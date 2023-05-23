@@ -1,0 +1,15 @@
+[tool.poetry]
+authors = ["DaSCH - Swiss National Data and Service Center for the Humanities <info@dasch.swiss>"]
+description = ""
+license = "Apache-2.0"
+name = "dsp-permissions-scripts"
+packages = [{include = "dsp_permissions_scripts"}]
+readme = "README.md"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
