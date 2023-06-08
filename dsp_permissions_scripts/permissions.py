@@ -8,8 +8,13 @@ from dsp_permissions_scripts.util import url_encode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
 
+# TODO: maybe these methods should live on the PermissionScope model?
+
 
 def __marshal_scope(scope: PermissionScope) -> dict[str, Any]:
+    """
+    Serializes a permission scope to a dict in the shape that it can be used for JSON requests to /admin/permissions routes.
+    """
     return {
         "additionalInformation": scope.info,
         "name": scope.name,
@@ -18,6 +23,9 @@ def __marshal_scope(scope: PermissionScope) -> dict[str, Any]:
 
 
 def __marshal_scope_as_permission_string(scope: list[PermissionScope]) -> str:
+    """
+    Serializes a permission scope to a permissions string as used by /v2 routes.
+    """
     lookup: dict[str, list[str]] = {}
     for s in scope:
         p = lookup.get(s.name, [])
@@ -28,6 +36,9 @@ def __marshal_scope_as_permission_string(scope: list[PermissionScope]) -> str:
 
 
 def __get_scope(scope: dict[str, Any]) -> PermissionScope:
+    """
+    turns permissions JSON  as returned by /admin/permissions routes into a PermissionScope object.
+    """
     return PermissionScope(
         info=scope["additionalInformation"],
         name=scope["name"]
@@ -41,6 +52,9 @@ def make_scope(
     delete: list[str] = [],
     change_rights: list[str] = []
 ) -> list[PermissionScope]:
+    """
+    Helper method to create scopes, by providing lists of Group IRIs for different permission levels.
+    """
     res = []
     res.extend([PermissionScope(info=iri, name="RV") for iri in restricted_view])
     res.extend([PermissionScope(info=iri, name="V") for iri in view])
@@ -51,7 +65,9 @@ def make_scope(
 
 
 def __get_doap(permission: dict[str, Any]) -> Doap:
-    # print(permission)
+    """
+    Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
+    """
     scope = [__get_scope(s) for s in permission["hasPermissions"]]
     doap = Doap(
         target=DoapTarget(
@@ -67,6 +83,9 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
 
 
 def get_doaps_for_project(project_iri: str, host: str, token: str) -> list[Doap]:
+    """
+    Returns all DOAPs for the given project.
+    """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = url_encode(project_iri)
     url = f"https://{host}/admin/permissions/doap/{project_iri}"
@@ -78,6 +97,9 @@ def get_doaps_for_project(project_iri: str, host: str, token: str) -> list[Doap]
 
 
 def get_permissions_for_project(project_iri: str, host: str, token: str) -> list[dict[str, Any]]:
+    """
+    Returns all permissions for the given project.
+    """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = url_encode(project_iri)
     url = f"https://{host}/admin/permissions/{project_iri}"
@@ -92,7 +114,7 @@ def update_all_doap_scopes_for_project(project_iri: str, scope: list[PermissionS
     Applies the given scope to all DOAPs for the given project.
     """
     doaps = get_doaps_for_project(project_iri, host, token)
-    # normally there are 2 doaps: one for project admins, one for project members. 
+    # normally there are 2 doaps: one for project admins, one for project members.
     # But there might be more groups.
     for d in doaps:
         print(d.iri, d.target, d.scope)
@@ -100,6 +122,9 @@ def update_all_doap_scopes_for_project(project_iri: str, scope: list[PermissionS
 
 
 def update_doap_scope(permission_iri: str, scope: list[PermissionScope], host: str, token: str) -> None:
+    """
+    Updates the scope of the given DOAP.
+    """
     iri = url_encode(permission_iri)
     headers = {"Authorization": f"Bearer {token}"}
     url = f"https://{host}/admin/permissions/{iri}/hasPermissions"
@@ -110,11 +135,17 @@ def update_doap_scope(permission_iri: str, scope: list[PermissionScope], host: s
 
 
 def update_permissions_for_resources_and_values(resource_iris: list[str], scope: list[PermissionScope], host: str, token: str) -> None:
+    """
+    Updates the permissions for the given resources and their values.
+    """
     for iri in resource_iris:
         update_permissions_for_resource_and_values(iri, scope, host, token)
 
 
 def update_permissions_for_resource_and_values(resource_iri: str,  scope: list[PermissionScope], host: str, token: str) -> None:
+    """
+    Updates the permissions for the given resource and its values.
+    """
     print(f"Updating permissions for {resource_iri}...")
     resource = __get_resource(resource_iri, host, token)
     lmd = __get_lmd(resource)
@@ -136,6 +167,9 @@ def update_permissions_for_resource(
         host: str,
         token: str
 ) -> None:
+    """
+    Updates the permissions for the given resource.
+    """
     payload = {
         "@id": resource_iri,
         "@type": type_,
@@ -160,6 +194,9 @@ def update_permissions_for_value(
         host: str,
         token: str
 ) -> None:
+    """
+    Updates the permissions for the given value.
+    """
     print(value.value_iri)
     payload = {
         "@id": resource_iri,
@@ -191,6 +228,9 @@ def update_permissions_for_value(
 
 
 def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
+    """
+    Returns a list of values that have permissions and hence should be updated.
+    """
     res: list[ValueUpdate] = []
     for k, v in resource.items():
         if k in {"@id", "@type", "@context", "rdfs:label"}:
@@ -204,6 +244,9 @@ def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
 
 
 def __get_resource(resource_iri: str, host: str, token: str) -> dict[str, Any]:
+    """
+    Requests the resource with the given IRI from the API.
+    """
     iri = url_encode(resource_iri)
     url = f"https://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
@@ -215,16 +258,21 @@ def __get_resource(resource_iri: str, host: str, token: str) -> dict[str, Any]:
 
 def __get_lmd(resource: dict[str, Any]) -> str | None:
     """
-    Get last modification date.
+    Gets last modification date from a resource JSON-LD dict.
     """
     return resource.get("knora-api:lastModificationDate")
 
 
 def __get_type(resource: dict[str, Any]) -> str:
+    """
+    Gets the type from a resource JSON-LD dict."""
     t: str = resource["@type"]
     return t
 
 
 def __get_context(resource: dict[str, Any]) -> dict[str, str]:
+    """
+    Gets the context object from a resource JSON-LD dict.
+    """
     c: dict[str, str] = resource["@context"]
     return c

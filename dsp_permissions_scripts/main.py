@@ -1,5 +1,3 @@
-# from getpass import getpass
-# from time import sleep
 import os
 
 from dotenv import load_dotenv
@@ -13,6 +11,7 @@ from dsp_permissions_scripts.permissions import (
 )
 from dsp_permissions_scripts.project import get_project_iri_by_shortcode
 
+# TODO: these are used along with the scopes. Should be moved to a separate file, main should only contain the logic to run the scripts
 UNKNOWN_USER = "http://www.knora.org/ontology/knora-admin#UnknownUser"
 KNOWN_USER = "http://www.knora.org/ontology/knora-admin#KnownUser"
 CREATOR = "http://www.knora.org/ontology/knora-admin#Creator"
@@ -22,7 +21,11 @@ PROJECT_ADMIN = "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
 SYSTEM_ADMIN = "http://www.knora.org/ontology/knora-admin#SystemAdmin"
 
 
+# TODO: the host part should be moved to its own file, main should only contain the logic to run the scripts
 class Hosts:
+    """
+    Helper class to deal with the different DSP environments.
+    """
     LOCALHOST = "localhost:3333"
     PROD = "api.dasch.swiss"
     TEST = "api.test.dasch.swiss"
@@ -50,6 +53,9 @@ def main() -> None:
 
 
 def inspect_permissions(host: str, shortcode: str) -> None:
+    """
+    Prints the doaps for a project, provided a host and a shortcode.
+    """
     user, pw = get_env(host)
     token = get_token(host, user, pw)
     project_iri = get_project_iri_by_shortcode(shortcode, host)
@@ -60,8 +66,12 @@ def inspect_permissions(host: str, shortcode: str) -> None:
 
 
 def set_object_permissions(host: str) -> None:
+    """
+    sets the permissions for a list of objects and each of their values.
+    """
     user, pw = get_env(host)
     token = get_token(host, user, pw)
+    # TODO: there should be defined common scopes, that should be useable by `Scopes.public`, `Scopes.private`, etc.
     new_scope = make_scope(
         change_rights=[PROJECT_ADMIN, CREATOR],
         view=[UNKNOWN_USER, KNOWN_USER],
@@ -81,6 +91,10 @@ def set_object_permissions(host: str) -> None:
 
 
 def set_doaps(host: str, shortcode: str) -> None:
+    """
+    sets all DOAPs for a project to a set scope.
+    """
+    # TODO: probably the scope should be provided as a parameter to this method
     user, pw = get_env(host)
     token = get_token(host, user, pw)
     project_iri = get_project_iri_by_shortcode(shortcode, host)
@@ -95,6 +109,10 @@ def set_doaps(host: str, shortcode: str) -> None:
 
 
 def get_env(host: str) -> tuple[str, str]:
+    """
+    returns user email and password for a given host.
+    """
+    # TODO: this could definitely be improved, including function naming
     if host.startswith("localhost"):
         user = "root@example.com"
         pw = "test"
@@ -107,5 +125,6 @@ def get_env(host: str) -> tuple[str, str]:
 
 
 if __name__ == "__main__":
+    # load environemnt variables from a .env file
     load_dotenv()
     main()
