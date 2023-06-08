@@ -88,7 +88,12 @@ def get_permissions_for_project(project_iri: str, host: str, token: str) -> list
 
 
 def update_all_doap_scopes_for_project(project_iri: str, scope: list[PermissionScope], host: str, token: str) -> None:
+    """
+    Applies the given scope to all DOAPs for the given project.
+    """
     doaps = get_doaps_for_project(project_iri, host, token)
+    # normally there are 2 doaps: one for project admins, one for project members. 
+    # But there might be more groups.
     for d in doaps:
         print(d.iri, d.target, d.scope)
         update_doap_scope(d.iri, scope, host, token)
@@ -209,6 +214,9 @@ def __get_resource(resource_iri: str, host: str, token: str) -> dict[str, Any]:
 
 
 def __get_lmd(resource: dict[str, Any]) -> str | None:
+    """
+    Get last modification date.
+    """
     return resource.get("knora-api:lastModificationDate")
 
 

@@ -28,6 +28,7 @@ class Hosts:
     TEST = "api.test.dasch.swiss"
     DEV = "api.dev.dasch.swiss"
     LS_PROD = "api.ls-prod.admin.ch"
+    STAGING = "api.staging.dasch.swiss"
 
     @staticmethod
     def get_host(identifier: str) -> str:
@@ -42,15 +43,16 @@ class Hosts:
 
 def main() -> None:
     host = Hosts.get_host("0106-test-server")
-    inspect_permissions(host)
-    # set_doaps()
-    # set_object_permissions()
+    shortcode = "0806"
+    inspect_permissions(host, shortcode)
+    # set_doaps(host, shortcode)
+    # set_object_permissions(host)
 
 
-def inspect_permissions(host: str) -> None:
+def inspect_permissions(host: str, shortcode: str) -> None:
     user, pw = get_env(host)
     token = get_token(host, user, pw)
-    project_iri = get_project_iri_by_shortcode("0106", host)
+    project_iri = get_project_iri_by_shortcode(shortcode, host)
     doaps = get_doaps_for_project(project_iri, host, token)
     for d in doaps:
         print(d.json(indent=2))
@@ -78,10 +80,11 @@ def set_object_permissions(host: str) -> None:
     update_permissions_for_resources_and_values(object_iris, new_scope, host, token)
 
 
-def set_doaps(host: str) -> None:
+def set_doaps(host: str, shortcode: str) -> None:
     user, pw = get_env(host)
     token = get_token(host, user, pw)
-    project_iri = get_project_iri_by_shortcode("0806", host)
+    project_iri = get_project_iri_by_shortcode(shortcode, host)
+    # scope = an object encoding the information which group gets which permissions if this doap gets applied
     new_scope = make_scope(
         view=[UNKNOWN_USER, KNOWN_USER],
         change_rights=[PROJECT_ADMIN],
@@ -92,8 +95,6 @@ def set_doaps(host: str) -> None:
 
 
 def get_env(host: str) -> tuple[str, str]:
-    host = "localhost:3333"
-    # host = "api.dasch.swiss"
     if host.startswith("localhost"):
         user = "root@example.com"
         pw = "test"
