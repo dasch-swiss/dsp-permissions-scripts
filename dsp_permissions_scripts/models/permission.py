@@ -19,6 +19,7 @@ class DoapTarget(BaseModel):
 
     @root_validator
     def assert_correct_combination(cls, values: dict[str, str | None]) -> dict[str, str | None]:
+        # asserts that DOAP is only defined for Group or ResourceClass or Property or a combination of ResourceClass and Property
         match (values["group"], values["resource_class"], values["property"]):
             case (None, None, None):
                 raise ValueError("At least one of group, resource_class or property must be set")
@@ -30,6 +31,9 @@ class DoapTarget(BaseModel):
 
 
 class Doap(BaseModel):
+    """
+    Model representing a DOAP, containing the target, the scope and the IRI of the DOAP.
+    """
     target: DoapTarget
     scope: list[PermissionScope]
     iri: str
