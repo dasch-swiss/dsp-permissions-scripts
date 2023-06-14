@@ -1,9 +1,10 @@
 import json
-from typing import Any, Optional
-import requests
-from dsp_permissions_scripts.models.permission import Doap, PermissionScope, DoapTarget
-from dsp_permissions_scripts.models.value import ValueUpdate
+from typing import Any, Optional, Sequence
 
+import requests
+
+from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScope
+from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.util import url_encode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
@@ -46,26 +47,15 @@ def __get_scope(scope: dict[str, Any]) -> PermissionScope:
 
 
 def make_scope(
-    restricted_view: Optional[list[str]] = None,
-    view: Optional[list[str]] = None,
-    modify: Optional[list[str]] = None,
-    delete: Optional[list[str]] = None,
-    change_rights: Optional[list[str]] = None
+    restricted_view: Sequence[str] = (),
+    view: Sequence[str] = (),
+    modify: Sequence[str] = (),
+    delete: Sequence[str] = (),
+    change_rights: Sequence[str] = ()
 ) -> list[PermissionScope]:
     """
     Helper method to create scopes, by providing lists of Group IRIs for different permission levels.
     """
-    if not restricted_view:
-        restricted_view = []
-    if not view:
-        view = []
-    if not modify:
-        modify = []
-    if not delete:
-        delete = []
-    if not change_rights:
-        change_rights = []
-    
     res = []
     res.extend([PermissionScope(info=iri, name="RV") for iri in restricted_view])
     res.extend([PermissionScope(info=iri, name="V") for iri in view])
