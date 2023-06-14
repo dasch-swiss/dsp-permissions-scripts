@@ -6,23 +6,69 @@ A collection of scripts to handle permissions in DSP.
 
 There are 3 permissions systems:
 
-- AP: administrative permissions
-- OAP: object access permissions
+- **AP**: administrative permissions
+- **OAP**: object access permissions
     - permissions of objects (resources and values)
-    - There are user groups who hold certain rights.
+    - OAPs grant rights to certain user groups.
     - The `<permissions>` tags in the XML of DSP-TOOLS define OAPs.
-- DOAP: default object access permissions
+- **DOAP**: default object access permissions
     - configured on a per-project basis
-    - defines what should happen if a resource/property/value without OAP is created
-    - If a new project without DOAPs is created, there is a default DOAP configuration. (Until now it isn't possible to specify DOAPs when creating a project.)
+    - defines what should happen if a resource/property/value is created without OAP.
+    - If a new project without DOAPs is created, there is a default DOAP configuration.
+      (Until now it isn't possible to specify DOAPs when creating a project.)
+
+### OAPs: Object Access Permissions
+
+OAPs grant **rights** to certain **user groups**.
+[See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permissions)
+for more information.
+
+#### Rights
+
+A group can have exactly one of these rights:
+
+- (no right): If no permission is defined for a certain group of users, these users cannot view any resources/values.
+- `RV` _restricted view permission_: Same as `V`,
+  but if it is applied to an image, the image is shown with a reduced resolution or with a watermark overlay.
+- `V` _view permission_: The user can view a resource or a value, but cannot modify it.
+- `M` _modify permission_: The user can modify the element, but cannot mark it as deleted.
+  The original resource or value will be preserved.
+- `D` _delete permission_: The user is allowed to mark an element as deleted.
+  The original resource or value will be preserved.
+- `CR` _change right permission_: The user can change the permission of a resource or value.
+  The user is also allowed to permanently delete (erase) a resource.
+
+Every right of this row includes all previous rights.
+
+#### User Groups
+
+The user doesn't hold the permissions directly,
+but belongs to an arbitrary number of groups which hold the permissions.
+There are **built-in groups** and **project specific groups**:
+
+- **Built-in groups**: Every user is automatically in at least one of the following built-in groups:
+    - `UnknownUser`: The user is not known to DSP (not logged in).
+    - `KnownUser`: The user is logged in, but not a member of the project the data element belongs to.
+    - `ProjectMember`: The user belongs to the same project as the data element.
+    - `ProjectAdmin`: The user is project administrator in the project the data element belongs to.
+    - `Creator`: The user is the owner of the element (created the element).
+    - `SystemAdmin`: The user is a system administrator.
+- **Project specific groups**:
+    - projects can define their own groups
+
+### DOAPs: Default Object Access Permissions
 
 DOAPs are always project-related, but more specifically, they are:
 
 - either group-related: I belong to a group and create a resource, which OAPs does the resource get?
-- or class-related: resources of some classes are public, resources of other classes are restricted.
+- or ontology-related:
+    - class-related: resources of some classes are public, while resources of other classes are restricted
+    - property-related: some properties are public, while other properties are restricted
+    - or a combination of class/property-related
 
-Group-related and class-related DOAPs cannot be combined, but there is a precedence rule,
-[documented here](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules):
+Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
+
+#### Precedence rule
 
 If a user creates a resource, DSP checks the following places for DOAPs:
 
@@ -31,20 +77,28 @@ If a user creates a resource, DSP checks the following places for DOAPs:
 - ...
 - Last: User belongs to group `ProjectMember`: take DOAPs of `ProjectMember`
 
+[See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules)
+for more details.
+
 ## Typical use cases
 
-If the backend team is asked to change permissions, it is usually because of one of the following reasons:
+If permissions need to be changed, it is usually because of one of the following reasons:
 
-- Use case 1: The project is unhappy with their default DOAPs. They want other permissions when creating a resource via the APP.
-- Use case 2: It's already too late, the project has created resources, and now they want to change the permissions of these resources.
+- Use case 1: The project is unhappy with their default DOAPs.
+  They want other permissions when creating a resource via the APP.
+- Use case 2: It's already too late, the project has created resources,
+  and now they want to change the permissions of these resources.
     - The wrong OAPs of existing resources must be adapted.
     - The DOAPs must be adapted, so that new resources get the correct OAPs.
 
-If we modify DOAPs, we usually have to modify them for the groups `ProjectMember` and `ProjectAdmin`, because these are the two groups that always exist.
+If we modify DOAPs, we usually have to modify them for the groups `ProjectMember` and `ProjectAdmin`,
+because these are the two groups that always exist.
 
 ## Changing DOAPs
 
 ### Understanding scopes
+
+A scope is a mapping of groups to rights granted to that group.
 
 Example result of `inspect_permissions()`:
 
