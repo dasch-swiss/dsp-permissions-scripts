@@ -20,3 +20,18 @@ python-dotenv = "^1.0.0"
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
+
+[tool.pylint.MASTER]
+extension-pkg-whitelist="pydantic"
+
+[tool.pylint.format]
+max-line-length = 140
+
+[tool.pylint."messages control"]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "invalid-name",
+    "trailing-whitespace",
+]

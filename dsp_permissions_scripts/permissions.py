@@ -1,9 +1,10 @@
 import json
-from typing import Any
-import requests
-from dsp_permissions_scripts.models.permission import Doap, PermissionScope, DoapTarget
-from dsp_permissions_scripts.models.value import ValueUpdate
+from typing import Any, Optional, Sequence
 
+import requests
+
+from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScope
+from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.util import url_encode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
@@ -46,11 +47,11 @@ def __get_scope(scope: dict[str, Any]) -> PermissionScope:
 
 
 def make_scope(
-    restricted_view: list[str] = [],
-    view: list[str] = [],
-    modify: list[str] = [],
-    delete: list[str] = [],
-    change_rights: list[str] = []
+    restricted_view: Sequence[str] = (),
+    view: Sequence[str] = (),
+    modify: Sequence[str] = (),
+    delete: Sequence[str] = (),
+    change_rights: Sequence[str] = ()
 ) -> list[PermissionScope]:
     """
     Helper method to create scopes, by providing lists of Group IRIs for different permission levels.
@@ -82,34 +83,47 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
     return doap
 
 
-def get_doaps_for_project(project_iri: str, host: str, token: str) -> list[Doap]:
+def get_doaps_for_project(
+    project_iri: str, 
+    host: str, 
+    token: str,
+) -> list[Doap]:
     """
     Returns all DOAPs for the given project.
     """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = url_encode(project_iri)
     url = f"https://{host}/admin/permissions/doap/{project_iri}"
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
     doap_objects = [__get_doap(doap) for doap in doaps]
     return doap_objects
 
 
-def get_permissions_for_project(project_iri: str, host: str, token: str) -> list[dict[str, Any]]:
+def get_permissions_for_project(
+    project_iri: str, 
+    host: str, 
+    token: str,
+) -> list[dict[str, Any]]:
     """
     Returns all permissions for the given project.
     """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = url_encode(project_iri)
     url = f"https://{host}/admin/permissions/{project_iri}"
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     permissions: list[dict[str, Any]] = response.json()["permissions"]
     return permissions
 
 
-def update_all_doap_scopes_for_project(project_iri: str, scope: list[PermissionScope], host: str, token: str) -> None:
+def update_all_doap_scopes_for_project(
+    project_iri: str, 
+    scope: list[PermissionScope], 
+    host: str, 
+    token: str,
+) -> None:
     """
     Applies the given scope to all DOAPs for the given project.
     """
@@ -121,7 +135,12 @@ def update_all_doap_scopes_for_project(project_iri: str, scope: list[PermissionS
         update_doap_scope(d.iri, scope, host, token)
 
 
-def update_doap_scope(permission_iri: str, scope: list[PermissionScope], host: str, token: str) -> None:
+def update_doap_scope(
+    permission_iri: str, 
+    scope: list[PermissionScope], 
+    host: str, 
+    token: str,
+) -> None:
     """
     Updates the scope of the given DOAP.
     """
@@ -129,12 +148,17 @@ def update_doap_scope(permission_iri: str, scope: list[PermissionScope], host: s
     headers = {"Authorization": f"Bearer {token}"}
     url = f"https://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
-    response = requests.put(url, headers=headers, json=payload)
+    response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
     print(response.json())
 
 
-def update_permissions_for_resources_and_values(resource_iris: list[str], scope: list[PermissionScope], host: str, token: str) -> None:
+def update_permissions_for_resources_and_values(
+    resource_iris: list[str], 
+    scope: list[PermissionScope], 
+    host: str, 
+    token: str,
+) -> None:
     """
     Updates the permissions for the given resources and their values.
     """
@@ -142,7 +166,12 @@ def update_permissions_for_resources_and_values(resource_iris: list[str], scope:
         update_permissions_for_resource_and_values(iri, scope, host, token)
 
 
-def update_permissions_for_resource_and_values(resource_iri: str,  scope: list[PermissionScope], host: str, token: str) -> None:
+def update_permissions_for_resource_and_values(
+    resource_iri: str, 
+    scope: list[PermissionScope], 
+    host: str, 
+    token: str,
+) -> None:
     """
     Updates the permissions for the given resource and its values.
     """
@@ -159,13 +188,13 @@ def update_permissions_for_resource_and_values(resource_iri: str,  scope: list[P
 
 
 def update_permissions_for_resource(
-        resource_iri: str,
-        lmd: str | None,
-        type_: str,
-        context: dict[str, str],
-        scope: list[PermissionScope],
-        host: str,
-        token: str
+    resource_iri: str,
+    lmd: str | None,
+    type_: str,
+    context: dict[str, str],
+    scope: list[PermissionScope],
+    host: str,
+    token: str,
 ) -> None:
     """
     Updates the permissions for the given resource.
@@ -180,19 +209,19 @@ def update_permissions_for_resource(
         payload["knora-api:lastModificationDate"] = lmd
     url = f"https://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload)
+    response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
     print(f"Updated permissions for {resource_iri}")
 
 
 def update_permissions_for_value(
-        resource_iri: str,
-        value: ValueUpdate,
-        resource_type: str,
-        context: dict[str, str],
-        scope: list[PermissionScope],
-        host: str,
-        token: str
+    resource_iri: str,
+    value: ValueUpdate,
+    resource_type: str,
+    context: dict[str, str],
+    scope: list[PermissionScope],
+    host: str,
+    token: str,
 ) -> None:
     """
     Updates the permissions for the given value.
@@ -210,7 +239,7 @@ def update_permissions_for_value(
     }
     url = f"https://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload)
+    response = requests.put(url, headers=headers, json=payload, timeout=5)
     if response.status_code == 400 and response.text:
         if "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones" in response.text:
             print(f"Permissions for {value.value_iri} are already up to date")
@@ -243,14 +272,18 @@ def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
     return res
 
 
-def __get_resource(resource_iri: str, host: str, token: str) -> dict[str, Any]:
+def __get_resource(
+    resource_iri: str, 
+    host: str, 
+    token: str,
+) -> dict[str, Any]:
     """
     Requests the resource with the given IRI from the API.
     """
     iri = url_encode(resource_iri)
     url = f"https://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     data: dict[str, Any] = response.json()
     return data

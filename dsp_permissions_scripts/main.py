@@ -45,11 +45,12 @@ class Hosts:
 
 
 def main() -> None:
+    load_dotenv()  # load environemnt variables from a .env file
     host = Hosts.get_host("0106-test-server")
     shortcode = "0806"
     inspect_permissions(host, shortcode)
     # set_doaps(host, shortcode)
-    # set_object_permissions(host)
+    # set_oaps(host)
 
 
 def inspect_permissions(host: str, shortcode: str) -> None:
@@ -65,9 +66,9 @@ def inspect_permissions(host: str, shortcode: str) -> None:
         print()
 
 
-def set_object_permissions(host: str) -> None:
+def set_oaps(host: str) -> None:
     """
-    sets the permissions for a list of objects and each of their values.
+    sets the object access permissions for a list of objects (resources/properties) and each of their values.
     """
     user, pw = get_env(host)
     token = get_token(host, user, pw)
@@ -125,6 +126,4 @@ def get_env(host: str) -> tuple[str, str]:
 
 
 if __name__ == "__main__":
-    # load environemnt variables from a .env file
-    load_dotenv()
     main()
