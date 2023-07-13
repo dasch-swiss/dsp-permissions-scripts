@@ -35,7 +35,7 @@ def login(host: str) -> str:
 
     Args:
         host: DSP server
-    
+
     Returns:
         token: access token
     """

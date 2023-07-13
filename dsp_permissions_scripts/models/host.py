@@ -2,6 +2,7 @@ class Hosts:
     """
     Helper class to deal with the different DSP environments.
     """
+
     LOCALHOST = "localhost:3333"
     PROD = "api.dasch.swiss"
     TEST = "api.test.dasch.swiss"

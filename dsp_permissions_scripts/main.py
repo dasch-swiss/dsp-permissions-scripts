@@ -1,4 +1,3 @@
-
 from typing import Sequence
 from dotenv import load_dotenv
 from dsp_permissions_scripts.models.groups import BuiltinGroup
@@ -10,7 +9,7 @@ from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
     update_permissions_for_resources_and_values,
-    get_doaps_for_project
+    get_doaps_for_project,
 )
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
@@ -20,7 +19,8 @@ def main() -> None:
     Currently, 3 actions are supported:
 
     1. print the doaps for a project
-    2. set the object access permissions for a list of objects (resources/properties) and each of their values.
+    2. set the object access permissions for a list of objects (resources/properties)
+       and each of their values.
     3. apply a scope (e.g. "public") to all DOAPs for the given project
     """
     host = Hosts.get_host("test")
@@ -29,14 +29,14 @@ def main() -> None:
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
     print_doaps(
-        host=host, 
+        host=host,
         shortcode=shortcode,
         token=token,
     )
     set_doaps(
         scope=new_scope,
         groups=groups,
-        host=host, 
+        host=host,
         shortcode=shortcode,
         token=token,
     )
@@ -48,7 +48,7 @@ def main() -> None:
 
 
 def print_doaps(
-    host: str, 
+    host: str,
     shortcode: str,
     token: str,
 ) -> None:
@@ -56,12 +56,12 @@ def print_doaps(
     Print the doaps for a project, provided a host and a shortcode.
     """
     project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode, 
+        shortcode=shortcode,
         host=host,
     )
     doaps = get_doaps_for_project(
-        project_iri=project_iri, 
-        host=host, 
+        project_iri=project_iri,
+        host=host,
         token=token,
     )
     for d in doaps:
@@ -75,16 +75,17 @@ def set_oaps(
     token: str,
 ) -> None:
     """
-    sets the object access permissions for a list of objects (resources/properties) and each of their values.
+    Sets the object access permissions
+    for a list of objects (resources/properties) and each of their values.
     """
     object_iris = [
         "http://rdfh.ch/0810/foo",
         "http://rdfh.ch/0810/bar",
     ]
     update_permissions_for_resources_and_values(
-        resource_iris=object_iris, 
-        scope=scope, 
-        host=host, 
+        resource_iris=object_iris,
+        scope=scope,
+        host=host,
         token=token,
     )
 
@@ -92,7 +93,7 @@ def set_oaps(
 def set_doaps(
     scope: list[PermissionScope],
     groups: Sequence[BuiltinGroup],
-    host: str, 
+    host: str,
     shortcode: str,
     token: str,
 ) -> None:
@@ -108,16 +109,16 @@ def set_doaps(
     """
     applicable_doaps = get_doaps_of_groups(
         groups=groups,
-        host=host, 
+        host=host,
         shortcode=shortcode,
         token=token,
     )
     for d in applicable_doaps:
         print(d.iri, d.target, d.scope)
         update_doap_scope(
-            permission_iri=d.iri, 
-            scope=scope, 
-            host=host, 
+            permission_iri=d.iri,
+            scope=scope,
+            host=host,
             token=token,
         )
     print("Finished successfully")
@@ -125,7 +126,7 @@ def set_doaps(
 
 def get_doaps_of_groups(
     groups: Sequence[BuiltinGroup],
-    host: str, 
+    host: str,
     shortcode: str,
     token: str,
 ) -> list[Doap]:
@@ -142,12 +143,12 @@ def get_doaps_of_groups(
         applicable_doaps: the applicable DOAPs
     """
     project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode, 
+        shortcode=shortcode,
         host=host,
     )
     all_doaps = get_doaps_for_project(
-        project_iri=project_iri, 
-        host=host, 
+        project_iri=project_iri,
+        host=host,
         token=token,
     )
     applicable_doaps = [d for d in all_doaps if d.target.group in groups]

@@ -14,12 +14,13 @@ KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermissi
 
 def __marshal_scope(scope: PermissionScope) -> dict[str, Any]:
     """
-    Serializes a permission scope to a dict in the shape that it can be used for JSON requests to /admin/permissions routes.
+    Serializes a permission scope to a dict
+    in the shape that it can be used for JSON requests to /admin/permissions routes.
     """
     return {
         "additionalInformation": scope.info,
         "name": scope.name,
-        "permissionCode": None
+        "permissionCode": None,
     }
 
 
@@ -42,7 +43,7 @@ def __get_scope(scope: dict[str, Any]) -> PermissionScope:
     """
     return PermissionScope(
         info=scope["additionalInformation"],
-        name=scope["name"]
+        name=scope["name"],
     )
 
 
@@ -65,8 +66,8 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
 
 
 def get_doaps_for_project(
-    project_iri: str, 
-    host: str, 
+    project_iri: str,
+    host: str,
     token: str,
 ) -> list[Doap]:
     """
@@ -83,8 +84,8 @@ def get_doaps_for_project(
 
 
 def get_permissions_for_project(
-    project_iri: str, 
-    host: str, 
+    project_iri: str,
+    host: str,
     token: str,
 ) -> list[dict[str, Any]]:
     """
@@ -100,9 +101,9 @@ def get_permissions_for_project(
 
 
 def update_doap_scope(
-    permission_iri: str, 
-    scope: list[PermissionScope], 
-    host: str, 
+    permission_iri: str,
+    scope: list[PermissionScope],
+    host: str,
     token: str,
 ) -> None:
     """
@@ -118,9 +119,9 @@ def update_doap_scope(
 
 
 def update_permissions_for_resources_and_values(
-    resource_iris: list[str], 
-    scope: list[PermissionScope], 
-    host: str, 
+    resource_iris: list[str],
+    scope: list[PermissionScope],
+    host: str,
     token: str,
 ) -> None:
     """
@@ -131,9 +132,9 @@ def update_permissions_for_resources_and_values(
 
 
 def update_permissions_for_resource_and_values(
-    resource_iri: str, 
-    scope: list[PermissionScope], 
-    host: str, 
+    resource_iri: str,
+    scope: list[PermissionScope],
+    host: str,
     token: str,
 ) -> None:
     """
@@ -167,7 +168,7 @@ def update_permissions_for_resource(
         "@id": resource_iri,
         "@type": type_,
         "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
-        "@context": context
+        "@context": context,
     }
     if lmd:
         payload["knora-api:lastModificationDate"] = lmd
@@ -197,15 +198,18 @@ def update_permissions_for_value(
         value.property: {
             "@id": value.value_iri,
             "@type": value.value_type,
-            "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope)
+            "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
         },
-        "@context": context
+        "@context": context,
     }
     url = f"https://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     if response.status_code == 400 and response.text:
-        if "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones" in response.text:
+        if (
+            "dsp.errors.BadRequestException: "
+            "The submitted permissions are the same as the current ones" in response.text
+        ):
             print(f"Permissions for {value.value_iri} are already up to date")
             return
     if response.status_code != 200:
@@ -229,7 +233,11 @@ def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
         if k in {"@id", "@type", "@context", "rdfs:label"}:
             continue
         match v:
-            case {"@id": id_, "@type": type_, **properties} if "/values/" in id_ and "knora-api:hasPermissions" in properties:
+            case {
+                "@id": id_,
+                "@type": type_,
+                **properties,
+            } if "/values/" in id_ and "knora-api:hasPermissions" in properties:
                 res.append(ValueUpdate(k, id_, type_))
             case _:
                 continue
@@ -237,8 +245,8 @@ def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
 
 
 def __get_resource(
-    resource_iri: str, 
-    host: str, 
+    resource_iri: str,
+    host: str,
     token: str,
 ) -> dict[str, Any]:
     """
