@@ -114,8 +114,11 @@ def set_doaps(
         shortcode=shortcode,
         token=token,
     )
+    heading = f"Update {len(applicable_doaps)} DOAPs on {host}..."
+    print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in applicable_doaps:
-        print(d.iri, d.target, d.scope)
+        print("Old DOAP:\n=========")
+        print(d.json(indent=2))
         update_doap_scope(
             permission_iri=d.iri,
             scope=scope,

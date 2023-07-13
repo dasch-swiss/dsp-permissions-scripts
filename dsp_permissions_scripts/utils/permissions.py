@@ -112,7 +112,10 @@ def get_doaps_of_groups(
         host=host,
         token=token,
     )
-    applicable_doaps = [d for d in all_doaps if d.target.group in groups]
+    groups_str = []
+    for g in groups:
+        groups_str.append(g.value if isinstance(g, BuiltinGroup) else g)
+    applicable_doaps = [d for d in all_doaps if d.target.group in groups_str]
     assert len(applicable_doaps) == len(groups)
     return applicable_doaps
 
@@ -149,7 +152,9 @@ def update_doap_scope(
     payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
-    print(response.json())
+    print("\nNew DOAP:\n=========")
+    print(json.dumps(response.json(), indent=2))
+    print()
 
 
 def update_permissions_for_resources_and_values(
