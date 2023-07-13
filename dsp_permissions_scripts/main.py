@@ -1,7 +1,7 @@
 
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.utils.authentication import get_env, get_token
+from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import PermissionScope
 from dsp_permissions_scripts.models.scope import Scope
@@ -22,25 +22,34 @@ def main() -> None:
     3. apply a scope (e.g. "public") to all DOAPs for the given project
     """
     host = Hosts.get_host("test")
+    token = login(host)
     shortcode = "0848"
-    inspect_permissions(host, shortcode)
+    inspect_permissions(
+        host=host, 
+        shortcode=shortcode,
+        token=token,
+    )
     set_doaps(
         host=host, 
         shortcode=shortcode,
         scope=Scope.PUBLIC,
+        token=token,
     )
     set_oaps(
         host=host,
         scope=Scope.PUBLIC,
+        token=token,
     )
 
 
-def inspect_permissions(host: str, shortcode: str) -> None:
+def inspect_permissions(
+    host: str, 
+    shortcode: str,
+    token: str,
+) -> None:
     """
     Prints the doaps for a project, provided a host and a shortcode.
     """
-    user, pw = get_env(host)
-    token = get_token(host, user, pw)
     project_iri = get_project_iri_by_shortcode(shortcode, host)
     doaps = get_doaps_for_project(project_iri, host, token)
     for d in doaps:
@@ -51,12 +60,11 @@ def inspect_permissions(host: str, shortcode: str) -> None:
 def set_oaps(
     host: str,
     scope: list[PermissionScope],
+    token: str,
 ) -> None:
     """
     sets the object access permissions for a list of objects (resources/properties) and each of their values.
     """
-    user, pw = get_env(host)
-    token = get_token(host, user, pw)
     object_iris = [
         # "http://rdfh.ch/0810/_cyEQqI4T3-d_MIl0IAS2w",
         # "http://rdfh.ch/0810/9eUg68OWR66u26Bffrj0nQ",
@@ -79,6 +87,7 @@ def set_doaps(
     host: str, 
     shortcode: str,
     scope: list[PermissionScope],
+    token: str,
 ) -> None:
     """
     Applies the given scope to all DOAPs for the given project.
@@ -88,8 +97,6 @@ def set_doaps(
         shortcode: the shortcode of the project
         scope: one of the standard scopes defined in the Scope class
     """
-    user, pw = get_env(host)
-    token = get_token(host, user, pw)
     project_iri = get_project_iri_by_shortcode(shortcode, host)
     doaps = get_doaps_for_project(project_iri, host, token)
     # normally there are 2 doaps: one for project admins, one for project members.

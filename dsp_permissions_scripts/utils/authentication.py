@@ -27,3 +27,18 @@ def get_env(host: str) -> tuple[str, str]:
     assert user
     assert pw
     return user, pw
+
+
+def login(host: str) -> str:
+    """
+    Login with the DSP server
+
+    Args:
+        host: DSP server
+    
+    Returns:
+        token: access token
+    """
+    user, pw = get_env(host)
+    token = get_token(host, user, pw)
+    return token
