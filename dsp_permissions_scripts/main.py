@@ -22,9 +22,10 @@ def main() -> None:
     3. apply a scope (e.g. "public") to all DOAPs for the given project
     """
     host = Hosts.get_host("test")
-    token = login(host)
     shortcode = "0848"
-    inspect_permissions(
+    new_scope = Scope.PUBLIC
+    token = login(host)
+    print_doaps(
         host=host, 
         shortcode=shortcode,
         token=token,
@@ -32,26 +33,33 @@ def main() -> None:
     set_doaps(
         host=host, 
         shortcode=shortcode,
-        scope=Scope.PUBLIC,
+        scope=new_scope,
         token=token,
     )
     set_oaps(
         host=host,
-        scope=Scope.PUBLIC,
+        scope=new_scope,
         token=token,
     )
 
 
-def inspect_permissions(
+def print_doaps(
     host: str, 
     shortcode: str,
     token: str,
 ) -> None:
     """
-    Prints the doaps for a project, provided a host and a shortcode.
+    Print the doaps for a project, provided a host and a shortcode.
     """
-    project_iri = get_project_iri_by_shortcode(shortcode, host)
-    doaps = get_doaps_for_project(project_iri, host, token)
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode, 
+        host=host,
+    )
+    doaps = get_doaps_for_project(
+        project_iri=project_iri, 
+        host=host, 
+        token=token,
+    )
     for d in doaps:
         print(d.json(indent=2))
         print()
@@ -66,14 +74,8 @@ def set_oaps(
     sets the object access permissions for a list of objects (resources/properties) and each of their values.
     """
     object_iris = [
-        # "http://rdfh.ch/0810/_cyEQqI4T3-d_MIl0IAS2w",
-        # "http://rdfh.ch/0810/9eUg68OWR66u26Bffrj0nQ",
-        # "http://rdfh.ch/0810/bAZD7_qnSMCt9yVtTaCNqQ",
-        # "http://rdfh.ch/0810/UigKXIqHSHSWomxUZ_gCvQ",
-        # "http://rdfh.ch/0810/FaURJ8QaRY2TbUahi6QBog",
-        # "http://rdfh.ch/0810/JYBrw1MARLKcrAHrJarrTQ",
-        # "http://rdfh.ch/0810/UHJZN4OZQ7SKIpAHzeCkQw"
-        "http://rdfh.ch/1234/QWh4ZIIiTuSxV0Ov3pc8ig"
+        "http://rdfh.ch/0810/foo",
+        "http://rdfh.ch/0810/bar",
     ]
     update_permissions_for_resources_and_values(
         resource_iris=object_iris, 
