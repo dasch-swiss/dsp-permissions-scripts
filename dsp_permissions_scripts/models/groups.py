@@ -1,4 +1,7 @@
 class Group:
+    """
+    Helper class to deal with the different DSP user groups.
+    """
     UNKNOWN_USER = "http://www.knora.org/ontology/knora-admin#UnknownUser"
     KNOWN_USER = "http://www.knora.org/ontology/knora-admin#KnownUser"
     CREATOR = "http://www.knora.org/ontology/knora-admin#Creator"

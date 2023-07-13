@@ -1,5 +1,5 @@
 import json
-from typing import Any, Sequence
+from typing import Any
 from urllib.parse import quote_plus
 
 import requests
@@ -44,25 +44,6 @@ def __get_scope(scope: dict[str, Any]) -> PermissionScope:
         info=scope["additionalInformation"],
         name=scope["name"]
     )
-
-
-def make_scope(
-    restricted_view: Sequence[str] = (),
-    view: Sequence[str] = (),
-    modify: Sequence[str] = (),
-    delete: Sequence[str] = (),
-    change_rights: Sequence[str] = ()
-) -> list[PermissionScope]:
-    """
-    Helper method to create scopes, by providing lists of Group IRIs for different permission levels.
-    """
-    res = []
-    res.extend([PermissionScope(info=iri, name="RV") for iri in restricted_view])
-    res.extend([PermissionScope(info=iri, name="V") for iri in view])
-    res.extend([PermissionScope(info=iri, name="M") for iri in modify])
-    res.extend([PermissionScope(info=iri, name="D") for iri in delete])
-    res.extend([PermissionScope(info=iri, name="CR") for iri in change_rights])
-    return res
 
 
 def __get_doap(permission: dict[str, Any]) -> Doap:
@@ -116,23 +97,6 @@ def get_permissions_for_project(
     assert response.status_code == 200
     permissions: list[dict[str, Any]] = response.json()["permissions"]
     return permissions
-
-
-def update_all_doap_scopes_for_project(
-    project_iri: str, 
-    scope: list[PermissionScope], 
-    host: str, 
-    token: str,
-) -> None:
-    """
-    Applies the given scope to all DOAPs for the given project.
-    """
-    doaps = get_doaps_for_project(project_iri, host, token)
-    # normally there are 2 doaps: one for project admins, one for project members.
-    # But there might be more groups.
-    for d in doaps:
-        print(d.iri, d.target, d.scope)
-        update_doap_scope(d.iri, scope, host, token)
 
 
 def update_doap_scope(

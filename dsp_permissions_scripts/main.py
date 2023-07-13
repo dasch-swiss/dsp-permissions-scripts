@@ -2,11 +2,11 @@
 from dotenv import load_dotenv
 
 from dsp_permissions_scripts.authentication import get_env, get_token
-from dsp_permissions_scripts.models.groups import Group
 from dsp_permissions_scripts.models.host import Hosts
+from dsp_permissions_scripts.models.permission import PermissionScope
+from dsp_permissions_scripts.models.scope import Scope
 from dsp_permissions_scripts.permissions import (
-    make_scope,
-    update_all_doap_scopes_for_project,
+    update_doap_scope,
     update_permissions_for_resources_and_values,
     get_doaps_for_project
 )
@@ -16,11 +16,18 @@ from dsp_permissions_scripts.project import get_project_iri_by_shortcode
 def main() -> None:
     # set login credentials from .env file as environment variables
     load_dotenv()
-    host = Hosts.get_host("prod")
+    host = Hosts.get_host("test")
     shortcode = "0848"
     inspect_permissions(host, shortcode)
-    # set_doaps(host, shortcode)
-    # set_oaps(host)
+    set_doaps(
+        host=host, 
+        shortcode=shortcode,
+        scope=Scope.PUBLIC,
+    )
+    set_oaps(
+        host=host,
+        scope=Scope.PUBLIC,
+    )
 
 
 def inspect_permissions(host: str, shortcode: str) -> None:
@@ -36,18 +43,15 @@ def inspect_permissions(host: str, shortcode: str) -> None:
         print()
 
 
-def set_oaps(host: str) -> None:
+def set_oaps(
+    host: str,
+    scope: list[PermissionScope],
+) -> None:
     """
     sets the object access permissions for a list of objects (resources/properties) and each of their values.
     """
     user, pw = get_env(host)
     token = get_token(host, user, pw)
-    # TODO: there should be defined common scopes, that should be useable by `Scopes.public`, `Scopes.private`, etc.
-    new_scope = make_scope(
-        change_rights=[Group.PROJECT_ADMIN, Group.CREATOR],
-        view=[Group.UNKNOWN_USER, Group.KNOWN_USER],
-        # delete=[Group.PROJECT_MEMBER]
-    )
     object_iris = [
         # "http://rdfh.ch/0810/_cyEQqI4T3-d_MIl0IAS2w",
         # "http://rdfh.ch/0810/9eUg68OWR66u26Bffrj0nQ",
@@ -58,24 +62,41 @@ def set_oaps(host: str) -> None:
         # "http://rdfh.ch/0810/UHJZN4OZQ7SKIpAHzeCkQw"
         "http://rdfh.ch/1234/QWh4ZIIiTuSxV0Ov3pc8ig"
     ]
-    update_permissions_for_resources_and_values(object_iris, new_scope, host, token)
+    update_permissions_for_resources_and_values(
+        resource_iris=object_iris, 
+        scope=scope, 
+        host=host, 
+        token=token,
+    )
 
 
-def set_doaps(host: str, shortcode: str) -> None:
+def set_doaps(
+    host: str, 
+    shortcode: str,
+    scope: list[PermissionScope],
+) -> None:
     """
-    sets all DOAPs for a project to a set scope.
+    Applies the given scope to all DOAPs for the given project.
+
+    Args:
+        host: the DSP server where the project is located
+        shortcode: the shortcode of the project
+        scope: one of the standard scopes defined in the Scope class
     """
-    # TODO: probably the scope should be provided as a parameter to this method
     user, pw = get_env(host)
     token = get_token(host, user, pw)
     project_iri = get_project_iri_by_shortcode(shortcode, host)
-    # scope = an object encoding the information which group gets which permissions if this doap gets applied
-    new_scope = make_scope(
-        view=[Group.UNKNOWN_USER, Group.KNOWN_USER],
-        change_rights=[Group.PROJECT_ADMIN],
-        delete=[Group.CREATOR, Group.PROJECT_MEMBER]
-    )
-    update_all_doap_scopes_for_project(project_iri, new_scope, host, token)
+    doaps = get_doaps_for_project(project_iri, host, token)
+    # normally there are 2 doaps: one for project admins, one for project members.
+    # But there might be more groups.
+    for d in doaps:
+        print(d.iri, d.target, d.scope)
+        update_doap_scope(
+            permission_iri=d.iri, 
+            scope=scope, 
+            host=host, 
+            token=token,
+        )
     print("Finished successfully")
 
 
