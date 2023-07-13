@@ -1,11 +1,11 @@
 import json
-from typing import Any, Optional, Sequence
+from typing import Any, Sequence
+from urllib.parse import quote_plus
 
 import requests
 
 from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
-from dsp_permissions_scripts.util import url_encode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
 
@@ -92,7 +92,7 @@ def get_doaps_for_project(
     Returns all DOAPs for the given project.
     """
     headers = {"Authorization": f"Bearer {token}"}
-    project_iri = url_encode(project_iri)
+    project_iri = quote_plus(project_iri, safe="")
     url = f"https://{host}/admin/permissions/doap/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
@@ -110,7 +110,7 @@ def get_permissions_for_project(
     Returns all permissions for the given project.
     """
     headers = {"Authorization": f"Bearer {token}"}
-    project_iri = url_encode(project_iri)
+    project_iri = quote_plus(project_iri, safe="")
     url = f"https://{host}/admin/permissions/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
@@ -144,7 +144,7 @@ def update_doap_scope(
     """
     Updates the scope of the given DOAP.
     """
-    iri = url_encode(permission_iri)
+    iri = quote_plus(permission_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     url = f"https://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
@@ -280,7 +280,7 @@ def __get_resource(
     """
     Requests the resource with the given IRI from the API.
     """
-    iri = url_encode(resource_iri)
+    iri = quote_plus(resource_iri, safe="")
     url = f"https://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
