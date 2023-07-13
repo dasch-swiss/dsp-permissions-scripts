@@ -13,11 +13,11 @@ def get_token(host: str, email: str, pw: str) -> str:
     return token
 
 
-def get_env(host: str) -> tuple[str, str]:
+def get_login_credentials(host: str) -> tuple[str, str]:
     """
-    returns user email and password for a given host.
+    Retrieve user email and password from the environment variables.
+    In case of localhost, return the default email/password for localhost.
     """
-    # TODO: this could definitely be improved, including function naming
     if host.startswith("localhost"):
         user = "root@example.com"
         pw = "test"
@@ -39,6 +39,6 @@ def login(host: str) -> str:
     Returns:
         token: access token
     """
-    user, pw = get_env(host)
+    user, pw = get_login_credentials(host)
     token = get_token(host, user, pw)
     return token

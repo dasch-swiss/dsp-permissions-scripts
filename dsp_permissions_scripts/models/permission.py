@@ -1,9 +1,17 @@
 from pydantic import BaseModel, root_validator, validator
 
+from dsp_permissions_scripts.models.groups import BuiltinGroup
+
 
 class PermissionScope(BaseModel):
     info: str
     name: str
+
+    @validator("info")
+    @classmethod
+    def info_must_represent_group_iri(cls, v: str) -> str:
+        assert v in BuiltinGroup
+        return v
 
     @validator("name")
     @classmethod

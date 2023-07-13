@@ -1,13 +1,12 @@
 
-import re
 from typing import Sequence
 from dotenv import load_dotenv
-from dsp_permissions_scripts.models.groups import Group
+from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import Doap, PermissionScope
-from dsp_permissions_scripts.models.scope import Scope
+from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
     update_permissions_for_resources_and_values,
@@ -26,8 +25,8 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "0848"
-    new_scope = Scope.PUBLIC
-    groups = [Group.PROJECT_ADMIN, Group.PROJECT_MEMBER]
+    new_scope = StandardScope.PUBLIC
+    groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
     print_doaps(
         host=host, 
@@ -92,7 +91,7 @@ def set_oaps(
 
 def set_doaps(
     scope: list[PermissionScope],
-    groups: Sequence[Group],
+    groups: Sequence[BuiltinGroup],
     host: str, 
     shortcode: str,
     token: str,
@@ -125,7 +124,7 @@ def set_doaps(
 
 
 def get_doaps_of_groups(
-    groups: Sequence[Group],
+    groups: Sequence[BuiltinGroup],
     host: str, 
     shortcode: str,
     token: str,

@@ -1,8 +1,8 @@
 from enum import Enum
 
-class Group(Enum):
+class BuiltinGroup(Enum):
     """
-    Helper class to deal with the different DSP user groups.
+    Enumeration of the built in DSP user groups.
     """
     UNKNOWN_USER = "http://www.knora.org/ontology/knora-admin#UnknownUser"
     KNOWN_USER = "http://www.knora.org/ontology/knora-admin#KnownUser"
