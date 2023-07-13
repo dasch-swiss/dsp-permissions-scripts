@@ -1,9 +1,12 @@
 
+import re
+from typing import Sequence
 from dotenv import load_dotenv
+from dsp_permissions_scripts.models.groups import Group
 
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import PermissionScope
+from dsp_permissions_scripts.models.permission import Doap, PermissionScope
 from dsp_permissions_scripts.models.scope import Scope
 from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
@@ -24,6 +27,7 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "0848"
     new_scope = Scope.PUBLIC
+    groups = [Group.PROJECT_ADMIN, Group.PROJECT_MEMBER]
     token = login(host)
     print_doaps(
         host=host, 
@@ -31,9 +35,10 @@ def main() -> None:
         token=token,
     )
     set_doaps(
+        scope=new_scope,
+        groups=groups,
         host=host, 
         shortcode=shortcode,
-        scope=new_scope,
         token=token,
     )
     set_oaps(
@@ -86,24 +91,29 @@ def set_oaps(
 
 
 def set_doaps(
+    scope: list[PermissionScope],
+    groups: Sequence[Group],
     host: str, 
     shortcode: str,
-    scope: list[PermissionScope],
     token: str,
 ) -> None:
     """
-    Applies the given scope to all DOAPs for the given project.
+    Applies the given scope to the DOAPs of the given groups.
 
     Args:
+        scope: one of the standard scopes defined in the Scope class
+        groups: the group IRIs to whose DOAP the scope should be applied
         host: the DSP server where the project is located
         shortcode: the shortcode of the project
-        scope: one of the standard scopes defined in the Scope class
+        token: the access token
     """
-    project_iri = get_project_iri_by_shortcode(shortcode, host)
-    doaps = get_doaps_for_project(project_iri, host, token)
-    # normally there are 2 doaps: one for project admins, one for project members.
-    # But there might be more groups.
-    for d in doaps:
+    applicable_doaps = get_doaps_of_groups(
+        groups=groups,
+        host=host, 
+        shortcode=shortcode,
+        token=token,
+    )
+    for d in applicable_doaps:
         print(d.iri, d.target, d.scope)
         update_doap_scope(
             permission_iri=d.iri, 
@@ -114,7 +124,38 @@ def set_doaps(
     print("Finished successfully")
 
 
+def get_doaps_of_groups(
+    groups: Sequence[Group],
+    host: str, 
+    shortcode: str,
+    token: str,
+) -> list[Doap]:
+    """
+    Retrieves the DOAPs for the given groups.
+
+    Args:
+        groups: the group IRIs to whose DOAP the scope should be applied
+        host: the DSP server where the project is located
+        shortcode: the shortcode of the project
+        token: the access token
+
+    Returns:
+        applicable_doaps: the applicable DOAPs
+    """
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode, 
+        host=host,
+    )
+    all_doaps = get_doaps_for_project(
+        project_iri=project_iri, 
+        host=host, 
+        token=token,
+    )
+    applicable_doaps = [d for d in all_doaps if d.target.group in groups]
+    assert len(applicable_doaps) == len(groups)
+    return applicable_doaps
+
+
 if __name__ == "__main__":
-    # set login credentials from .env file as environment variables
-    load_dotenv()
+    load_dotenv()  # set login credentials from .env file as environment variables
     main()

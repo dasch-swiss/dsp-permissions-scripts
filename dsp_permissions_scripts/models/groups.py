@@ -1,4 +1,6 @@
-class Group:
+from enum import Enum
+
+class Group(Enum):
     """
     Helper class to deal with the different DSP user groups.
     """
