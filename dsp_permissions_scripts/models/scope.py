@@ -23,19 +23,19 @@ class StandardScope:
 
     def _make_scope(
         self,
-        restricted_view: Sequence[str] = (),
-        view: Sequence[str] = (),
-        modify: Sequence[str] = (),
-        delete: Sequence[str] = (),
-        change_rights: Sequence[str] = (),
+        restricted_view: Sequence[str | BuiltinGroup] = (),
+        view: Sequence[str | BuiltinGroup] = (),
+        modify: Sequence[str | BuiltinGroup] = (),
+        delete: Sequence[str | BuiltinGroup] = (),
+        change_rights: Sequence[str | BuiltinGroup] = (),
     ) -> list[PermissionScope]:
         """
         Create scopes by providing group IRIs for different permission levels.
         """
         res = []
-        res.extend([PermissionScope(info=iri, name="RV") for iri in restricted_view])
-        res.extend([PermissionScope(info=iri, name="V") for iri in view])
-        res.extend([PermissionScope(info=iri, name="M") for iri in modify])
-        res.extend([PermissionScope(info=iri, name="D") for iri in delete])
-        res.extend([PermissionScope(info=iri, name="CR") for iri in change_rights])
+        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="RV") for x in restricted_view])
+        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="V") for x in view])
+        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="M") for x in modify])
+        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="D") for x in delete])
+        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="CR") for x in change_rights])
         return res

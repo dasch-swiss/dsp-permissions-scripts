@@ -31,7 +31,7 @@ def __marshal_scope_as_permission_string(scope: list[PermissionScope]) -> str:
     lookup: dict[str, list[str]] = {}
     for s in scope:
         p = lookup.get(s.name, [])
-        p.append(s.info.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:"))
+        p.append(str(s.info).replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:"))
         lookup[s.name] = p
     strs = [f"{k} {','.join(l)}" for k, l in lookup.items()]
     return "|".join(strs)

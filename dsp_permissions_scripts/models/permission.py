@@ -4,13 +4,13 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 
 class PermissionScope(BaseModel):
-    info: str
+    info: str | BuiltinGroup
     name: str
 
     @validator("info")
     @classmethod
-    def info_must_represent_group_iri(cls, v: str) -> str:
-        assert v in BuiltinGroup
+    def info_must_represent_group_iri(cls, v: str | BuiltinGroup) -> str | BuiltinGroup:
+        assert v in [x.value for x in BuiltinGroup]
         return v
 
     @validator("name")

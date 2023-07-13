@@ -24,8 +24,8 @@ def main() -> None:
     3. apply a scope (e.g. "public") to all DOAPs for the given project
     """
     host = Hosts.get_host("test")
-    shortcode = "0848"
-    new_scope = StandardScope.PUBLIC
+    shortcode = "F18E"
+    new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
     print_doaps(
@@ -92,7 +92,7 @@ def set_oaps(
 
 def set_doaps(
     scope: list[PermissionScope],
-    groups: Sequence[BuiltinGroup],
+    groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
     token: str,
@@ -125,7 +125,7 @@ def set_doaps(
 
 
 def get_doaps_of_groups(
-    groups: Sequence[BuiltinGroup],
+    groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
     token: str,
