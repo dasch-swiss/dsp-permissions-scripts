@@ -1,16 +1,16 @@
 
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.authentication import get_env, get_token
+from dsp_permissions_scripts.utils.authentication import get_env, get_token
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import PermissionScope
 from dsp_permissions_scripts.models.scope import Scope
-from dsp_permissions_scripts.permissions import (
+from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
     update_permissions_for_resources_and_values,
     get_doaps_for_project
 )
-from dsp_permissions_scripts.project import get_project_iri_by_shortcode
+from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
 
 def main() -> None:
