@@ -142,7 +142,7 @@ def update_doap_scope(
     scope: list[PermissionScopeElement],
     host: str,
     token: str,
-) -> None:
+) -> Doap:
     """
     Updates the scope of the given DOAP.
     """
@@ -152,9 +152,8 @@ def update_doap_scope(
     payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
-    print("\nNew DOAP:\n=========")
-    print(json.dumps(response.json(), indent=2))
-    print()
+    new_doap = __get_doap(response.json()["default_object_access_permission"])
+    return new_doap
 
 
 def update_permissions_for_resources_and_values(
