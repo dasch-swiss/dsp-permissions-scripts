@@ -66,6 +66,8 @@ def print_doaps(
         host=host,
         token=token,
     )
+    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
         print(d.model_dump_json(indent=2))
         print()
@@ -120,13 +122,16 @@ def set_doaps(
     for d in applicable_doaps:
         print("Old DOAP:\n=========")
         print(d.model_dump_json(indent=2))
-        update_doap_scope(
+        new_doap = update_doap_scope(
             permission_iri=d.iri,
             scope=scope,
             host=host,
             token=token,
         )
-    print("Finished successfully")
+        print("\nNew DOAP:\n=========")
+        print(new_doap.model_dump_json(indent=2))
+        print()
+    print("All DOAPs have been updated.")
 
 
 if __name__ == "__main__":
