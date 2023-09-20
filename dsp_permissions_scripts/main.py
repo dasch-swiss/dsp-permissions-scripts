@@ -66,6 +66,8 @@ def print_doaps(
         host=host,
         token=token,
     )
+    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
         print(d.model_dump_json(indent=2))
         print()
@@ -126,7 +128,7 @@ def set_doaps(
             host=host,
             token=token,
         )
-    print("Finished successfully")
+    print("All DOAPs have been updated.")
 
 
 if __name__ == "__main__":
