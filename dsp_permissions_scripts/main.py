@@ -30,12 +30,12 @@ def main() -> None:
     new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
-    print_doaps(
+    print_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
     )
-    set_doaps(
+    set_doaps_of_groups(
         scope=new_scope,
         groups=groups,
         host=host,
@@ -49,7 +49,7 @@ def main() -> None:
     )
 
 
-def print_doaps(
+def print_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
@@ -94,7 +94,7 @@ def set_oaps(
     )
 
 
-def set_doaps(
+def set_doaps_of_groups(
     scope: list[PermissionScope],
     groups: Sequence[str | BuiltinGroup],
     host: str,
