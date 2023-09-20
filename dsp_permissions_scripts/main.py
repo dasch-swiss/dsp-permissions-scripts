@@ -66,7 +66,7 @@ def print_doaps(
         token=token,
     )
     for d in doaps:
-        print(d.json(indent=2))
+        print(d.model_dump_json(indent=2))
         print()
 
 
@@ -118,7 +118,7 @@ def set_doaps(
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in applicable_doaps:
         print("Old DOAP:\n=========")
-        print(d.json(indent=2))
+        print(d.model_dump_json(indent=2))
         update_doap_scope(
             permission_iri=d.iri,
             scope=scope,

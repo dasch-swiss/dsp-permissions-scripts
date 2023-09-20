@@ -1,4 +1,4 @@
-from pydantic import BaseModel, root_validator, validator
+from pydantic import BaseModel, field_validator, root_validator
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 
@@ -7,13 +7,13 @@ class PermissionScope(BaseModel):
     info: str | BuiltinGroup
     name: str
 
-    @validator("info")
+    @field_validator("info")
     @classmethod
     def info_must_represent_group_iri(cls, v: str | BuiltinGroup) -> str | BuiltinGroup:
         assert v in [x.value for x in BuiltinGroup]
         return v
 
-    @validator("name")
+    @field_validator("name")
     @classmethod
     def name_must_represent_permission(cls, v: str) -> str:
         assert v in {"RV", "V", "M", "D", "CR"}
@@ -26,7 +26,7 @@ class DoapTarget(BaseModel):
     resource_class: str | None
     property: str | None
 
-    @root_validator
+    @root_validator(skip_on_failure=True)  # should be replaced by model_validator: https://docs.pydantic.dev/2.2/migration/#validator-and-root_validator-are-deprecated
     @classmethod
     def assert_correct_combination(cls, values: dict[str, str | None]) -> dict[str, str | None]:
         # asserts that DOAP is only defined for Group or ResourceClass or Property
