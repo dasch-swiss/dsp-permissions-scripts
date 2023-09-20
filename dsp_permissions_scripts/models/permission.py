@@ -3,7 +3,7 @@ from pydantic import BaseModel, root_validator, validator
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 
-class PermissionScope(BaseModel):
+class PermissionScopeElement(BaseModel):
     info: str | BuiltinGroup
     name: str
 
@@ -47,5 +47,5 @@ class Doap(BaseModel):
     """
 
     target: DoapTarget
-    scope: list[PermissionScope]
+    scope: list[PermissionScopeElement]
     iri: str

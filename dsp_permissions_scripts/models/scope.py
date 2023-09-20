@@ -1,7 +1,7 @@
 from typing import Sequence
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.models.permission import PermissionScope
+from dsp_permissions_scripts.models.permission import PermissionScopeElement
 
 
 class StandardScope:
@@ -13,7 +13,7 @@ class StandardScope:
     please add a new class variable and implement it in the __init__ method.
     """
 
-    PUBLIC: list[PermissionScope]
+    PUBLIC: list[PermissionScopeElement]
 
     def __init__(self):
         self.PUBLIC = self._make_scope(
@@ -29,14 +29,15 @@ class StandardScope:
         modify: Sequence[str | BuiltinGroup] = (),
         delete: Sequence[str | BuiltinGroup] = (),
         change_rights: Sequence[str | BuiltinGroup] = (),
-    ) -> list[PermissionScope]:
+    ) -> list[PermissionScopeElement]:
         """
         Create scopes by providing group IRIs for different permission levels.
+        Every parameter represents the groups that get the corresponding permission.
         """
+        perm_codes_to_groups = {"RV": restricted_view, "V": view, "M": modify, "D": delete, "CR": change_rights}
         res = []
-        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="RV") for x in restricted_view])
-        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="V") for x in view])
-        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="M") for x in modify])
-        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="D") for x in delete])
-        res.extend([PermissionScope(info=x if isinstance(x, str) else x.value, name="CR") for x in change_rights])
+        for perm_code, groups in perm_codes_to_groups.items():
+            res.extend(
+                [PermissionScopeElement(info=x if isinstance(x, str) else x.value, name=perm_code) for x in groups]
+            )
         return res
