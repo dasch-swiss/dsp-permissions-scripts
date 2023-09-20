@@ -1,16 +1,17 @@
 from typing import Sequence
-from dotenv import load_dotenv
-from dsp_permissions_scripts.models.groups import BuiltinGroup
 
-from dsp_permissions_scripts.utils.authentication import login
+from dotenv import load_dotenv
+
+from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import PermissionScope
 from dsp_permissions_scripts.models.scope import StandardScope
+from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
+    get_doaps_for_project,
     get_doaps_of_groups,
     update_doap_scope,
     update_permissions_for_resources_and_values,
-    get_doaps_for_project,
 )
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 

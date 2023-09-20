@@ -1,4 +1,5 @@
 from typing import Sequence
+
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.permission import PermissionScope
 
