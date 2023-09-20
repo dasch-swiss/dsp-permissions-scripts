@@ -26,7 +26,7 @@ class DoapTarget(BaseModel):
     resource_class: str | None
     property: str | None
 
-    @root_validator(skip_on_failure=True)  # should be replaced by model_validator: https://docs.pydantic.dev/2.2/migration/#validator-and-root_validator-are-deprecated
+    @root_validator(skip_on_failure=True)
     @classmethod
     def assert_correct_combination(cls, values: dict[str, str | None]) -> dict[str, str | None]:
         # asserts that DOAP is only defined for Group or ResourceClass or Property
