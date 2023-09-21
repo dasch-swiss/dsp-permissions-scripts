@@ -18,7 +18,7 @@ There are 3 permissions systems:
 
 - **AP**: administrative permissions
 - **OAP**: object access permissions
-    - permissions of objects (resources and values)
+    - define permissions of objects (resources and values)
     - OAPs grant rights to certain user groups.
     - The `<permissions>` tags in the XML of DSP-TOOLS define OAPs.
 - **DOAP**: default object access permissions
@@ -32,6 +32,9 @@ There are 3 permissions systems:
 OAPs grant **rights** to certain **user groups**.
 [See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permissions)
 for more information.
+
+OAPs are attached to either a resource or a value (value of a property),
+but not to a property.
 
 #### Rights
 
@@ -70,8 +73,8 @@ There are **built-in groups** and **project specific groups**:
 
 DOAPs are always project-related, but more specifically, they are:
 
-- either group-related: I belong to a group and create a resource, which OAPs does the resource get?
-- or ontology-related:
+- Either group-related: I belong to a group and create a resource, which OAPs does the resource get?
+- Or ontology-related:
     - class-related: resources of some classes are public, while resources of other classes are restricted
     - property-related: some properties are public, while other properties are restricted
     - or a combination of class/property-related
