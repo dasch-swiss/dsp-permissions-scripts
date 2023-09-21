@@ -1,11 +1,14 @@
 from pathlib import Path
-from typing import Literal, Sequence
+from typing import Sequence
 
 from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import PermissionScopeElement
+from dsp_permissions_scripts.models.permission import (
+    DoapTargetType,
+    PermissionScopeElement,
+)
 from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
@@ -56,7 +59,7 @@ def print_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
-    target: Literal["all", "group", "resource_class", "property"] = "all",
+    target: DoapTargetType = DoapTargetType.ALL,
 ) -> None:
     """
     Print the doaps for a project, provided a host and a shortcode.
@@ -77,7 +80,7 @@ def print_doaps_of_project(
         target=target,
     )
     heading = f"Project {shortcode} on server {host} has {len(filtered_doaps)} DOAPs"
-    if target != "all":
+    if target != DoapTargetType.ALL:
         heading += f" which are related to a {target}"
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in filtered_doaps:

@@ -1,5 +1,5 @@
 import json
-from typing import Any, Literal, Sequence
+from typing import Any, Sequence
 from urllib.parse import quote_plus
 
 import requests
@@ -8,6 +8,7 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.permission import (
     Doap,
     DoapTarget,
+    DoapTargetType,
     PermissionScopeElement,
 )
 from dsp_permissions_scripts.models.value import ValueUpdate
@@ -126,17 +127,21 @@ def get_doaps_of_groups(
 
 def filter_doaps_by_target(
     doaps: list[Doap], 
-    target: Literal["all", "group", "resource_class", "property"]
+    target: DoapTargetType,
 ) -> list[Doap]:
     """
     Returns only the DOAPs that are related to either a group, or a resource class, or a property.
     In case of "all", return all DOAPs.
     """
     match target:
-        case "all": filtered_doaps = doaps
-        case "group": filtered_doaps = [d for d in doaps if d.target.group]
-        case "property": filtered_doaps = [d for d in doaps if d.target.property]
-        case "resource_class": filtered_doaps = [d for d in doaps if d.target.resource_class]
+        case DoapTargetType.ALL: 
+            filtered_doaps = doaps
+        case DoapTargetType.GROUP: 
+            filtered_doaps = [d for d in doaps if d.target.group]
+        case DoapTargetType.PROPERTY: 
+            filtered_doaps = [d for d in doaps if d.target.property]
+        case DoapTargetType.RESOURCE_CLASS: 
+            filtered_doaps = [d for d in doaps if d.target.resource_class]
     return filtered_doaps
 
 

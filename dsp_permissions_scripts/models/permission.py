@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Self
 
 from pydantic import BaseModel, field_validator, model_validator
@@ -50,3 +51,10 @@ class Doap(BaseModel):
     target: DoapTarget
     scope: list[PermissionScopeElement]
     iri: str
+
+
+class DoapTargetType(Enum):
+    ALL = "all"
+    GROUP = "group"
+    RESOURCE_CLASS = "resource_class"
+    PROPERTY = "property"
