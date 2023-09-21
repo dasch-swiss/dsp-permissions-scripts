@@ -25,8 +25,8 @@ def main() -> None:
        and each of their values.
     3. apply a scope (e.g. "public") to all DOAPs for the given project
     """
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
+    host = Hosts.get_host("staging")
+    shortcode = "0102"
     new_scope = StandardScope().READ_ONLY_FOR_GROUP_SCENARIO_TANNER
     groups = [BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.CREATOR]
     token = login(host)
