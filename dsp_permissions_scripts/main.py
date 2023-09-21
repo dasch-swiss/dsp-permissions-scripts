@@ -28,8 +28,6 @@ def main() -> None:
     """
     host = Hosts.get_host("staging")
     shortcode = "0102"
-    new_scope = StandardScope().READ_ONLY_FOR_GROUP_SCENARIO_TANNER
-    groups = [BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
     print_doaps_of_project(
         host=host,
@@ -37,17 +35,11 @@ def main() -> None:
         token=token,
     )
     set_doaps_of_groups(
-        scope=new_scope,
-        groups=groups,
+        scope=StandardScope().READ_ONLY_FOR_GROUP_SCENARIO_TANNER,
+        groups=[BuiltinGroup.PROJECT_MEMBER],
         host=host,
         shortcode=shortcode,
         token=token,
-    )
-    set_oaps_of_resources(
-        host=host,
-        scope=new_scope,
-        token=token,
-        resources_filepath="resource_iris.txt",
     )
 
 
