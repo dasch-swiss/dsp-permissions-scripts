@@ -1,5 +1,5 @@
 import json
-from typing import Any, Sequence
+from typing import Any, Literal, Sequence
 from urllib.parse import quote_plus
 
 import requests
@@ -118,6 +118,22 @@ def get_doaps_of_groups(
     applicable_doaps = [d for d in all_doaps if d.target.group in groups_str]
     assert len(applicable_doaps) == len(groups)
     return applicable_doaps
+
+
+def filter_doaps_by_target(
+    doaps: list[Doap], 
+    target: Literal["all", "group", "resource_class", "property"]
+) -> list[Doap]:
+    """
+    Returns only the DOAPs that are related to either a group, or a resource class, or a property.
+    In case of "all", return all DOAPs.
+    """
+    match target:
+        case "all": filtered_doaps = doaps
+        case "group": filtered_doaps = [d for d in doaps if d.target.group]
+        case "property": filtered_doaps = [d for d in doaps if d.target.property]
+        case "resource_class": filtered_doaps = [d for d in doaps if d.target.resource_class]
+    return filtered_doaps
 
 
 def get_permissions_for_project(

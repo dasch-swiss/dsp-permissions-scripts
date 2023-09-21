@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Sequence
+from typing import Literal, Sequence
 
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ from dsp_permissions_scripts.models.permission import PermissionScopeElement
 from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
+    filter_doaps_by_target,
     get_doaps_for_project,
     get_doaps_of_groups,
     update_doap_scope,
@@ -55,9 +56,12 @@ def print_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
+    target: Literal["all", "group", "resource_class", "property"] = "all",
 ) -> None:
     """
     Print the doaps for a project, provided a host and a shortcode.
+    Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
+    By default, all DOAPs are printed, regardless of their target (target=all).
     """
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
@@ -68,9 +72,15 @@ def print_doaps_of_project(
         host=host,
         token=token,
     )
-    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    filtered_doaps = filter_doaps_by_target(
+        doaps=doaps,
+        target=target,
+    )
+    heading = f"Project {shortcode} on server {host} has {len(filtered_doaps)} DOAPs"
+    if target != "all":
+        heading += f" which are related to a {target}"
     print(f"\n{heading}\n{'=' * len(heading)}\n")
-    for d in doaps:
+    for d in filtered_doaps:
         print(d.model_dump_json(indent=2))
         print()
 
