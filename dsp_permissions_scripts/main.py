@@ -86,7 +86,6 @@ def set_oaps(
     and sets the object access permissions
     for all resources and each of their values.
     """
-    # TODO: Is this docstring correct? The called functions are only for resources, not for properties.
     with open(resources_filepath, "r", encoding="utf-8") as f:
         resource_iris = [s.strip("\n") for s in f.readlines()]
     update_permissions_for_resources_and_values(
