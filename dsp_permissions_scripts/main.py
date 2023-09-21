@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import PermissionScope
+from dsp_permissions_scripts.models.permission import PermissionScopeElement
 from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
@@ -75,7 +75,7 @@ def print_doaps(
 
 def set_oaps(
     host: str,
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     token: str,
 ) -> None:
     """
@@ -95,7 +95,7 @@ def set_oaps(
 
 
 def set_doaps(
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
