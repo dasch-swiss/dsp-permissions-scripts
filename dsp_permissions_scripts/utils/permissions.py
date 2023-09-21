@@ -5,7 +5,11 @@ from urllib.parse import quote_plus
 import requests
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScopeElement
+from dsp_permissions_scripts.models.permission import (
+    Doap,
+    DoapTarget,
+    PermissionScopeElement,
+)
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
