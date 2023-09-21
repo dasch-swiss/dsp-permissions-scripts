@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.groups import Group
 from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScopeElement
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
@@ -86,7 +86,7 @@ def get_doaps_for_project(
 
 
 def get_doaps_of_groups(
-    groups: Sequence[str | BuiltinGroup],
+    groups: Sequence[str | Group],
     host: str,
     shortcode: str,
     token: str,
@@ -114,7 +114,7 @@ def get_doaps_of_groups(
     )
     groups_str = []
     for g in groups:
-        groups_str.append(g.value if isinstance(g, BuiltinGroup) else g)
+        groups_str.append(g.value if isinstance(g, Group) else g)
     applicable_doaps = [d for d in all_doaps if d.target.group in groups_str]
     assert len(applicable_doaps) == len(groups)
     return applicable_doaps

@@ -3,7 +3,7 @@ from typing import Sequence
 
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.groups import Group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import PermissionScopeElement
 from dsp_permissions_scripts.models.scope import StandardScope
@@ -29,7 +29,7 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "F18E"
     new_scope = StandardScope().PUBLIC
-    groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
+    groups = [Group.PROJECT_ADMIN, Group.PROJECT_MEMBER]
     token = login(host)
     print_doaps_of_project(
         host=host,
@@ -98,7 +98,7 @@ def set_oaps_of_resources(
 
 def set_doaps_of_groups(
     scope: list[PermissionScopeElement],
-    groups: Sequence[str | BuiltinGroup],
+    groups: Sequence[str | Group],
     host: str,
     shortcode: str,
     token: str,

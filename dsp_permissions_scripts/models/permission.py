@@ -2,17 +2,17 @@ from typing import Self
 
 from pydantic import BaseModel, field_validator, model_validator
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.groups import Group
 
 
 class PermissionScopeElement(BaseModel):
-    info: str | BuiltinGroup
+    info: str | Group
     name: str
 
     @field_validator("info")
     @classmethod
-    def info_must_represent_group_iri(cls, v: str | BuiltinGroup) -> str | BuiltinGroup:
-        assert v in [x.value for x in BuiltinGroup]
+    def info_must_represent_group_iri(cls, v: str | Group) -> str | Group:
+        assert v in [x.value for x in Group]
         return v
 
     @field_validator("name")

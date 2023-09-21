@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.groups import Group
 from dsp_permissions_scripts.models.permission import PermissionScopeElement
 
 
@@ -17,18 +17,18 @@ class StandardScope:
 
     def __init__(self):
         self.PUBLIC = self._make_scope(
-            view=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
-            change_rights=[BuiltinGroup.PROJECT_ADMIN],
-            delete=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
+            view=[Group.UNKNOWN_USER, Group.KNOWN_USER],
+            change_rights=[Group.PROJECT_ADMIN],
+            delete=[Group.CREATOR, Group.PROJECT_MEMBER],
         )
 
     def _make_scope(
         self,
-        restricted_view: Sequence[str | BuiltinGroup] = (),
-        view: Sequence[str | BuiltinGroup] = (),
-        modify: Sequence[str | BuiltinGroup] = (),
-        delete: Sequence[str | BuiltinGroup] = (),
-        change_rights: Sequence[str | BuiltinGroup] = (),
+        restricted_view: Sequence[str | Group] = (),
+        view: Sequence[str | Group] = (),
+        modify: Sequence[str | Group] = (),
+        delete: Sequence[str | Group] = (),
+        change_rights: Sequence[str | Group] = (),
     ) -> list[PermissionScopeElement]:
         """
         Create scopes by providing group IRIs for different permission levels.
