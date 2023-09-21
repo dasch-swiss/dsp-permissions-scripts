@@ -5,28 +5,28 @@ from urllib.parse import quote_plus
 import requests
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScope
+from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScopeElement
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
 
-# TODO: maybe these methods should live on the PermissionScope model?
+# TODO: maybe these methods should live on the PermissionScopeElement model?
 
 
-def __marshal_scope(scope: PermissionScope) -> dict[str, Any]:
+def __marshal_scope(scope_element: PermissionScopeElement) -> dict[str, Any]:
     """
-    Serializes a permission scope to a dict
+    Serializes a permission scope element to a dict
     in the shape that it can be used for JSON requests to /admin/permissions routes.
     """
     return {
-        "additionalInformation": scope.info,
-        "name": scope.name,
+        "additionalInformation": scope_element.info,
+        "name": scope_element.name,
         "permissionCode": None,
     }
 
 
-def __marshal_scope_as_permission_string(scope: list[PermissionScope]) -> str:
+def __marshal_scope_as_permission_string(scope: list[PermissionScopeElement]) -> str:
     """
     Serializes a permission scope to a permissions string as used by /v2 routes.
     """
@@ -39,11 +39,11 @@ def __marshal_scope_as_permission_string(scope: list[PermissionScope]) -> str:
     return "|".join(strs)
 
 
-def __get_scope(scope: dict[str, Any]) -> PermissionScope:
+def __get_scope_element(scope: dict[str, Any]) -> PermissionScopeElement:
     """
-    turns permissions JSON  as returned by /admin/permissions routes into a PermissionScope object.
+    turns permissions JSON  as returned by /admin/permissions routes into a PermissionScopeElement object.
     """
-    return PermissionScope(
+    return PermissionScopeElement(
         info=scope["additionalInformation"],
         name=scope["name"],
     )
@@ -53,7 +53,7 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
     """
     Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
     """
-    scope = [__get_scope(s) for s in permission["hasPermissions"]]
+    scope = [__get_scope_element(s) for s in permission["hasPermissions"]]
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
@@ -139,7 +139,7 @@ def get_permissions_for_project(
 
 def update_doap_scope(
     permission_iri: str,
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     host: str,
     token: str,
 ) -> Doap:
@@ -158,7 +158,7 @@ def update_doap_scope(
 
 def update_permissions_for_resources_and_values(
     resource_iris: list[str],
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     host: str,
     token: str,
 ) -> None:
@@ -171,7 +171,7 @@ def update_permissions_for_resources_and_values(
 
 def update_permissions_for_resource_and_values(
     resource_iri: str,
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     host: str,
     token: str,
 ) -> None:
@@ -195,7 +195,7 @@ def update_permissions_for_resource(
     lmd: str | None,
     type_: str,
     context: dict[str, str],
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     host: str,
     token: str,
 ) -> None:
@@ -222,7 +222,7 @@ def update_permissions_for_value(
     value: ValueUpdate,
     resource_type: str,
     context: dict[str, str],
-    scope: list[PermissionScope],
+    scope: list[PermissionScopeElement],
     host: str,
     token: str,
 ) -> None:
