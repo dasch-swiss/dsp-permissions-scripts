@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Sequence
 
 from dotenv import load_dotenv
@@ -30,26 +31,27 @@ def main() -> None:
     new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
-    print_doaps(
+    print_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
     )
-    set_doaps(
+    set_doaps_of_groups(
         scope=new_scope,
         groups=groups,
         host=host,
         shortcode=shortcode,
         token=token,
     )
-    set_oaps(
+    set_oaps_of_resources(
         host=host,
         scope=new_scope,
         token=token,
+        resources_filepath="resource_iris.txt",
     )
 
 
-def print_doaps(
+def print_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
@@ -73,28 +75,28 @@ def print_doaps(
         print()
 
 
-def set_oaps(
+def set_oaps_of_resources(
     host: str,
     scope: list[PermissionScopeElement],
     token: str,
+    resources_filepath: str | Path,
 ) -> None:
     """
-    Sets the object access permissions
-    for a list of objects (resources/properties) and each of their values.
+    Reads resource IRIs from a txt file,
+    and sets the object access permissions
+    for all resources and each of their values.
     """
-    object_iris = [
-        "http://rdfh.ch/0810/foo",
-        "http://rdfh.ch/0810/bar",
-    ]
+    with open(resources_filepath, "r", encoding="utf-8") as f:
+        resource_iris = [s.strip("\n") for s in f.readlines()]
     update_permissions_for_resources_and_values(
-        resource_iris=object_iris,
+        resource_iris=resource_iris,
         scope=scope,
         host=host,
         token=token,
     )
 
 
-def set_doaps(
+def set_doaps_of_groups(
     scope: list[PermissionScopeElement],
     groups: Sequence[str | BuiltinGroup],
     host: str,
