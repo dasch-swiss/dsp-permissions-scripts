@@ -43,7 +43,7 @@ def main() -> None:
         shortcode=shortcode,
         token=token,
     )
-    set_oaps(
+    set_oaps_of_resources(
         host=host,
         scope=new_scope,
         token=token,
@@ -75,7 +75,7 @@ def print_doaps_of_project(
         print()
 
 
-def set_oaps(
+def set_oaps_of_resources(
     host: str,
     scope: list[PermissionScope],
     token: str,
