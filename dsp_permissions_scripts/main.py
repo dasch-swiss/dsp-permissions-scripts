@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Sequence
 
 from dotenv import load_dotenv
@@ -46,6 +47,7 @@ def main() -> None:
         host=host,
         scope=new_scope,
         token=token,
+        resources_filepath="resource_iris.txt",
     )
 
 
@@ -77,17 +79,18 @@ def set_oaps(
     host: str,
     scope: list[PermissionScope],
     token: str,
+    resources_filepath: str | Path,
 ) -> None:
     """
-    Sets the object access permissions
-    for a list of objects (resources/properties) and each of their values.
+    Reads resource IRIs from a txt file,
+    and sets the object access permissions
+    for all resources and each of their values.
     """
-    object_iris = [
-        "http://rdfh.ch/0810/foo",
-        "http://rdfh.ch/0810/bar",
-    ]
+    # TODO: Is this docstring correct? The called functions are only for resources, not for properties.
+    with open(resources_filepath, "r", encoding="utf-8") as f:
+        resource_iris = [s.strip("\n") for s in f.readlines()]
     update_permissions_for_resources_and_values(
-        resource_iris=object_iris,
+        resource_iris=resource_iris,
         scope=scope,
         host=host,
         token=token,
