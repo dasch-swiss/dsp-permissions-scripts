@@ -14,12 +14,18 @@ class StandardScope:
     """
 
     PUBLIC: list[PermissionScope]
+    READ_ONLY_FOR_GROUP_SCENARIO_TANNER: list[PermissionScope]
 
     def __init__(self):
         self.PUBLIC = self._make_scope(
             view=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
             change_rights=[BuiltinGroup.PROJECT_ADMIN],
             delete=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
+        )
+        self.READ_ONLY_FOR_GROUP_SCENARIO_TANNER = self._make_scope(
+            view=[],
+            change_rights=[],
+            delete=[],
         )
 
     def _make_scope(

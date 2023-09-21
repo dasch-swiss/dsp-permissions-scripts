@@ -27,8 +27,8 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    new_scope = StandardScope().PUBLIC
-    groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
+    new_scope = StandardScope().READ_ONLY_FOR_GROUP_SCENARIO_TANNER
+    groups = [BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.CREATOR]
     token = login(host)
     print_doaps(
         host=host,
