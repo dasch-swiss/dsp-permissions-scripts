@@ -23,9 +23,11 @@ class StandardScope:
             delete=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
         )
         self.READ_ONLY_FOR_GROUP_SCENARIO_TANNER = self._make_scope(
-            view=[],
-            change_rights=[],
-            delete=[],
+            restricted_view=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
+            view=["http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA"],
+            modify=[BuiltinGroup.PROJECT_MEMBER],
+            delete=[BuiltinGroup.CREATOR],
+            change_rights=[BuiltinGroup.PROJECT_ADMIN],
         )
 
     def _make_scope(
