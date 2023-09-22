@@ -27,10 +27,10 @@ def main() -> None:
     """
     Currently, 3 actions are supported:
 
-    1. print the doaps for a project
-    2. set the object access permissions for a list of objects (resources/properties)
-       and each of their values.
+    1. get the doaps of a project
+    2. print the doaps of a project
     3. apply a scope (e.g. "public") to all DOAPs for the given project
+    4. set the object access permissions for a list of resources and each of their values.
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
