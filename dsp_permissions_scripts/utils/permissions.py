@@ -145,7 +145,7 @@ def filter_doaps_by_target(
     return filtered_doaps
 
 
-def print_doaps(
+def print_doaps_of_project(
     doaps: list[Doap],
     host: str,
     shortcode: str,

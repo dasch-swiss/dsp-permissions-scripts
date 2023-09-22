@@ -16,7 +16,7 @@ from dsp_permissions_scripts.utils.permissions import (
     filter_doaps_by_target,
     get_doaps_for_project,
     get_doaps_of_groups,
-    print_doaps,
+    print_doaps_of_project,
     update_doap_scope,
     update_permissions_for_resources_and_values,
 )
@@ -42,7 +42,7 @@ def main() -> None:
         shortcode=shortcode,
         token=token,
     )
-    print_doaps(
+    print_doaps_of_project(
         doaps=doaps,
         host=host,
         shortcode=shortcode,
