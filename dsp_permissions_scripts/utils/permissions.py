@@ -5,7 +5,12 @@ from urllib.parse import quote_plus
 import requests
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.models.permission import Doap, DoapTarget, PermissionScopeElement
+from dsp_permissions_scripts.models.permission import (
+    Doap,
+    DoapTarget,
+    DoapTargetType,
+    PermissionScopeElement,
+)
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
@@ -118,6 +123,41 @@ def get_doaps_of_groups(
     applicable_doaps = [d for d in all_doaps if d.target.group in groups_str]
     assert len(applicable_doaps) == len(groups)
     return applicable_doaps
+
+
+def filter_doaps_by_target(
+    doaps: list[Doap], 
+    target: DoapTargetType,
+) -> list[Doap]:
+    """
+    Returns only the DOAPs that are related to either a group, or a resource class, or a property.
+    In case of "all", return all DOAPs.
+    """
+    match target:
+        case DoapTargetType.ALL: 
+            filtered_doaps = doaps
+        case DoapTargetType.GROUP: 
+            filtered_doaps = [d for d in doaps if d.target.group]
+        case DoapTargetType.PROPERTY: 
+            filtered_doaps = [d for d in doaps if d.target.property]
+        case DoapTargetType.RESOURCE_CLASS: 
+            filtered_doaps = [d for d in doaps if d.target.resource_class]
+    return filtered_doaps
+
+
+def print_doaps_of_project(
+    doaps: list[Doap],
+    host: str,
+    shortcode: str,
+    target: DoapTargetType = DoapTargetType.ALL,
+) -> None:
+    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    if target != DoapTargetType.ALL:
+        heading += f" which are related to a {target}"
+    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    for d in doaps:
+        print(d.model_dump_json(indent=2))
+        print()
 
 
 def get_permissions_for_project(
