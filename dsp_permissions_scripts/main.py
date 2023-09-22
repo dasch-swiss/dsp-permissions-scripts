@@ -27,7 +27,7 @@ def main() -> None:
     Fix the DOAPs of the scenario Tanner.
     Later, fix the OAPs.
     """
-    host = Hosts.get_host("staging")
+    host = Hosts.get_host("stage")
     shortcode = "0102"
     token = login(host)
     fix_doaps(
