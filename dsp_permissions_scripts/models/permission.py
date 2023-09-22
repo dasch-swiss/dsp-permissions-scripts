@@ -10,12 +10,6 @@ class PermissionScopeElement(BaseModel):
     info: str | BuiltinGroup
     name: str
 
-    @field_validator("info")
-    @classmethod
-    def info_must_represent_group_iri(cls, v: str | BuiltinGroup) -> str | BuiltinGroup:
-        assert v in [x.value for x in BuiltinGroup]
-        return v
-
     @field_validator("name")
     @classmethod
     def name_must_represent_permission(cls, v: str) -> str:
