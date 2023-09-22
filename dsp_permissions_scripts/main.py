@@ -10,7 +10,6 @@ from dsp_permissions_scripts.models.permission import (
     DoapTargetType,
     PermissionScopeElement,
 )
-from dsp_permissions_scripts.models.scope import StandardScope
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
     filter_doaps_by_target,
@@ -25,12 +24,8 @@ from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
 def main() -> None:
     """
-    Currently, 3 actions are supported:
-
-    1. print the doaps for a project
-    2. set the object access permissions for a list of objects (resources/properties)
-       and each of their values.
-    3. apply a scope (e.g. "public") to all DOAPs for the given project
+    Fix the DOAPs of the scenario Tanner.
+    Later, fix the OAPs.
     """
     host = Hosts.get_host("staging")
     shortcode = "0102"
