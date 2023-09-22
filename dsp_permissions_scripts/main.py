@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import (
+    Doap,
     DoapTargetType,
     PermissionScopeElement,
 )
@@ -15,6 +16,7 @@ from dsp_permissions_scripts.utils.permissions import (
     filter_doaps_by_target,
     get_doaps_for_project,
     get_doaps_of_groups,
+    print_doaps,
     update_doap_scope,
     update_permissions_for_resources_and_values,
 )
@@ -35,10 +37,11 @@ def main() -> None:
     new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
-    print_doaps_of_project(
+    _ = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
+        print_out=True,
     )
     set_doaps_of_groups(
         scope=new_scope,
@@ -55,16 +58,17 @@ def main() -> None:
     )
 
 
-def print_doaps_of_project(
+def get_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
+    print_out: bool,
     target: DoapTargetType = DoapTargetType.ALL,
-) -> None:
+) -> list[Doap]:
     """
-    Print the doaps for a project, provided a host and a shortcode.
+    Get the doaps for a project, provided a host and a shortcode.
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
-    By default, all DOAPs are printed, regardless of their target (target=all).
+    By default, all DOAPs are returned, regardless of their target (target=all).
     """
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
@@ -79,13 +83,14 @@ def print_doaps_of_project(
         doaps=doaps,
         target=target,
     )
-    heading = f"Project {shortcode} on server {host} has {len(filtered_doaps)} DOAPs"
-    if target != DoapTargetType.ALL:
-        heading += f" which are related to a {target}"
-    print(f"\n{heading}\n{'=' * len(heading)}\n")
-    for d in filtered_doaps:
-        print(d.model_dump_json(indent=2))
-        print()
+    if print_out:
+        print_doaps(
+            doaps=filtered_doaps,
+            host=host,
+            shortcode=shortcode,
+            target=target,
+        )
+    return filtered_doaps
 
 
 def set_oaps_of_resources(
