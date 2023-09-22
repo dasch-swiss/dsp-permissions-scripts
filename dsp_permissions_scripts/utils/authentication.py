@@ -4,7 +4,7 @@ import requests
 
 
 def get_protocol(host: str) -> str:
-    return "http" if host == "localhost" else "https"
+    return "http" if host.startswith("localhost") else "https"
 
 
 def get_token(host: str, email: str, pw: str) -> str:
