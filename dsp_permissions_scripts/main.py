@@ -37,11 +37,15 @@ def main() -> None:
     new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
     token = login(host)
-    _ = get_doaps_of_project(
+    doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
-        print_out=True,
+    )
+    print_doaps(
+        doaps=doaps,
+        host=host,
+        shortcode=shortcode,
     )
     set_doaps_of_groups(
         scope=new_scope,
@@ -62,7 +66,6 @@ def get_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
-    print_out: bool,
     target: DoapTargetType = DoapTargetType.ALL,
 ) -> list[Doap]:
     """
@@ -83,13 +86,6 @@ def get_doaps_of_project(
         doaps=doaps,
         target=target,
     )
-    if print_out:
-        print_doaps(
-            doaps=filtered_doaps,
-            host=host,
-            shortcode=shortcode,
-            target=target,
-        )
     return filtered_doaps
 
 

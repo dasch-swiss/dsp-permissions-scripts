@@ -144,11 +144,12 @@ def filter_doaps_by_target(
             filtered_doaps = [d for d in doaps if d.target.resource_class]
     return filtered_doaps
 
+
 def print_doaps(
     doaps: list[Doap],
     host: str,
     shortcode: str,
-    target: DoapTargetType,
+    target: DoapTargetType = DoapTargetType.ALL,
 ) -> None:
     heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
     if target != DoapTargetType.ALL:
