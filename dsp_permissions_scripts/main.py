@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Sequence
 
 from dotenv import load_dotenv
@@ -124,27 +123,6 @@ def get_doaps_of_project(
         target=target,
     )
     return filtered_doaps
-
-
-def set_oaps_of_resources(
-    host: str,
-    scope: list[PermissionScopeElement],
-    token: str,
-    resources_filepath: str | Path,
-) -> None:
-    """
-    Reads resource IRIs from a txt file,
-    and sets the object access permissions
-    for all resources and each of their values.
-    """
-    with open(resources_filepath, "r", encoding="utf-8") as f:
-        resource_iris = [s.strip("\n") for s in f.readlines()]
-    update_permissions_for_resources_and_values(
-        resource_iris=resource_iris,
-        scope=scope,
-        host=host,
-        token=token,
-    )
 
 
 def set_doaps_of_groups(
