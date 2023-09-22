@@ -145,6 +145,21 @@ def filter_doaps_by_target(
     return filtered_doaps
 
 
+def print_doaps_of_project(
+    doaps: list[Doap],
+    host: str,
+    shortcode: str,
+    target: DoapTargetType = DoapTargetType.ALL,
+) -> None:
+    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    if target != DoapTargetType.ALL:
+        heading += f" which are related to a {target}"
+    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    for d in doaps:
+        print(d.model_dump_json(indent=2))
+        print()
+
+
 def get_permissions_for_project(
     project_iri: str,
     host: str,
