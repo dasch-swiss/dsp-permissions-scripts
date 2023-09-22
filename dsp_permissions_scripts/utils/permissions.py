@@ -12,6 +12,7 @@ from dsp_permissions_scripts.models.permission import (
     PermissionScopeElement,
 )
 from dsp_permissions_scripts.models.value import ValueUpdate
+from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
 KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
@@ -82,7 +83,8 @@ def get_doaps_for_project(
     """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
-    url = f"https://{host}/admin/permissions/doap/{project_iri}"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
@@ -170,7 +172,8 @@ def get_permissions_for_project(
     """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
-    url = f"https://{host}/admin/permissions/{project_iri}"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/admin/permissions/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     permissions: list[dict[str, Any]] = response.json()["permissions"]
@@ -188,7 +191,8 @@ def update_doap_scope(
     """
     iri = quote_plus(permission_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
-    url = f"https://{host}/admin/permissions/{iri}/hasPermissions"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
@@ -250,7 +254,8 @@ def update_permissions_for_resource(
     }
     if lmd:
         payload["knora-api:lastModificationDate"] = lmd
-    url = f"https://{host}/v2/resources"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
@@ -280,7 +285,8 @@ def update_permissions_for_value(
         },
         "@context": context,
     }
-    url = f"https://{host}/v2/values"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     if response.status_code == 400 and response.text:
@@ -331,7 +337,8 @@ def __get_resource(
     Requests the resource with the given IRI from the API.
     """
     iri = quote_plus(resource_iri, safe="")
-    url = f"https://{host}/v2/resources/{iri}"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200

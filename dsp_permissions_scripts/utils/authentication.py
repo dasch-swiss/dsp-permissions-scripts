@@ -3,11 +3,16 @@ import os
 import requests
 
 
+def get_protocol(host: str) -> str:
+    return "http" if host == "localhost" else "https"
+
+
 def get_token(host: str, email: str, pw: str) -> str:
     """
     requests an access token from the API, provided host, email and password.
     """
-    url = f"https://{host}/v2/authentication"
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/authentication"
     response = requests.post(url, json={"email": email, "password": pw}, timeout=5)
     assert response.status_code == 200
     token: str = response.json()["token"]
