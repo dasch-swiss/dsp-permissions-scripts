@@ -8,7 +8,7 @@ class Hosts:
     TEST = "api.test.dasch.swiss"
     DEV = "api.dev.dasch.swiss"
     LS_PROD = "api.ls-prod.admin.ch"
-    STAGING = "api.staging.dasch.swiss"
+    STAGE = "api.stage.dasch.swiss"
 
     @staticmethod
     def get_host(identifier: str) -> str:
