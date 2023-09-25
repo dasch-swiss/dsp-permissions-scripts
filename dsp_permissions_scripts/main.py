@@ -19,7 +19,10 @@ from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
     update_permissions_for_resources_and_values,
 )
-from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
+from dsp_permissions_scripts.utils.project import (
+    get_all_resource_iris_of_project,
+    get_project_iri_by_shortcode,
+)
 
 
 def main() -> None:
@@ -28,6 +31,10 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode,
+        host=host,
+    )
     token = login(host)
     
     new_scope = StandardScope().PUBLIC
@@ -50,8 +57,13 @@ def main() -> None:
         shortcode=shortcode,
         token=token,
     )
+    resource_iris = get_all_resource_iris_of_project(
+        project_iri=project_iri,
+        host=host,
+        token=token,
+    )
     update_permissions_for_resources_and_values(
-        resource_iris=["http://rdfh.ch/0810/foo", "http://rdfh.ch/0810/bar"],
+        resource_iris=resource_iris,
         scope=new_scope,
         host=host,
         token=token,

@@ -1,2 +1,0 @@
-http://rdfh.ch/0810/foo
-http://rdfh.ch/0810/bar
