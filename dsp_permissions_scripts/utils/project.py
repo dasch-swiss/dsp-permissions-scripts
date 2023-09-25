@@ -23,7 +23,7 @@ def get_all_resource_iris_of_project(
     token: str,
 ) -> list[str]:
     all_resource_iris = []
-    resclasses = __get_all_resource_classes_of_project(
+    resclasses = __get_all_resource_class_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
@@ -39,7 +39,7 @@ def get_all_resource_iris_of_project(
     return all_resource_iris
 
 
-def __get_all_resource_classes_of_project(
+def __get_all_resource_class_iris_of_project(
     project_iri: str, 
     host: str,
     token: str,
@@ -107,19 +107,37 @@ def __get_all_resource_iris_of_resclass(
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
     resource_iris = []
     page = 0
-    while True:
-        url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass)}&page={page}"
-        response = requests.get(url, headers=headers, timeout=5)
-        assert response.status_code == 200
-        result = response.json()
-        if "@graph" in result:
-            # result contains several resources: store them, then continue with next page
-            resource_iris.extend([r["@id"] for r in result["@graph"]])
-        elif "@id" in result:
-            # result contains only 1 resource: store it, then stop (there will be no more resources)
-            resource_iris.append(result["@id"])
-            break
-        else:
-            break  # there are no more resources
+    more = True
+    while more:
+        more, iris = __get_next_page(
+            protocol=protocol,
+            host=host,
+            resclass=resclass,
+            page=page,
+            headers=headers,
+        )
+        resource_iris.extend(iris)
         page += 1
     return resource_iris
+
+
+def __get_next_page(
+    protocol: str,
+    host: str,
+    resclass: str,
+    page: int,
+    headers: dict[str, str],
+) -> tuple[bool, list[str]]:
+    url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass)}&page={page}"
+    response = requests.get(url, headers=headers, timeout=5)
+    assert response.status_code == 200
+    result = response.json()
+    if "@graph" in result:
+        # result contains several resources: return them, then continue with next page
+        return True, [r["@id"] for r in result["@graph"]]
+    elif "@id" in result:
+        # result contains only 1 resource: return it, then stop (there will be no more resources)
+        return False, [result["@id"], ]
+    else:
+        # there are no more resources
+        return False, []
