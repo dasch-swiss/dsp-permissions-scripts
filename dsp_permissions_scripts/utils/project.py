@@ -128,6 +128,15 @@ def __get_next_page(
     page: int,
     headers: dict[str, str],
 ) -> tuple[bool, list[str]]:
+    """
+    Get the resource IRIs of a resource class, one page at a time.
+    DSP-API returns results page-wise: 
+    a list of 25 resources if there are 25 resources or more,
+    a list of less than 25 resources if there are less than 25 remaining,
+    1 resource (not packed in a list) if there is only 1 remaining,
+    and an empty response content with status code 200 if there are no resources remaining.
+    This means that the page must be incremented until the response contains 0 or 1 resource.
+    """
     url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass)}&page={page}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
