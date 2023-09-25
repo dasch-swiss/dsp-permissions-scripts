@@ -1,12 +1,7 @@
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import (
-    Doap,
-    DoapTargetType,
-    PermissionScopeElement,
-)
+from dsp_permissions_scripts.models.permission import PermissionScopeElement
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
     get_doaps_of_project,
@@ -24,6 +19,7 @@ def main() -> None:
     Fix the DOAPs of the scenario Tanner.
     Later, fix the OAPs.
     """
+    load_dotenv()  # set login credentials from .env file as environment variables
     host = Hosts.get_host("stage")
     shortcode = "0102"
     token = login(host)
