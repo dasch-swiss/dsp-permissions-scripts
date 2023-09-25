@@ -16,7 +16,6 @@ from dsp_permissions_scripts.utils.permissions import (
     get_doaps_of_groups,
     print_doaps_of_project,
     update_doap_scope,
-    update_permissions_for_resources_and_values,
 )
 from dsp_permissions_scripts.utils.project import (
     get_all_resource_iris_of_project,
