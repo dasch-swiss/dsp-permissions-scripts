@@ -15,8 +15,6 @@ from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
-KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
-
 
 def get_doaps_of_project(
     host: str,
@@ -85,40 +83,13 @@ def set_doaps_of_groups(
     print("All DOAPs have been updated.")
 
 
-# TODO: maybe these methods should live on the PermissionScopeElement model?
-
-def __marshal_scope(scope_element: PermissionScopeElement) -> dict[str, Any]:
-    """
-    Serializes a permission scope element to a dict
-    in the shape that it can be used for JSON requests to /admin/permissions routes.
-    """
-    return {
-        "additionalInformation": scope_element.info,
-        "name": scope_element.name,
-        "permissionCode": None,
-    }
-
-
-def __marshal_scope_as_permission_string(scope: list[PermissionScopeElement]) -> str:
-    """
-    Serializes a permission scope to a permissions string as used by /v2 routes.
-    """
-    lookup: dict[str, list[str]] = {}
-    for s in scope:
-        p = lookup.get(s.name, [])
-        p.append(str(s.info).replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:"))
-        lookup[s.name] = p
-    strs = [f"{k} {','.join(l)}" for k, l in lookup.items()]
-    return "|".join(strs)
-
-
 def __get_scope_element(scope: dict[str, Any]) -> PermissionScopeElement:
     """
     turns permissions JSON  as returned by /admin/permissions routes into a PermissionScopeElement object.
     """
     return PermissionScopeElement(
-        info=scope["additionalInformation"],
-        name=scope["name"],
+        group_iri=scope["additionalInformation"],
+        permission_code=scope["name"],
     )
 
 

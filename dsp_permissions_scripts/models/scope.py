@@ -38,6 +38,6 @@ class StandardScope:
         res = []
         for perm_code, groups in perm_codes_to_groups.items():
             res.extend(
-                [PermissionScopeElement(info=x if isinstance(x, str) else x.value, name=perm_code) for x in groups]
+                [PermissionScopeElement(group_iri=x if isinstance(x, str) else x.value, permission_code=perm_code) for x in groups]
             )
         return res
