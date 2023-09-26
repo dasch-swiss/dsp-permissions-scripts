@@ -17,6 +17,19 @@ class PermissionScopeElement(BaseModel):
         return v
 
 
+class PermissionScope:
+    scope_elements: dict[str, str]
+
+    def __init__(self, scope_elements: dict[str, str] | None, permission_string: str | None) -> None:
+        if bool(scope_elements) == bool(permission_string):
+            raise ValueError("Either scope_elements or permission_string must be set")
+        elif scope_elements:
+            self.scope_elements = scope_elements
+        else:
+            self.scope_elements = self._parse_permission_string(permission_string)
+    
+
+
 class DoapTarget(BaseModel):
     project: str
     group: str | None
