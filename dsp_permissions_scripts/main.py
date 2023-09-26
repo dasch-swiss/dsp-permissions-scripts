@@ -11,7 +11,7 @@ from dsp_permissions_scripts.utils.permissions import (
     update_permissions_for_resources_and_values,
 )
 from dsp_permissions_scripts.utils.project import (
-    get_all_resource_iris_of_project,
+    get_all_resources_of_project,
     get_project_iri_by_shortcode,
 )
 
@@ -42,14 +42,14 @@ def main() -> None:
         host=host,
         shortcode=shortcode,
     )
-    set_doaps_of_groups(
-        scope=new_scope,
-        groups=groups,
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-    resource_iris = get_all_resource_iris_of_project(
+    # set_doaps_of_groups(
+    #     scope=new_scope,
+    #     groups=groups,
+    #     host=host,
+    #     shortcode=shortcode,
+    #     token=token,
+    # )
+    resources = get_all_resources_of_project(
         project_iri=project_iri,
         host=host,
         token=token,

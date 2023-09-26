@@ -112,6 +112,22 @@ def __marshal_scope_as_permission_string(scope: list[PermissionScopeElement]) ->
     return "|".join(strs)
 
 
+def permission_string_as_marshal_scope(perm_string: str) -> list[PermissionScopeElement]:
+    """
+    Deserializes a permissions string as used by /v2 routes to a permission scope.
+    """
+    res = []
+    scopes = perm_string.split("|")
+    for scope in scopes:
+        code, groups_as_str = scope.split(" ")
+        groups = groups_as_str.split(",")
+        groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
+        for group in groups:
+            res.append(PermissionScopeElement(info=group, name=code))
+    return res
+
+
+
 def __get_scope_element(scope: dict[str, Any]) -> PermissionScopeElement:
     """
     turns permissions JSON  as returned by /admin/permissions routes into a PermissionScopeElement object.
