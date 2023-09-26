@@ -112,7 +112,7 @@ def __marshal_scope_as_permission_string(scope: list[PermissionScopeElement]) ->
     return "|".join(strs)
 
 
-def permission_string_as_marshal_scope(perm_string: str) -> list[PermissionScopeElement]:
+def __unmarshal_permission_string_to_scope(perm_string: str) -> list[PermissionScopeElement]:
     """
     Deserializes a permissions string as used by /v2 routes to a permission scope.
     """

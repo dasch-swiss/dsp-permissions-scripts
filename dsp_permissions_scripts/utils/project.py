@@ -4,7 +4,9 @@ import requests
 
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.permissions import permission_string_as_marshal_scope
+from dsp_permissions_scripts.utils.permissions import (
+    __unmarshal_permission_string_to_scope,
+)
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
@@ -107,7 +109,7 @@ def __get_all_resources_of_resclass(
 ) -> list[Oap]:
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
-    resources: list[str] = []
+    resources: list[Oap] = []
     page = 0
     more = True
     while more:
@@ -129,7 +131,7 @@ def __get_next_page(
     resclass: str,
     page: int,
     headers: dict[str, str],
-) -> tuple[bool, list[str]]:
+) -> tuple[bool, list[Oap]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
     DSP-API returns results page-wise: 
@@ -147,12 +149,12 @@ def __get_next_page(
         # result contains several resources: return them, then continue with next page
         oaps = []
         for r in result["@graph"]:
-            scope=permission_string_as_marshal_scope(r["knora-api:hasPermissions"])
+            scope=__unmarshal_permission_string_to_scope(r["knora-api:hasPermissions"])
             oaps.append(Oap(scope=scope, object_iri=r["@id"]))
         return True, oaps
     elif "@id" in result:
         # result contains only 1 resource: return it, then stop (there will be no more resources)
-        scope=permission_string_as_marshal_scope(result["knora-api:hasPermissions"])
+        scope=__unmarshal_permission_string_to_scope(result["knora-api:hasPermissions"])
         return False, [Oap(scope=scope, object_iri=result["@id"]), ]
     else:
         # there are no more resources
