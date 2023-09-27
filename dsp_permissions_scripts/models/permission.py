@@ -17,14 +17,16 @@ class PermissionScopeElement(BaseModel):
         return v
 
 
-class PermissionScope:
+class PermissionScope(BaseModel):
     change_rights: list[str | BuiltinGroup] | None = []
     delete: list[str | BuiltinGroup] | None = []
     modify: list[str | BuiltinGroup] | None = []
     view: list[str | BuiltinGroup] | None = []
     restricted_view: list[str | BuiltinGroup] | None = []
 
-    def __init__(self, permission_string: str) -> None:
+    @classmethod
+    def create_from_string(cls, permission_string: str) -> Self:
+        kwargs = {}
         scopes = permission_string.split("|")
         for scope in scopes:
             perm_letter, groups_as_str = scope.split(" ")
@@ -32,17 +34,18 @@ class PermissionScope:
             groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
             match perm_letter:
                 case "CR":
-                    self.change_rights = list(groups)
+                    kwargs["change_rights"] = groups
                 case "D":
-                    self.delete = list(groups)
+                    kwargs["delete"] = groups
                 case "M":
-                    self.modify = list(groups)
+                    kwargs["modify"] = groups
                 case "V":
-                    self.view = list(groups)
+                    kwargs["view"] = groups
                 case "RV":
-                    self.restricted_view = list(groups)
+                    kwargs["restricted_view"] = groups
                 case _:
                     raise ValueError(f"Invalid permission letter {perm_letter}")
+        return cls(**kwargs)
 
     def as_admin_route_object(self) -> list[dict[str, Any]]:
         """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""

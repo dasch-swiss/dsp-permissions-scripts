@@ -43,12 +43,12 @@ class TestPermissionScope(unittest.TestCase):
 
     def test_perm_string_of_scope_equals_to_orig_string(self) -> None:
         for perm_string in self.perm_strings_to_admin_route_object:
-            self.assertEqual(PermissionScope(perm_string).as_permission_string(), perm_string)
+            self.assertEqual(PermissionScope.create_from_string(perm_string).as_permission_string(), perm_string)
 
     def test_admin_route_object_of_scope_equals_to_orig_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
             self.assertEqual(
-                PermissionScope(perm_string).as_admin_route_object(), 
+                PermissionScope.create_from_string(perm_string).as_admin_route_object(), 
                 admin_route_object,
                 msg=f"Failed with permission string '{perm_string}'"
             )
