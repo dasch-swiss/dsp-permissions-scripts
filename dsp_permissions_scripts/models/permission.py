@@ -18,11 +18,11 @@ class PermissionScopeElement(BaseModel):
 
 
 class PermissionScope:
-    restricted_view: list[str | BuiltinGroup] | None = []
-    view: list[str | BuiltinGroup] | None = []
-    modify: list[str | BuiltinGroup] | None = []
-    delete: list[str | BuiltinGroup] | None = []
     change_rights: list[str | BuiltinGroup] | None = []
+    delete: list[str | BuiltinGroup] | None = []
+    modify: list[str | BuiltinGroup] | None = []
+    view: list[str | BuiltinGroup] | None = []
+    restricted_view: list[str | BuiltinGroup] | None = []
 
     def __init__(self, permission_string: str) -> None:
         scopes = permission_string.split("|")
