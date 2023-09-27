@@ -1,20 +1,9 @@
 from enum import Enum
 from typing import Any, Self
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, model_validator
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-
-
-class PermissionScopeElement(BaseModel):
-    group_iri: str | BuiltinGroup
-    permission_code: str
-
-    @field_validator("permission_code")
-    @classmethod
-    def name_must_represent_permission(cls, v: str) -> str:
-        assert v in {"RV", "V", "M", "D", "CR"}
-        return v
 
 
 class PermissionScopeFields(Enum):
