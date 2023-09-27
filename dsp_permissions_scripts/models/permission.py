@@ -31,16 +31,16 @@ class PermissionScope:
             groups = groups_as_str.split(",")
             groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
             match perm_letter:
-                case "RV":
-                    self.restricted_view = list(groups)
-                case "V":
-                    self.view = list(groups)
-                case "M":
-                    self.modify = list(groups)
-                case "D":
-                    self.delete = list(groups)
                 case "CR":
                     self.change_rights = list(groups)
+                case "D":
+                    self.delete = list(groups)
+                case "M":
+                    self.modify = list(groups)
+                case "V":
+                    self.view = list(groups)
+                case "RV":
+                    self.restricted_view = list(groups)
                 case _:
                     raise ValueError(f"Invalid permission letter {perm_letter}")
 
@@ -48,16 +48,20 @@ class PermissionScope:
         """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
         scope_elements = []
         for letter, groups in [
-            ("RV", self.restricted_view), 
-            ("V", self.view), 
-            ("M", self.modify), 
+            ("CR", self.change_rights),
             ("D", self.delete), 
-            ("CR", self.change_rights)
+            ("M", self.modify), 
+            ("V", self.view), 
+            ("RV", self.restricted_view), 
         ]:
             if groups:
+                groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
+                groups_as_str = [
+                    g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
+                ]
                 scope_elements.append(
                     {
-                        "additionalInformation": groups,
+                        "additionalInformation": groups_as_str,
                         "name": letter,
                         "permissionCode": None,
                     }
@@ -68,11 +72,11 @@ class PermissionScope:
         """Serializes a permission scope to a permissions string as used by /v2 routes."""
         as_dict = {}
         for letter, groups in [
-            ("RV", self.restricted_view), 
-            ("V", self.view), 
-            ("M", self.modify), 
+            ("CR", self.change_rights),
             ("D", self.delete), 
-            ("CR", self.change_rights)
+            ("M", self.modify), 
+            ("V", self.view), 
+            ("RV", self.restricted_view), 
         ]:
             if groups:
                 groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
