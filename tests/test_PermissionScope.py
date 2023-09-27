@@ -48,6 +48,14 @@ class TestPermissionScope(unittest.TestCase):
     def test_admin_route_object_of_scope_equals_to_orig_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
             self.assertEqual(
+                PermissionScope.create_from_admin_route_object(admin_route_object).as_admin_route_object(), 
+                admin_route_object,
+                msg=f"Failed with admin group object of permission string '{perm_string}'"
+            )
+
+    def test_admin_route_object_of_scope_equals_to_expected_object(self) -> None:
+        for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
+            self.assertEqual(
                 PermissionScope.create_from_string(perm_string).as_admin_route_object(), 
                 admin_route_object,
                 msg=f"Failed with permission string '{perm_string}'"

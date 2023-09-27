@@ -17,6 +17,14 @@ class PermissionScopeElement(BaseModel):
         return v
 
 
+class PermissionScopeFields(Enum):
+    CR = "change_rights"
+    D = "delete"
+    M = "modify"
+    V = "view"
+    RV = "restricted_view"
+
+
 class PermissionScope(BaseModel):
     change_rights: list[str | BuiltinGroup] | None = []
     delete: list[str | BuiltinGroup] | None = []
@@ -45,6 +53,18 @@ class PermissionScope(BaseModel):
                     kwargs["restricted_view"] = groups
                 case _:
                     raise ValueError(f"Invalid permission letter {perm_letter}")
+        return cls(**kwargs)
+    
+    @classmethod
+    def create_from_admin_route_object(cls, admin_route_object: list[dict[str, Any]]) -> Self:
+        kwargs = {}
+        for obj in admin_route_object:
+            attr_name = PermissionScopeFields[obj["name"]].value
+            groups_full = obj["additionalInformation"]
+            groups = [
+                g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_full
+            ]
+            kwargs[attr_name] = groups
         return cls(**kwargs)
 
     def as_admin_route_object(self) -> list[dict[str, Any]]:
