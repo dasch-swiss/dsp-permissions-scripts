@@ -117,7 +117,7 @@ class Doap(BaseModel):
     """
 
     target: DoapTarget
-    scope: list[PermissionScopeElement]
+    scope: PermissionScope
     iri: str
 
 

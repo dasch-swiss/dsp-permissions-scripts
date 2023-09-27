@@ -9,7 +9,7 @@ from dsp_permissions_scripts.models.permission import (
     Doap,
     DoapTarget,
     DoapTargetType,
-    PermissionScopeElement,
+    PermissionScope,
 )
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.authentication import get_protocol
@@ -44,7 +44,7 @@ def get_doaps_of_project(
 
 
 def set_doaps_of_groups(
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
@@ -83,21 +83,11 @@ def set_doaps_of_groups(
     print("All DOAPs have been updated.")
 
 
-def __get_scope_element(scope: dict[str, Any]) -> PermissionScopeElement:
-    """
-    turns permissions JSON  as returned by /admin/permissions routes into a PermissionScopeElement object.
-    """
-    return PermissionScopeElement(
-        group_iri=scope["additionalInformation"],
-        permission_code=scope["name"],
-    )
-
-
 def __get_doap(permission: dict[str, Any]) -> Doap:
     """
     Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
     """
-    scope = [__get_scope_element(s) for s in permission["hasPermissions"]]
+    scope = PermissionScope.create_from_admin_route_object(permission["hasPermissions"])
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
@@ -220,7 +210,7 @@ def get_permissions_for_project(
 
 def update_doap_scope(
     permission_iri: str,
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> Doap:
@@ -231,7 +221,7 @@ def update_doap_scope(
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
-    payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
+    payload = {"hasPermissions": scope.as_admin_route_object()}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
     new_doap = __get_doap(response.json()["default_object_access_permission"])
@@ -240,7 +230,7 @@ def update_doap_scope(
 
 def update_permissions_for_resources_and_values(
     resource_iris: list[str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -253,7 +243,7 @@ def update_permissions_for_resources_and_values(
 
 def update_permissions_for_resource_and_values(
     resource_iri: str,
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -277,7 +267,7 @@ def update_permissions_for_resource(
     lmd: str | None,
     type_: str,
     context: dict[str, str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -287,7 +277,7 @@ def update_permissions_for_resource(
     payload = {
         "@id": resource_iri,
         "@type": type_,
-        "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
+        "knora-api:hasPermissions": scope.as_permission_string(),
         "@context": context,
     }
     if lmd:
@@ -305,7 +295,7 @@ def update_permissions_for_value(
     value: ValueUpdate,
     resource_type: str,
     context: dict[str, str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -319,7 +309,7 @@ def update_permissions_for_value(
         value.property: {
             "@id": value.value_iri,
             "@type": value.value_type,
-            "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
+            "knora-api:hasPermissions": scope.as_permission_string(),
         },
         "@context": context,
     }
