@@ -38,21 +38,10 @@ class PermissionScope(BaseModel):
         scopes = permission_string.split("|")
         for scope in scopes:
             perm_letter, groups_as_str = scope.split(" ")
+            attr_name = PermissionScopeFields[perm_letter].value
             groups = groups_as_str.split(",")
             groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
-            match perm_letter:
-                case "CR":
-                    kwargs["change_rights"] = groups
-                case "D":
-                    kwargs["delete"] = groups
-                case "M":
-                    kwargs["modify"] = groups
-                case "V":
-                    kwargs["view"] = groups
-                case "RV":
-                    kwargs["restricted_view"] = groups
-                case _:
-                    raise ValueError(f"Invalid permission letter {perm_letter}")
+            kwargs[attr_name] = groups
         return cls(**kwargs)
     
     @classmethod
@@ -70,13 +59,9 @@ class PermissionScope(BaseModel):
     def as_admin_route_object(self) -> list[dict[str, Any]]:
         """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
         scope_elements = []
-        for letter, groups in [
-            ("CR", self.change_rights),
-            ("D", self.delete), 
-            ("M", self.modify), 
-            ("V", self.view), 
-            ("RV", self.restricted_view), 
-        ]:
+        for f in PermissionScopeFields:
+            letter = f.name
+            groups = getattr(self, f.value)
             if groups:
                 groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
                 groups_as_str = [
@@ -94,13 +79,9 @@ class PermissionScope(BaseModel):
     def as_permission_string(self) -> str:
         """Serializes a permission scope to a permissions string as used by /v2 routes."""
         as_dict = {}
-        for letter, groups in [
-            ("CR", self.change_rights),
-            ("D", self.delete), 
-            ("M", self.modify), 
-            ("V", self.view), 
-            ("RV", self.restricted_view), 
-        ]:
+        for f in PermissionScopeFields:
+            letter = f.name
+            groups = getattr(self, f.value)
             if groups:
                 groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
                 as_dict[letter] = [
