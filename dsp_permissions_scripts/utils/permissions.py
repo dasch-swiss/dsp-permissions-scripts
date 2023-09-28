@@ -186,7 +186,7 @@ def print_doaps_of_project(
         heading += f" which are related to a {target}"
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
-        print(d.model_dump_json(indent=2))
+        print(d.model_dump_json(indent=2, exclude_none=True))
         print()
 
 

@@ -15,11 +15,11 @@ class PermissionScopeFields(Enum):
 
 
 class PermissionScope(BaseModel):
-    change_rights: list[str | BuiltinGroup] | None = []
-    delete: list[str | BuiltinGroup] | None = []
-    modify: list[str | BuiltinGroup] | None = []
-    view: list[str | BuiltinGroup] | None = []
-    restricted_view: list[str | BuiltinGroup] | None = []
+    change_rights: list[str | BuiltinGroup] | None = None
+    delete: list[str | BuiltinGroup] | None = None
+    modify: list[str | BuiltinGroup] | None = None
+    view: list[str | BuiltinGroup] | None = None
+    restricted_view: list[str | BuiltinGroup] | None = None
 
     @classmethod
     def create_from_string(cls, permission_string: str) -> Self:
