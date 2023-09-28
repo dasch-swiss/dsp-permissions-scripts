@@ -23,7 +23,7 @@ class PermissionScope(BaseModel):
 
     @classmethod
     def create_from_string(cls, permission_string: str) -> Self:
-        kwargs = {}
+        kwargs: dict[str, list[str]] = {}
         scopes = permission_string.split("|")
         for scope in scopes:
             perm_letter, groups_as_str = scope.split(" ")
@@ -31,11 +31,11 @@ class PermissionScope(BaseModel):
             groups = groups_as_str.split(",")
             groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
             kwargs[attr_name] = groups
-        return cls(**kwargs)
+        return cls(**kwargs)  # type: ignore[arg-type]
     
     @classmethod
     def create_from_admin_route_object(cls, admin_route_object: list[dict[str, Any]]) -> Self:
-        kwargs = {}
+        kwargs: dict[str, list[str]] = {}
         for obj in admin_route_object:
             attr_name = PermissionScopeFields[obj["name"]].value
             group: str = obj["additionalInformation"]
@@ -44,7 +44,7 @@ class PermissionScope(BaseModel):
                 kwargs[attr_name].append(group)
             else:
                 kwargs[attr_name] = [group]
-        return cls(**kwargs)
+        return cls(**kwargs)  # type: ignore[arg-type]
 
     def as_admin_route_object(self) -> list[dict[str, str | None]]:
         """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
