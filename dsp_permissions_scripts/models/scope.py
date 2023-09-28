@@ -1,24 +1,14 @@
-from enum import Enum
-
 from pydantic import BaseModel
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 
-class PermissionScopeFields(Enum):
-    CR = "change_rights"
-    D = "delete"
-    M = "modify"
-    V = "view"
-    RV = "restricted_view"
-
-
 class PermissionScope(BaseModel):
-    change_rights: list[str | BuiltinGroup] | None = None
-    delete: list[str | BuiltinGroup] | None = None
-    modify: list[str | BuiltinGroup] | None = None
-    view: list[str | BuiltinGroup] | None = None
-    restricted_view: list[str | BuiltinGroup] | None = None
+    CR: list[str | BuiltinGroup] | None = None
+    D: list[str | BuiltinGroup] | None = None
+    M: list[str | BuiltinGroup] | None = None
+    V: list[str | BuiltinGroup] | None = None
+    RV: list[str | BuiltinGroup] | None = None
 
 
 class StandardScope:
@@ -34,7 +24,7 @@ class StandardScope:
 
     def __init__(self):
         self.PUBLIC = PermissionScope(
-            change_rights=[BuiltinGroup.PROJECT_ADMIN],
-            delete=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
-            view=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
+            CR=[BuiltinGroup.PROJECT_ADMIN],
+            D=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
+            V=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
         )
