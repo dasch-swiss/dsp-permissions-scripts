@@ -38,16 +38,17 @@ class PermissionScope(BaseModel):
         kwargs = {}
         for obj in admin_route_object:
             attr_name = PermissionScopeFields[obj["name"]].value
-            groups_full = obj["additionalInformation"]
-            groups = [
-                g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_full
-            ]
-            kwargs[attr_name] = groups
+            group: str = obj["additionalInformation"]
+            group = group.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:")
+            if attr_name in kwargs:
+                kwargs[attr_name].append(group)
+            else:
+                kwargs[attr_name] = [group]
         return cls(**kwargs)
 
-    def as_admin_route_object(self) -> list[dict[str, Any]]:
+    def as_admin_route_object(self) -> list[dict[str, str | None]]:
         """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
-        scope_elements = []
+        scope_elements: list[dict[str, str | None]] = []
         for f in PermissionScopeFields:
             letter = f.name
             groups = getattr(self, f.value)
@@ -56,11 +57,12 @@ class PermissionScope(BaseModel):
                 groups_as_str = [
                     g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
                 ]
-                scope_elements.append(
-                    {
-                        "additionalInformation": groups_as_str,
-                        "name": letter,
-                        "permissionCode": None,
+                for group in groups_as_str:
+                    scope_elements.append(
+                        {
+                            "additionalInformation": group,
+                            "name": letter,
+                            "permissionCode": None,
                     }
                 )
         return scope_elements

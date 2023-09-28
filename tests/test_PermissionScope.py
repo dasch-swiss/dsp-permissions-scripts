@@ -20,22 +20,25 @@ class TestPermissionScope(unittest.TestCase):
             ),
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[0]] = [
-            {"name": "CR", "additionalInformation": ["knora-admin:SystemUser"]},
-            {"name": "V", "additionalInformation": ["knora-admin:CustomGroup"]},
+            {"name": "CR", "additionalInformation": "knora-admin:SystemUser"},
+            {"name": "V", "additionalInformation": "knora-admin:CustomGroup"},
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[1]] = [
-            {"name": "D", "additionalInformation": ["knora-admin:ProjectAdmin"]},
-            {"name": "RV", "additionalInformation": ["knora-admin:ProjectMember"]},
+            {"name": "D", "additionalInformation": "knora-admin:ProjectAdmin"},
+            {"name": "RV", "additionalInformation": "knora-admin:ProjectMember"},
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[2]] = [
-            {"name": "M", "additionalInformation": ["knora-admin:ProjectAdmin"]},
-            {"name": "V", "additionalInformation": ["knora-admin:Creator", "knora-admin:KnownUser"]},
-            {"name": "RV", "additionalInformation": ["knora-admin:UnknownUser"]},
+            {"name": "M", "additionalInformation": "knora-admin:ProjectAdmin"},
+            {"name": "V", "additionalInformation": "knora-admin:Creator"}, 
+            {"name": "V", "additionalInformation":"knora-admin:KnownUser"},
+            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[3]] = [
-            {"name": "CR", "additionalInformation": ["knora-admin:SystemAdmin", "knora-admin:ProjectAdmin"]},
-            {"name": "D", "additionalInformation": ["knora-admin:Creator"]},
-            {"name": "RV", "additionalInformation": ["knora-admin:KnownUser", "knora-admin:UnknownUser"]},
+            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin"}, 
+            {"name": "CR", "additionalInformation": "knora-admin:ProjectAdmin"},
+            {"name": "D", "additionalInformation": "knora-admin:Creator"},
+            {"name": "RV", "additionalInformation": "knora-admin:KnownUser"}, 
+            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
         ]
         for _, admin_route_object in cls.perm_strings_to_admin_route_object.items():
             for elem in admin_route_object:
@@ -45,7 +48,7 @@ class TestPermissionScope(unittest.TestCase):
         for perm_string in self.perm_strings_to_admin_route_object:
             self.assertEqual(PermissionScope.create_from_string(perm_string).as_permission_string(), perm_string)
 
-    def test_admin_route_object_of_scope_equals_to_orig_object(self) -> None:
+    def test_as_admin_route_object_equals_to_orig_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
             self.assertEqual(
                 PermissionScope.create_from_admin_route_object(admin_route_object).as_admin_route_object(), 
@@ -53,7 +56,7 @@ class TestPermissionScope(unittest.TestCase):
                 msg=f"Failed with admin group object of permission string '{perm_string}'"
             )
 
-    def test_admin_route_object_of_scope_equals_to_expected_object(self) -> None:
+    def test_as_admin_route_object_equals_to_expected_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
             self.assertEqual(
                 PermissionScope.create_from_string(perm_string).as_admin_route_object(), 
