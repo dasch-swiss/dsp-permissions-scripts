@@ -161,7 +161,7 @@ def get_doaps_of_groups(
 
 
 def filter_doaps_by_target(
-    doaps: list[Doap], 
+    doaps: list[Doap],
     target: DoapTargetType,
 ) -> list[Doap]:
     """
@@ -169,13 +169,13 @@ def filter_doaps_by_target(
     In case of "all", return all DOAPs.
     """
     match target:
-        case DoapTargetType.ALL: 
+        case DoapTargetType.ALL:
             filtered_doaps = doaps
-        case DoapTargetType.GROUP: 
+        case DoapTargetType.GROUP:
             filtered_doaps = [d for d in doaps if d.target.group]
-        case DoapTargetType.PROPERTY: 
+        case DoapTargetType.PROPERTY:
             filtered_doaps = [d for d in doaps if d.target.property]
-        case DoapTargetType.RESOURCE_CLASS: 
+        case DoapTargetType.RESOURCE_CLASS:
             filtered_doaps = [d for d in doaps if d.target.resource_class]
     return filtered_doaps
 

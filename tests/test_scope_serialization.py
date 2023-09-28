@@ -34,15 +34,15 @@ class TestScopeSerialization(unittest.TestCase):
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[2]] = [
             {"name": "M", "additionalInformation": "knora-admin:ProjectAdmin"},
-            {"name": "V", "additionalInformation": "knora-admin:Creator"}, 
-            {"name": "V", "additionalInformation":"knora-admin:KnownUser"},
+            {"name": "V", "additionalInformation": "knora-admin:Creator"},
+            {"name": "V", "additionalInformation": "knora-admin:KnownUser"},
             {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
         ]
         cls.perm_strings_to_admin_route_object[perm_strings[3]] = [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin"}, 
+            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin"},
             {"name": "CR", "additionalInformation": "knora-admin:ProjectAdmin"},
             {"name": "D", "additionalInformation": "knora-admin:Creator"},
-            {"name": "RV", "additionalInformation": "knora-admin:KnownUser"}, 
+            {"name": "RV", "additionalInformation": "knora-admin:KnownUser"},
             {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
         ]
         for _, admin_route_object in cls.perm_strings_to_admin_route_object.items():
@@ -60,9 +60,9 @@ class TestScopeSerialization(unittest.TestCase):
             scope = create_scope_from_admin_route_object(admin_route_object)
             admin_route_object_new = create_admin_route_object_from_scope(scope)
             self.assertEqual(
-                admin_route_object, 
+                admin_route_object,
                 admin_route_object_new,
-                msg=f"Failed with admin group object of permission string '{perm_string}'"
+                msg=f"Failed with admin group object of permission string '{perm_string}'",
             )
 
     def test_as_admin_route_object_equals_to_expected_object(self) -> None:
@@ -71,9 +71,10 @@ class TestScopeSerialization(unittest.TestCase):
             admin_route_object_new = create_admin_route_object_from_scope(scope)
             self.assertEqual(
                 admin_route_object, 
-                admin_route_object_new,
-                msg=f"Failed with permission string '{perm_string}'"
+                admin_route_object_new, 
+                msg=f"Failed with permission string '{perm_string}'",
             )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

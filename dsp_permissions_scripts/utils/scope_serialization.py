@@ -28,7 +28,6 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
     return PermissionScope(**kwargs)  # type: ignore[arg-type]
 
 
-    
 def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]]) -> PermissionScope:
     kwargs: dict[str, list[str]] = {}
     for obj in admin_route_object:
@@ -57,6 +56,6 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
                         "additionalInformation": group,
                         "name": perm_letter,
                         "permissionCode": None,
-                }
-            )
+                    }
+                )
     return scope_elements
