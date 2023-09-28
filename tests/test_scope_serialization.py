@@ -1,6 +1,7 @@
 import unittest
-from typing import Any
 
+from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
     create_scope_from_admin_route_object,
@@ -10,69 +11,85 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 
 
 class TestScopeSerialization(unittest.TestCase):
-    perm_strings_to_admin_route_object: dict[str, list[dict[str, Any]]] = {}
+    perm_strings = [
+        "CR knora-admin:SystemUser|V knora-admin:CustomGroup",
+        "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
+        "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
+        "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
+    ]
+    admin_route_objects = [
+        [
+            {"name": "CR", "additionalInformation": "knora-admin:SystemUser", "permissionCode": None},
+            {"name": "V", "additionalInformation": "knora-admin:CustomGroup", "permissionCode": None},
+        ],
+        [
+            {"name": "D", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
+            {"name": "RV", "additionalInformation": "knora-admin:ProjectMember", "permissionCode": None},
+        ],
+        [
+            {"name": "M", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
+            {"name": "V", "additionalInformation": "knora-admin:Creator", "permissionCode": None},
+            {"name": "V", "additionalInformation": "knora-admin:KnownUser", "permissionCode": None},
+            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser", "permissionCode": None},
+        ],
+        [
+            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin", "permissionCode": None},
+            {"name": "CR", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
+            {"name": "D", "additionalInformation": "knora-admin:Creator", "permissionCode": None},
+            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser", "permissionCode": None},
+        ],
+    ]
+    scopes = [
+        PermissionScope(
+            CR=[BuiltinGroup.SYSTEM_USER], 
+            V=["http://www.knora.org/ontology/knora-admin#CustomGroup"]
+        ),
+        PermissionScope(
+            D=[BuiltinGroup.PROJECT_ADMIN], 
+            RV=[BuiltinGroup.PROJECT_MEMBER]
+        ),
+        PermissionScope(
+            M=[BuiltinGroup.PROJECT_ADMIN], 
+            V=[BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER], 
+            RV=[BuiltinGroup.UNKNOWN_USER]
+        ),
+        PermissionScope(
+            CR=[BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN], 
+            D=[BuiltinGroup.CREATOR], 
+            RV=[BuiltinGroup.UNKNOWN_USER]
+        ),
+    ]
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        """Is executed once before the methods of this class are run"""
-        perm_strings = [
-            "CR knora-admin:SystemUser|V knora-admin:CustomGroup",
-            "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
-            "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
-            (
-                "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|"
-                "RV knora-admin:KnownUser,knora-admin:UnknownUser"
-            ),
-        ]
-        cls.perm_strings_to_admin_route_object[perm_strings[0]] = [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemUser"},
-            {"name": "V", "additionalInformation": "knora-admin:CustomGroup"},
-        ]
-        cls.perm_strings_to_admin_route_object[perm_strings[1]] = [
-            {"name": "D", "additionalInformation": "knora-admin:ProjectAdmin"},
-            {"name": "RV", "additionalInformation": "knora-admin:ProjectMember"},
-        ]
-        cls.perm_strings_to_admin_route_object[perm_strings[2]] = [
-            {"name": "M", "additionalInformation": "knora-admin:ProjectAdmin"},
-            {"name": "V", "additionalInformation": "knora-admin:Creator"},
-            {"name": "V", "additionalInformation": "knora-admin:KnownUser"},
-            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
-        ]
-        cls.perm_strings_to_admin_route_object[perm_strings[3]] = [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin"},
-            {"name": "CR", "additionalInformation": "knora-admin:ProjectAdmin"},
-            {"name": "D", "additionalInformation": "knora-admin:Creator"},
-            {"name": "RV", "additionalInformation": "knora-admin:KnownUser"},
-            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser"},
-        ]
-        for _, admin_route_object in cls.perm_strings_to_admin_route_object.items():
-            for elem in admin_route_object:
-                elem["permissionCode"] = None
-
-    def test_perm_string_of_scope_equals_to_orig_string(self) -> None:
-        for perm_string in self.perm_strings_to_admin_route_object:
-            scope = create_scope_from_string(perm_string)
-            perm_string_new = create_string_from_scope(scope)
-            self.assertEqual(perm_string, perm_string_new)
-
-    def test_as_admin_route_object_equals_to_orig_object(self) -> None:
-        for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
-            scope = create_scope_from_admin_route_object(admin_route_object)
-            admin_route_object_new = create_admin_route_object_from_scope(scope)
+    def test_create_scope_from_string(self) -> None:
+        for perm_string, scope in zip(self.perm_strings, self.scopes):
             self.assertEqual(
-                admin_route_object,
-                admin_route_object_new,
-                msg=f"Failed with admin group object of permission string '{perm_string}'",
+                create_scope_from_string(perm_string).model_dump_json(),
+                scope.model_dump_json(),
+                msg=f"Failed with permission string '{perm_string}'",
+            )
+    
+    def test_create_scope_from_admin_route_object(self) -> None:
+        for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
+            self.assertEqual(
+                create_scope_from_admin_route_object(admin_route_object).model_dump_json(),
+                scope.model_dump_json(),
+                msg=f"Failed with admin group object no. {index}",
             )
 
-    def test_as_admin_route_object_equals_to_expected_object(self) -> None:
-        for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
-            scope = create_scope_from_string(perm_string)
-            admin_route_object_new = create_admin_route_object_from_scope(scope)
+    def test_create_string_from_scope(self) -> None:
+        for perm_string, scope in zip(self.perm_strings, self.scopes):
             self.assertEqual(
-                admin_route_object, 
-                admin_route_object_new, 
+                create_string_from_scope(scope),
+                perm_string,
                 msg=f"Failed with permission string '{perm_string}'",
+            )
+
+    def test_create_admin_route_object_from_scope(self) -> None:
+        for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
+            self.assertEqual(
+                create_admin_route_object_from_scope(scope),
+                admin_route_object,
+                msg=f"Failed with admin group object no. {index}",
             )
 
 
