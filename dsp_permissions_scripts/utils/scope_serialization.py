@@ -33,7 +33,7 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
     for obj in admin_route_object:
         attr_name: str = obj["name"]
         group: str = obj["additionalInformation"]
-        group = group.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:")
+        group = group.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#")
         if attr_name in kwargs:
             kwargs[attr_name].append(group)
         else:
