@@ -1,10 +1,15 @@
 import unittest
 from typing import Any
 
-from dsp_permissions_scripts.models.permission import PermissionScope
+from dsp_permissions_scripts.utils.scope_serialization import (
+    create_admin_route_object_from_scope,
+    create_scope_from_admin_route_object,
+    create_scope_from_string,
+    create_string_from_scope,
+)
 
 
-class TestPermissionScope(unittest.TestCase):
+class TestScopeSerialization(unittest.TestCase):
     perm_strings_to_admin_route_object: dict[str, list[dict[str, Any]]] = {}
 
     @classmethod
@@ -46,21 +51,27 @@ class TestPermissionScope(unittest.TestCase):
 
     def test_perm_string_of_scope_equals_to_orig_string(self) -> None:
         for perm_string in self.perm_strings_to_admin_route_object:
-            self.assertEqual(PermissionScope.create_from_string(perm_string).as_permission_string(), perm_string)
+            scope = create_scope_from_string(perm_string)
+            perm_string_new = create_string_from_scope(scope)
+            self.assertEqual(perm_string, perm_string_new)
 
     def test_as_admin_route_object_equals_to_orig_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
+            scope = create_scope_from_admin_route_object(admin_route_object)
+            admin_route_object_new = create_admin_route_object_from_scope(scope)
             self.assertEqual(
-                PermissionScope.create_from_admin_route_object(admin_route_object).as_admin_route_object(), 
-                admin_route_object,
+                admin_route_object, 
+                admin_route_object_new,
                 msg=f"Failed with admin group object of permission string '{perm_string}'"
             )
 
     def test_as_admin_route_object_equals_to_expected_object(self) -> None:
         for perm_string, admin_route_object in self.perm_strings_to_admin_route_object.items():
+            scope = create_scope_from_string(perm_string)
+            admin_route_object_new = create_admin_route_object_from_scope(scope)
             self.assertEqual(
-                PermissionScope.create_from_string(perm_string).as_admin_route_object(), 
-                admin_route_object,
+                admin_route_object, 
+                admin_route_object_new,
                 msg=f"Failed with permission string '{perm_string}'"
             )
 

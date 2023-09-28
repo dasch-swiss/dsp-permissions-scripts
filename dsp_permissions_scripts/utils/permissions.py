@@ -14,6 +14,11 @@ from dsp_permissions_scripts.models.permission import (
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
+from dsp_permissions_scripts.utils.scope_serialization import (
+    create_admin_route_object_from_scope,
+    create_scope_from_admin_route_object,
+    create_string_from_scope,
+)
 
 
 def get_doaps_of_project(
@@ -87,7 +92,7 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
     """
     Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
     """
-    scope = PermissionScope.create_from_admin_route_object(permission["hasPermissions"])
+    scope = create_scope_from_admin_route_object(permission["hasPermissions"])
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
@@ -221,7 +226,7 @@ def update_doap_scope(
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
-    payload = {"hasPermissions": scope.as_admin_route_object()}
+    payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
     new_doap = __get_doap(response.json()["default_object_access_permission"])
@@ -277,7 +282,7 @@ def update_permissions_for_resource(
     payload = {
         "@id": resource_iri,
         "@type": type_,
-        "knora-api:hasPermissions": scope.as_permission_string(),
+        "knora-api:hasPermissions": create_string_from_scope(scope),
         "@context": context,
     }
     if lmd:
@@ -309,7 +314,7 @@ def update_permissions_for_value(
         value.property: {
             "@id": value.value_iri,
             "@type": value.value_type,
-            "knora-api:hasPermissions": scope.as_permission_string(),
+            "knora-api:hasPermissions": create_string_from_scope(scope),
         },
         "@context": context,
     }

@@ -1,87 +1,11 @@
 from enum import Enum
-from typing import Any, Self
+from typing import Self
 
 from pydantic import BaseModel, model_validator
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.scope import PermissionScope
 
 
-class PermissionScopeFields(Enum):
-    CR = "change_rights"
-    D = "delete"
-    M = "modify"
-    V = "view"
-    RV = "restricted_view"
-
-
-class PermissionScope(BaseModel):
-    change_rights: list[str | BuiltinGroup] | None = None
-    delete: list[str | BuiltinGroup] | None = None
-    modify: list[str | BuiltinGroup] | None = None
-    view: list[str | BuiltinGroup] | None = None
-    restricted_view: list[str | BuiltinGroup] | None = None
-
-    @classmethod
-    def create_from_string(cls, permission_string: str) -> Self:
-        kwargs: dict[str, list[str]] = {}
-        scopes = permission_string.split("|")
-        for scope in scopes:
-            perm_letter, groups_as_str = scope.split(" ")
-            attr_name = PermissionScopeFields[perm_letter].value
-            groups = groups_as_str.split(",")
-            groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
-            kwargs[attr_name] = groups
-        return cls(**kwargs)  # type: ignore[arg-type]
-    
-    @classmethod
-    def create_from_admin_route_object(cls, admin_route_object: list[dict[str, Any]]) -> Self:
-        kwargs: dict[str, list[str]] = {}
-        for obj in admin_route_object:
-            attr_name = PermissionScopeFields[obj["name"]].value
-            group: str = obj["additionalInformation"]
-            group = group.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:")
-            if attr_name in kwargs:
-                kwargs[attr_name].append(group)
-            else:
-                kwargs[attr_name] = [group]
-        return cls(**kwargs)  # type: ignore[arg-type]
-
-    def as_admin_route_object(self) -> list[dict[str, str | None]]:
-        """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
-        scope_elements: list[dict[str, str | None]] = []
-        for f in PermissionScopeFields:
-            letter = f.name
-            groups = getattr(self, f.value)
-            if groups:
-                groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
-                groups_as_str = [
-                    g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
-                ]
-                for group in groups_as_str:
-                    scope_elements.append(
-                        {
-                            "additionalInformation": group,
-                            "name": letter,
-                            "permissionCode": None,
-                    }
-                )
-        return scope_elements
-    
-    def as_permission_string(self) -> str:
-        """Serializes a permission scope to a permissions string as used by /v2 routes."""
-        as_dict = {}
-        for f in PermissionScopeFields:
-            letter = f.name
-            groups = getattr(self, f.value)
-            if groups:
-                groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
-                as_dict[letter] = [
-                    g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
-                ]
-        strs = [f"{k} {','.join(l)}" for k, l in as_dict.items()]
-        return "|".join(strs)
-                
-        
 class DoapTarget(BaseModel):
     project: str
     group: str | None
