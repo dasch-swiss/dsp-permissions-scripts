@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import PermissionScopeElement
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
     get_doaps_of_project,
@@ -66,12 +65,8 @@ def fix_doaps(
         host=host,
         shortcode=shortcode,
     )
-    group_scenario_tanner_scope = PermissionScopeElement(
-        info="http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA",
-        name="V",
-    )
     for d in doaps:
-        d.scope.append(group_scenario_tanner_scope)
+        d.scope.V.append("http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA")
     new_doaps = []
     for d in doaps:
         new_doap = update_doap_scope(
