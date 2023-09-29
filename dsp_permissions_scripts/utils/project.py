@@ -18,7 +18,7 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
 
 
 def get_all_resource_iris_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
@@ -40,7 +40,7 @@ def get_all_resource_iris_of_project(
 
 
 def __get_all_resource_class_iris_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
@@ -61,7 +61,7 @@ def __get_all_resource_class_iris_of_project(
 
 
 def __get_onto_iris_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
@@ -98,7 +98,7 @@ def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
 
 
 def __get_all_resource_iris_of_resclass(
-    host: str, 
+    host: str,
     resclass: str,
     project_iri: str,
     token: str,
@@ -130,7 +130,7 @@ def __get_next_page(
 ) -> tuple[bool, list[str]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
-    DSP-API returns results page-wise: 
+    DSP-API returns results page-wise:
     a list of 25 resources if there are 25 resources or more,
     a list of less than 25 resources if there are less than 25 remaining,
     1 resource (not packed in a list) if there is only 1 remaining,
@@ -146,7 +146,7 @@ def __get_next_page(
         return True, [r["@id"] for r in result["@graph"]]
     elif "@id" in result:
         # result contains only 1 resource: return it, then stop (there will be no more resources)
-        return False, [result["@id"], ]
+        return False, [result["@id"]]
     else:
         # there are no more resources
         return False, []

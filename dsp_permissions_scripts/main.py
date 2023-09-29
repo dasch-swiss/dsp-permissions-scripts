@@ -28,7 +28,7 @@ def main() -> None:
         host=host,
     )
     token = login(host)
-    
+
     new_scope = StandardScope().PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
 
