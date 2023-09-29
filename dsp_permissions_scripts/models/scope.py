@@ -4,11 +4,11 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 
 class PermissionScope(BaseModel):
-    CR: list[str | BuiltinGroup] | None = None
-    D: list[str | BuiltinGroup] | None = None
-    M: list[str | BuiltinGroup] | None = None
-    V: list[str | BuiltinGroup] | None = None
-    RV: list[str | BuiltinGroup] | None = None
+    CR: list[str | BuiltinGroup] = []
+    D: list[str | BuiltinGroup] = []
+    M: list[str | BuiltinGroup] = []
+    V: list[str | BuiltinGroup] = []
+    RV: list[str | BuiltinGroup] = []
 
 
 class StandardScope:
