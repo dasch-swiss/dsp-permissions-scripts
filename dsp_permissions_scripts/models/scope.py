@@ -1,43 +1,30 @@
-from typing import Sequence
+from pydantic import BaseModel
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.models.permission import PermissionScopeElement
+
+
+class PermissionScope(BaseModel):
+    CR: list[str | BuiltinGroup] | None = None
+    D: list[str | BuiltinGroup] | None = None
+    M: list[str | BuiltinGroup] | None = None
+    V: list[str | BuiltinGroup] | None = None
+    RV: list[str | BuiltinGroup] | None = None
 
 
 class StandardScope:
     """
     A scope is an object encoding the information:
-    "Which user group gets which permissions, if a certain DOAP gets applied?"
+    "Which user group gets which permissions on a resource/value?"
     This class offers some predefined scopes.
     If your preferred scope is not available,
-    please add a new class variable and implement it in the __init__ method.
+    please add a new class attribute and implement it in the __init__ method.
     """
 
-    PUBLIC: list[PermissionScopeElement]
+    PUBLIC: PermissionScope
 
     def __init__(self):
-        self.PUBLIC = self._make_scope(
-            view=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
-            change_rights=[BuiltinGroup.PROJECT_ADMIN],
-            delete=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
+        self.PUBLIC = PermissionScope(
+            CR=[BuiltinGroup.PROJECT_ADMIN],
+            D=[BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER],
+            V=[BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER],
         )
-
-    def _make_scope(
-        self,
-        restricted_view: Sequence[str | BuiltinGroup] = (),
-        view: Sequence[str | BuiltinGroup] = (),
-        modify: Sequence[str | BuiltinGroup] = (),
-        delete: Sequence[str | BuiltinGroup] = (),
-        change_rights: Sequence[str | BuiltinGroup] = (),
-    ) -> list[PermissionScopeElement]:
-        """
-        Create scopes by providing group IRIs for different permission levels.
-        Every parameter represents the groups that get the corresponding permission.
-        """
-        perm_codes_to_groups = {"RV": restricted_view, "V": view, "M": modify, "D": delete, "CR": change_rights}
-        res = []
-        for perm_code, groups in perm_codes_to_groups.items():
-            res.extend(
-                [PermissionScopeElement(info=x if isinstance(x, str) else x.value, name=perm_code) for x in groups]
-            )
-        return res

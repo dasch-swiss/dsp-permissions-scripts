@@ -49,7 +49,7 @@ def fix_oaps(
         host=host,
         token=token,
     )
-    
+
 
 def fix_doaps(
     host: str,
