@@ -10,9 +10,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     for perm_letter, groups in perm_scope.model_dump().items():
         if groups:
             groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
-            as_dict[perm_letter] = [
-                g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
-            ]
+            as_dict[perm_letter] = groups_as_str
     strs = [f"{k} {','.join(l)}" for k, l in as_dict.items()]
     return "|".join(strs)
 
@@ -47,9 +45,6 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
     for perm_letter, groups in perm_scope.model_dump().items():
         if groups:
             groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
-            groups_as_str = [
-                g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups_as_str
-            ]
             for group in groups_as_str:
                 scope_elements.append(
                     {
