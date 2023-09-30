@@ -41,11 +41,11 @@ class TestScopeSerialization(unittest.TestCase):
     ]
     scopes = [
         PermissionScope(
-            CR=[BuiltinGroup.SYSTEM_USER], 
+            CR=[BuiltinGroup.SYSTEM_USER],
             V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
         ),
         PermissionScope(
-            D=[BuiltinGroup.PROJECT_ADMIN], 
+            D=[BuiltinGroup.PROJECT_ADMIN],
             RV=[BuiltinGroup.PROJECT_MEMBER],
         ),
         PermissionScope(
