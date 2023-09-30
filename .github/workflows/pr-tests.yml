@@ -1,0 +1,40 @@
+---
+
+name: PR Tests
+
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+
+jobs:
+  tests-on-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        run: | 
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Python dependencies
+        run: poetry install
+
+      - name: Linting with Pylint
+        run: poetry run pylint dsp_permissions_scripts tests
+
+      - name: Linting with mypy
+        run: poetry run mypy .
+
+      - name: unittests
+        run: poetry run python -m unittest discover tests
+
+
