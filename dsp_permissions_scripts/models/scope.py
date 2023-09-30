@@ -8,6 +8,7 @@ class PermissionScope(BaseModel):
     A scope is an object encoding the information:
     "Which user group gets which permissions on a resource/value?"
     """
+
     CR: list[str | BuiltinGroup] = []
     D: list[str | BuiltinGroup] = []
     M: list[str | BuiltinGroup] = []
