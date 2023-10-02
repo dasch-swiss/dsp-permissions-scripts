@@ -33,7 +33,7 @@ class Doap(BaseModel):
 
     target: DoapTarget
     scope: PermissionScope
-    iri: str
+    doap_iri: str
 
 
 class DoapTargetType(Enum):
@@ -46,5 +46,5 @@ class DoapTargetType(Enum):
 class Oap(BaseModel):
     """Model representing an object access permission, containing a scope and the IRI of the resource/value"""
 
-    scope: list[PermissionScopeElement]
+    scope: PermissionScope
     object_iri: str

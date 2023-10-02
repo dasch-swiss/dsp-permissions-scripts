@@ -1,5 +1,5 @@
-from typing import Any
 import unittest
+from typing import Any
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.scope import PermissionScope

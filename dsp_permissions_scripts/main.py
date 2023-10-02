@@ -42,14 +42,14 @@ def main() -> None:
         host=host,
         shortcode=shortcode,
     )
-    # set_doaps_of_groups(
-    #     scope=new_scope,
-    #     groups=groups,
-    #     host=host,
-    #     shortcode=shortcode,
-    #     token=token,
-    # )
-    resources = get_all_resources_of_project(
+    set_doaps_of_groups(
+        scope=new_scope,
+        groups=groups,
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    resource_oaps = get_all_resources_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
