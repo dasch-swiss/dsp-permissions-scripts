@@ -1,3 +1,4 @@
+from typing import Any
 import unittest
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
@@ -78,20 +79,31 @@ class TestScopeSerialization(unittest.TestCase):
 
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
+            perm_string_full = self._resolve_prefixes_of_perm_string(perm_string)
             self.assertEqual(
                 create_string_from_scope(scope),
-                perm_string,
+                perm_string_full,
                 msg=f"Failed with permission string '{perm_string}'",
             )
 
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
+            admin_route_object_full = self._resolve_prefixes_of_admin_route_object(admin_route_object)
             self.assertEqual(
                 create_admin_route_object_from_scope(scope),
-                admin_route_object,
+                admin_route_object_full,
                 msg=f"Failed with admin group object no. {index}",
             )
 
+    def _resolve_prefixes_of_admin_route_object(self, admin_route_object: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        for obj in admin_route_object:
+            obj["additionalInformation"] = obj["additionalInformation"].replace(
+                "knora-admin:", "http://www.knora.org/ontology/knora-admin#"
+            )
+        return admin_route_object
+    
+    def _resolve_prefixes_of_perm_string(self, perm_string: str) -> str:
+        return perm_string.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#")
 
 if __name__ == "__main__":
     unittest.main()

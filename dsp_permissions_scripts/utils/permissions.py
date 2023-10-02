@@ -77,7 +77,7 @@ def set_doaps_of_groups(
         print("Old DOAP:\n=========")
         print(d.model_dump_json(indent=2))
         new_doap = update_doap_scope(
-            permission_iri=d.iri,
+            doap_iri=d.iri,
             scope=scope,
             host=host,
             token=token,
@@ -214,7 +214,7 @@ def get_permissions_for_project(
 
 
 def update_doap_scope(
-    permission_iri: str,
+    doap_iri: str,
     scope: PermissionScope,
     host: str,
     token: str,
@@ -222,7 +222,7 @@ def update_doap_scope(
     """
     Updates the scope of the given DOAP.
     """
-    iri = quote_plus(permission_iri, safe="")
+    iri = quote_plus(doap_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
