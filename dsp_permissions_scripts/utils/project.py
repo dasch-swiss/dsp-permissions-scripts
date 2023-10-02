@@ -19,29 +19,29 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
     return iri
 
 
-def get_all_resources_of_project(
+def get_all_resource_oaps_of_project(
     project_iri: str, 
     host: str,
     token: str,
 ) -> list[Oap]:
-    all_resources = []
-    resclasses = __get_all_resource_classes_of_project(
+    all_resource_oaps = []
+    resclass_iris = __get_all_resource_class_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
-    for resclass in resclasses:
-        resources = __get_all_resources_of_resclass(
+    for resclass_iri in resclass_iris:
+        resource_oaps = __get_all_resource_oaps_of_resclass(
             host=host,
-            resclass=resclass,
+            resclass_iri=resclass_iri,
             project_iri=project_iri,
             token=token,
         )
-        all_resources.extend(resources)
-    return all_resources
+        all_resource_oaps.extend(resource_oaps)
+    return all_resource_oaps
 
 
-def __get_all_resource_classes_of_project(
+def __get_all_resource_class_iris_of_project(
     project_iri: str, 
     host: str,
     token: str,
@@ -99,9 +99,9 @@ def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
     return context[prefix] + actual_id
 
 
-def __get_all_resources_of_resclass(
+def __get_all_resource_oaps_of_resclass(
     host: str, 
-    resclass: str,
+    resclass_iri: str,
     project_iri: str,
     token: str,
 ) -> list[Oap]:
@@ -114,7 +114,7 @@ def __get_all_resources_of_resclass(
         more, iris = __get_next_page(
             protocol=protocol,
             host=host,
-            resclass=resclass,
+            resclass=resclass_iri,
             page=page,
             headers=headers,
         )
