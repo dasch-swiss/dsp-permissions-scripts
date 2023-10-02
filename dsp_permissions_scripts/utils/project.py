@@ -4,9 +4,7 @@ import requests
 
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.permissions import (
-    __unmarshal_permission_string_to_scope,
-)
+from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
@@ -65,7 +63,7 @@ def __get_all_resource_classes_of_project(
 
 
 def __get_onto_iris_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
@@ -134,7 +132,7 @@ def __get_next_page(
 ) -> tuple[bool, list[Oap]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
-    DSP-API returns results page-wise: 
+    DSP-API returns results page-wise:
     a list of 25 resources if there are 25 resources or more,
     a list of less than 25 resources if there are less than 25 remaining,
     1 resource (not packed in a list) if there is only 1 remaining,
@@ -149,12 +147,12 @@ def __get_next_page(
         # result contains several resources: return them, then continue with next page
         oaps = []
         for r in result["@graph"]:
-            scope=__unmarshal_permission_string_to_scope(r["knora-api:hasPermissions"])
+            scope=create_scope_from_string(r["knora-api:hasPermissions"])
             oaps.append(Oap(scope=scope, object_iri=r["@id"]))
         return True, oaps
     elif "@id" in result:
         # result contains only 1 resource: return it, then stop (there will be no more resources)
-        scope=__unmarshal_permission_string_to_scope(result["knora-api:hasPermissions"])
+        scope=create_scope_from_string(result["knora-api:hasPermissions"])
         return False, [Oap(scope=scope, object_iri=result["@id"]), ]
     else:
         # there are no more resources

@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import StandardScope
+from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
     get_doaps_of_project,
@@ -28,8 +28,8 @@ def main() -> None:
         host=host,
     )
     token = login(host)
-    
-    new_scope = StandardScope().PUBLIC
+
+    new_scope = PUBLIC
     groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
 
     doaps = get_doaps_of_project(

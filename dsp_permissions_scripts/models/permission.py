@@ -1,20 +1,9 @@
 from enum import Enum
 from typing import Self
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, model_validator
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
-
-
-class PermissionScopeElement(BaseModel):
-    info: str | BuiltinGroup
-    name: str
-
-    @field_validator("name")
-    @classmethod
-    def name_must_represent_permission(cls, v: str) -> str:
-        assert v in {"RV", "V", "M", "D", "CR"}
-        return v
+from dsp_permissions_scripts.models.scope import PermissionScope
 
 
 class DoapTarget(BaseModel):
@@ -43,7 +32,7 @@ class Doap(BaseModel):
     """
 
     target: DoapTarget
-    scope: list[PermissionScopeElement]
+    scope: PermissionScope
     iri: str
 
 

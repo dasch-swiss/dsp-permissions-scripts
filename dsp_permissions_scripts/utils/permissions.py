@@ -9,13 +9,16 @@ from dsp_permissions_scripts.models.permission import (
     Doap,
     DoapTarget,
     DoapTargetType,
-    PermissionScopeElement,
+    PermissionScope,
 )
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
-
-KB_DOAP = "http://www.knora.org/ontology/knora-admin#DefaultObjectAccessPermission"
+from dsp_permissions_scripts.utils.scope_serialization import (
+    create_admin_route_object_from_scope,
+    create_scope_from_admin_route_object,
+    create_string_from_scope,
+)
 
 
 def get_doaps_of_project(
@@ -46,7 +49,7 @@ def get_doaps_of_project(
 
 
 def set_doaps_of_groups(
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
@@ -74,7 +77,7 @@ def set_doaps_of_groups(
         print("Old DOAP:\n=========")
         print(d.model_dump_json(indent=2))
         new_doap = update_doap_scope(
-            permission_iri=d.iri,
+            doap_iri=d.iri,
             scope=scope,
             host=host,
             token=token,
@@ -85,48 +88,11 @@ def set_doaps_of_groups(
     print("All DOAPs have been updated.")
 
 
-# TODO: maybe these methods should live on the PermissionScopeElement model?
-
-def __marshal_scope(scope_element: PermissionScopeElement) -> dict[str, Any]:
-    """
-    Serializes a permission scope element to a dict
-    in the shape that it can be used for JSON requests to /admin/permissions routes.
-    """
-    return {
-        "additionalInformation": scope_element.info,
-        "name": scope_element.name,
-        "permissionCode": None,
-    }
-
-
-def __marshal_scope_as_permission_string(scope: list[PermissionScopeElement]) -> str:
-    """
-    Serializes a permission scope to a permissions string as used by /v2 routes.
-    """
-    lookup: dict[str, list[str]] = {}
-    for s in scope:
-        p = lookup.get(s.name, [])
-        p.append(str(s.info).replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:"))
-        lookup[s.name] = p
-    strs = [f"{k} {','.join(l)}" for k, l in lookup.items()]
-    return "|".join(strs)
-
-
-def __get_scope_element(scope: dict[str, Any]) -> PermissionScopeElement:
-    """
-    turns permissions JSON  as returned by /admin/permissions routes into a PermissionScopeElement object.
-    """
-    return PermissionScopeElement(
-        info=scope["additionalInformation"],
-        name=scope["name"],
-    )
-
-
 def __get_doap(permission: dict[str, Any]) -> Doap:
     """
     Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
     """
-    scope = [__get_scope_element(s) for s in permission["hasPermissions"]]
+    scope = create_scope_from_admin_route_object(permission["hasPermissions"])
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
@@ -195,7 +161,7 @@ def get_doaps_of_groups(
 
 
 def filter_doaps_by_target(
-    doaps: list[Doap], 
+    doaps: list[Doap],
     target: DoapTargetType,
 ) -> list[Doap]:
     """
@@ -203,13 +169,13 @@ def filter_doaps_by_target(
     In case of "all", return all DOAPs.
     """
     match target:
-        case DoapTargetType.ALL: 
+        case DoapTargetType.ALL:
             filtered_doaps = doaps
-        case DoapTargetType.GROUP: 
+        case DoapTargetType.GROUP:
             filtered_doaps = [d for d in doaps if d.target.group]
-        case DoapTargetType.PROPERTY: 
+        case DoapTargetType.PROPERTY:
             filtered_doaps = [d for d in doaps if d.target.property]
-        case DoapTargetType.RESOURCE_CLASS: 
+        case DoapTargetType.RESOURCE_CLASS:
             filtered_doaps = [d for d in doaps if d.target.resource_class]
     return filtered_doaps
 
@@ -225,7 +191,7 @@ def print_doaps_of_project(
         heading += f" which are related to a {target}"
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
-        print(d.model_dump_json(indent=2))
+        print(d.model_dump_json(indent=2, exclude_none=True))
         print()
 
 
@@ -248,19 +214,19 @@ def get_permissions_for_project(
 
 
 def update_doap_scope(
-    permission_iri: str,
-    scope: list[PermissionScopeElement],
+    doap_iri: str,
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> Doap:
     """
     Updates the scope of the given DOAP.
     """
-    iri = quote_plus(permission_iri, safe="")
+    iri = quote_plus(doap_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
-    payload = {"hasPermissions": [__marshal_scope(s) for s in scope]}
+    payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
     new_doap = __get_doap(response.json()["default_object_access_permission"])
@@ -269,7 +235,7 @@ def update_doap_scope(
 
 def update_permissions_for_resources_and_values(
     resource_iris: list[str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -282,7 +248,7 @@ def update_permissions_for_resources_and_values(
 
 def update_permissions_for_resource_and_values(
     resource_iri: str,
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -306,7 +272,7 @@ def update_permissions_for_resource(
     lmd: str | None,
     type_: str,
     context: dict[str, str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -316,7 +282,7 @@ def update_permissions_for_resource(
     payload = {
         "@id": resource_iri,
         "@type": type_,
-        "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
+        "knora-api:hasPermissions": create_string_from_scope(scope),
         "@context": context,
     }
     if lmd:
@@ -334,7 +300,7 @@ def update_permissions_for_value(
     value: ValueUpdate,
     resource_type: str,
     context: dict[str, str],
-    scope: list[PermissionScopeElement],
+    scope: PermissionScope,
     host: str,
     token: str,
 ) -> None:
@@ -348,7 +314,7 @@ def update_permissions_for_value(
         value.property: {
             "@id": value.value_iri,
             "@type": value.value_type,
-            "knora-api:hasPermissions": __marshal_scope_as_permission_string(scope),
+            "knora-api:hasPermissions": create_string_from_scope(scope),
         },
         "@context": context,
     }
