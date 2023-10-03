@@ -2,18 +2,25 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
+from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.permissions import (
+    apply_updated_oaps_on_server,
     get_doaps_of_project,
     print_doaps_of_project,
     set_doaps_of_groups,
-    update_permissions_for_resources_and_values,
 )
 from dsp_permissions_scripts.utils.project import (
     get_all_resource_oaps_of_project,
     get_project_iri_by_shortcode,
 )
+
+
+def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+    for oap in oaps:
+        oap.scope.D.append(BuiltinGroup.PROJECT_MEMBER)
+    return oaps
 
 
 def main() -> None:
@@ -54,9 +61,9 @@ def main() -> None:
         host=host,
         token=token,
     )
-    update_permissions_for_resources_and_values(
-        resource_iris=resource_oaps_updated,
-        scope=new_scope,
+    resource_oaps_updated = modify_oaps(oaps=resource_oaps)
+    apply_updated_oaps_on_server(
+        resource_oaps=resource_oaps_updated,
         host=host,
         token=token,
     )

@@ -9,6 +9,7 @@ from dsp_permissions_scripts.models.permission import (
     Doap,
     DoapTarget,
     DoapTargetType,
+    Oap,
     PermissionScope,
 )
 from dsp_permissions_scripts.models.value import ValueUpdate
@@ -231,6 +232,21 @@ def update_doap_scope(
     assert response.status_code == 200
     new_doap = __get_doap(response.json()["default_object_access_permission"])
     return new_doap
+
+
+def apply_updated_oaps_on_server(
+    resource_oaps: list[Oap],
+    host: str,
+    token: str,
+) -> None:
+    """Applies object access permissions on a DSP server."""
+    for resource_oap in resource_oaps:
+        update_permissions_for_resources_and_values(
+            resource_iris=[resource_oap.object_iri],
+            scope=resource_oap.scope,
+            host=host,
+            token=token,
+        )
 
 
 def update_permissions_for_resources_and_values(
