@@ -13,7 +13,7 @@ from dsp_permissions_scripts.utils.project import (
 )
 
 
-def main() -> None:
+def fix_scenario_tanner() -> None:
     """
     Fix the DOAPs of the scenario Tanner.
     Later, fix the OAPs.
@@ -85,4 +85,4 @@ def fix_doaps(
 
 
 if __name__ == "__main__":
-    main()
+    fix_scenario_tanner()
