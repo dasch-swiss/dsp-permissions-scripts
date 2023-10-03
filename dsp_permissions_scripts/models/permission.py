@@ -33,7 +33,7 @@ class Doap(BaseModel):
 
     target: DoapTarget
     scope: PermissionScope
-    iri: str
+    doap_iri: str
 
 
 class DoapTargetType(Enum):
