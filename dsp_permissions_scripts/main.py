@@ -70,7 +70,7 @@ def fix_doaps(
     new_doaps = []
     for d in doaps:
         new_doap = update_doap_scope(
-            permission_iri=d.iri,
+            doap_iri=d.doap_iri,
             scope=d.scope,
             host=host,
             token=token,
