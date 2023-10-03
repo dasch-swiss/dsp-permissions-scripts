@@ -1,5 +1,5 @@
-from typing import Any
 import unittest
+from typing import Any
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -101,9 +101,10 @@ class TestScopeSerialization(unittest.TestCase):
                 "knora-admin:", "http://www.knora.org/ontology/knora-admin#"
             )
         return admin_route_object
-    
+
     def _resolve_prefixes_of_perm_string(self, perm_string: str) -> str:
         return perm_string.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#")
+
 
 if __name__ == "__main__":
     unittest.main()

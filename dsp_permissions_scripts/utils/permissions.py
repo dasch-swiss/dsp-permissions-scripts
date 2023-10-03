@@ -77,7 +77,7 @@ def set_doaps_of_groups(
         print("Old DOAP:\n=========")
         print(d.model_dump_json(indent=2))
         new_doap = update_doap_scope(
-            doap_iri=d.iri,
+            doap_iri=d.doap_iri,
             scope=scope,
             host=host,
             token=token,
@@ -101,7 +101,7 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
             property=permission["forProperty"],
         ),
         scope=scope,
-        iri=permission["iri"],
+        doap_iri=permission["iri"],
     )
     return doap
 
