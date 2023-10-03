@@ -20,7 +20,7 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
 
 
 def get_all_resource_oaps_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[Oap]:
@@ -42,7 +42,7 @@ def get_all_resource_oaps_of_project(
 
 
 def __get_all_resource_class_iris_of_project(
-    project_iri: str, 
+    project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
@@ -100,7 +100,7 @@ def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
 
 
 def __get_all_resource_oaps_of_resclass(
-    host: str, 
+    host: str,
     resclass_iri: str,
     project_iri: str,
     token: str,
@@ -147,13 +147,13 @@ def __get_next_page(
         # result contains several resources: return them, then continue with next page
         oaps = []
         for r in result["@graph"]:
-            scope=create_scope_from_string(r["knora-api:hasPermissions"])
+            scope = create_scope_from_string(r["knora-api:hasPermissions"])
             oaps.append(Oap(scope=scope, object_iri=r["@id"]))
         return True, oaps
     elif "@id" in result:
         # result contains only 1 resource: return it, then stop (there will be no more resources)
-        scope=create_scope_from_string(result["knora-api:hasPermissions"])
-        return False, [Oap(scope=scope, object_iri=result["@id"]), ]
+        scope = create_scope_from_string(result["knora-api:hasPermissions"])
+        return False, [Oap(scope=scope, object_iri=result["@id"])]
     else:
         # there are no more resources
         return False, []
