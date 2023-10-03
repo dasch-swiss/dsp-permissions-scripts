@@ -23,15 +23,15 @@ def get_all_resource_iris_of_project(
     token: str,
 ) -> list[str]:
     all_resource_iris = []
-    resclasses = __get_all_resource_class_iris_of_project(
+    resclass_iris = __get_all_resource_class_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
-    for resclass in resclasses:
+    for resclass_iri in resclass_iris:
         resource_iris = __get_all_resource_iris_of_resclass(
             host=host,
-            resclass=resclass,
+            resclass_iri=resclass_iri,
             project_iri=project_iri,
             token=token,
         )
@@ -99,7 +99,7 @@ def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
 
 def __get_all_resource_iris_of_resclass(
     host: str,
-    resclass: str,
+    resclass_iri: str,
     project_iri: str,
     token: str,
 ) -> list[str]:
@@ -112,7 +112,7 @@ def __get_all_resource_iris_of_resclass(
         more, iris = __get_next_page(
             protocol=protocol,
             host=host,
-            resclass=resclass,
+            resclass_iri=resclass_iri,
             page=page,
             headers=headers,
         )
@@ -124,7 +124,7 @@ def __get_all_resource_iris_of_resclass(
 def __get_next_page(
     protocol: str,
     host: str,
-    resclass: str,
+    resclass_iri: str,
     page: int,
     headers: dict[str, str],
 ) -> tuple[bool, list[str]]:
@@ -137,7 +137,7 @@ def __get_next_page(
     and an empty response content with status code 200 if there are no resources remaining.
     This means that the page must be incremented until the response contains 0 or 1 resource.
     """
-    url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass)}&page={page}"
+    url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     result = response.json()
