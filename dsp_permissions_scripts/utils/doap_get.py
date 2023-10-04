@@ -31,26 +31,7 @@ def __filter_doaps_by_target(
     return filtered_doaps
 
 
-# TODO: this function is unused
-def get_permissions_for_project(
-    project_iri: str,
-    host: str,
-    token: str,
-) -> list[dict[str, Any]]:
-    """
-    Returns all permissions for the given project.
-    """
-    headers = {"Authorization": f"Bearer {token}"}
-    project_iri = quote_plus(project_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/admin/permissions/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
-    permissions: list[dict[str, Any]] = response.json()["permissions"]
-    return permissions
-
-
-def get_all_doaps_of_project(
+def __get_all_doaps_of_project(
     project_iri: str,
     host: str,
     token: str,
@@ -102,7 +83,7 @@ def get_doaps_of_project(
         shortcode=shortcode,
         host=host,
     )
-    doaps = get_all_doaps_of_project(
+    doaps = __get_all_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
