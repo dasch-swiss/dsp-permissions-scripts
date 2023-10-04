@@ -119,7 +119,7 @@ def _update_permissions_for_value(
 def _update_permissions_for_resource(
     resource_iri: str,
     lmd: str | None,
-    type_: str,
+    resource_type: str,
     context: dict[str, str],
     scope: PermissionScope,
     host: str,
@@ -130,7 +130,7 @@ def _update_permissions_for_resource(
     """
     payload = {
         "@id": resource_iri,
-        "@type": type_,
+        "@type": resource_type,
         "knora-api:hasPermissions": create_string_from_scope(scope),
         "@context": context,
     }
@@ -155,12 +155,28 @@ def _update_permissions_for_resource_and_values(
     """
     resource = _get_resource(resource_iri, host, token)
     lmd = _get_lmd(resource)
-    type_ = _get_type(resource)
+    resource_type = _get_type(resource)
     context = _get_context(resource)
     values = _get_value_iris(resource)
-    _update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
+    _update_permissions_for_resource(
+        resource_iri=resource_iri, 
+        lmd=lmd, 
+        resource_type=resource_type, 
+        context=context, 
+        scope=scope, 
+        host=host, 
+        token=token,
+    )
     for v in values:
-        _update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
+        _update_permissions_for_value(
+            resource_iri=resource_iri, 
+            value=v, 
+            resource_type=resource_type, 
+            context=context, 
+            scope=scope, 
+            host=host, 
+            token=token,
+        )
 
 
 def apply_updated_oaps_on_server(
