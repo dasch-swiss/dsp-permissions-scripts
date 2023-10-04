@@ -1,4 +1,4 @@
-from typing import Any, Sequence
+from typing import Any
 from urllib.parse import quote_plus
 
 import requests
@@ -9,25 +9,6 @@ from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
 )
-
-
-def __get_all_doaps_of_project(
-    project_iri: str,
-    host: str,
-    token: str,
-) -> list[Doap]:
-    """
-    Returns all DOAPs of the given project.
-    """
-    headers = {"Authorization": f"Bearer {token}"}
-    project_iri = quote_plus(project_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
-    doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
-    doap_objects = [create_doap_from_admin_route_response(doap) for doap in doaps]
-    return doap_objects
 
 
 def __filter_doaps_by_target(
@@ -69,6 +50,25 @@ def get_permissions_for_project(
     return permissions
 
 
+def get_all_doaps_of_project(
+    project_iri: str,
+    host: str,
+    token: str,
+) -> list[Doap]:
+    """
+    Returns all DOAPs of the given project.
+    """
+    headers = {"Authorization": f"Bearer {token}"}
+    project_iri = quote_plus(project_iri, safe="")
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
+    response = requests.get(url, headers=headers, timeout=5)
+    assert response.status_code == 200
+    doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
+    doap_objects = [create_doap_from_admin_route_response(doap) for doap in doaps]
+    return doap_objects
+
+
 def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     """
     Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
@@ -102,7 +102,7 @@ def get_doaps_of_project(
         shortcode=shortcode,
         host=host,
     )
-    doaps = __get_all_doaps_of_project(
+    doaps = get_all_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
