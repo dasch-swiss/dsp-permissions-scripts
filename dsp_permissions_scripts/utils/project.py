@@ -10,48 +10,6 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 logger = get_logger(__name__)
 
 
-def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
-    """
-    Retrieves the IRI of a project by its shortcode.
-    """
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
-    response = requests.get(url, timeout=5)
-    assert response.status_code == 200
-    iri: str = response.json()["project"]["id"]
-    return iri
-
-
-def get_all_resource_oaps_of_project(
-    shortcode: str,
-    host: str,
-    token: str,
-) -> list[Oap]:
-    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
-    print(f"{get_timestamp()}: ******* Getting all resource OAPs of project {shortcode} *******")
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
-    all_resource_oaps = []
-    resclass_iris = _get_all_resource_class_iris_of_project(
-        project_iri=project_iri,
-        host=host,
-        token=token,
-    )
-    for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_resource_oaps_of_resclass(
-            host=host,
-            resclass_iri=resclass_iri,
-            project_iri=project_iri,
-            token=token,
-        )
-        all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
-    print(f"{get_timestamp()}: Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
-    return all_resource_oaps
-
-
 def _get_all_resource_class_iris_of_project(
     project_iri: str,
     host: str,
@@ -175,3 +133,45 @@ def _get_next_page(
     else:
         # there are no more resources
         return False, []
+
+
+def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
+    """
+    Retrieves the IRI of a project by its shortcode.
+    """
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
+    response = requests.get(url, timeout=5)
+    assert response.status_code == 200
+    iri: str = response.json()["project"]["id"]
+    return iri
+
+
+def get_all_resource_oaps_of_project(
+    shortcode: str,
+    host: str,
+    token: str,
+) -> list[Oap]:
+    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
+    print(f"{get_timestamp()}: ******* Getting all resource OAPs of project {shortcode} *******")
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode,
+        host=host,
+    )
+    all_resource_oaps = []
+    resclass_iris = _get_all_resource_class_iris_of_project(
+        project_iri=project_iri,
+        host=host,
+        token=token,
+    )
+    for resclass_iri in resclass_iris:
+        resource_oaps = _get_all_resource_oaps_of_resclass(
+            host=host,
+            resclass_iri=resclass_iri,
+            project_iri=project_iri,
+            token=token,
+        )
+        all_resource_oaps.extend(resource_oaps)
+    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    print(f"{get_timestamp()}: Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    return all_resource_oaps
