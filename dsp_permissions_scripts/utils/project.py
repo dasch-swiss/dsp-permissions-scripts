@@ -27,6 +27,7 @@ def get_all_resource_oaps_of_project(
     host: str,
     token: str,
 ) -> list[Oap]:
+    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,

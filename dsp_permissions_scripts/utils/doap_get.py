@@ -5,11 +5,13 @@ import requests
 
 from dsp_permissions_scripts.models.permission import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
 )
+
+logger = get_logger(__name__)
 
 
 def __filter_doaps_by_target(
@@ -80,6 +82,7 @@ def get_doaps_of_project(
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
+    logger.info(f"******* Getting DOAPs of project {shortcode} on server {host} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -102,10 +105,12 @@ def print_doaps_of_project(
     shortcode: str,
     target: DoapTargetType = DoapTargetType.ALL,
 ) -> None:
-    heading = f"{get_timestamp()}: Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
     if target != DoapTargetType.ALL:
         heading += f" which are related to a {target}"
-    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    print(f"\n{get_timestamp()}: {heading}\n{'=' * len(heading)}\n")
+    logger.info(f"******* Printing DOAPs of project {shortcode} on server {host} *******")
+    logger.info(heading)
     for d in doaps:
         print(d.model_dump_json(indent=2, exclude_none=True))
         print()

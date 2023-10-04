@@ -60,8 +60,8 @@ def apply_updated_doaps_on_server(
         host: the DSP server where the project is located
         token: the access token
     """
-    logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
-    heading = f"{get_timestamp()}: Update {len(doaps)} DOAPs on {host}..."
+    logger.info(f"******* Updating {len(doaps)} DOAPs on {host} *******")
+    heading = f"{get_timestamp()}: Updating {len(doaps)} DOAPs on {host}..."
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
         __log_and_print_doap_update(doap=d, state="before")
