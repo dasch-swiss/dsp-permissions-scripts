@@ -2,15 +2,12 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.permissions import (
+from dsp_permissions_scripts.utils.doap_get import (
     get_doaps_of_project,
     print_doaps_of_project,
-    update_doap_scope,
 )
-from dsp_permissions_scripts.utils.project import (
-    get_all_resource_oaps_of_project,
-    get_project_iri_by_shortcode,
-)
+from dsp_permissions_scripts.utils.doap_set import __update_doap_scope
+from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
 def fix_scenario_tanner() -> None:
@@ -39,12 +36,8 @@ def fix_oaps(
     shortcode: str,
     token: str,
 ) -> None:
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
     all_resource_oaps = get_all_resource_oaps_of_project(
-        project_iri=project_iri,
+        shortcode=shortcode,
         host=host,
         token=token,
     )
@@ -69,7 +62,7 @@ def fix_doaps(
         d.scope.V.append("http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA")
     new_doaps = []
     for d in doaps:
-        new_doap = update_doap_scope(
+        new_doap = __update_doap_scope(
             doap_iri=d.doap_iri,
             scope=d.scope,
             host=host,
