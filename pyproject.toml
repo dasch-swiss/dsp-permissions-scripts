@@ -37,6 +37,7 @@ disable = [
     "invalid-name",
     "trailing-whitespace",
     "too-few-public-methods",
+    "logging-fstring-interpolation",
 ]
 
 [tool.black]

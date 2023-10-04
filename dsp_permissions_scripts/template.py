@@ -2,22 +2,29 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.permission import Oap
+from dsp_permissions_scripts.models.permission import Doap, Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import (
     get_doaps_of_project,
     print_doaps_of_project,
 )
-from dsp_permissions_scripts.utils.doap_set import set_doaps_of_groups
+from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     for oap in oaps:
-        oap.scope.D.append(BuiltinGroup.PROJECT_MEMBER)
+        oap.scope.CR.append(BuiltinGroup.SYSTEM_ADMIN)
     return oaps
+
+
+def modify_doaps(doaps: list[Doap]) -> list[Doap]:
+    for doap in doaps: 
+        if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
+            doap.scope = PUBLIC
+    return doaps
 
 
 def main() -> None:
@@ -29,24 +36,20 @@ def main() -> None:
     shortcode = "F18E"
     token = login(host)
 
-    new_scope = PUBLIC
-    groups = [BuiltinGroup.PROJECT_ADMIN, BuiltinGroup.PROJECT_MEMBER]
-
-    doaps = get_doaps_of_project(
+    project_doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
     )
     print_doaps_of_project(
-        doaps=doaps,
+        doaps=project_doaps,
         host=host,
         shortcode=shortcode,
     )
-    set_doaps_of_groups(
-        scope=new_scope,
-        groups=groups,
+    project_doaps_updated = modify_doaps(doaps=project_doaps)
+    apply_updated_doaps_on_server(
+        doaps=project_doaps_updated,
         host=host,
-        shortcode=shortcode,
         token=token,
     )
     resource_oaps = get_all_resource_oaps_of_project(

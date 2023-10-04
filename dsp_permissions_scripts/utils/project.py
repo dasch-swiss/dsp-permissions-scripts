@@ -4,7 +4,10 @@ import requests
 
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
+from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
+
+logger = get_logger(__name__)
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
@@ -24,6 +27,8 @@ def get_all_resource_oaps_of_project(
     host: str,
     token: str,
 ) -> list[Oap]:
+    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
+    print(f"{get_timestamp()}: ******* Getting all resource OAPs of project {shortcode} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -42,6 +47,8 @@ def get_all_resource_oaps_of_project(
             token=token,
         )
         all_resource_oaps.extend(resource_oaps)
+    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    print(f"{get_timestamp()}: Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
     return all_resource_oaps
 
 
@@ -50,6 +57,7 @@ def __get_all_resource_class_iris_of_project(
     host: str,
     token: str,
 ) -> list[str]:
+    logger.info(f"Getting all resource class IRIs of project {project_iri}...")
     project_onto_iris = __get_onto_iris_of_project(
         project_iri=project_iri,
         host=host,
@@ -63,6 +71,7 @@ def __get_all_resource_class_iris_of_project(
             token=token,
         )
         all_class_iris.extend(class_iris)
+        logger.info(f"Found {len(class_iris)} resource classes in onto {onto_iri}.")
     return all_class_iris
 
 
@@ -109,12 +118,15 @@ def __get_all_resource_oaps_of_resclass(
     project_iri: str,
     token: str,
 ) -> list[Oap]:
+    print(f"{get_timestamp()}: Getting all resource OAPs of class {resclass_iri}...")
+    logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
     resources: list[Oap] = []
     page = 0
     more = True
     while more:
+        logger.info(f"Getting page {page}...")
         more, iris = __get_next_page(
             protocol=protocol,
             host=host,
@@ -124,6 +136,8 @@ def __get_all_resource_oaps_of_resclass(
         )
         resources.extend(iris)
         page += 1
+    print(f"{get_timestamp()}: Retrieved {len(resources)} resource OAPs of class {resclass_iri}.")
+    logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}.")
     return resources
 
 
