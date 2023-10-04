@@ -1,6 +1,3 @@
-
-
-
 from typing import Sequence
 from urllib.parse import quote_plus
 
@@ -10,7 +7,10 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.permission import Doap
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.doap_get import create_doap_from_admin_route_response, get_all_doaps_of_project
+from dsp_permissions_scripts.utils.doap_get import (
+    create_doap_from_admin_route_response,
+    get_all_doaps_of_project,
+)
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
