@@ -28,6 +28,7 @@ def get_all_resource_oaps_of_project(
     token: str,
 ) -> list[Oap]:
     logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
+    print(f"{get_timestamp()}: ******* Getting all resource OAPs of project {shortcode} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -47,6 +48,7 @@ def get_all_resource_oaps_of_project(
         )
         all_resource_oaps.extend(resource_oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    print(f"{get_timestamp()}: Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
     return all_resource_oaps
 
 

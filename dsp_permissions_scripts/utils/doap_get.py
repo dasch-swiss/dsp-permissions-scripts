@@ -96,7 +96,7 @@ def get_doaps_of_project(
         doaps=doaps,
         target=target,
     )
-    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to a {target}.")
+    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to {target}.")
     return filtered_doaps
 
 
@@ -109,9 +109,10 @@ def print_doaps_of_project(
     heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
     if target != DoapTargetType.ALL:
         heading += f" which are related to a {target}"
-    print(f"\n{get_timestamp()}: {heading}\n{'=' * len(heading)}\n")
+    print(f"\n{get_timestamp()}: {heading}\n{'=' * (len(heading) + len(get_timestamp()) + 2)}\n")
     logger.info(f"******* Printing DOAPs of project {shortcode} on server {host} *******")
     logger.info(heading)
     for d in doaps:
-        print(d.model_dump_json(indent=2, exclude_none=True))
-        print()
+        representation = d.model_dump_json(indent=2, exclude_none=True)
+        print(representation + "\n")
+        logger.info(representation)

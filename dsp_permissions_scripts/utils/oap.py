@@ -20,6 +20,7 @@ def apply_updated_oaps_on_server(
 ) -> None:
     """Applies object access permissions on a DSP server."""
     logger.info("******* Applying updated object access permissions on server *******")
+    print(f"{get_timestamp()}: ******* Applying updated object access permissions on server *******")
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
         logger.info("=====")
