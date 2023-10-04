@@ -20,10 +20,14 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
 
 
 def get_all_resource_oaps_of_project(
-    project_iri: str,
+    shortcode: str,
     host: str,
     token: str,
 ) -> list[Oap]:
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode,
+        host=host,
+    )
     all_resource_oaps = []
     resclass_iris = __get_all_resource_class_iris_of_project(
         project_iri=project_iri,
