@@ -27,15 +27,31 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return doaps
 
 
-def main() -> None:
-    """
-    The main method assembles a sample call of all available high-level functions.
-    """
-    load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
-    token = login(host)
+def update_oaps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    """Sample function to modify the Object Access Permissions of a project."""
+    resource_oaps = get_all_resource_oaps_of_project(
+        shortcode=shortcode,
+        host=host,
+        token=token,
+    )
+    resource_oaps_updated = modify_oaps(oaps=resource_oaps)
+    apply_updated_oaps_on_server(
+        resource_oaps=resource_oaps_updated,
+        host=host,
+        token=token,
+    )
 
+
+def update_doaps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
@@ -52,15 +68,28 @@ def main() -> None:
         host=host,
         token=token,
     )
-    resource_oaps = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
+
+
+def main() -> None:
+    """
+    The main function provides you with 2 sample functions:
+    one to update the Object Access Permissions of a project,
+    and one to update the Default Object Access Permissions of a project.
+    Both must first be adapted to your needs.
+    """
+    load_dotenv()  # set login credentials from .env file as environment variables
+    host = Hosts.get_host("test")
+    shortcode = "F18E"
+    token = login(host)
+
+    update_oaps(
         host=host,
+        shortcode=shortcode,
         token=token,
     )
-    resource_oaps_updated = modify_oaps(oaps=resource_oaps)
-    apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_updated,
+    update_doaps(
         host=host,
+        shortcode=shortcode,
         token=token,
     )
 
