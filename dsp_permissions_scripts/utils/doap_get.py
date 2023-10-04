@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -6,6 +5,7 @@ import requests
 
 from dsp_permissions_scripts.models.permission import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.utils.authentication import get_protocol
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
@@ -102,7 +102,7 @@ def print_doaps_of_project(
     shortcode: str,
     target: DoapTargetType = DoapTargetType.ALL,
 ) -> None:
-    heading = f"{datetime.now()}: Project {shortcode} on server {host} has {len(doaps)} DOAPs"
+    heading = f"{get_timestamp()}: Project {shortcode} on server {host} has {len(doaps)} DOAPs"
     if target != DoapTargetType.ALL:
         heading += f" which are related to a {target}"
     print(f"\n{heading}\n{'=' * len(heading)}\n")

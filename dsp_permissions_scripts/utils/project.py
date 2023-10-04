@@ -1,10 +1,10 @@
-from datetime import datetime
 from urllib.parse import quote_plus
 
 import requests
 
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 
@@ -110,7 +110,7 @@ def __get_all_resource_oaps_of_resclass(
     project_iri: str,
     token: str,
 ) -> list[Oap]:
-    print(f"{datetime.now()}: Getting all resource OAPs of {resclass_iri}...")
+    print(f"{get_timestamp()}: Getting all resource OAPs of class {resclass_iri}...")
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
     resources: list[Oap] = []

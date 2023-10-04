@@ -7,6 +7,7 @@ from dsp_permissions_scripts.models.permission import Doap
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.doap_get import create_doap_from_admin_route_response
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
 )
@@ -59,4 +60,4 @@ def apply_updated_doaps_on_server(
         print("\nNew DOAP:\n---------")
         print(new_doap.model_dump_json(indent=2))
         print()
-    print(f"{datetime.now()}: All DOAPs have been updated.")
+    print(f"{get_timestamp()}: All DOAPs have been updated.")
