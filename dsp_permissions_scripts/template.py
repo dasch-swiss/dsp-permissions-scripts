@@ -5,12 +5,12 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.permissions import (
-    apply_updated_oaps_on_server,
+from dsp_permissions_scripts.utils.doap_operations import (
     get_doaps_of_project,
     print_doaps_of_project,
     set_doaps_of_groups,
 )
+from dsp_permissions_scripts.utils.oap_operations import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
@@ -25,8 +25,8 @@ def main() -> None:
     The main method assembles a sample call of all available high-level functions.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("localhost")
-    shortcode = "4123"
+    host = Hosts.get_host("test")
+    shortcode = "F18E"
     token = login(host)
 
     new_scope = PUBLIC
