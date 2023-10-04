@@ -1,3 +1,4 @@
+from datetime import datetime
 from urllib.parse import quote_plus
 
 import requests
@@ -109,6 +110,7 @@ def __get_all_resource_oaps_of_resclass(
     project_iri: str,
     token: str,
 ) -> list[Oap]:
+    print(f"{datetime.now()}: Getting all resource OAPs of {resclass_iri}...")
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
     resources: list[Oap] = []

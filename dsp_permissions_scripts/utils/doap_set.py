@@ -1,3 +1,4 @@
+from datetime import datetime
 from urllib.parse import quote_plus
 
 import requests
@@ -44,10 +45,10 @@ def apply_updated_doaps_on_server(
         host: the DSP server where the project is located
         token: the access token
     """
-    heading = f"Update {len(doaps)} DOAPs on {host}..."
+    heading = f"{datetime.now()}: Update {len(doaps)} DOAPs on {host}..."
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
-        print("Old DOAP:\n=========")
+        print("Old DOAP:\n---------")
         print(d.model_dump_json(indent=2))
         new_doap = __update_doap_scope(
             doap_iri=d.doap_iri,
@@ -55,7 +56,7 @@ def apply_updated_doaps_on_server(
             host=host,
             token=token,
         )
-        print("\nNew DOAP:\n=========")
+        print("\nNew DOAP:\n---------")
         print(new_doap.model_dump_json(indent=2))
         print()
-    print("All DOAPs have been updated.")
+    print(f"{datetime.now()}: All DOAPs have been updated.")
