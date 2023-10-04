@@ -26,26 +26,13 @@ def apply_updated_oaps_on_server(
         logger.info("=====")
         logger.info(msg)
         print(f"{get_timestamp()}: {msg}")
-        update_permissions_for_resources_and_values(
-            resource_iris=[resource_oap.object_iri],
+        __update_permissions_for_resource_and_values(
+            resource_iri=resource_oap.object_iri,
             scope=resource_oap.scope,
             host=host,
             token=token,
         )
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
-
-
-def update_permissions_for_resources_and_values(
-    resource_iris: list[str],
-    scope: PermissionScope,
-    host: str,
-    token: str,
-) -> None:
-    """
-    Updates the permissions for the given resources and their values.
-    """
-    for iri in resource_iris:
-        __update_permissions_for_resource_and_values(iri, scope, host, token)
 
 
 def __update_permissions_for_resource_and_values(
