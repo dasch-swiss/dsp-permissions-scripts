@@ -13,116 +13,6 @@ from dsp_permissions_scripts.utils.scope_serialization import create_string_from
 
 logger = get_logger(__name__)
 
-def apply_updated_oaps_on_server(
-    resource_oaps: list[Oap],
-    host: str,
-    token: str,
-) -> None:
-    """Applies object access permissions on a DSP server."""
-    logger.info("******* Applying updated object access permissions on server *******")
-    print(f"{get_timestamp()}: ******* Applying updated object access permissions on server *******")
-    for index, resource_oap in enumerate(resource_oaps):
-        msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
-        logger.info("=====")
-        logger.info(msg)
-        print(f"{get_timestamp()}: {msg}")
-        __update_permissions_for_resource_and_values(
-            resource_iri=resource_oap.object_iri,
-            scope=resource_oap.scope,
-            host=host,
-            token=token,
-        )
-        logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
-
-
-def __update_permissions_for_resource_and_values(
-    resource_iri: str,
-    scope: PermissionScope,
-    host: str,
-    token: str,
-) -> None:
-    """
-    Updates the permissions for the given resource and its values.
-    """
-    resource = __get_resource(resource_iri, host, token)
-    lmd = __get_lmd(resource)
-    type_ = __get_type(resource)
-    context = __get_context(resource)
-    values = __get_value_iris(resource)
-    update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
-    for v in values:
-        __update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
-
-
-def update_permissions_for_resource(
-    resource_iri: str,
-    lmd: str | None,
-    type_: str,
-    context: dict[str, str],
-    scope: PermissionScope,
-    host: str,
-    token: str,
-) -> None:
-    """
-    Updates the permissions for the given resource.
-    """
-    payload = {
-        "@id": resource_iri,
-        "@type": type_,
-        "knora-api:hasPermissions": create_string_from_scope(scope),
-        "@context": context,
-    }
-    if lmd:
-        payload["knora-api:lastModificationDate"] = lmd
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/resources"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200
-    logger.info(f"Updated permissions of resource {resource_iri}")
-
-
-def __update_permissions_for_value(
-    resource_iri: str,
-    value: ValueUpdate,
-    resource_type: str,
-    context: dict[str, str],
-    scope: PermissionScope,
-    host: str,
-    token: str,
-) -> None:
-    """
-    Updates the permissions for the given value.
-    """
-    payload = {
-        "@id": resource_iri,
-        "@type": resource_type,
-        value.property: {
-            "@id": value.value_iri,
-            "@type": value.value_type,
-            "knora-api:hasPermissions": create_string_from_scope(scope),
-        },
-        "@context": context,
-    }
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/values"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload, timeout=5)
-    if response.status_code == 400 and response.text:
-        already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
-        if already in response.text:
-            msg = f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date"
-            logger.warning(msg)
-    elif response.status_code != 200:
-        logger.error(
-            f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}. "
-            f"Response status code: {response.status_code}. "
-            f"Response text: {response.text}. "
-            f"Payload: {json.dumps(payload, indent=4)}"
-        )
-    else:
-        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
-
 
 def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
     """
@@ -182,3 +72,114 @@ def __get_context(resource: dict[str, Any]) -> dict[str, str]:
     """
     c: dict[str, str] = resource["@context"]
     return c
+
+
+def __update_permissions_for_value(
+    resource_iri: str,
+    value: ValueUpdate,
+    resource_type: str,
+    context: dict[str, str],
+    scope: PermissionScope,
+    host: str,
+    token: str,
+) -> None:
+    """
+    Updates the permissions for the given value.
+    """
+    payload = {
+        "@id": resource_iri,
+        "@type": resource_type,
+        value.property: {
+            "@id": value.value_iri,
+            "@type": value.value_type,
+            "knora-api:hasPermissions": create_string_from_scope(scope),
+        },
+        "@context": context,
+    }
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/values"
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.put(url, headers=headers, json=payload, timeout=5)
+    if response.status_code == 400 and response.text:
+        already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
+        if already in response.text:
+            msg = f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date"
+            logger.warning(msg)
+    elif response.status_code != 200:
+        logger.error(
+            f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}. "
+            f"Response status code: {response.status_code}. "
+            f"Response text: {response.text}. "
+            f"Payload: {json.dumps(payload, indent=4)}"
+        )
+    else:
+        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
+
+
+def __update_permissions_for_resource(
+    resource_iri: str,
+    lmd: str | None,
+    type_: str,
+    context: dict[str, str],
+    scope: PermissionScope,
+    host: str,
+    token: str,
+) -> None:
+    """
+    Updates the permissions for the given resource.
+    """
+    payload = {
+        "@id": resource_iri,
+        "@type": type_,
+        "knora-api:hasPermissions": create_string_from_scope(scope),
+        "@context": context,
+    }
+    if lmd:
+        payload["knora-api:lastModificationDate"] = lmd
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/resources"
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.put(url, headers=headers, json=payload, timeout=5)
+    assert response.status_code == 200
+    logger.info(f"Updated permissions of resource {resource_iri}")
+
+
+def __update_permissions_for_resource_and_values(
+    resource_iri: str,
+    scope: PermissionScope,
+    host: str,
+    token: str,
+) -> None:
+    """
+    Updates the permissions for the given resource and its values.
+    """
+    resource = __get_resource(resource_iri, host, token)
+    lmd = __get_lmd(resource)
+    type_ = __get_type(resource)
+    context = __get_context(resource)
+    values = __get_value_iris(resource)
+    __update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
+    for v in values:
+        __update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
+
+
+def apply_updated_oaps_on_server(
+    resource_oaps: list[Oap],
+    host: str,
+    token: str,
+) -> None:
+    """Applies object access permissions on a DSP server."""
+    logger.info("******* Applying updated object access permissions on server *******")
+    print(f"{get_timestamp()}: ******* Applying updated object access permissions on server *******")
+    for index, resource_oap in enumerate(resource_oaps):
+        msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
+        logger.info("=====")
+        logger.info(msg)
+        print(f"{get_timestamp()}: {msg}")
+        __update_permissions_for_resource_and_values(
+            resource_iri=resource_oap.object_iri,
+            scope=resource_oap.scope,
+            host=host,
+            token=token,
+        )
+        logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
