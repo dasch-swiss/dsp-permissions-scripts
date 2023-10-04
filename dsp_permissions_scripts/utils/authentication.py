@@ -3,11 +3,7 @@ import os
 import requests
 
 
-def get_protocol(host: str) -> str:
-    return "http" if host.startswith("localhost") else "https"
-
-
-def get_token(host: str, email: str, pw: str) -> str:
+def __get_token(host: str, email: str, pw: str) -> str:
     """
     requests an access token from the API, provided host, email and password.
     """
@@ -19,7 +15,7 @@ def get_token(host: str, email: str, pw: str) -> str:
     return token
 
 
-def get_login_credentials(host: str) -> tuple[str, str]:
+def __get_login_credentials(host: str) -> tuple[str, str]:
     """
     Retrieve user email and password from the environment variables.
     In case of localhost, return the default email/password for localhost.
@@ -45,6 +41,10 @@ def login(host: str) -> str:
     Returns:
         token: access token
     """
-    user, pw = get_login_credentials(host)
-    token = get_token(host, user, pw)
+    user, pw = __get_login_credentials(host)
+    token = __get_token(host, user, pw)
     return token
+
+
+def get_protocol(host: str) -> str:
+    return "http" if host.startswith("localhost") else "https"

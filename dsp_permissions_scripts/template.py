@@ -5,16 +5,13 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.permissions import (
-    apply_updated_oaps_on_server,
+from dsp_permissions_scripts.utils.doap_get import (
     get_doaps_of_project,
     print_doaps_of_project,
-    set_doaps_of_groups,
 )
-from dsp_permissions_scripts.utils.project import (
-    get_all_resource_oaps_of_project,
-    get_project_iri_by_shortcode,
-)
+from dsp_permissions_scripts.utils.doap_set import set_doaps_of_groups
+from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
+from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
@@ -30,10 +27,6 @@ def main() -> None:
     load_dotenv()  # set login credentials from .env file as environment variables
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
     token = login(host)
 
     new_scope = PUBLIC
@@ -57,7 +50,7 @@ def main() -> None:
         token=token,
     )
     resource_oaps = get_all_resource_oaps_of_project(
-        project_iri=project_iri,
+        shortcode=shortcode,
         host=host,
         token=token,
     )
