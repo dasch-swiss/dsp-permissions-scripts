@@ -14,7 +14,7 @@ from dsp_permissions_scripts.utils.scope_serialization import create_string_from
 logger = get_logger(__name__)
 
 
-def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
+def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
     """
     Returns a list of values that have permissions and hence should be updated.
     """
@@ -34,7 +34,7 @@ def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
     return res
 
 
-def __get_resource(
+def _get_resource(
     resource_iri: str,
     host: str,
     token: str,
@@ -52,21 +52,21 @@ def __get_resource(
     return data
 
 
-def __get_lmd(resource: dict[str, Any]) -> str | None:
+def _get_lmd(resource: dict[str, Any]) -> str | None:
     """
     Gets last modification date from a resource JSON-LD dict.
     """
     return resource.get("knora-api:lastModificationDate")
 
 
-def __get_type(resource: dict[str, Any]) -> str:
+def _get_type(resource: dict[str, Any]) -> str:
     """
     Gets the type from a resource JSON-LD dict."""
     t: str = resource["@type"]
     return t
 
 
-def __get_context(resource: dict[str, Any]) -> dict[str, str]:
+def _get_context(resource: dict[str, Any]) -> dict[str, str]:
     """
     Gets the context object from a resource JSON-LD dict.
     """
@@ -74,7 +74,7 @@ def __get_context(resource: dict[str, Any]) -> dict[str, str]:
     return c
 
 
-def __update_permissions_for_value(
+def _update_permissions_for_value(
     resource_iri: str,
     value: ValueUpdate,
     resource_type: str,
@@ -116,7 +116,7 @@ def __update_permissions_for_value(
         logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
-def __update_permissions_for_resource(
+def _update_permissions_for_resource(
     resource_iri: str,
     lmd: str | None,
     type_: str,
@@ -144,7 +144,7 @@ def __update_permissions_for_resource(
     logger.info(f"Updated permissions of resource {resource_iri}")
 
 
-def __update_permissions_for_resource_and_values(
+def _update_permissions_for_resource_and_values(
     resource_iri: str,
     scope: PermissionScope,
     host: str,
@@ -153,14 +153,14 @@ def __update_permissions_for_resource_and_values(
     """
     Updates the permissions for the given resource and its values.
     """
-    resource = __get_resource(resource_iri, host, token)
-    lmd = __get_lmd(resource)
-    type_ = __get_type(resource)
-    context = __get_context(resource)
-    values = __get_value_iris(resource)
-    __update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
+    resource = _get_resource(resource_iri, host, token)
+    lmd = _get_lmd(resource)
+    type_ = _get_type(resource)
+    context = _get_context(resource)
+    values = _get_value_iris(resource)
+    _update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
     for v in values:
-        __update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
+        _update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
 
 
 def apply_updated_oaps_on_server(
@@ -176,7 +176,7 @@ def apply_updated_oaps_on_server(
         logger.info("=====")
         logger.info(msg)
         print(f"{get_timestamp()}: {msg}")
-        __update_permissions_for_resource_and_values(
+        _update_permissions_for_resource_and_values(
             resource_iri=resource_oap.object_iri,
             scope=resource_oap.scope,
             host=host,

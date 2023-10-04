@@ -34,13 +34,13 @@ def get_all_resource_oaps_of_project(
         host=host,
     )
     all_resource_oaps = []
-    resclass_iris = __get_all_resource_class_iris_of_project(
+    resclass_iris = _get_all_resource_class_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
     for resclass_iri in resclass_iris:
-        resource_oaps = __get_all_resource_oaps_of_resclass(
+        resource_oaps = _get_all_resource_oaps_of_resclass(
             host=host,
             resclass_iri=resclass_iri,
             project_iri=project_iri,
@@ -52,20 +52,20 @@ def get_all_resource_oaps_of_project(
     return all_resource_oaps
 
 
-def __get_all_resource_class_iris_of_project(
+def _get_all_resource_class_iris_of_project(
     project_iri: str,
     host: str,
     token: str,
 ) -> list[str]:
     logger.info(f"Getting all resource class IRIs of project {project_iri}...")
-    project_onto_iris = __get_onto_iris_of_project(
+    project_onto_iris = _get_onto_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
     all_class_iris = []
     for onto_iri in project_onto_iris:
-        class_iris = __get_class_iris_of_onto(
+        class_iris = _get_class_iris_of_onto(
             host=host,
             onto_iri=onto_iri,
             token=token,
@@ -75,7 +75,7 @@ def __get_all_resource_class_iris_of_project(
     return all_class_iris
 
 
-def __get_onto_iris_of_project(
+def _get_onto_iris_of_project(
     project_iri: str,
     host: str,
     token: str,
@@ -90,7 +90,7 @@ def __get_onto_iris_of_project(
     return project_onto_iris
 
 
-def __get_class_iris_of_onto(
+def _get_class_iris_of_onto(
     host: str,
     onto_iri: str,
     token: str,
@@ -103,16 +103,16 @@ def __get_class_iris_of_onto(
     all_entities = response.json()["@graph"]
     context = response.json()["@context"]
     class_ids = [c["@id"] for c in all_entities if c.get("knora-api:isResourceClass")]
-    class_iris = [__dereference_prefix(class_id, context) for class_id in class_ids]
+    class_iris = [_dereference_prefix(class_id, context) for class_id in class_ids]
     return class_iris
 
 
-def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
+def _dereference_prefix(identifier: str, context: dict[str, str]) -> str:
     prefix, actual_id = identifier.split(":")
     return context[prefix] + actual_id
 
 
-def __get_all_resource_oaps_of_resclass(
+def _get_all_resource_oaps_of_resclass(
     host: str,
     resclass_iri: str,
     project_iri: str,
@@ -127,7 +127,7 @@ def __get_all_resource_oaps_of_resclass(
     more = True
     while more:
         logger.info(f"Getting page {page}...")
-        more, iris = __get_next_page(
+        more, iris = _get_next_page(
             protocol=protocol,
             host=host,
             resclass_iri=resclass_iri,
@@ -141,7 +141,7 @@ def __get_all_resource_oaps_of_resclass(
     return resources
 
 
-def __get_next_page(
+def _get_next_page(
     protocol: str,
     host: str,
     resclass_iri: str,

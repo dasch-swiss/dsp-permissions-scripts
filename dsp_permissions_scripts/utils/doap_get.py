@@ -14,7 +14,7 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 logger = get_logger(__name__)
 
 
-def __filter_doaps_by_target(
+def _filter_doaps_by_target(
     doaps: list[Doap],
     target: DoapTargetType,
 ) -> list[Doap]:
@@ -34,7 +34,7 @@ def __filter_doaps_by_target(
     return filtered_doaps
 
 
-def __get_all_doaps_of_project(
+def _get_all_doaps_of_project(
     project_iri: str,
     host: str,
     token: str,
@@ -87,12 +87,12 @@ def get_doaps_of_project(
         shortcode=shortcode,
         host=host,
     )
-    doaps = __get_all_doaps_of_project(
+    doaps = _get_all_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
-    filtered_doaps = __filter_doaps_by_target(
+    filtered_doaps = _filter_doaps_by_target(
         doaps=doaps,
         target=target,
     )
