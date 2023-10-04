@@ -28,7 +28,7 @@ def get_doaps_of_project(
     target: DoapTargetType = DoapTargetType.ALL,
 ) -> list[Doap]:
     """
-    Get the doaps for a project, provided a host and a shortcode.
+    Returns the doaps for a project.
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
@@ -36,12 +36,12 @@ def get_doaps_of_project(
         shortcode=shortcode,
         host=host,
     )
-    doaps = get_doaps_for_project(
+    doaps = __get_all_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
-    filtered_doaps = filter_doaps_by_target(
+    filtered_doaps = __filter_doaps_by_target(
         doaps=doaps,
         target=target,
     )
@@ -65,7 +65,7 @@ def set_doaps_of_groups(
         shortcode: the shortcode of the project
         token: the access token
     """
-    applicable_doaps = get_doaps_of_groups(
+    applicable_doaps = __get_doaps_of_groups(
         groups=groups,
         host=host,
         shortcode=shortcode,
@@ -76,7 +76,7 @@ def set_doaps_of_groups(
     for d in applicable_doaps:
         print("Old DOAP:\n=========")
         print(d.model_dump_json(indent=2))
-        new_doap = update_doap_scope(
+        new_doap = __update_doap_scope(
             doap_iri=d.doap_iri,
             scope=scope,
             host=host,
@@ -106,13 +106,13 @@ def __get_doap(permission: dict[str, Any]) -> Doap:
     return doap
 
 
-def get_doaps_for_project(
+def __get_all_doaps_of_project(
     project_iri: str,
     host: str,
     token: str,
 ) -> list[Doap]:
     """
-    Returns all DOAPs for the given project.
+    Returns all DOAPs of the given project.
     """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
@@ -125,7 +125,7 @@ def get_doaps_for_project(
     return doap_objects
 
 
-def get_doaps_of_groups(
+def __get_doaps_of_groups(
     groups: Sequence[str | BuiltinGroup],
     host: str,
     shortcode: str,
@@ -147,7 +147,7 @@ def get_doaps_of_groups(
         shortcode=shortcode,
         host=host,
     )
-    all_doaps = get_doaps_for_project(
+    all_doaps = __get_all_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
@@ -160,7 +160,7 @@ def get_doaps_of_groups(
     return applicable_doaps
 
 
-def filter_doaps_by_target(
+def __filter_doaps_by_target(
     doaps: list[Doap],
     target: DoapTargetType,
 ) -> list[Doap]:
@@ -195,6 +195,7 @@ def print_doaps_of_project(
         print()
 
 
+# TODO: this function is unused
 def get_permissions_for_project(
     project_iri: str,
     host: str,
@@ -213,7 +214,7 @@ def get_permissions_for_project(
     return permissions
 
 
-def update_doap_scope(
+def __update_doap_scope(
     doap_iri: str,
     scope: PermissionScope,
     host: str,
@@ -243,10 +244,10 @@ def update_permissions_for_resources_and_values(
     Updates the permissions for the given resources and their values.
     """
     for iri in resource_iris:
-        update_permissions_for_resource_and_values(iri, scope, host, token)
+        __update_permissions_for_resource_and_values(iri, scope, host, token)
 
 
-def update_permissions_for_resource_and_values(
+def __update_permissions_for_resource_and_values(
     resource_iri: str,
     scope: PermissionScope,
     host: str,
@@ -263,7 +264,7 @@ def update_permissions_for_resource_and_values(
     values = __get_value_iris(resource)
     update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
     for v in values:
-        update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
+        __update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
     print("Done. \n")
 
 
@@ -295,7 +296,7 @@ def update_permissions_for_resource(
     print(f"Updated permissions for {resource_iri}")
 
 
-def update_permissions_for_value(
+def __update_permissions_for_value(
     resource_iri: str,
     value: ValueUpdate,
     resource_type: str,

@@ -10,10 +10,7 @@ from dsp_permissions_scripts.utils.permissions import (
     set_doaps_of_groups,
     update_permissions_for_resources_and_values,
 )
-from dsp_permissions_scripts.utils.project import (
-    get_all_resource_iris_of_project,
-    get_project_iri_by_shortcode,
-)
+from dsp_permissions_scripts.utils.project import get_all_resource_iris_of_project
 
 
 def main() -> None:
@@ -21,12 +18,8 @@ def main() -> None:
     The main method assembles a sample call of all available high-level functions.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
+    host = Hosts.get_host("localhost")
+    shortcode = "4123"
     token = login(host)
 
     new_scope = PUBLIC
@@ -50,7 +43,7 @@ def main() -> None:
         token=token,
     )
     resource_iris = get_all_resource_iris_of_project(
-        project_iri=project_iri,
+        shortcode=shortcode,
         host=host,
         token=token,
     )
