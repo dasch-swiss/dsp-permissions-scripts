@@ -2,7 +2,9 @@ from urllib.parse import quote_plus
 
 import requests
 
+from dsp_permissions_scripts.models.permission import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
+from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
@@ -17,26 +19,26 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
     return iri
 
 
-def get_all_resource_iris_of_project(
+def get_all_resource_oaps_of_project(
     project_iri: str,
     host: str,
     token: str,
-) -> list[str]:
-    all_resource_iris = []
+) -> list[Oap]:
+    all_resource_oaps = []
     resclass_iris = __get_all_resource_class_iris_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
     )
     for resclass_iri in resclass_iris:
-        resource_iris = __get_all_resource_iris_of_resclass(
+        resource_oaps = __get_all_resource_oaps_of_resclass(
             host=host,
             resclass_iri=resclass_iri,
             project_iri=project_iri,
             token=token,
         )
-        all_resource_iris.extend(resource_iris)
-    return all_resource_iris
+        all_resource_oaps.extend(resource_oaps)
+    return all_resource_oaps
 
 
 def __get_all_resource_class_iris_of_project(
@@ -97,15 +99,15 @@ def __dereference_prefix(identifier: str, context: dict[str, str]) -> str:
     return context[prefix] + actual_id
 
 
-def __get_all_resource_iris_of_resclass(
+def __get_all_resource_oaps_of_resclass(
     host: str,
     resclass_iri: str,
     project_iri: str,
     token: str,
-) -> list[str]:
+) -> list[Oap]:
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
-    resource_iris = []
+    resources: list[Oap] = []
     page = 0
     more = True
     while more:
@@ -116,9 +118,9 @@ def __get_all_resource_iris_of_resclass(
             page=page,
             headers=headers,
         )
-        resource_iris.extend(iris)
+        resources.extend(iris)
         page += 1
-    return resource_iris
+    return resources
 
 
 def __get_next_page(
@@ -127,7 +129,7 @@ def __get_next_page(
     resclass_iri: str,
     page: int,
     headers: dict[str, str],
-) -> tuple[bool, list[str]]:
+) -> tuple[bool, list[Oap]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
     DSP-API returns results page-wise:
@@ -143,10 +145,15 @@ def __get_next_page(
     result = response.json()
     if "@graph" in result:
         # result contains several resources: return them, then continue with next page
-        return True, [r["@id"] for r in result["@graph"]]
+        oaps = []
+        for r in result["@graph"]:
+            scope = create_scope_from_string(r["knora-api:hasPermissions"])
+            oaps.append(Oap(scope=scope, object_iri=r["@id"]))
+        return True, oaps
     elif "@id" in result:
         # result contains only 1 resource: return it, then stop (there will be no more resources)
-        return False, [result["@id"]]
+        scope = create_scope_from_string(result["knora-api:hasPermissions"])
+        return False, [Oap(scope=scope, object_iri=result["@id"])]
     else:
         # there are no more resources
         return False, []
