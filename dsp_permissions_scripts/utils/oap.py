@@ -19,13 +19,18 @@ def apply_updated_oaps_on_server(
     token: str,
 ) -> None:
     """Applies object access permissions on a DSP server."""
-    for resource_oap in resource_oaps:
+    for index, resource_oap in enumerate(resource_oaps):
+        msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
+        logger.info("=====")
+        logger.info(msg)
+        print(f"{get_timestamp()}: {msg}")
         update_permissions_for_resources_and_values(
             resource_iris=[resource_oap.object_iri],
             scope=resource_oap.scope,
             host=host,
             token=token,
         )
+        logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
 
 
 def update_permissions_for_resources_and_values(
@@ -50,8 +55,6 @@ def __update_permissions_for_resource_and_values(
     """
     Updates the permissions for the given resource and its values.
     """
-    logger.info(f"Updating permissions for resource {resource_iri}...")
-    print(f"{get_timestamp()}: Updating permissions for resource {resource_iri}...")
     resource = __get_resource(resource_iri, host, token)
     lmd = __get_lmd(resource)
     type_ = __get_type(resource)
@@ -60,8 +63,6 @@ def __update_permissions_for_resource_and_values(
     update_permissions_for_resource(resource_iri, lmd, type_, context, scope, host, token)
     for v in values:
         __update_permissions_for_value(resource_iri, v, type_, context, scope, host, token)
-    logger.info(f"Successfully updated permissions for resource {resource_iri} and its values.")
-    logger.info("=====")
 
 
 def update_permissions_for_resource(
@@ -89,7 +90,7 @@ def update_permissions_for_resource(
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
     assert response.status_code == 200
-    logger.info(f"Updated permissions for {resource_iri}")
+    logger.info(f"Updated permissions of resource {resource_iri}")
 
 
 def __update_permissions_for_value(
@@ -121,17 +122,17 @@ def __update_permissions_for_value(
     if response.status_code == 400 and response.text:
         already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
         if already in response.text:
-            msg = f"Permissions for value {value.value_iri} of resource {resource_iri} are already up to date"
+            msg = f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date"
             logger.warning(msg)
     elif response.status_code != 200:
         logger.error(
-            f"Error while updating permissions for value {value.value_iri} of resource {resource_iri}. "
+            f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}. "
             f"Response status code: {response.status_code}. "
             f"Response text: {response.text}. "
             f"Payload: {json.dumps(payload, indent=4)}"
         )
     else:
-        logger.info(f"Updated permissions for {value.value_iri} of resource {resource_iri}")
+        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
 def __get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
