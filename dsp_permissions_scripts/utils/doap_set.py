@@ -14,7 +14,7 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 
 logger = get_logger(__name__)
 
-def __update_doap_scope(
+def _update_doap_scope(
     doap_iri: str,
     scope: PermissionScope,
     host: str,
@@ -34,7 +34,7 @@ def __update_doap_scope(
     return new_doap
 
 
-def __log_and_print_doap_update(
+def _log_and_print_doap_update(
     doap: Doap,
     state: Literal["before", "after"],
 ) -> None:
@@ -64,12 +64,12 @@ def apply_updated_doaps_on_server(
     heading = f"{get_timestamp()}: Updating {len(doaps)} DOAPs on {host}..."
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
-        __log_and_print_doap_update(doap=d, state="before")
-        new_doap = __update_doap_scope(
+        _log_and_print_doap_update(doap=d, state="before")
+        new_doap = _update_doap_scope(
             doap_iri=d.doap_iri,
             scope=d.scope,
             host=host,
             token=token,
         )
-        __log_and_print_doap_update(doap=new_doap, state="after")
+        _log_and_print_doap_update(doap=new_doap, state="after")
     print(f"{get_timestamp()}: All DOAPs have been updated.")
