@@ -15,12 +15,14 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 
 
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+    """Adapt this sample to your needs."""
     for oap in oaps:
         oap.scope.CR.append(BuiltinGroup.SYSTEM_ADMIN)
     return oaps
 
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
+    """Adapt this sample to your needs."""
     for doap in doaps: 
         if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
             doap.scope = PUBLIC
