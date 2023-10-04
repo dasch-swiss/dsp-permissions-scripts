@@ -96,6 +96,7 @@ def get_doaps_of_project(
         doaps=doaps,
         target=target,
     )
+    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to a {target}.")
     return filtered_doaps
 
 
