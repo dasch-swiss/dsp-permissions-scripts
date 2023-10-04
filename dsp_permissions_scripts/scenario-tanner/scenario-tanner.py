@@ -8,7 +8,7 @@ from dsp_permissions_scripts.utils.permissions import (
     update_doap_scope,
 )
 from dsp_permissions_scripts.utils.project import (
-    get_all_resource_iris_of_project,
+    get_all_resource_oaps_of_project,
     get_project_iri_by_shortcode,
 )
 
@@ -43,7 +43,7 @@ def fix_oaps(
         shortcode=shortcode,
         host=host,
     )
-    all_resource_iris = get_all_resource_iris_of_project(
+    all_resource_oaps = get_all_resource_oaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
