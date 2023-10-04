@@ -41,3 +41,10 @@ class DoapTargetType(Enum):
     GROUP = "group"
     RESOURCE_CLASS = "resource_class"
     PROPERTY = "property"
+
+
+class Oap(BaseModel):
+    """Model representing an object access permission, containing a scope and the IRI of the resource/value"""
+
+    scope: PermissionScope
+    object_iri: str
