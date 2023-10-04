@@ -8,8 +8,8 @@ from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import (
     get_doaps_of_project,
     print_doaps_of_project,
-    set_doaps_of_groups,
 )
+from dsp_permissions_scripts.utils.doap_set import set_doaps_of_groups
 from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
