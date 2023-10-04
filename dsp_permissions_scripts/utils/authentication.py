@@ -3,7 +3,7 @@ import os
 import requests
 
 
-def __get_token(host: str, email: str, pw: str) -> str:
+def _get_token(host: str, email: str, pw: str) -> str:
     """
     requests an access token from the API, provided host, email and password.
     """
@@ -15,7 +15,7 @@ def __get_token(host: str, email: str, pw: str) -> str:
     return token
 
 
-def __get_login_credentials(host: str) -> tuple[str, str]:
+def _get_login_credentials(host: str) -> tuple[str, str]:
     """
     Retrieve user email and password from the environment variables.
     In case of localhost, return the default email/password for localhost.
@@ -41,8 +41,8 @@ def login(host: str) -> str:
     Returns:
         token: access token
     """
-    user, pw = __get_login_credentials(host)
-    token = __get_token(host, user, pw)
+    user, pw = _get_login_credentials(host)
+    token = _get_token(host, user, pw)
     return token
 
 
