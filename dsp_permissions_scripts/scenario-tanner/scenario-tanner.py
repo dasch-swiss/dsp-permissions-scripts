@@ -6,7 +6,7 @@ from dsp_permissions_scripts.utils.doap_get import (
     get_doaps_of_project,
     print_doaps_of_project,
 )
-from dsp_permissions_scripts.utils.doap_set import __update_doap_scope
+from dsp_permissions_scripts.utils.doap_set import _update_doap_scope
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
@@ -62,7 +62,7 @@ def fix_doaps(
         d.scope.V.append("http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA")
     new_doaps = []
     for d in doaps:
-        new_doap = __update_doap_scope(
+        new_doap = _update_doap_scope(
             doap_iri=d.doap_iri,
             scope=d.scope,
             host=host,
