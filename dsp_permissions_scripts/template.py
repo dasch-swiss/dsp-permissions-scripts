@@ -12,6 +12,10 @@ from dsp_permissions_scripts.utils.doap_get import (
 )
 from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
+from dsp_permissions_scripts.utils.oap_serialize import (
+    deserialize_resource_oaps,
+    serialize_resource_oaps,
+)
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
@@ -41,7 +45,21 @@ def update_oaps(
         host=host,
         token=token,
     )
+    serialize_resource_oaps(
+        resource_oaps=resource_oaps,
+        shortcode=shortcode,
+        mode="original",
+    )
     resource_oaps_updated = modify_oaps(oaps=resource_oaps)
+    serialize_resource_oaps(
+        resource_oaps=resource_oaps,
+        shortcode=shortcode,
+        mode="modified",
+    )
+    resource_oaps_updated = deserialize_resource_oaps(
+        shortcode=shortcode,
+        mode="modified",
+    )
     apply_updated_oaps_on_server(
         resource_oaps=resource_oaps_updated,
         host=host,
