@@ -9,7 +9,7 @@ def _get_project_data_path(
     shortcode: str,
     mode: Literal["original", "modified"]
 ) -> Path:
-    return Path(f"project_data/{shortcode}_OAPs_{mode}")
+    return Path(f"project_data/{shortcode}/OAPs_{mode}")
 
 
 def serialize_resource_oaps(
