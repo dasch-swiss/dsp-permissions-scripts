@@ -2,7 +2,7 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.permission import Oap
+from dsp_permissions_scripts.models.doap import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string

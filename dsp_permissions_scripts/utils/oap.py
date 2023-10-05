@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.permission import Oap
+from dsp_permissions_scripts.models.doap import Oap
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.utils.authentication import get_protocol
