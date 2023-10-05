@@ -1,9 +1,21 @@
+from __future__ import annotations
+
 from enum import Enum
 from typing import Self
 
 from pydantic import BaseModel, model_validator
 
 from dsp_permissions_scripts.models.scope import PermissionScope
+
+
+class Doap(BaseModel):
+    """
+    Model representing a DOAP, containing the target, the scope and the IRI of the DOAP.
+    """
+
+    target: DoapTarget
+    scope: PermissionScope
+    doap_iri: str
 
 
 class DoapTarget(BaseModel):
@@ -26,25 +38,8 @@ class DoapTarget(BaseModel):
         return self
 
 
-class Doap(BaseModel):
-    """
-    Model representing a DOAP, containing the target, the scope and the IRI of the DOAP.
-    """
-
-    target: DoapTarget
-    scope: PermissionScope
-    doap_iri: str
-
-
 class DoapTargetType(Enum):
     ALL = "all"
     GROUP = "group"
     RESOURCE_CLASS = "resource_class"
     PROPERTY = "property"
-
-
-class Oap(BaseModel):
-    """Model representing an object access permission, containing a scope and the IRI of the resource/value"""
-
-    scope: PermissionScope
-    object_iri: str
