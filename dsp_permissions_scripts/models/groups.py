@@ -11,5 +11,4 @@ class BuiltinGroup(Enum):
     CREATOR = "http://www.knora.org/ontology/knora-admin#Creator"
     PROJECT_MEMBER = "http://www.knora.org/ontology/knora-admin#ProjectMember"
     PROJECT_ADMIN = "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
-    SYSTEM_USER = "http://www.knora.org/ontology/knora-admin#SystemUser"
     SYSTEM_ADMIN = "http://www.knora.org/ontology/knora-admin#SystemAdmin"
