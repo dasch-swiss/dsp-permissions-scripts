@@ -42,22 +42,22 @@ class TestScopeSerialization(unittest.TestCase):
     ]
     scopes = [
         PermissionScope(
-            CR=[BuiltinGroup.SYSTEM_USER],
-            V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
+            CR={BuiltinGroup.SYSTEM_USER},
+            V={"http://www.knora.org/ontology/knora-admin#CustomGroup"},
         ),
         PermissionScope(
-            D=[BuiltinGroup.PROJECT_ADMIN],
-            RV=[BuiltinGroup.PROJECT_MEMBER],
+            D={BuiltinGroup.PROJECT_ADMIN},
+            RV={BuiltinGroup.PROJECT_MEMBER},
         ),
         PermissionScope(
-            M=[BuiltinGroup.PROJECT_ADMIN],
-            V=[BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER],
-            RV=[BuiltinGroup.UNKNOWN_USER],
+            M={BuiltinGroup.PROJECT_ADMIN},
+            V={BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER},
+            RV={BuiltinGroup.UNKNOWN_USER},
         ),
         PermissionScope(
-            CR=[BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN],
-            D=[BuiltinGroup.CREATOR],
-            RV=[BuiltinGroup.UNKNOWN_USER],
+            CR={BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN},
+            D={BuiltinGroup.CREATOR},
+            RV={BuiltinGroup.UNKNOWN_USER},
         ),
     ]
 
