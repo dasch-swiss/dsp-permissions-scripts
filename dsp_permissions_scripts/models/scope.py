@@ -16,8 +16,8 @@ class PermissionScope(BaseModel, validate_assignment=True):
     RV: frozenset[str | BuiltinGroup] = frozenset()
 
     def __init__(self, **kwargs):
-        kwargs_frozenset = {frozenset(x) for x in kwargs}
-        super().__init__(**kwargs_frozenset)
+        kwargs_as_frozenset = {k: frozenset(v) for k, v in kwargs.items()}
+        super().__init__(**kwargs_as_frozenset)
 
     @model_validator(mode="after")
     def check_fields(self):

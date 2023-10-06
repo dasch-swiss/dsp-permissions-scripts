@@ -89,7 +89,7 @@ class TestScopeSerialization(unittest.TestCase):
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             admin_route_object_full = self._resolve_prefixes_of_admin_route_object(admin_route_object)
-            self.assertEqual(
+            self.assertCountEqual(
                 create_admin_route_object_from_scope(scope),
                 admin_route_object_full,
                 msg=f"Failed with admin group object no. {index}",
