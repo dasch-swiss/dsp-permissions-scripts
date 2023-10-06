@@ -22,7 +22,7 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     for oap in oaps:
-        oap.scope.CR.add(BuiltinGroup.SYSTEM_ADMIN)
+        oap.scope.CR = frozenset(oap.scope.CR | {BuiltinGroup.SYSTEM_ADMIN})
     return oaps
 
 
