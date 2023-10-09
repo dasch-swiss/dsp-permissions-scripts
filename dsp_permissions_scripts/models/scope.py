@@ -35,8 +35,8 @@ class PermissionScope(BaseModel, validate_assignment=True):
 
     def add(
         self,
-        group: str | BuiltinGroup,
         permission: Literal["CR", "D", "M", "V", "RV"],
+        group: str | BuiltinGroup,
     ):
         groups = list(getattr(self, permission))
         groups.append(group)
