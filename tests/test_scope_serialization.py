@@ -14,14 +14,14 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 
 class TestScopeSerialization(unittest.TestCase):
     perm_strings = [
-        "CR knora-admin:SystemUser|V knora-admin:CustomGroup",
+        "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
         "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
         "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
     ]
     admin_route_objects = [
         [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemUser", "permissionCode": None},
+            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin", "permissionCode": None},
             {"name": "V", "additionalInformation": "knora-admin:CustomGroup", "permissionCode": None},
         ],
         [
@@ -43,8 +43,8 @@ class TestScopeSerialization(unittest.TestCase):
     ]
     scopes = [
         PermissionScope(
-            CR={BuiltinGroup.SYSTEM_USER},
-            V={"http://www.knora.org/ontology/knora-admin#CustomGroup"},
+            CR=[BuiltinGroup.SYSTEM_ADMIN],
+            V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
         ),
         PermissionScope(
             D={BuiltinGroup.PROJECT_ADMIN},
