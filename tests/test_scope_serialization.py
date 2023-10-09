@@ -65,7 +65,9 @@ class TestScopeSerialization(unittest.TestCase):
     def test_create_scope_from_string(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
             returned = json.loads(create_scope_from_string(perm_string).model_dump_json())
+            returned = {k: sorted(v) for k, v in returned.items()}
             expected = json.loads(scope.model_dump_json())
+            expected = {k: sorted(v) for k, v in expected.items()}
             self.assertDictEqual(
                 returned,
                 expected,
@@ -75,7 +77,9 @@ class TestScopeSerialization(unittest.TestCase):
     def test_create_scope_from_admin_route_object(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             returned = json.loads(create_scope_from_admin_route_object(admin_route_object).model_dump_json())
+            returned = {k: sorted(v) for k, v in returned.items()}
             expected = json.loads(scope.model_dump_json())
+            expected = {k: sorted(v) for k, v in expected.items()}
             self.assertDictEqual(
                 returned,
                 expected,

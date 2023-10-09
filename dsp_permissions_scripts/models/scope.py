@@ -3,7 +3,6 @@ from typing import Literal
 from pydantic import BaseModel, model_validator
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
-from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
 class PermissionScope(BaseModel, validate_assignment=True):
@@ -40,8 +39,7 @@ class PermissionScope(BaseModel, validate_assignment=True):
     ):
         groups = list(getattr(self, permission))
         groups.append(group)
-        groups_sorted = sort_groups(groups)
-        setattr(self, permission, groups_sorted)
+        setattr(self, permission, groups)
 
 
 PUBLIC = PermissionScope(
