@@ -20,15 +20,15 @@ class TestScope(unittest.TestCase):
             V={BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER},
         )
         with self.assertRaisesRegex(ValueError, "must not occur in more than one field"):
-            scope.D = frozenset({BuiltinGroup.PROJECT_ADMIN})
+            scope.add("RV", BuiltinGroup.PROJECT_ADMIN)
 
-    # def test_scope_validation_on_update(self) -> None:
-    #     scope = PermissionScope(
-    #         CR={BuiltinGroup.PROJECT_ADMIN},
-    #         V={BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER},
-    #     )
-    #     with self.assertRaisesRegex(ValueError, "must not occur in more than one field"):
-    #         scope.D.add(BuiltinGroup.PROJECT_ADMIN)
+    def test_scope_validation_on_update(self) -> None:
+        scope = PermissionScope(
+            CR={BuiltinGroup.PROJECT_ADMIN},
+            V={BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER},
+        )
+        with self.assertRaisesRegex(ValueError, "must not occur in more than one field"):
+            scope.add("D", BuiltinGroup.PROJECT_ADMIN)
 
 
 if __name__ == "__main__":
