@@ -16,7 +16,7 @@ def sort_algorith_custom_groups(group: str) -> int:
 
 
 def sort_groups(groups_original: list[str]) -> list[str]:
-    """Sorts groups by their name, except for the built-in groups, which are sorted to the beginning."""
+    """Sorts groups, first according to their power (most powerful first), then alphabetically."""
     sort_key = list(reversed([x.value for x in BuiltinGroup]))
     groups = groups_original.copy()
     groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else sort_algorith_custom_groups(x))

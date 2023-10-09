@@ -16,6 +16,7 @@ class PermissionScope(BaseModel, validate_assignment=True):
     RV: frozenset[str | BuiltinGroup] = frozenset()
 
     def __init__(self, **kwargs):
+        # for conventience, allow initialization with sets instead of frozensets
         kwargs_as_frozenset = {k: frozenset(v) for k, v in kwargs.items()}
         super().__init__(**kwargs_as_frozenset)
 
