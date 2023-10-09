@@ -23,7 +23,7 @@ class PermissionScope(BaseModel, validate_assignment=True):
         super().__init__(**kwargs_as_frozenset)
 
     @model_validator(mode="after")
-    def check_fields(self):
+    def check_group_occurs_only_once(self):
         all_groups = []
         for field in self.model_fields:
             all_groups.extend(getattr(self, field))
@@ -37,6 +37,7 @@ class PermissionScope(BaseModel, validate_assignment=True):
         permission: Literal["CR", "D", "M", "V", "RV"],
         group: str | BuiltinGroup,
     ):
+        """Add a group to a permission."""
         groups = list(getattr(self, permission))
         groups.append(group)
         setattr(self, permission, groups)

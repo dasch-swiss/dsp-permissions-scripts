@@ -9,15 +9,15 @@ def dereference_prefix(
     return context[prefix] + actual_id
 
 
-def sort_algorith_custom_groups(group: str) -> int:
+def _get_sort_pos_of_custom_group(group: str) -> int:
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
     relevant_letter = group.replace("http://www.knora.org/ontology/knora-admin#", "")[0]
-    return alphabet.index(relevant_letter.lower()) + 999
+    return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
 def sort_groups(groups_original: list[str]) -> list[str]:
     """Sorts groups, first according to their power (most powerful first), then alphabetically."""
     sort_key = list(reversed([x.value for x in BuiltinGroup]))
     groups = groups_original.copy()
-    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else sort_algorith_custom_groups(x))
+    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x))
     return groups
