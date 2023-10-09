@@ -30,6 +30,20 @@ class TestScope(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "must not occur in more than one field"):
             scope.add("D", BuiltinGroup.PROJECT_ADMIN)
 
+    def test_add_to_scope(self) -> None:
+        scope = PermissionScope(
+            D={BuiltinGroup.SYSTEM_ADMIN},
+            M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
+        )
+        scope.add("CR", BuiltinGroup.PROJECT_ADMIN)
+        self.assertEqual(
+            scope,
+            PermissionScope(
+                CR={BuiltinGroup.PROJECT_ADMIN},
+                D={BuiltinGroup.SYSTEM_ADMIN},
+                M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
+            ),
+        )
 
 if __name__ == "__main__":
     unittest.main()
