@@ -1,6 +1,9 @@
+from typing import Literal
+
 from pydantic import BaseModel, model_validator
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
 class PermissionScope(BaseModel, validate_assignment=True):
@@ -29,6 +32,16 @@ class PermissionScope(BaseModel, validate_assignment=True):
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
         return self
+
+    def add(
+        self,
+        group: str | BuiltinGroup,
+        permission: Literal["CR", "D", "M", "V", "RV"],
+    ):
+        groups = list(getattr(self, permission))
+        groups.append(group)
+        groups_sorted = sort_groups(groups)
+        setattr(self, permission, groups_sorted)
 
 
 PUBLIC = PermissionScope(
