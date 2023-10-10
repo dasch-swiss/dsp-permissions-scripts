@@ -2,6 +2,7 @@ from typing import Any
 from urllib.parse import quote_plus
 
 import requests
+from dsp_permissions_scripts.dsp_connection_service.dsp_connection_service import DspConnectionService
 
 from dsp_permissions_scripts.models.doap import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.utils.authentication import get_protocol
@@ -38,37 +39,10 @@ def _get_all_doaps_of_project(
     project_iri: str,
     host: str,
     token: str,
+    dsp_connection: DspConnectionService,
 ) -> list[Doap]:
-    """
-    Returns all DOAPs of the given project.
-    """
-    headers = {"Authorization": f"Bearer {token}"}
-    project_iri = quote_plus(project_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
-    doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
-    doap_objects = [create_doap_from_admin_route_response(doap) for doap in doaps]
-    return doap_objects
-
-
-def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
-    """
-    Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
-    """
-    scope = create_scope_from_admin_route_object(permission["hasPermissions"])
-    doap = Doap(
-        target=DoapTarget(
-            project=permission["forProject"],
-            group=permission["forGroup"],
-            resource_class=permission["forResourceClass"],
-            property=permission["forProperty"],
-        ),
-        scope=scope,
-        doap_iri=permission["iri"],
-    )
-    return doap
+    """Returns all DOAPs of the given project."""
+    return dsp_connection.get_all_doaps_of_project(project_iri, host, token)
 
 
 def get_doaps_of_project(
@@ -76,6 +50,7 @@ def get_doaps_of_project(
     shortcode: str,
     token: str,
     target: DoapTargetType = DoapTargetType.ALL,
+    dsp_connection: DspConnectionService,
 ) -> list[Doap]:
     """
     Returns the doaps for a project.
@@ -91,6 +66,7 @@ def get_doaps_of_project(
         project_iri=project_iri,
         host=host,
         token=token,
+        dsp_connection,
     )
     filtered_doaps = _filter_doaps_by_target(
         doaps=doaps,

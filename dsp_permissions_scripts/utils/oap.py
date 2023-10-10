@@ -39,9 +39,7 @@ def _get_resource(
     host: str,
     token: str,
 ) -> dict[str, Any]:
-    """
-    Requests the resource with the given IRI from the API.
-    """
+    """Requests the resource with the given IRI from the API."""
     iri = quote_plus(resource_iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/resources/{iri}"
@@ -83,9 +81,7 @@ def _update_permissions_for_value(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates the permissions for the given value.
-    """
+    """Updates the permissions for the given value."""
     payload = {
         "@id": resource_iri,
         "@type": resource_type,
@@ -125,9 +121,7 @@ def _update_permissions_for_resource(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates the permissions for the given resource.
-    """
+    """Updates the permissions for the given resource."""
     payload = {
         "@id": resource_iri,
         "@type": resource_type,

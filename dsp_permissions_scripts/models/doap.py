@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Self
+from typing import Any, Self
 
 from pydantic import BaseModel, model_validator
 
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 
 
 class Doap(BaseModel):
@@ -43,3 +44,21 @@ class DoapTargetType(Enum):
     GROUP = "group"
     RESOURCE_CLASS = "resource_class"
     PROPERTY = "property"
+
+
+def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
+    """
+    Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
+    """
+    scope = create_scope_from_admin_route_object(permission["hasPermissions"])
+    doap = Doap(
+        target=DoapTarget(
+            project=permission["forProject"],
+            group=permission["forGroup"],
+            resource_class=permission["forResourceClass"],
+            property=permission["forProperty"],
+        ),
+        scope=scope,
+        doap_iri=permission["iri"],
+    )
+    return doap

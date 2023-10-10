@@ -1,18 +1,11 @@
 import os
 
-import requests
+from dsp_permissions_scripts.dsp_connection_service.dsp_connection_service import DspConnectionService
 
 
-def _get_token(host: str, email: str, pw: str) -> str:
-    """
-    requests an access token from the API, provided host, email and password.
-    """
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/authentication"
-    response = requests.post(url, json={"email": email, "password": pw}, timeout=5)
-    assert response.status_code == 200
-    token: str = response.json()["token"]
-    return token
+def _get_token(host: str, email: str, pw: str, dsp_connection: DspConnectionService) -> str:
+    """requests an access token from the API, provided host, email and password."""
+    return dsp_connection.get_token(host, email, pw)
 
 
 def _get_login_credentials(host: str) -> tuple[str, str]:
@@ -31,7 +24,10 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     return user, pw
 
 
-def login(host: str) -> str:
+def login(
+    host: str,
+    dsp_connection: DspConnectionService
+) -> str:
     """
     Login with the DSP server
 
@@ -42,9 +38,5 @@ def login(host: str) -> str:
         token: access token
     """
     user, pw = _get_login_credentials(host)
-    token = _get_token(host, user, pw)
+    token = _get_token(host, user, pw, dsp_connection)
     return token
-
-
-def get_protocol(host: str) -> str:
-    return "http" if host.startswith("localhost") else "https"

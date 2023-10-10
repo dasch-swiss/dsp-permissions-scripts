@@ -20,9 +20,7 @@ def _update_doap_scope(
     host: str,
     token: str,
 ) -> Doap:
-    """
-    Updates the scope of the given DOAP.
-    """
+    """Updates the scope of the given DOAP."""
     iri = quote_plus(doap_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)

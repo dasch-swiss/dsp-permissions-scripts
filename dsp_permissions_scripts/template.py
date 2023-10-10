@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+from dsp_permissions_scripts.dsp_connection_service.dsp_connection_service import DspConnectionService
+from dsp_permissions_scripts.dsp_connection_service.dsp_connection_service_live import DspConnectionServiceLive
 
 from dsp_permissions_scripts.models.doap import Doap
 from dsp_permissions_scripts.models.groups import BuiltinGroup
@@ -71,12 +73,14 @@ def update_doaps(
     host: str,
     shortcode: str,
     token: str,
+    dsp_connection: DspConnectionService,
 ) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
         token=token,
+        dsp_connection=dsp_connection,
     )
     print_doaps_of_project(
         doaps=project_doaps,
@@ -101,7 +105,8 @@ def main() -> None:
     load_dotenv()  # set login credentials from .env file as environment variables
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    token = login(host)
+    dsp_connection = DspConnectionServiceLive()
+    token = login(host, dsp_connection)
 
     update_oaps(
         host=host,
@@ -112,6 +117,7 @@ def main() -> None:
         host=host,
         shortcode=shortcode,
         token=token,
+        dsp_connection=dsp_connection,
     )
 
 
