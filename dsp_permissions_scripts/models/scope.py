@@ -1,15 +1,18 @@
-from typing import Literal
+from __future__ import annotations
 
-from pydantic import BaseModel, model_validator
+from typing import Iterable, Literal
+
+from pydantic import BaseModel, ConfigDict, model_validator
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 
 
-class PermissionScope(BaseModel, validate_assignment=True):
+class PermissionScope(BaseModel):
     """
     A scope is an object encoding the information:
     "Which user group gets which permissions on a resource/value?"
     """
+    model_config = ConfigDict(frozen=True)
 
     CR: frozenset[str | BuiltinGroup] = frozenset()
     D: frozenset[str | BuiltinGroup] = frozenset()
@@ -17,10 +20,22 @@ class PermissionScope(BaseModel, validate_assignment=True):
     V: frozenset[str | BuiltinGroup] = frozenset()
     RV: frozenset[str | BuiltinGroup] = frozenset()
 
-    def __init__(self, **kwargs):
-        # for conventience, allow initialization with sets instead of frozensets
-        kwargs_as_frozenset = {k: frozenset(v) for k, v in kwargs.items()}
-        super().__init__(**kwargs_as_frozenset)
+    @staticmethod
+    def create(
+        CR: Iterable[str | BuiltinGroup] = (),
+        D: Iterable[str | BuiltinGroup] = (),
+        M: Iterable[str | BuiltinGroup] = (),
+        V: Iterable[str | BuiltinGroup] = (),
+        RV: Iterable[str | BuiltinGroup] = (),
+    ) -> PermissionScope:
+        """Factory method to create a PermissionScope from Iterables instead of frozensets."""
+        return PermissionScope(
+            CR=frozenset(CR),
+            D=frozenset(D),
+            M=frozenset(M),
+            V=frozenset(V),
+            RV=frozenset(RV),
+        )
 
     @model_validator(mode="after")
     def check_group_occurs_only_once(self):
@@ -40,10 +55,14 @@ class PermissionScope(BaseModel, validate_assignment=True):
         """Add a group to a permission."""
         groups = list(getattr(self, permission))
         groups.append(group)
-        setattr(self, permission, groups)
+        kwargs = {permission: groups}
+        for perm in ["CR", "D", "M", "V", "RV"]:
+            if perm != permission:
+                kwargs[perm] = getattr(self, perm)
+        return PermissionScope.create(**kwargs)
 
 
-PUBLIC = PermissionScope(
+PUBLIC = PermissionScope.create(
     CR={BuiltinGroup.PROJECT_ADMIN},
     D={BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER},
     V={BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER},

@@ -42,20 +42,20 @@ class TestScopeSerialization(unittest.TestCase):
         ],
     ]
     scopes = [
-        PermissionScope(
+        PermissionScope.create(
             CR=[BuiltinGroup.SYSTEM_ADMIN],
             V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
         ),
-        PermissionScope(
+        PermissionScope.create(
             D={BuiltinGroup.PROJECT_ADMIN},
             RV={BuiltinGroup.PROJECT_MEMBER},
         ),
-        PermissionScope(
+        PermissionScope.create(
             M={BuiltinGroup.PROJECT_ADMIN},
             V={BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER},
             RV={BuiltinGroup.UNKNOWN_USER},
         ),
-        PermissionScope(
+        PermissionScope.create(
             CR={BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN},
             D={BuiltinGroup.CREATOR},
             RV={BuiltinGroup.UNKNOWN_USER},
