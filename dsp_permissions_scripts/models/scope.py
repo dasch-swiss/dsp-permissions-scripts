@@ -42,8 +42,9 @@ class PermissionScope(BaseModel):
         all_groups = []
         for field in self.model_fields:
             all_groups.extend(getattr(self, field))
-        for group in all_groups:
-            if all_groups.count(group) > 1:
+        all_groups_as_strs = [g.value if isinstance(g, BuiltinGroup) else g for g in all_groups]
+        for group in all_groups_as_strs:
+            if all_groups_as_strs.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
         return self
 
