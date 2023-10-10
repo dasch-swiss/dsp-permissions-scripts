@@ -52,9 +52,12 @@ class PermissionScope(BaseModel):
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
         group: str | BuiltinGroup,
-    ):
-        """Add a group to a permission."""
-        groups = list(getattr(self, permission))
+    ) -> PermissionScope:
+        """Return a copy of the PermissionScope instance with group added to permission."""
+        groups = [g.value if isinstance(g, BuiltinGroup) else g for g in getattr(self, permission)]
+        group = group.value if isinstance(group, BuiltinGroup) else group
+        if group in groups:
+            raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups.append(group)
         kwargs = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
