@@ -2,6 +2,7 @@ import unittest
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.scope import PermissionScope
+from tests.test_scope_serialization import compare_scopes
 
 
 class TestScope(unittest.TestCase):
@@ -39,13 +40,13 @@ class TestScope(unittest.TestCase):
             M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
         )
         scope_added = scope.add("CR", BuiltinGroup.PROJECT_ADMIN)
-        self.assertEqual(
-            scope_added.model_dump_json(),
-            PermissionScope.create(
+        compare_scopes(
+            scope1=scope_added,
+            scope2=PermissionScope.create(
                 CR={BuiltinGroup.PROJECT_ADMIN},
                 D={BuiltinGroup.SYSTEM_ADMIN},
                 M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
-            ).model_dump_json(),
+            ),
         )
 
     def test_remove_inexisting_group(self) -> None:
@@ -71,12 +72,12 @@ class TestScope(unittest.TestCase):
             M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
         )
         scope_removed = scope.remove("CR", BuiltinGroup.PROJECT_ADMIN)
-        self.assertEqual(
-            scope_removed.model_dump_json(),
-            PermissionScope.create(
+        compare_scopes(
+            scope1=scope_removed,
+            scope2=PermissionScope.create(
                 D={BuiltinGroup.SYSTEM_ADMIN},
                 M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
-            ).model_dump_json(),
+            ),
         )
 
 if __name__ == "__main__":
