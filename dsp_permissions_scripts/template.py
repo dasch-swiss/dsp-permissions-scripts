@@ -41,7 +41,7 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     return oaps
 
 
-def update_administrative_permissions(
+def update_aps(
     host: str,
     shortcode: str,
     token: str,
@@ -146,7 +146,7 @@ def main() -> None:
     shortcode = "F18E"
     token = login(host)
 
-    update_administrative_permissions(
+    update_aps(
         host=host,
         shortcode=shortcode,
         token=token,
