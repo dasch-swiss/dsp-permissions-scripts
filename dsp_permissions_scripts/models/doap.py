@@ -20,9 +20,9 @@ class Doap(BaseModel):
 
 class DoapTarget(BaseModel):
     project: str
-    group: str | None
-    resource_class: str | None
-    property: str | None
+    group: str | None = None
+    resource_class: str | None = None
+    property: str | None = None
 
     @model_validator(mode="after")
     def assert_correct_combination(self) -> Self:
