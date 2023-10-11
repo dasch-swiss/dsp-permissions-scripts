@@ -4,13 +4,10 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.ap import Ap
+from dsp_permissions_scripts.models.ap import Ap, ApValue
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
-from dsp_permissions_scripts.utils.scope_serialization import (
-    create_scope_from_admin_route_object,
-)
 
 logger = get_logger(__name__)
 
@@ -19,11 +16,11 @@ def _create_ap_from_admin_route_response(permission: dict[str, Any]) -> Ap:
     """
     Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}
     """
-    scope = create_scope_from_admin_route_object(permission["hasPermissions"])
+    names = frozenset(ApValue(p["name"]) for p in permission["hasPermissions"])
     ap = Ap(
         forGroup=permission["forGroup"],
         forProject=permission["forProject"],
-        hasPermissions=scope,
+        hasPermissions=names,
         iri=permission["iri"],
     )
     return ap

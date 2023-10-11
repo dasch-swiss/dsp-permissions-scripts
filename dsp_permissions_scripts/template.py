@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.models.ap import Ap
+from dsp_permissions_scripts.models.ap import Ap, ApValue
 from dsp_permissions_scripts.models.doap import Doap
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
@@ -18,8 +18,10 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
-    for ap in aps: 
-        pass
+    for ap in aps:
+        if ap.forGroup == BuiltinGroup.PROJECT_ADMIN.value:
+            if ApValue.ProjectAdminAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminAllPermission)
     return aps
 
 
