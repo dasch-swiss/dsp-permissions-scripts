@@ -12,6 +12,18 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 )
 
 
+def compare_scopes(
+    scope1: PermissionScope, 
+    scope2: PermissionScope,
+    msg: str | None = None,
+) -> None:
+    scope1_dict = json.loads(scope1.model_dump_json())
+    scope1_dict = {k: sorted(v) for k, v in scope1_dict.items()}
+    scope2_dict = json.loads(scope2.model_dump_json())
+    scope2_dict = {k: sorted(v) for k, v in scope2_dict.items()}
+    unittest.TestCase().assertDictEqual(scope1_dict, scope2_dict, msg=msg)
+
+
 class TestScopeSerialization(unittest.TestCase):
     perm_strings = [
         "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
@@ -64,25 +76,17 @@ class TestScopeSerialization(unittest.TestCase):
 
     def test_create_scope_from_string(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            returned = json.loads(create_scope_from_string(perm_string).model_dump_json())
-            returned = {k: sorted(v) for k, v in returned.items()}
-            expected = json.loads(scope.model_dump_json())
-            expected = {k: sorted(v) for k, v in expected.items()}
-            self.assertDictEqual(
-                returned,
-                expected,
+            compare_scopes(
+                scope1=create_scope_from_string(perm_string),
+                scope2=scope,
                 msg=f"Failed with permission string '{perm_string}'",
             )
 
     def test_create_scope_from_admin_route_object(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            returned = json.loads(create_scope_from_admin_route_object(admin_route_object).model_dump_json())
-            returned = {k: sorted(v) for k, v in returned.items()}
-            expected = json.loads(scope.model_dump_json())
-            expected = {k: sorted(v) for k, v in expected.items()}
-            self.assertDictEqual(
-                returned,
-                expected,
+            compare_scopes(
+                scope1=create_scope_from_admin_route_object(admin_route_object),
+                scope2=scope,
                 msg=f"Failed with admin group object no. {index}",
             )
 
