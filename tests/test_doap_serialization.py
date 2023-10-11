@@ -2,9 +2,9 @@ import shutil
 import unittest
 from pathlib import Path
 
-from dsp_permissions_scripts.models import scope
 from dsp_permissions_scripts.models.doap import Doap, DoapTarget
 from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.doap_serialize import (
     deserialize_doaps_of_project,
     serialize_doaps_of_project,
@@ -26,7 +26,7 @@ class TestDoapSerialization(unittest.TestCase):
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
             ),
-            scope=scope.PermissionScope.create(
+            scope=PermissionScope.create(
                 CR=[BuiltinGroup.PROJECT_ADMIN],
                 V=[BuiltinGroup.PROJECT_MEMBER],
             ),
@@ -37,7 +37,7 @@ class TestDoapSerialization(unittest.TestCase):
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group="http://www.knora.org/ontology/knora-admin#ProjectMember",
             ),
-            scope=scope.PermissionScope.create(
+            scope=PermissionScope.create(
                 D=[BuiltinGroup.SYSTEM_ADMIN],
                 M=[BuiltinGroup.KNOWN_USER],
             ),
