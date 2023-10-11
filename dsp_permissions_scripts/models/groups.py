@@ -12,3 +12,6 @@ class BuiltinGroup(Enum):
     PROJECT_ADMIN = "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
     CREATOR = "http://www.knora.org/ontology/knora-admin#Creator"
     SYSTEM_ADMIN = "http://www.knora.org/ontology/knora-admin#SystemAdmin"
+    
+    def __str__(self):
+        return self.value
