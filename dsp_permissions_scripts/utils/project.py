@@ -5,6 +5,7 @@ import requests
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.helpers import dereference_prefix
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 logger = get_logger(__name__)
@@ -61,13 +62,8 @@ def _get_class_iris_of_onto(
     all_entities = response.json()["@graph"]
     context = response.json()["@context"]
     class_ids = [c["@id"] for c in all_entities if c.get("knora-api:isResourceClass")]
-    class_iris = [_dereference_prefix(class_id, context) for class_id in class_ids]
+    class_iris = [dereference_prefix(class_id, context) for class_id in class_ids]
     return class_iris
-
-
-def _dereference_prefix(identifier: str, context: dict[str, str]) -> str:
-    prefix, actual_id = identifier.split(":")
-    return context[prefix] + actual_id
 
 
 def _get_all_resource_oaps_of_resclass(

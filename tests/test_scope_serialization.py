@@ -1,3 +1,4 @@
+import json
 import unittest
 from typing import Any
 
@@ -41,39 +42,47 @@ class TestScopeSerialization(unittest.TestCase):
         ],
     ]
     scopes = [
-        PermissionScope(
+        PermissionScope.create(
             CR=[BuiltinGroup.SYSTEM_ADMIN],
             V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
         ),
-        PermissionScope(
-            D=[BuiltinGroup.PROJECT_ADMIN],
-            RV=[BuiltinGroup.PROJECT_MEMBER],
+        PermissionScope.create(
+            D={BuiltinGroup.PROJECT_ADMIN},
+            RV={BuiltinGroup.PROJECT_MEMBER},
         ),
-        PermissionScope(
-            M=[BuiltinGroup.PROJECT_ADMIN],
-            V=[BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER],
-            RV=[BuiltinGroup.UNKNOWN_USER],
+        PermissionScope.create(
+            M={BuiltinGroup.PROJECT_ADMIN},
+            V={BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER},
+            RV={BuiltinGroup.UNKNOWN_USER},
         ),
-        PermissionScope(
-            CR=[BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN],
-            D=[BuiltinGroup.CREATOR],
-            RV=[BuiltinGroup.UNKNOWN_USER],
+        PermissionScope.create(
+            CR={BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN},
+            D={BuiltinGroup.CREATOR},
+            RV={BuiltinGroup.UNKNOWN_USER},
         ),
     ]
 
     def test_create_scope_from_string(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            self.assertEqual(
-                create_scope_from_string(perm_string).model_dump_json(),
-                scope.model_dump_json(),
+            returned = json.loads(create_scope_from_string(perm_string).model_dump_json())
+            returned = {k: sorted(v) for k, v in returned.items()}
+            expected = json.loads(scope.model_dump_json())
+            expected = {k: sorted(v) for k, v in expected.items()}
+            self.assertDictEqual(
+                returned,
+                expected,
                 msg=f"Failed with permission string '{perm_string}'",
             )
 
     def test_create_scope_from_admin_route_object(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            self.assertEqual(
-                create_scope_from_admin_route_object(admin_route_object).model_dump_json(),
-                scope.model_dump_json(),
+            returned = json.loads(create_scope_from_admin_route_object(admin_route_object).model_dump_json())
+            returned = {k: sorted(v) for k, v in returned.items()}
+            expected = json.loads(scope.model_dump_json())
+            expected = {k: sorted(v) for k, v in expected.items()}
+            self.assertDictEqual(
+                returned,
+                expected,
                 msg=f"Failed with admin group object no. {index}",
             )
 
@@ -89,7 +98,7 @@ class TestScopeSerialization(unittest.TestCase):
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             admin_route_object_full = self._resolve_prefixes_of_admin_route_object(admin_route_object)
-            self.assertEqual(
+            self.assertCountEqual(
                 create_admin_route_object_from_scope(scope),
                 admin_route_object_full,
                 msg=f"Failed with admin group object no. {index}",
