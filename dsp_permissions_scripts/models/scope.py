@@ -64,6 +64,23 @@ class PermissionScope(BaseModel):
             if perm != permission:
                 kwargs[perm] = getattr(self, perm)
         return PermissionScope.create(**kwargs)
+    
+    def remove(
+        self,
+        permission: Literal["CR", "D", "M", "V", "RV"],
+        group: str | BuiltinGroup,
+    ) -> PermissionScope:
+        """Return a copy of the PermissionScope instance with group removed from permission."""
+        groups = [g.value if isinstance(g, BuiltinGroup) else g for g in getattr(self, permission)]
+        group = group.value if isinstance(group, BuiltinGroup) else group
+        if group not in groups:
+            raise ValueError(f"Group '{group}' is not in permission '{permission}'")
+        groups.remove(group)
+        kwargs: dict[str, list[str]] = {permission: groups}
+        for perm in ["CR", "D", "M", "V", "RV"]:
+            if perm != permission:
+                kwargs[perm] = getattr(self, perm)
+        return PermissionScope.create(**kwargs)
 
 
 PUBLIC = PermissionScope.create(
