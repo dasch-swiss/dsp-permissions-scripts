@@ -5,6 +5,7 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.utils.ap import get_aps_of_project
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
@@ -28,6 +29,35 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
         if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
             doap.scope = PUBLIC
     return doaps
+
+
+def update_administrative_permissions(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    """Sample function to modify the administrative permissions of a project."""
+    project_aps = get_aps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_aps_of_project(
+        project_aps=project_aps,
+        shortcode=shortcode,
+        mode="original",
+    )
+    project_aps_updated = modify_aps(doaps=project_aps)
+    serialize_aps_of_project(
+        project_doaps=project_aps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
+    apply_updated_aps_on_server(
+        doaps=project_aps_updated,
+        host=host,
+        token=token,
+    )
 
 
 def update_oaps(
@@ -100,12 +130,17 @@ def main() -> None:
     shortcode = "F18E"
     token = login(host)
 
-    update_oaps(
+    update_administrative_permissions(
         host=host,
         shortcode=shortcode,
         token=token,
     )
     update_doaps(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    update_oaps(
         host=host,
         shortcode=shortcode,
         token=token,
