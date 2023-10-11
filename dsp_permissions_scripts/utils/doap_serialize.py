@@ -24,7 +24,7 @@ def serialize_doaps_of_project(
     explanation_string = f"Project {shortcode} has {len(project_doaps)} DOAPs"
     if target != DoapTargetType.ALL:
         explanation_string += f" which are related to a {target}"
-    doaps_as_dicts = [doap.model_dump(exclude_none=True) for doap in project_doaps]
+    doaps_as_dicts = [doap.model_dump(exclude_none=True, mode="json") for doap in project_doaps]
     doaps_as_dict = {explanation_string: doaps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(doaps_as_dict, ensure_ascii=False, indent=2))
