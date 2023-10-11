@@ -5,10 +5,8 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.doap_get import (
-    get_doaps_of_project,
-    print_doaps_of_project,
-)
+from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
+from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
@@ -45,12 +43,17 @@ def fix_doaps(
         shortcode=shortcode,
         token=token,
     )
-    print_doaps_of_project(
-        doaps=project_doaps,
-        host=host,
+    serialize_doaps_of_project(
+        project_doaps=project_doaps,
         shortcode=shortcode,
+        mode="original",
     )
     project_doaps_updated = modify_doaps(doaps=project_doaps)
+    serialize_doaps_of_project(
+        project_doaps=project_doaps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
     apply_updated_doaps_on_server(
         doaps=project_doaps_updated,
         host=host,
