@@ -48,5 +48,36 @@ class TestScope(unittest.TestCase):
             ).model_dump_json(),
         )
 
+    def test_remove_inexisting_group(self) -> None:
+        scope = PermissionScope.create(
+            D={BuiltinGroup.SYSTEM_ADMIN},
+            M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
+        )
+        with self.assertRaisesRegex(ValueError, "is not in permission 'D'"):
+            _ = scope.remove("D", BuiltinGroup.UNKNOWN_USER)
+        
+    def test_remove_from_empty_perm(self) -> None:
+        scope = PermissionScope.create(
+            D={BuiltinGroup.PROJECT_ADMIN},
+            V={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.UNKNOWN_USER},
+        )
+        with self.assertRaisesRegex(ValueError, "is not in permission 'CR'"):
+            _ = scope.remove("CR", BuiltinGroup.PROJECT_ADMIN)
+
+    def test_remove_from_scope(self) -> None:
+        scope = PermissionScope.create(
+            CR={BuiltinGroup.PROJECT_ADMIN},
+            D={BuiltinGroup.SYSTEM_ADMIN},
+            M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
+        )
+        scope_removed = scope.remove("CR", BuiltinGroup.PROJECT_ADMIN)
+        self.assertEqual(
+            scope_removed.model_dump_json(),
+            PermissionScope.create(
+                D={BuiltinGroup.SYSTEM_ADMIN},
+                M={BuiltinGroup.PROJECT_MEMBER, BuiltinGroup.KNOWN_USER},
+            ).model_dump_json(),
+        )
+
 if __name__ == "__main__":
     unittest.main()
