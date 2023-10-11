@@ -21,34 +21,28 @@ class TestDoapSerialization(unittest.TestCase):
             shutil.rmtree(testdata_dir)
     
     def test_doap_serialization(self):
-        target1 = DoapTarget(
-            project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-            group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-        )
-        scope1 = scope.PermissionScope.create(
-            CR=[BuiltinGroup.PROJECT_ADMIN],
-            V=[BuiltinGroup.PROJECT_MEMBER],
-        )
         doap1 = Doap(
-            target=target1,
-            scope=scope1,
+            target=DoapTarget(
+                project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+                group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+            ),
+            scope=scope.PermissionScope.create(
+                CR=[BuiltinGroup.PROJECT_ADMIN],
+                V=[BuiltinGroup.PROJECT_MEMBER],
+            ),
             doap_iri="http://rdfh.ch/doap-1",
         )
-
-        target2 = DoapTarget(
-            project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-            group="http://www.knora.org/ontology/knora-admin#ProjectMember",
-        )
-        scope2 = scope.PermissionScope.create(
-            D=[BuiltinGroup.SYSTEM_ADMIN],
-            M=[BuiltinGroup.KNOWN_USER],
-        )
         doap2 = Doap(
-            target=target2,
-            scope=scope2,
+            target=DoapTarget(
+                project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+                group="http://www.knora.org/ontology/knora-admin#ProjectMember",
+            ),
+            scope=scope.PermissionScope.create(
+                D=[BuiltinGroup.SYSTEM_ADMIN],
+                M=[BuiltinGroup.KNOWN_USER],
+            ),
             doap_iri="http://rdfh.ch/doap-2",
         )
-
         serialize_doaps_of_project(
             project_doaps=[doap1, doap2],
             shortcode=self.shortcode,
@@ -58,7 +52,6 @@ class TestDoapSerialization(unittest.TestCase):
             shortcode=self.shortcode, 
             mode="original",
         )
-
         self._compare_doaps(deserialized_doaps[0], doap1)
         self._compare_doaps(deserialized_doaps[1], doap2)
 
