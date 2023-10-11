@@ -1,4 +1,5 @@
 import json
+import warnings
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -187,15 +188,25 @@ def apply_updated_oaps_on_server(
     """Applies object access permissions on a DSP server."""
     logger.info("******* Applying updated object access permissions on server *******")
     print(f"{get_timestamp()}: ******* Applying updated object access permissions on server *******")
+    num_of_errors = 0
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
         logger.info("=====")
         logger.info(msg)
         print(f"{get_timestamp()}: {msg}")
-        _update_permissions_for_resource_and_values(
-            resource_iri=resource_oap.object_iri,
-            scope=resource_oap.scope,
-            host=host,
-            token=token,
-        )
+        try:
+            _update_permissions_for_resource_and_values(
+                resource_iri=resource_oap.object_iri,
+                scope=resource_oap.scope,
+                host=host,
+                token=token,
+            )
+        except:  # pylint: disable=bare-except
+            logger.error(f"ERROR while updating permissions of resource {resource_oap.object_iri}", exc_info=True)
+            warnings.warn(f"ERROR while updating permissions of resource {resource_oap.object_iri}")
+            num_of_errors += 1
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
+
+    if num_of_errors:
+        logger.error(f"ERROR: {num_of_errors} resources could not be updated.")
+        warnings.warn(f"ERROR: {num_of_errors} resources could not be updated.")
