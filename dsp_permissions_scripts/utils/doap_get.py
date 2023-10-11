@@ -5,7 +5,7 @@ import requests
 
 from dsp_permissions_scripts.models.doap import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
@@ -98,21 +98,3 @@ def get_doaps_of_project(
     )
     logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to {target}.")
     return filtered_doaps
-
-
-def print_doaps_of_project(
-    doaps: list[Doap],
-    host: str,
-    shortcode: str,
-    target: DoapTargetType = DoapTargetType.ALL,
-) -> None:
-    heading = f"Project {shortcode} on server {host} has {len(doaps)} DOAPs"
-    if target != DoapTargetType.ALL:
-        heading += f" which are related to a {target}"
-    print(f"\n{get_timestamp()}: {heading}\n{'=' * (len(heading) + len(get_timestamp()) + 2)}\n")
-    logger.info(f"******* Printing DOAPs of project {shortcode} on server {host} *******")
-    logger.info(heading)
-    for d in doaps:
-        representation = d.model_dump_json(indent=2, exclude_none=True)
-        print(representation + "\n")
-        logger.info(representation)
