@@ -1,4 +1,6 @@
+import shutil
 import unittest
+from pathlib import Path
 
 from dsp_permissions_scripts.models import scope
 from dsp_permissions_scripts.models.doap import Doap, DoapTarget
@@ -11,9 +13,14 @@ from tests.test_scope_serialization import compare_scopes
 
 
 class TestDoapSerialization(unittest.TestCase):
-    def test_doap_serialization(self):
-        shortcode = "1234"
+    shortcode = "1234"
 
+    def tearDown(self) -> None:
+        testdata_dir = Path(f"project_data/{self.shortcode}")
+        if testdata_dir.is_dir():
+            shutil.rmtree(testdata_dir)
+    
+    def test_doap_serialization(self):
         target1 = DoapTarget(
             project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
             group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
@@ -44,11 +51,11 @@ class TestDoapSerialization(unittest.TestCase):
 
         serialize_doaps_of_project(
             project_doaps=[doap1, doap2],
-            shortcode=shortcode,
+            shortcode=self.shortcode,
             mode="original",
         )
         deserialized_doaps = deserialize_doaps_of_project(
-            shortcode=shortcode, 
+            shortcode=self.shortcode, 
             mode="original",
         )
 
