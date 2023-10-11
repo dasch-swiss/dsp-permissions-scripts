@@ -30,7 +30,7 @@ def serialize_doaps_of_project(
         f.write(json.dumps(doaps_as_dict, ensure_ascii=False, indent=2))
 
 
-def deserialize_project_doaps(
+def deserialize_doaps_of_project(
     shortcode: str,
     mode: Literal["original", "modified"],
 ) -> list[Doap]:
