@@ -44,6 +44,7 @@ class TestOapSerialization(unittest.TestCase):
             shortcode=self.shortcode, 
             mode="original",
         )
+        deserialized_oaps.sort(key=lambda oap: oap.object_iri)
         self._compare_oaps(deserialized_oaps[0], oap1)
         self._compare_oaps(deserialized_oaps[1], oap2)
 
