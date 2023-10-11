@@ -47,7 +47,7 @@ def update_oaps(
     )
     resource_oaps_updated = modify_oaps(oaps=resource_oaps)
     serialize_resource_oaps(
-        resource_oaps=resource_oaps,
+        resource_oaps=resource_oaps_updated,
         shortcode=shortcode,
         mode="modified",
     )
@@ -76,7 +76,7 @@ def update_doaps(
     )
     project_doaps_updated = modify_doaps(doaps=project_doaps)
     serialize_doaps_of_project(
-        project_doaps=project_doaps,
+        project_doaps=project_doaps_updated,
         shortcode=shortcode,
         mode="modified",
     )
