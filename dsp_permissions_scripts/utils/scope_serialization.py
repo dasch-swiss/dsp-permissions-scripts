@@ -2,6 +2,7 @@ from typing import Any
 
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
 def create_string_from_scope(perm_scope: PermissionScope) -> str:
@@ -10,7 +11,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     for perm_letter, groups in perm_scope.model_dump().items():
         if groups:
             groups_as_str = [g.value if isinstance(g, BuiltinGroup) else g for g in groups]
-            as_dict[perm_letter] = groups_as_str
+            as_dict[perm_letter] = sort_groups(groups_as_str)
     strs = [f"{k} {','.join(l)}" for k, l in as_dict.items()]
     return "|".join(strs)
 
