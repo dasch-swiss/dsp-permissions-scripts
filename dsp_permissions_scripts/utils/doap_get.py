@@ -45,7 +45,7 @@ def _get_all_doaps_of_project(
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
-    url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
+    url = f"{protocol}://{host}/admin/permissions/ap/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]

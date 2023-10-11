@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.models.ap import Ap
 from dsp_permissions_scripts.models.doap import Doap
 from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
@@ -15,12 +16,11 @@ from dsp_permissions_scripts.utils.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
-def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
-    for oap in oaps:
-        if BuiltinGroup.SYSTEM_ADMIN.value not in oap.scope.CR:
-            oap.scope = oap.scope.add("CR", BuiltinGroup.SYSTEM_ADMIN)
-    return oaps
+    for ap in aps: 
+        pass
+    return aps
 
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
@@ -29,6 +29,14 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
         if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
             doap.scope = PUBLIC
     return doaps
+
+
+def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+    """Adapt this sample to your needs."""
+    for oap in oaps:
+        if BuiltinGroup.SYSTEM_ADMIN.value not in oap.scope.CR:
+            oap.scope = oap.scope.add("CR", BuiltinGroup.SYSTEM_ADMIN)
+    return oaps
 
 
 def update_administrative_permissions(
@@ -42,22 +50,22 @@ def update_administrative_permissions(
         shortcode=shortcode,
         token=token,
     )
-    serialize_aps_of_project(
-        project_aps=project_aps,
-        shortcode=shortcode,
-        mode="original",
-    )
-    project_aps_updated = modify_aps(doaps=project_aps)
-    serialize_aps_of_project(
-        project_doaps=project_aps_updated,
-        shortcode=shortcode,
-        mode="modified",
-    )
-    apply_updated_aps_on_server(
-        doaps=project_aps_updated,
-        host=host,
-        token=token,
-    )
+    # serialize_aps_of_project(
+    #     project_aps=project_aps,
+    #     shortcode=shortcode,
+    #     mode="original",
+    # )
+    project_aps_updated = modify_aps(project_aps)
+    # serialize_aps_of_project(
+    #     project_doaps=project_aps_updated,
+    #     shortcode=shortcode,
+    #     mode="modified",
+    # )
+    # apply_updated_aps_on_server(
+    #     doaps=project_aps_updated,
+    #     host=host,
+    #     token=token,
+    # )
 
 
 def update_oaps(
