@@ -6,7 +6,7 @@ from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.utils.ap import get_aps_of_project
+from dsp_permissions_scripts.utils.ap import delete_ap, get_aps_of_project
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
@@ -58,6 +58,12 @@ def update_administrative_permissions(
     #     mode="original",
     # )
     project_aps_updated = modify_aps(project_aps)
+    delete_ap(
+        host=host,
+        token=token,
+        existing_aps=project_aps,
+        forGroup=BuiltinGroup.PROJECT_MEMBER,
+    )
     # serialize_aps_of_project(
     #     project_doaps=project_aps_updated,
     #     shortcode=shortcode,
