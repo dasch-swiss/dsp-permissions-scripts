@@ -7,7 +7,7 @@ from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
-from dsp_permissions_scripts.utils.doap_serialize import serialize_project_doaps
+from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.oap_serialize import serialize_resource_oaps
@@ -69,13 +69,13 @@ def update_doaps(
         shortcode=shortcode,
         token=token,
     )
-    serialize_project_doaps(
+    serialize_doaps_of_project(
         project_doaps=project_doaps,
         shortcode=shortcode,
         mode="original",
     )
     project_doaps_updated = modify_doaps(doaps=project_doaps)
-    serialize_project_doaps(
+    serialize_doaps_of_project(
         project_doaps=project_doaps,
         shortcode=shortcode,
         mode="modified",
