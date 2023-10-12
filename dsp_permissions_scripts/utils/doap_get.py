@@ -75,7 +75,7 @@ def get_doaps_of_project(
     host: str,
     shortcode: str,
     token: str,
-    target: DoapTargetType = DoapTargetType.ALL,
+    target_type: DoapTargetType = DoapTargetType.ALL,
 ) -> list[Doap]:
     """
     Returns the doaps for a project.
@@ -94,7 +94,7 @@ def get_doaps_of_project(
     )
     filtered_doaps = _filter_doaps_by_target(
         doaps=doaps,
-        target=target,
+        target=target_type,
     )
-    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to {target}.")
+    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to {target_type}.")
     return filtered_doaps
