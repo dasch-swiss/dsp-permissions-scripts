@@ -2,7 +2,7 @@ import shutil
 import unittest
 from pathlib import Path
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.oap_serialize import (
@@ -23,15 +23,15 @@ class TestOapSerialization(unittest.TestCase):
     def test_oap_serialization(self):
         oap1 = Oap(
             scope=PermissionScope.create(
-                CR=[BuiltinGroup.PROJECT_ADMIN],
-                V=[BuiltinGroup.PROJECT_MEMBER],
+                CR=[builtin_groups.PROJECT_ADMIN],
+                V=[builtin_groups.PROJECT_MEMBER],
             ),
             object_iri=f"http://rdfh.ch/{self.shortcode}/resource-1",
         )
         oap2 = Oap(
             scope=PermissionScope.create(
-                D=[BuiltinGroup.SYSTEM_ADMIN],
-                M=[BuiltinGroup.KNOWN_USER],
+                D=[builtin_groups.SYSTEM_ADMIN],
+                M=[builtin_groups.KNOWN_USER],
             ),
             object_iri=f"http://rdfh.ch/{self.shortcode}/resource-2",
         )
