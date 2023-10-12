@@ -51,7 +51,7 @@ def update_aps(
     shortcode: str,
     token: str,
 ) -> None:
-    """Sample function to modify the administrative permissions of a project."""
+    """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(
         host=host,
         shortcode=shortcode,
@@ -157,10 +157,11 @@ def update_oaps(
 
 def main() -> None:
     """
-    The main function provides you with 2 sample functions:
+    The main function provides you with 3 sample functions:
+    One to update the Administrative Permissions of a project,
     one to update the Default Object Access Permissions of a project,
     and one to update the Object Access Permissions of a project.
-    Both must first be adapted to your needs.
+    All must first be adapted to your needs.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
     host = Hosts.get_host("test")
