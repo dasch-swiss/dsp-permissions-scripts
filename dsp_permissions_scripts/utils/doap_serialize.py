@@ -46,7 +46,7 @@ def deserialize_doaps_of_project(
         target_group_str: str | None = d["target"].get("group")
         if target_group_str:
             try:
-                target_group = BuiltinGroup(target_group_str)
+                target_group = BuiltinGroup(target_group_str)  # type: ignore[assignment]
             except ValueError:
                 target_group = CustomGroup(value=target_group_str)
         target = DoapTarget(
