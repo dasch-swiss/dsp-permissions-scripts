@@ -14,6 +14,14 @@ from dsp_permissions_scripts.utils.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
+def modify_doaps(doaps: list[Doap]) -> list[Doap]:
+    """Adapt this sample to your needs."""
+    for doap in doaps: 
+        if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
+            doap.scope = PUBLIC
+    return doaps
+
+
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     for oap in oaps:
@@ -22,12 +30,33 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     return oaps
 
 
-def modify_doaps(doaps: list[Doap]) -> list[Doap]:
-    """Adapt this sample to your needs."""
-    for doap in doaps: 
-        if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
-            doap.scope = PUBLIC
-    return doaps
+def update_doaps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    """Sample function to modify the Default Object Access Permissions of a project."""
+    project_doaps = get_doaps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_doaps_of_project(
+        project_doaps=project_doaps,
+        shortcode=shortcode,
+        mode="original",
+    )
+    project_doaps_updated = modify_doaps(doaps=project_doaps)
+    serialize_doaps_of_project(
+        project_doaps=project_doaps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
+    apply_updated_doaps_on_server(
+        doaps=project_doaps_updated,
+        host=host,
+        token=token,
+    )
 
 
 def update_oaps(
@@ -60,35 +89,6 @@ def update_oaps(
     )
 
 
-def update_doaps(
-    host: str,
-    shortcode: str,
-    token: str,
-) -> None:
-    """Sample function to modify the Default Object Access Permissions of a project."""
-    project_doaps = get_doaps_of_project(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-    serialize_doaps_of_project(
-        project_doaps=project_doaps,
-        shortcode=shortcode,
-        mode="original",
-    )
-    project_doaps_updated = modify_doaps(doaps=project_doaps)
-    serialize_doaps_of_project(
-        project_doaps=project_doaps_updated,
-        shortcode=shortcode,
-        mode="modified",
-    )
-    apply_updated_doaps_on_server(
-        doaps=project_doaps_updated,
-        host=host,
-        token=token,
-    )
-
-
 def main() -> None:
     """
     The main function provides you with 2 sample functions:
@@ -101,12 +101,12 @@ def main() -> None:
     shortcode = "F18E"
     token = login(host)
 
-    update_oaps(
+    update_doaps(
         host=host,
         shortcode=shortcode,
         token=token,
     )
-    update_doaps(
+    update_oaps(
         host=host,
         shortcode=shortcode,
         token=token,
