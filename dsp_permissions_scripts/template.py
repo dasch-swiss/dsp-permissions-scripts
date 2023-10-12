@@ -6,9 +6,12 @@ from dsp_permissions_scripts.models.doap import Doap
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.utils.ap.ap_get import delete_ap, get_aps_of_project
+from dsp_permissions_scripts.utils.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.utils.ap.ap_serialize import serialize_aps_of_project
-from dsp_permissions_scripts.utils.ap.ap_set import apply_updated_aps_on_server
+from dsp_permissions_scripts.utils.ap.ap_set import (
+    apply_updated_aps_on_server,
+    delete_ap,
+)
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
