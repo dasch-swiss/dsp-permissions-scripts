@@ -46,16 +46,21 @@ def update_doaps(
         shortcode=shortcode,
         mode="original",
     )
-    project_doaps_updated = modify_doaps(doaps=project_doaps)
+    project_doaps_modified = modify_doaps(doaps=project_doaps)
+    apply_updated_doaps_on_server(
+        doaps=project_doaps_modified,
+        host=host,
+        token=token,
+    )
+    project_doaps_updated = get_doaps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
         shortcode=shortcode,
         mode="modified",
-    )
-    apply_updated_doaps_on_server(
-        doaps=project_doaps_updated,
-        host=host,
-        token=token,
     )
 
 
@@ -75,25 +80,30 @@ def update_oaps(
         shortcode=shortcode,
         mode="original",
     )
-    resource_oaps_updated = modify_oaps(oaps=resource_oaps)
+    resource_oaps_modified = modify_oaps(oaps=resource_oaps)
+    apply_updated_oaps_on_server(
+        resource_oaps=resource_oaps_modified,
+        host=host,
+        token=token,
+        shortcode=shortcode,
+    )
+    resource_oaps_updated = get_all_resource_oaps_of_project(
+        shortcode=shortcode,
+        host=host,
+        token=token,
+    )
     serialize_resource_oaps(
         resource_oaps=resource_oaps_updated,
         shortcode=shortcode,
         mode="modified",
-    )
-    apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_updated,
-        host=host,
-        token=token,
-        shortcode=shortcode,
     )
 
 
 def main() -> None:
     """
     The main function provides you with 2 sample functions:
-    one to update the Object Access Permissions of a project,
-    and one to update the Default Object Access Permissions of a project.
+    one to update the Default Object Access Permissions of a project,
+    and one to update the Object Access Permissions of a project.
     Both must first be adapted to your needs.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
