@@ -12,7 +12,7 @@ from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 logger = get_logger(__name__)
 
 
-def _create_ap_from_admin_route_response(permission: dict[str, Any]) -> Ap:
+def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
     """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
     ap = Ap(
         forGroup=permission["forGroup"],
@@ -21,6 +21,21 @@ def _create_ap_from_admin_route_response(permission: dict[str, Any]) -> Ap:
         iri=permission["iri"],
     )
     return ap
+
+
+def create_admin_route_object_from_ap(ap: Ap) -> dict[str, Any]:
+    """Serializes a AP to JSON as expected by /admin/permissions/ap/{project_iri}"""
+    has_permissions = [
+        {"additionalInformation": None, "name": p.value, "permissionCode": None}
+        for p in ap.hasPermissions
+    ]
+    ap_dict = {
+        "forGroup": ap.forGroup,
+        "forProject": ap.forProject,
+        "hasPermissions": has_permissions,
+        "iri": ap.iri,
+    }
+    return ap_dict
 
 
 def _get_all_aps_of_project(
@@ -36,7 +51,7 @@ def _get_all_aps_of_project(
     response = requests.get(url, headers=headers, timeout=5)
     assert response.status_code == 200
     aps: list[dict[str, Any]] = response.json()["administrative_permissions"]
-    ap_objects = [_create_ap_from_admin_route_response(ap) for ap in aps]
+    ap_objects = [create_ap_from_admin_route_object(ap) for ap in aps]
     return ap_objects
 
 
