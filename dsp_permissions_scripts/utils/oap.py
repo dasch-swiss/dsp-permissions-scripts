@@ -203,8 +203,7 @@ def apply_updated_oaps_on_server(
     failed_res_iris: list[str] = []
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
-        logger.info("=====")
-        logger.info(msg)
+        logger.info(f"=====\n{msg}")
         print(f"{get_timestamp()}: {msg}")
         try:
             _update_permissions_for_resource_and_values(
