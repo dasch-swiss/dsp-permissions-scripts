@@ -1,7 +1,7 @@
 import unittest
 from typing import Any
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
@@ -54,22 +54,22 @@ class TestScopeSerialization(unittest.TestCase):
     ]
     scopes = [
         PermissionScope.create(
-            CR=[BuiltinGroup.SYSTEM_ADMIN],
+            CR=[builtin_groups.SYSTEM_ADMIN],
             V=["http://www.knora.org/ontology/knora-admin#CustomGroup"],
         ),
         PermissionScope.create(
-            D={BuiltinGroup.PROJECT_ADMIN},
-            RV={BuiltinGroup.PROJECT_MEMBER},
+            D={builtin_groups.PROJECT_ADMIN},
+            RV={builtin_groups.PROJECT_MEMBER},
         ),
         PermissionScope.create(
-            M={BuiltinGroup.PROJECT_ADMIN},
-            V={BuiltinGroup.CREATOR, BuiltinGroup.KNOWN_USER},
-            RV={BuiltinGroup.UNKNOWN_USER},
+            M={builtin_groups.PROJECT_ADMIN},
+            V={builtin_groups.CREATOR, builtin_groups.KNOWN_USER},
+            RV={builtin_groups.UNKNOWN_USER},
         ),
         PermissionScope.create(
-            CR={BuiltinGroup.SYSTEM_ADMIN, BuiltinGroup.PROJECT_ADMIN},
-            D={BuiltinGroup.CREATOR},
-            RV={BuiltinGroup.UNKNOWN_USER},
+            CR={builtin_groups.SYSTEM_ADMIN, builtin_groups.PROJECT_ADMIN},
+            D={builtin_groups.CREATOR},
+            RV={builtin_groups.UNKNOWN_USER},
         ),
     ]
 

@@ -2,8 +2,8 @@ import shutil
 import unittest
 from pathlib import Path
 
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.doap import Doap, DoapTarget
-from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.doap_serialize import (
     deserialize_doaps_of_project,
@@ -24,22 +24,22 @@ class TestDoapSerialization(unittest.TestCase):
         doap1 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+                group=builtin_groups.PROJECT_ADMIN,
             ),
             scope=PermissionScope.create(
-                CR=[BuiltinGroup.PROJECT_ADMIN],
-                V=[BuiltinGroup.PROJECT_MEMBER],
+                CR=[builtin_groups.PROJECT_ADMIN],
+                V=[builtin_groups.PROJECT_MEMBER],
             ),
             doap_iri="http://rdfh.ch/doap-1",
         )
         doap2 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group="http://www.knora.org/ontology/knora-admin#ProjectMember",
+                group=builtin_groups.PROJECT_MEMBER,
             ),
             scope=PermissionScope.create(
-                D=[BuiltinGroup.SYSTEM_ADMIN],
-                M=[BuiltinGroup.KNOWN_USER],
+                D=[builtin_groups.SYSTEM_ADMIN],
+                M=[builtin_groups.KNOWN_USER],
             ),
             doap_iri="http://rdfh.ch/doap-2",
         )
