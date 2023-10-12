@@ -131,6 +131,7 @@ def update_oaps(
         resource_oaps=resource_oaps_updated,
         host=host,
         token=token,
+        shortcode=shortcode,
     )
 
 
