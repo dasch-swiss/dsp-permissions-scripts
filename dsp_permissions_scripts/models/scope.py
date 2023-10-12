@@ -56,7 +56,7 @@ class PermissionScope(BaseModel):
         groups = getattr(self, permission)
         if group in groups:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
-        groups.append(group)
+        groups = groups | {group}
         kwargs: dict[str, list[str]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
@@ -72,7 +72,7 @@ class PermissionScope(BaseModel):
         groups = getattr(self, permission)
         if group not in groups:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
-        groups.remove(group)
+        groups = groups - {group}
         kwargs: dict[str, list[str]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
