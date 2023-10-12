@@ -7,6 +7,7 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.utils.ap.ap import delete_ap, get_aps_of_project
+from dsp_permissions_scripts.utils.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
@@ -52,11 +53,11 @@ def update_aps(
         shortcode=shortcode,
         token=token,
     )
-    # serialize_aps_of_project(
-    #     project_aps=project_aps,
-    #     shortcode=shortcode,
-    #     mode="original",
-    # )
+    serialize_aps_of_project(
+        project_aps=project_aps,
+        shortcode=shortcode,
+        mode="original",
+    )
     project_aps_updated = modify_aps(project_aps)
     delete_ap(
         host=host,
@@ -64,11 +65,11 @@ def update_aps(
         existing_aps=project_aps,
         forGroup=builtin_groups.PROJECT_MEMBER,
     )
-    # serialize_aps_of_project(
-    #     project_doaps=project_aps_updated,
-    #     shortcode=shortcode,
-    #     mode="modified",
-    # )
+    serialize_aps_of_project(
+        project_aps=project_aps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
     # apply_updated_aps_on_server(
     #     doaps=project_aps_updated,
     #     host=host,
