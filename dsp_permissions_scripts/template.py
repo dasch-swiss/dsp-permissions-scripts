@@ -68,16 +68,21 @@ def update_aps(
         existing_aps=project_aps,
         forGroup=builtin_groups.PROJECT_MEMBER,
     )
-    project_aps_updated = modify_aps(remaining_aps)
+    modified_aps = modify_aps(remaining_aps)
+    apply_updated_aps_on_server(
+        aps=modified_aps,
+        host=host,
+        token=token,
+    )
+    project_aps_updated = get_aps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
     serialize_aps_of_project(
         project_aps=project_aps_updated,
         shortcode=shortcode,
         mode="modified",
-    )
-    apply_updated_aps_on_server(
-        aps=project_aps_updated,
-        host=host,
-        token=token,
     )
 
 
