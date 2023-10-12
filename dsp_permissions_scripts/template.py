@@ -58,13 +58,13 @@ def update_aps(
         shortcode=shortcode,
         mode="original",
     )
-    project_aps_updated = modify_aps(project_aps)
-    delete_ap(
+    remaining_aps = delete_ap(
         host=host,
         token=token,
         existing_aps=project_aps,
         forGroup=builtin_groups.PROJECT_MEMBER,
     )
+    project_aps_updated = modify_aps(remaining_aps)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
         shortcode=shortcode,

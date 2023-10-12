@@ -88,7 +88,7 @@ def delete_ap(
     token: str,
     existing_aps: list[Ap],
     forGroup: str,
-) -> None:
+) -> list[Ap]:
     """Deletes the Administrative Permission of a group."""
     logger.info(f"Deleting the Administrative Permission for group {forGroup} on server {host}")
     ap_to_delete = _filter_aps_by_group(
@@ -100,3 +100,5 @@ def delete_ap(
         host=host,
         token=token,
     )
+    existing_aps.remove(ap_to_delete)
+    return existing_aps
