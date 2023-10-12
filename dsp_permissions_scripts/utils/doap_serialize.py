@@ -38,5 +38,5 @@ def deserialize_doaps_of_project(
     filepath = _get_file_path(shortcode, mode)
     with open(filepath, mode="r", encoding="utf-8") as f:
         doaps_as_dict = json.load(f)
-    doaps_as_dicts = doaps_as_dict.values()[0]
+    doaps_as_dicts = list(doaps_as_dict.values())[0]
     return [Doap.model_validate(d) for d in doaps_as_dicts]

@@ -1,4 +1,5 @@
 import json
+import warnings
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -179,23 +180,51 @@ def _update_permissions_for_resource_and_values(
         )
 
 
+def _write_failed_res_iris_to_file(
+    failed_res_iris: list[str],
+    shortcode: str,
+    host: str,
+    filename: str,
+) -> None:
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(f"Failed to update the OAPs of the following resources in project {shortcode} on host {host}:\n")
+        f.write("\n".join(failed_res_iris))
+
+
 def apply_updated_oaps_on_server(
     resource_oaps: list[Oap],
     host: str,
     token: str,
+    shortcode: str,
 ) -> None:
     """Applies object access permissions on a DSP server."""
     logger.info("******* Applying updated object access permissions on server *******")
     print(f"{get_timestamp()}: ******* Applying updated object access permissions on server *******")
+    failed_res_iris: list[str] = []
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
-        logger.info("=====")
-        logger.info(msg)
+        logger.info(f"=====\n{msg}")
         print(f"{get_timestamp()}: {msg}")
-        _update_permissions_for_resource_and_values(
-            resource_iri=resource_oap.object_iri,
-            scope=resource_oap.scope,
-            host=host,
-            token=token,
-        )
+        try:
+            _update_permissions_for_resource_and_values(
+                resource_iri=resource_oap.object_iri,
+                scope=resource_oap.scope,
+                host=host,
+                token=token,
+            )
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.error(f"ERROR while updating permissions of resource {resource_oap.object_iri}", exc_info=True)
+            warnings.warn(f"ERROR while updating permissions of resource {resource_oap.object_iri}")
+            failed_res_iris.append(resource_oap.object_iri)
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
+
+    if failed_res_iris:
+        filename = "FAILED_RESOURCES.txt"
+        _write_failed_res_iris_to_file(
+            failed_res_iris=failed_res_iris, 
+            shortcode=shortcode,
+            host=host,
+            filename=filename,
+        )
+        logger.error(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")
+        warnings.warn(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")

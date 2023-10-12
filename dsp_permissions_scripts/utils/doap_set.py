@@ -1,3 +1,4 @@
+import warnings
 from typing import Literal
 from urllib.parse import quote_plus
 
@@ -65,11 +66,16 @@ def apply_updated_doaps_on_server(
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
         _log_and_print_doap_update(doap=d, state="before")
-        new_doap = _update_doap_scope(
-            doap_iri=d.doap_iri,
-            scope=d.scope,
-            host=host,
-            token=token,
-        )
-        _log_and_print_doap_update(doap=new_doap, state="after")
+        try:
+            new_doap = _update_doap_scope(
+                doap_iri=d.doap_iri,
+                scope=d.scope,
+                host=host,
+                token=token,
+            )
+            _log_and_print_doap_update(doap=new_doap, state="after")
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.error(f"ERROR while updating permissions of resource {d.doap_iri}", exc_info=True)
+            warnings.warn(f"ERROR while updating permissions of resource {d.doap_iri}")
+
     print(f"{get_timestamp()}: All DOAPs have been updated.")
