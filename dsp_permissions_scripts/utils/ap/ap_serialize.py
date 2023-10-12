@@ -35,5 +35,5 @@ def deserialize_aps_of_project(
     filepath = _get_file_path(shortcode, mode)
     with open(filepath, mode="r", encoding="utf-8") as f:
         aps_as_dict = json.load(f)
-    aps_as_dicts = aps_as_dict.values()[0]
+    aps_as_dicts = list(aps_as_dict.values())[0]
     return [Ap.model_validate(d) for d in aps_as_dicts]
