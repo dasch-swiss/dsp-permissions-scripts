@@ -1,4 +1,4 @@
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models import builtin_groups
 
 
 def dereference_prefix(
@@ -17,7 +17,14 @@ def _get_sort_pos_of_custom_group(group: str) -> int:
 
 def sort_groups(groups_original: list[str]) -> list[str]:
     """Sorts groups, first according to their power (most powerful first), then alphabetically."""
-    sort_key = list(reversed([x.value for x in BuiltinGroup]))
+    sort_key = [
+        builtin_groups.SYSTEM_ADMIN, 
+        builtin_groups.CREATOR, 
+        builtin_groups.PROJECT_ADMIN, 
+        builtin_groups.PROJECT_MEMBER, 
+        builtin_groups.KNOWN_USER, 
+        builtin_groups.UNKNOWN_USER
+    ]
     groups = groups_original.copy()
     groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x))
     return groups

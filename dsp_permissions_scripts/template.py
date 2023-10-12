@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.ap import Ap, ApValue
 from dsp_permissions_scripts.models.doap import Doap
-from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
@@ -19,7 +19,7 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     for ap in aps:
-        if ap.forGroup == BuiltinGroup.PROJECT_ADMIN.value:
+        if ap.forGroup == builtin_groups.PROJECT_ADMIN:
             if ApValue.ProjectAdminAllPermission not in ap.hasPermissions:
                 ap.add_permission(ApValue.ProjectAdminAllPermission)
     return aps
@@ -28,7 +28,7 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     for doap in doaps: 
-        if doap.target.group in [BuiltinGroup.PROJECT_MEMBER.value, BuiltinGroup.PROJECT_ADMIN.value]:
+        if doap.target.group in [builtin_groups.PROJECT_MEMBER, builtin_groups.PROJECT_ADMIN]:
             doap.scope = PUBLIC
     return doaps
 
@@ -36,8 +36,8 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     for oap in oaps:
-        if BuiltinGroup.SYSTEM_ADMIN.value not in oap.scope.CR:
-            oap.scope = oap.scope.add("CR", BuiltinGroup.SYSTEM_ADMIN)
+        if builtin_groups.SYSTEM_ADMIN not in oap.scope.CR:
+            oap.scope = oap.scope.add("CR", builtin_groups.SYSTEM_ADMIN)
     return oaps
 
 
@@ -62,7 +62,7 @@ def update_aps(
         host=host,
         token=token,
         existing_aps=project_aps,
-        forGroup=BuiltinGroup.PROJECT_MEMBER,
+        forGroup=builtin_groups.PROJECT_MEMBER,
     )
     # serialize_aps_of_project(
     #     project_doaps=project_aps_updated,

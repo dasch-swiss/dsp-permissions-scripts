@@ -4,7 +4,7 @@ from typing import Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models import builtin_groups
 
 
 class PermissionScope(BaseModel):
@@ -14,19 +14,19 @@ class PermissionScope(BaseModel):
     """
     model_config = ConfigDict(frozen=True)
 
-    CR: frozenset[str | BuiltinGroup] = frozenset()
-    D: frozenset[str | BuiltinGroup] = frozenset()
-    M: frozenset[str | BuiltinGroup] = frozenset()
-    V: frozenset[str | BuiltinGroup] = frozenset()
-    RV: frozenset[str | BuiltinGroup] = frozenset()
+    CR: frozenset[str] = frozenset()
+    D: frozenset[str] = frozenset()
+    M: frozenset[str] = frozenset()
+    V: frozenset[str] = frozenset()
+    RV: frozenset[str] = frozenset()
 
     @staticmethod
     def create(
-        CR: Iterable[str | BuiltinGroup] = (),
-        D: Iterable[str | BuiltinGroup] = (),
-        M: Iterable[str | BuiltinGroup] = (),
-        V: Iterable[str | BuiltinGroup] = (),
-        RV: Iterable[str | BuiltinGroup] = (),
+        CR: Iterable[str] = (),
+        D: Iterable[str] = (),
+        M: Iterable[str] = (),
+        V: Iterable[str] = (),
+        RV: Iterable[str] = (),
     ) -> PermissionScope:
         """Factory method to create a PermissionScope from Iterables instead of frozensets."""
         return PermissionScope(
@@ -42,23 +42,21 @@ class PermissionScope(BaseModel):
         all_groups = []
         for field in self.model_fields:
             all_groups.extend(getattr(self, field))
-        all_groups_as_strs = [g.value if isinstance(g, BuiltinGroup) else g for g in all_groups]
-        for group in all_groups_as_strs:
-            if all_groups_as_strs.count(group) > 1:
+        for group in all_groups:
+            if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
         return self
 
     def add(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: str | BuiltinGroup,
+        group: str,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
-        groups = [g.value if isinstance(g, BuiltinGroup) else g for g in getattr(self, permission)]
-        group = group.value if isinstance(group, BuiltinGroup) else group
+        groups = getattr(self, permission)
         if group in groups:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
-        groups.append(group)
+        groups = groups | {group}
         kwargs: dict[str, list[str]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
@@ -68,14 +66,13 @@ class PermissionScope(BaseModel):
     def remove(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: str | BuiltinGroup,
+        group: str,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
-        groups = [g.value if isinstance(g, BuiltinGroup) else g for g in getattr(self, permission)]
-        group = group.value if isinstance(group, BuiltinGroup) else group
+        groups = getattr(self, permission)
         if group not in groups:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
-        groups.remove(group)
+        groups = groups - {group}
         kwargs: dict[str, list[str]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
@@ -84,7 +81,7 @@ class PermissionScope(BaseModel):
 
 
 PUBLIC = PermissionScope.create(
-    CR={BuiltinGroup.PROJECT_ADMIN},
-    D={BuiltinGroup.CREATOR, BuiltinGroup.PROJECT_MEMBER},
-    V={BuiltinGroup.UNKNOWN_USER, BuiltinGroup.KNOWN_USER},
+    CR={builtin_groups.PROJECT_ADMIN},
+    D={builtin_groups.CREATOR, builtin_groups.PROJECT_MEMBER},
+    V={builtin_groups.UNKNOWN_USER, builtin_groups.KNOWN_USER},
 )

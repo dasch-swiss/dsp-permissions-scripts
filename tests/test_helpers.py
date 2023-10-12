@@ -1,6 +1,6 @@
 import unittest
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
@@ -9,22 +9,22 @@ class TestHelpers(unittest.TestCase):
     def test_sort_groups(self) -> None:
         groups_original = [
             "http://www.knora.org/ontology/knora-admin#C_CustomGroup",
-            BuiltinGroup.UNKNOWN_USER.value,
-            BuiltinGroup.PROJECT_ADMIN.value,
-            BuiltinGroup.PROJECT_MEMBER.value,
-            BuiltinGroup.CREATOR.value,
+            builtin_groups.UNKNOWN_USER,
+            builtin_groups.PROJECT_ADMIN,
+            builtin_groups.PROJECT_MEMBER,
+            builtin_groups.CREATOR,
             "http://www.knora.org/ontology/knora-admin#A_CustomGroup",
             "http://www.knora.org/ontology/knora-admin#B_CustomGroup",
-            BuiltinGroup.KNOWN_USER.value,
-            BuiltinGroup.SYSTEM_ADMIN.value,
+            builtin_groups.KNOWN_USER,
+            builtin_groups.SYSTEM_ADMIN,
         ]
         groups_expected = [
-            BuiltinGroup.SYSTEM_ADMIN.value,
-            BuiltinGroup.CREATOR.value,
-            BuiltinGroup.PROJECT_ADMIN.value,
-            BuiltinGroup.PROJECT_MEMBER.value,
-            BuiltinGroup.KNOWN_USER.value,
-            BuiltinGroup.UNKNOWN_USER.value,
+            builtin_groups.SYSTEM_ADMIN,
+            builtin_groups.CREATOR,
+            builtin_groups.PROJECT_ADMIN,
+            builtin_groups.PROJECT_MEMBER,
+            builtin_groups.KNOWN_USER,
+            builtin_groups.UNKNOWN_USER,
             "http://www.knora.org/ontology/knora-admin#A_CustomGroup",
             "http://www.knora.org/ontology/knora-admin#B_CustomGroup",
             "http://www.knora.org/ontology/knora-admin#C_CustomGroup",
