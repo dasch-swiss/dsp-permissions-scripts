@@ -5,7 +5,6 @@ from urllib.parse import quote_plus
 import requests
 
 from dsp_permissions_scripts.models.ap import Ap, ApValue
-from dsp_permissions_scripts.models.groups import BuiltinGroup
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
@@ -14,14 +13,11 @@ logger = get_logger(__name__)
 
 
 def _create_ap_from_admin_route_response(permission: dict[str, Any]) -> Ap:
-    """
-    Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}
-    """
-    names = frozenset(ApValue(p["name"]) for p in permission["hasPermissions"])
+    """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
     ap = Ap(
         forGroup=permission["forGroup"],
         forProject=permission["forProject"],
-        hasPermissions=names,
+        hasPermissions=frozenset(ApValue(p["name"]) for p in permission["hasPermissions"]),
         iri=permission["iri"],
     )
     return ap
@@ -32,9 +28,7 @@ def _get_all_aps_of_project(
     host: str,
     token: str,
 ) -> list[Ap]:
-    """
-    Returns all Administrative Permissions of the given project.
-    """
+    """Returns all Administrative Permissions of the given project."""
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
@@ -68,9 +62,9 @@ def get_aps_of_project(
 
 def _filter_aps_by_group(
     aps: list[Ap],
-    forGroup: BuiltinGroup | str,
+    forGroup: str,
 ) -> Ap:
-    aps = [ap for ap in aps if str(ap.forGroup) == str(forGroup)]
+    aps = [ap for ap in aps if ap.forGroup == forGroup]
     assert len(aps) == 1
     return aps[0]
 
@@ -93,7 +87,7 @@ def delete_ap(
     host: str,
     token: str,
     existing_aps: list[Ap],
-    forGroup: BuiltinGroup | str,
+    forGroup: str,
 ) -> None:
     """Deletes the Administrative Permission of a group."""
     logger.info(f"Deleting the Administrative Permission for group {forGroup} on server {host}")

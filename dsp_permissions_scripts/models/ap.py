@@ -2,8 +2,6 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from dsp_permissions_scripts.models.groups import BuiltinGroup
-
 
 class ApValue(Enum):
     # is allowed to create resources inside the project
@@ -24,8 +22,8 @@ class ApValue(Enum):
 
 class Ap(BaseModel):
     """Represents an Administrative Permission"""
-    forGroup: BuiltinGroup | str
-    forProject: BuiltinGroup | str
+    forGroup: str
+    forProject: str
     hasPermissions: frozenset[ApValue]
     iri: str
 
