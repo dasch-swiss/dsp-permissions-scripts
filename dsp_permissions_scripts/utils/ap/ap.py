@@ -40,26 +40,6 @@ def _get_all_aps_of_project(
     return ap_objects
 
 
-def get_aps_of_project(
-    host: str,
-    shortcode: str,
-    token: str,
-) -> list[Ap]:
-    """Returns the Administrative Permissions for a project."""
-    logger.info(f"******* Getting Administrative Permissions of project {shortcode} on server {host} *******")
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
-    aps = _get_all_aps_of_project(
-        project_iri=project_iri,
-        host=host,
-        token=token,
-    )
-    logger.info(f"Found {len(aps)} Administrative Permissions")
-    return aps
-
-
 def _filter_aps_by_group(
     aps: list[Ap],
     forGroup: str,
@@ -102,3 +82,23 @@ def delete_ap(
     )
     existing_aps.remove(ap_to_delete)
     return existing_aps
+
+
+def get_aps_of_project(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> list[Ap]:
+    """Returns the Administrative Permissions for a project."""
+    logger.info(f"******* Getting Administrative Permissions of project {shortcode} on server {host} *******")
+    project_iri = get_project_iri_by_shortcode(
+        shortcode=shortcode,
+        host=host,
+    )
+    aps = _get_all_aps_of_project(
+        project_iri=project_iri,
+        host=host,
+        token=token,
+    )
+    logger.info(f"Found {len(aps)} Administrative Permissions")
+    return aps
