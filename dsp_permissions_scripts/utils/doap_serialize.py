@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.models.doap import Doap, DoapTargetType
+from dsp_permissions_scripts.models.doap import Doap, DoapTarget, DoapTargetType
+from dsp_permissions_scripts.models.groups import BuiltinGroup, CustomGroup, Group
 
 
 def _get_file_path(
@@ -39,4 +40,26 @@ def deserialize_doaps_of_project(
     with open(filepath, mode="r", encoding="utf-8") as f:
         doaps_as_dict = json.load(f)
     doaps_as_dicts = list(doaps_as_dict.values())[0]
-    return [Doap.model_validate(d) for d in doaps_as_dicts]
+    doaps_as_doaps = []
+    for d in doaps_as_dicts:
+        target_group: Group | None = None
+        target_group_str: str | None = d["target"].get("group")
+        if target_group_str:
+            try:
+                target_group = BuiltinGroup(target_group_str)
+            except ValueError:
+                target_group = CustomGroup(value=target_group_str)
+        target = DoapTarget(
+            project = d["target"]["project"],
+            group=target_group,
+            resource_class=d["target"].get("resource_class"),
+            property=d["target"].get("property"),
+        )
+        doaps_as_doaps.append(
+            Doap(
+                target=target, 
+                scope=d["scope"], 
+                doap_iri=d["doap_iri"]
+            )
+        )
+    return doaps_as_doaps

@@ -24,7 +24,7 @@ class TestDoapSerialization(unittest.TestCase):
         doap1 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group="http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+                group=BuiltinGroup.PROJECT_ADMIN,
             ),
             scope=PermissionScope.create(
                 CR=[BuiltinGroup.PROJECT_ADMIN],
@@ -35,7 +35,7 @@ class TestDoapSerialization(unittest.TestCase):
         doap2 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group="http://www.knora.org/ontology/knora-admin#ProjectMember",
+                group=BuiltinGroup.PROJECT_MEMBER,
             ),
             scope=PermissionScope.create(
                 D=[BuiltinGroup.SYSTEM_ADMIN],
