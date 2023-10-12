@@ -1,4 +1,3 @@
-import json
 import unittest
 from typing import Any
 
@@ -17,9 +16,9 @@ def compare_scopes(
     scope2: PermissionScope,
     msg: str | None = None,
 ) -> None:
-    scope1_dict = json.loads(scope1.model_dump_json())
+    scope1_dict = scope1.model_dump(mode="json")
     scope1_dict = {k: sorted(v) for k, v in scope1_dict.items()}
-    scope2_dict = json.loads(scope2.model_dump_json())
+    scope2_dict = scope2.model_dump(mode="json")
     scope2_dict = {k: sorted(v) for k, v in scope2_dict.items()}
     unittest.TestCase().assertDictEqual(scope1_dict, scope2_dict, msg=msg)
 
