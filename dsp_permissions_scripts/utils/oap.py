@@ -201,7 +201,7 @@ def apply_updated_oaps_on_server(
                 host=host,
                 token=token,
             )
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=broad-exception-caught
             logger.error(f"ERROR while updating permissions of resource {resource_oap.object_iri}", exc_info=True)
             warnings.warn(f"ERROR while updating permissions of resource {resource_oap.object_iri}")
             num_of_errors += 1

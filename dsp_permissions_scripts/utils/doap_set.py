@@ -74,7 +74,7 @@ def apply_updated_doaps_on_server(
                 token=token,
             )
             _log_and_print_doap_update(doap=new_doap, state="after")
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=broad-exception-caught
             logger.error(f"ERROR while updating permissions of resource {d.doap_iri}", exc_info=True)
             warnings.warn(f"ERROR while updating permissions of resource {d.doap_iri}")
 
