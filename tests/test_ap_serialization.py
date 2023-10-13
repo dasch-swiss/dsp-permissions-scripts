@@ -20,9 +20,9 @@ class TestApSerialization(unittest.TestCase):
     ap1 = Ap(
         forGroup=builtin_groups.PROJECT_ADMIN,
         forProject=project_iri,
-        hasPermissions=frozenset({
-            ApValue.ProjectAdminGroupRestrictedPermission, ApValue.ProjectAdminRightsAllPermission
-        }),
+        hasPermissions=frozenset(
+            {ApValue.ProjectAdminGroupRestrictedPermission, ApValue.ProjectAdminRightsAllPermission}
+        ),
         iri="http://rdfh.ch/ap-1",
     )
     ap2 = Ap(
@@ -38,7 +38,7 @@ class TestApSerialization(unittest.TestCase):
     def tearDown(self) -> None:
         if self.output_dir.is_dir():
             shutil.rmtree(self.output_dir)
-    
+
     def test_serialize_aps_of_project(self):
         serialize_aps_of_project(
             project_aps=[self.ap1, self.ap2],
@@ -60,6 +60,7 @@ class TestApSerialization(unittest.TestCase):
         )
         self.assertEqual(self.ap1, aps[0])
         self.assertEqual(self.ap2, aps[1])
+
 
 if __name__ == "__main__":
     unittest.main()

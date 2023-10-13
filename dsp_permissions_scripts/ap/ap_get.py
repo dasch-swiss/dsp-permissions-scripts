@@ -1,4 +1,3 @@
-
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -26,8 +25,7 @@ def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
 def create_admin_route_object_from_ap(ap: Ap) -> dict[str, Any]:
     """Serializes a AP to JSON as expected by /admin/permissions/ap/{project_iri}"""
     has_permissions = [
-        {"additionalInformation": None, "name": p.value, "permissionCode": None}
-        for p in ap.hasPermissions
+        {"additionalInformation": None, "name": p.value, "permissionCode": None} for p in ap.hasPermissions
     ]
     ap_dict = {
         "forGroup": ap.forGroup,

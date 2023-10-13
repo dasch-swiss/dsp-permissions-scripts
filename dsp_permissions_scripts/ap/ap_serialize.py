@@ -5,10 +5,7 @@ from typing import Literal
 from dsp_permissions_scripts.ap.ap_model import Ap
 
 
-def _get_file_path(
-    shortcode: str,
-    mode: Literal["original", "modified"]
-) -> Path:
+def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
     return Path(f"project_data/{shortcode}/APs_{mode}.json")
 
 

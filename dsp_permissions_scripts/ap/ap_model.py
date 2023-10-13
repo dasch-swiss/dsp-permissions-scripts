@@ -22,6 +22,7 @@ class ApValue(Enum):
 
 class Ap(BaseModel):
     """Represents an Administrative Permission"""
+
     forGroup: str
     forProject: str
     hasPermissions: frozenset[ApValue]
@@ -32,7 +33,7 @@ class Ap(BaseModel):
         if permission in self.hasPermissions:
             raise ValueError(f"Permission {permission} is already in the AP")
         self.hasPermissions = self.hasPermissions.union({permission})
-    
+
     def remove_permission(self, permission: ApValue) -> None:
         """Removes a permission from the AP."""
         if permission not in self.hasPermissions:
