@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.models.doap import Doap, DoapTargetType
+from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
 
 
 def _get_file_path(

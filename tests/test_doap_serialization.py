@@ -3,9 +3,9 @@ import unittest
 from pathlib import Path
 
 from dsp_permissions_scripts.models import builtin_groups
-from dsp_permissions_scripts.models.doap import Doap, DoapTarget
+from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.utils.doap_serialize import (
+from dsp_permissions_scripts.doap.doap_serialize import (
     deserialize_doaps_of_project,
     serialize_doaps_of_project,
 )
