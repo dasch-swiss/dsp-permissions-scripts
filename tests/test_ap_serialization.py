@@ -2,12 +2,12 @@ import shutil
 import unittest
 from pathlib import Path
 
-from dsp_permissions_scripts.models import builtin_groups
-from dsp_permissions_scripts.models.ap import Ap, ApValue
-from dsp_permissions_scripts.utils.ap.ap_serialize import (
+from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_serialize import (
     deserialize_aps_of_project,
     serialize_aps_of_project,
 )
+from dsp_permissions_scripts.models import builtin_groups
 
 
 class TestApSerialization(unittest.TestCase):

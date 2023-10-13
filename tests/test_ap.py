@@ -1,7 +1,7 @@
 import unittest
 
+from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
 from dsp_permissions_scripts.models import builtin_groups
-from dsp_permissions_scripts.models.ap import Ap, ApValue
 
 
 class TestAp(unittest.TestCase):

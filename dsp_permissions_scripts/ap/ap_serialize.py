@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.models.ap import Ap
+from dsp_permissions_scripts.ap.ap_model import Ap
 
 
 def _get_file_path(
