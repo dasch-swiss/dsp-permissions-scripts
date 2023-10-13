@@ -9,6 +9,7 @@ from dsp_permissions_scripts.ap.ap_get import (
     create_ap_from_admin_route_object,
 )
 from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 
@@ -34,7 +35,8 @@ def _delete_single_ap(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{ap_iri}"
     response = requests.delete(url, headers=headers, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError(f"Could not delete Administrative Permission {ap.iri}", response.text, response.status_code)
     logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
 
 
@@ -52,7 +54,13 @@ def _update_ap(
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError(
+            message=f"Could not update Administrative Permission {ap.iri}",
+            response_text=response.text,
+            status_code=response.status_code,
+            payload=payload,
+        )
     ap_updated: dict[str, Any] = response.json()["administrative_permission"]
     ap_object_updated = create_ap_from_admin_route_object(ap_updated)
     return ap_object_updated
@@ -90,9 +98,9 @@ def apply_updated_aps_on_server(
                 token=token,
             )
             _log_and_print_ap_update(ap=new_ap)
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.error(f"ERROR while updating Administrative Permission {ap.iri}", exc_info=True)
-            warnings.warn(f"ERROR while updating Administrative Permission {ap.iri}")
+        except ApiError as err:
+            logger.error(err, exc_info=True)
+            warnings.warn(err.message)
 
     print(f"{get_timestamp()}: All APs have been updated.")
 

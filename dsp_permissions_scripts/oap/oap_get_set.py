@@ -1,12 +1,12 @@
 # pylint: disable=too-many-arguments
 
-import json
 import warnings
 from typing import Any
 from urllib.parse import quote_plus
 
 import requests
 
+from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_model import Oap
@@ -50,7 +50,8 @@ def _get_resource(
     url = f"{protocol}://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
     data: dict[str, Any] = response.json()
     return data
 
@@ -109,11 +110,11 @@ def _update_permissions_for_value(
             msg = f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date"
             logger.warning(msg)
     elif response.status_code != 200:
-        logger.error(
-            f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}. "
-            f"Response status code: {response.status_code}. "
-            f"Response text: {response.text}. "
-            f"Payload: {json.dumps(payload, indent=4)}"
+        raise ApiError(
+            message=f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}",
+            response_text=response.text, 
+            status_code=response.status_code, 
+            payload=payload
         )
     else:
         logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
@@ -143,7 +144,13 @@ def _update_permissions_for_resource(
     url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError(
+            message=f"ERROR while updating permissions of resource {resource_iri}",
+            response_text=response.text,
+            status_code=response.status_code, 
+            payload=payload, 
+        )
     logger.info(f"Updated permissions of resource {resource_iri}")
 
 
@@ -214,9 +221,9 @@ def apply_updated_oaps_on_server(
                 host=host,
                 token=token,
             )
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.error(f"ERROR while updating permissions of resource {resource_oap.object_iri}", exc_info=True)
-            warnings.warn(f"ERROR while updating permissions of resource {resource_oap.object_iri}")
+        except ApiError as err:
+            logger.error(err, exc_info=True)
+            warnings.warn(err.message)
             failed_res_iris.append(resource_oap.object_iri)
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
 
