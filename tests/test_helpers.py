@@ -5,7 +5,6 @@ from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
 class TestHelpers(unittest.TestCase):
-
     def test_sort_groups(self) -> None:
         groups_original = [
             "http://www.knora.org/ontology/knora-admin#C_CustomGroup",

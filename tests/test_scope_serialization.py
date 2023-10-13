@@ -12,7 +12,7 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 
 
 def compare_scopes(
-    scope1: PermissionScope, 
+    scope1: PermissionScope,
     scope2: PermissionScope,
     msg: str | None = None,
 ) -> None:

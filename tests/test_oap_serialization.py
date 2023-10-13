@@ -19,7 +19,7 @@ class TestOapSerialization(unittest.TestCase):
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
-    
+
     def test_oap_serialization(self):
         oap1 = Oap(
             scope=PermissionScope.create(
@@ -41,7 +41,7 @@ class TestOapSerialization(unittest.TestCase):
             mode="original",
         )
         deserialized_oaps = deserialize_resource_oaps(
-            shortcode=self.shortcode, 
+            shortcode=self.shortcode,
             mode="original",
         )
         deserialized_oaps.sort(key=lambda oap: oap.object_iri)

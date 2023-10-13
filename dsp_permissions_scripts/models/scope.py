@@ -12,6 +12,7 @@ class PermissionScope(BaseModel):
     A scope is an object encoding the information:
     "Which user group gets which permissions on a resource/value?"
     """
+
     model_config = ConfigDict(frozen=True)
 
     CR: frozenset[str] = frozenset()
@@ -62,7 +63,7 @@ class PermissionScope(BaseModel):
             if perm != permission:
                 kwargs[perm] = getattr(self, perm)
         return PermissionScope.create(**kwargs)
-    
+
     def remove(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],

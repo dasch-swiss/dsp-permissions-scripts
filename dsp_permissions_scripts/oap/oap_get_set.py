@@ -162,22 +162,22 @@ def _update_permissions_for_resource_and_values(
     context = _get_context(resource)
     values = _get_value_iris(resource)
     _update_permissions_for_resource(
-        resource_iri=resource_iri, 
-        lmd=lmd, 
-        resource_type=resource_type, 
-        context=context, 
-        scope=scope, 
-        host=host, 
+        resource_iri=resource_iri,
+        lmd=lmd,
+        resource_type=resource_type,
+        context=context,
+        scope=scope,
+        host=host,
         token=token,
     )
     for v in values:
         _update_permissions_for_value(
-            resource_iri=resource_iri, 
-            value=v, 
-            resource_type=resource_type, 
-            context=context, 
-            scope=scope, 
-            host=host, 
+            resource_iri=resource_iri,
+            value=v,
+            resource_type=resource_type,
+            context=context,
+            scope=scope,
+            host=host,
             token=token,
         )
 
@@ -223,7 +223,7 @@ def apply_updated_oaps_on_server(
     if failed_res_iris:
         filename = "FAILED_RESOURCES.txt"
         _write_failed_res_iris_to_file(
-            failed_res_iris=failed_res_iris, 
+            failed_res_iris=failed_res_iris,
             shortcode=shortcode,
             host=host,
             filename=filename,

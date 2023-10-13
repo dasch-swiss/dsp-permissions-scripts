@@ -5,10 +5,7 @@ from typing import Literal
 from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
 
 
-def _get_file_path(
-    shortcode: str,
-    mode: Literal["original", "modified"]
-) -> Path:
+def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
     return Path(f"project_data/{shortcode}/DOAPs_{mode}.json")
 
 
