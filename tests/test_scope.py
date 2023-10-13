@@ -6,7 +6,6 @@ from tests.test_scope_serialization import compare_scopes
 
 
 class TestScope(unittest.TestCase):
-
     def test_scope_validation_on_creation(self) -> None:
         with self.assertRaisesRegex(ValueError, "must not occur in more than one field"):
             PermissionScope.create(
@@ -21,8 +20,7 @@ class TestScope(unittest.TestCase):
             V={builtin_groups.UNKNOWN_USER, builtin_groups.KNOWN_USER},
         )
         with self.assertRaisesRegex(
-            ValueError, 
-            "Group 'http://www.knora.org/ontology/knora-admin#ProjectAdmin' is already in permission 'CR'"
+            ValueError, "Group 'http://www.knora.org/ontology/knora-admin#ProjectAdmin' is already in permission 'CR'"
         ):
             _ = scope.add("CR", builtin_groups.PROJECT_ADMIN)
 
@@ -56,7 +54,7 @@ class TestScope(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "is not in permission 'D'"):
             _ = scope.remove("D", builtin_groups.UNKNOWN_USER)
-        
+
     def test_remove_from_empty_perm(self) -> None:
         scope = PermissionScope.create(
             D={builtin_groups.PROJECT_ADMIN},
@@ -79,6 +77,7 @@ class TestScope(unittest.TestCase):
                 M={builtin_groups.PROJECT_MEMBER, builtin_groups.KNOWN_USER},
             ),
         )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -29,7 +29,7 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
-    for doap in doaps: 
+    for doap in doaps:
         if doap.target.group in [builtin_groups.PROJECT_MEMBER, builtin_groups.PROJECT_ADMIN]:
             doap.scope = PUBLIC
     return doaps
