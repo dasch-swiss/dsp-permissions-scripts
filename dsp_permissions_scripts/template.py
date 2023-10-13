@@ -21,9 +21,9 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     for ap in aps:
-        if ap.forGroup == builtin_groups.PROJECT_ADMIN:
-            if ApValue.ProjectAdminAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminAllPermission)
+        if ap.forGroup == builtin_groups.PROJECT_MEMBER:
+            if ApValue.ProjectAdminOntologyAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminOntologyAllPermission)
     return aps
 
 
