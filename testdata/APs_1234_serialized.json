@@ -1,0 +1,21 @@
+{
+  "Project 1234 has 2 APs": [
+    {
+      "forGroup": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+      "forProject": "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+      "hasPermissions": [
+        "ProjectAdminRightsAllPermission",
+        "ProjectAdminGroupRestrictedPermission"
+      ],
+      "iri": "http://rdfh.ch/ap-1"
+    },
+    {
+      "forGroup": "http://www.knora.org/ontology/knora-admin#KnownUser",
+      "forProject": "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+      "hasPermissions": [
+        "ProjectResourceCreateRestrictedPermission"
+      ],
+      "iri": "http://rdfh.ch/ap-2"
+    }
+  ]
+}
