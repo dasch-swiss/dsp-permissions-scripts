@@ -30,7 +30,7 @@ def _update_doap_scope(
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     new_doap = create_doap_from_admin_route_response(response.json()["default_object_access_permission"])
     return new_doap
 

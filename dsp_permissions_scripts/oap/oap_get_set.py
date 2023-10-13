@@ -50,7 +50,7 @@ def _get_resource(
     url = f"{protocol}://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     data: dict[str, Any] = response.json()
     return data
 
@@ -143,7 +143,7 @@ def _update_permissions_for_resource(
     url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     logger.info(f"Updated permissions of resource {resource_iri}")
 
 
