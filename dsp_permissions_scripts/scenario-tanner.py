@@ -1,14 +1,14 @@
 from dotenv import load_dotenv
 
-from dsp_permissions_scripts.models.doap import Doap
-from dsp_permissions_scripts.models.groups import BuiltinGroup
+from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
+from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.oap import Oap
+from dsp_permissions_scripts.oap.oap_get_set import apply_updated_oaps_on_server
+from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
-from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
-from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
-from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
@@ -76,22 +76,23 @@ def fix_oaps(
         resource_oaps=resource_oaps_updated,
         host=host,
         token=token,
+        shortcode=shortcode,
     )
 
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Remove ProjectMember from Modify, and add it to View."""
     for d in doaps:
-        d.scope = d.scope.remove("M", BuiltinGroup.PROJECT_MEMBER)
-        d.scope = d.scope.add("V", BuiltinGroup.PROJECT_MEMBER)
+        d.scope = d.scope.remove("M", builtin_groups.PROJECT_MEMBER)
+        d.scope = d.scope.add("V", builtin_groups.PROJECT_MEMBER)
     return doaps
 
 
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Remove ProjectMember from Modify, and add it to View."""
     for oap in oaps:
-        oap.scope = oap.scope.remove("M", BuiltinGroup.PROJECT_MEMBER)
-        oap.scope = oap.scope.add("V", BuiltinGroup.PROJECT_MEMBER)
+        oap.scope = oap.scope.remove("M", builtin_groups.PROJECT_MEMBER)
+        oap.scope = oap.scope.add("V", builtin_groups.PROJECT_MEMBER)
     return oaps
 
 
