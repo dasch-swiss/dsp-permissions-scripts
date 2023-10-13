@@ -1,5 +1,4 @@
 import warnings
-from typing import Literal
 from urllib.parse import quote_plus
 
 import requests
