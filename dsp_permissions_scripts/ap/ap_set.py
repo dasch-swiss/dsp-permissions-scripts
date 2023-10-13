@@ -99,7 +99,7 @@ def apply_updated_aps_on_server(
             )
             _log_and_print_ap_update(ap=new_ap)
         except ApiError as err:
-            logger.error(err, exc_info=True)
+            logger.error(err)
             warnings.warn(err.message)
 
     print(f"{get_timestamp()}: All APs have been updated.")

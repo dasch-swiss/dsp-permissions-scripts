@@ -222,7 +222,7 @@ def apply_updated_oaps_on_server(
                 token=token,
             )
         except ApiError as err:
-            logger.error(err, exc_info=True)
+            logger.error(err)
             warnings.warn(err.message)
             failed_res_iris.append(resource_oap.object_iri)
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")

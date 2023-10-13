@@ -96,7 +96,7 @@ def _get_all_resource_oaps_of_resclass(
             resources.extend(iris)
             page += 1
         except ApiError as err:
-            logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.", exc_info=True)
+            logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
             warnings.warn(f"{err.message}\nStop getting more pages, return what has been retrieved so far.")
             more = False
     print(f"{get_timestamp()}: Retrieved {len(resources)} resource OAPs of class {resclass_iri}.")
