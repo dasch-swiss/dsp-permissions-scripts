@@ -43,7 +43,7 @@ def _get_onto_iris_of_project(
     url = f"{protocol}://{host}/v2/ontologies/metadata"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
     all_ontologies = response.json().get("@graph")
     project_onto_iris = [o["@id"] for o in all_ontologies if o["knora-api:attachedToProject"]["@id"] == project_iri]
     return project_onto_iris
@@ -58,7 +58,7 @@ def _get_class_iris_of_onto(
     url = f"{protocol}://{host}/v2/ontologies/allentities/{quote_plus(onto_iri)}"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
     all_entities = response.json()["@graph"]
     context = response.json()["@context"]
     class_ids = [c["@id"] for c in all_entities if c.get("knora-api:isResourceClass")]
@@ -113,7 +113,7 @@ def _get_next_page(
     """
     url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
     result = response.json()
     if "@graph" in result:
         # result contains several resources: return them, then continue with next page
@@ -138,7 +138,7 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
     response = requests.get(url, timeout=5)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
     iri: str = response.json()["project"]["id"]
     return iri
 
