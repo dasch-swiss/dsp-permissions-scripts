@@ -5,10 +5,7 @@ from typing import Literal
 from dsp_permissions_scripts.oap.oap_model import Oap
 
 
-def _get_project_data_path(
-    shortcode: str,
-    mode: Literal["original", "modified"]
-) -> Path:
+def _get_project_data_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
     return Path(f"project_data/{shortcode}/OAPs_{mode}")
 
 

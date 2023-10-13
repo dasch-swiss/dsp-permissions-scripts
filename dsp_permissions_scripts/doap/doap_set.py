@@ -15,6 +15,7 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 
 logger = get_logger(__name__)
 
+
 def _update_doap_scope(
     doap_iri: str,
     scope: PermissionScope,

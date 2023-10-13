@@ -16,7 +16,7 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
-    for doap in doaps: 
+    for doap in doaps:
         if doap.target.group in [builtin_groups.PROJECT_MEMBER, builtin_groups.PROJECT_ADMIN]:
             doap.scope = PUBLIC
     return doaps

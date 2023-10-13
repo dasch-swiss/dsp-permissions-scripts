@@ -19,7 +19,7 @@ class TestDoapSerialization(unittest.TestCase):
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
-    
+
     def test_doap_serialization(self):
         doap1 = Doap(
             target=DoapTarget(
@@ -49,7 +49,7 @@ class TestDoapSerialization(unittest.TestCase):
             mode="original",
         )
         deserialized_doaps = deserialize_doaps_of_project(
-            shortcode=self.shortcode, 
+            shortcode=self.shortcode,
             mode="original",
         )
         self._compare_doaps(deserialized_doaps[0], doap1)
