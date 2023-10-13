@@ -70,8 +70,8 @@ def apply_updated_doaps_on_server(
                 token=token,
             )
             _log_and_print_doap_update(doap=new_doap)
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.error(f"ERROR while updating DOAP {d.doap_iri}", exc_info=True)
-            warnings.warn(f"ERROR while updating DOAP {d.doap_iri}")
+        except ApiError as err:
+            logger.error(err)
+            warnings.warn(err.message)
 
     print(f"{get_timestamp()}: All DOAPs have been updated.")
