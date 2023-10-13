@@ -8,76 +8,9 @@ from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.oap.oap_get_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
-
-
-def fix_scenario_tanner() -> None:
-    """
-    Adapt the project Scenario Tanner on prod:
-    Remove ProjectMember from Modify, and add it to View.
-    """
-    load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("stage")
-    shortcode = "0102"
-    token = login(host)
-    fix_doaps(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-    fix_oaps(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-
-
-def fix_doaps(
-    host: str,
-    shortcode: str,
-    token: str,
-) -> None:
-    project_doaps = get_doaps_of_project(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-    serialize_doaps_of_project(
-        project_doaps=project_doaps,
-        shortcode=shortcode,
-        mode="original",
-    )
-    project_doaps_updated = modify_doaps(doaps=project_doaps)
-    serialize_doaps_of_project(
-        project_doaps=project_doaps_updated,
-        shortcode=shortcode,
-        mode="modified",
-    )
-    apply_updated_doaps_on_server(
-        doaps=project_doaps_updated,
-        host=host,
-        token=token,
-    )
-
-
-def fix_oaps(
-    host: str,
-    shortcode: str,
-    token: str,
-) -> None:
-    all_resource_oaps = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
-        host=host,
-        token=token,
-    )
-    resource_oaps_updated = modify_oaps(oaps=all_resource_oaps)
-    apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_updated,
-        host=host,
-        token=token,
-        shortcode=shortcode,
-    )
 
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
@@ -94,6 +27,95 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
         oap.scope = oap.scope.remove("M", builtin_groups.PROJECT_MEMBER)
         oap.scope = oap.scope.add("V", builtin_groups.PROJECT_MEMBER)
     return oaps
+
+
+def update_doaps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    project_doaps = get_doaps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_doaps_of_project(
+        project_doaps=project_doaps,
+        shortcode=shortcode,
+        mode="original",
+    )
+    project_doaps_modified = modify_doaps(doaps=project_doaps)
+    apply_updated_doaps_on_server(
+        doaps=project_doaps_modified,
+        host=host,
+        token=token,
+    )
+    project_doaps_updated = get_doaps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_doaps_of_project(
+        project_doaps=project_doaps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
+
+
+def update_oaps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    resource_oaps = get_all_resource_oaps_of_project(
+        shortcode=shortcode,
+        host=host,
+        token=token,
+    )
+    serialize_resource_oaps(
+        resource_oaps=resource_oaps,
+        shortcode=shortcode,
+        mode="original",
+    )
+    resource_oaps_modified = modify_oaps(oaps=resource_oaps)
+    apply_updated_oaps_on_server(
+        resource_oaps=resource_oaps_modified,
+        host=host,
+        token=token,
+        shortcode=shortcode,
+    )
+    resource_oaps_updated = get_all_resource_oaps_of_project(
+        shortcode=shortcode,
+        host=host,
+        token=token,
+    )
+    serialize_resource_oaps(
+        resource_oaps=resource_oaps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
+
+
+def fix_scenario_tanner() -> None:
+    """
+    Adapt the project Scenario Tanner on prod:
+    Revoke Modify rights from ProjectMember, and grant them View rights.
+    """
+    load_dotenv()  # set login credentials from .env file as environment variables
+    host = Hosts.get_host("stage")
+    shortcode = "0102"
+    token = login(host)
+
+    update_doaps(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    update_oaps(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
 
 
 if __name__ == "__main__":
