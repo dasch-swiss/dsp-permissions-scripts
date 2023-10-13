@@ -16,8 +16,6 @@ class ApValue(Enum):
     ProjectAdminGroupRestrictedPermission = "ProjectAdminGroupRestrictedPermission"
     # is allowed to change the permissions on all objects belonging to the project
     ProjectAdminRightsAllPermission = "ProjectAdminRightsAllPermission"
-    # is allowed to administrate the project ontologies
-    ProjectAdminOntologyAllPermission = "ProjectAdminOntologyAllPermission"
 
 
 class Ap(BaseModel):

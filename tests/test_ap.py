@@ -26,4 +26,4 @@ class TestAp(unittest.TestCase):
 
     def test_remove_permission_not_exists(self):
         with self.assertRaises(ValueError):
-            self.ap.remove_permission(ApValue.ProjectAdminOntologyAllPermission)
+            self.ap.remove_permission(ApValue.ProjectAdminAllPermission)
