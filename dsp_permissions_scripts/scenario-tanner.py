@@ -1,3 +1,5 @@
+# pylint: disable=duplicate-code
+
 from dotenv import load_dotenv
 
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
