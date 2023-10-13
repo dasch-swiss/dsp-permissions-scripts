@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.doap import Doap, DoapTarget, DoapTargetType
+from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode

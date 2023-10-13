@@ -1,3 +1,5 @@
+# pylint: disable=too-many-arguments
+
 import json
 import warnings
 from typing import Any
@@ -5,9 +7,9 @@ from urllib.parse import quote_plus
 
 import requests
 
-from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
+from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
