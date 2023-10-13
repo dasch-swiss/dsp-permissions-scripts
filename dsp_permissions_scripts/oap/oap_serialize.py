@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.models.oap import Oap
+from dsp_permissions_scripts.oap.oap_model import Oap
 
 
 def _get_project_data_path(

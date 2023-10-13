@@ -1,11 +1,16 @@
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
+from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.ap import Ap, ApValue
-from dsp_permissions_scripts.models.doap import Doap
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.oap import Oap
 from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.oap.oap_get_set import apply_updated_oaps_on_server
+from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.utils.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.utils.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.utils.ap.ap_set import (
@@ -13,11 +18,6 @@ from dsp_permissions_scripts.utils.ap.ap_set import (
     delete_ap,
 )
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.doap_get import get_doaps_of_project
-from dsp_permissions_scripts.utils.doap_serialize import serialize_doaps_of_project
-from dsp_permissions_scripts.utils.doap_set import apply_updated_doaps_on_server
-from dsp_permissions_scripts.utils.oap import apply_updated_oaps_on_server
-from dsp_permissions_scripts.utils.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
