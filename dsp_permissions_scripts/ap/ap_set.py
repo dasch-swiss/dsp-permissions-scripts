@@ -34,7 +34,7 @@ def _delete_single_ap(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{ap_iri}"
     response = requests.delete(url, headers=headers, timeout=5)
-    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
 
 
@@ -52,7 +52,7 @@ def _update_ap(
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     ap_updated: dict[str, Any] = response.json()["administrative_permission"]
     ap_object_updated = create_ap_from_admin_route_object(ap_updated)
     return ap_object_updated

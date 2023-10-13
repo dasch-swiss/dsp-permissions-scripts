@@ -47,7 +47,7 @@ def _get_all_aps_of_project(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/ap/{project_iri}"
     response = requests.get(url, headers=headers, timeout=5)
-    assert response.status_code == 200, f"Error message from DSP-API: {response.text}"
+    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
     aps: list[dict[str, Any]] = response.json()["administrative_permissions"]
     ap_objects = [create_ap_from_admin_route_object(ap) for ap in aps]
     return ap_objects
