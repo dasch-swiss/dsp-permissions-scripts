@@ -20,27 +20,33 @@ from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_proje
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
+    modified_aps = []
     for ap in aps:
         if ap.forGroup == builtin_groups.PROJECT_MEMBER:
             if ApValue.ProjectAdminOntologyAllPermission not in ap.hasPermissions:
                 ap.add_permission(ApValue.ProjectAdminOntologyAllPermission)
-    return aps
+                modified_aps.append(ap)
+    return modified_aps
 
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
+    modified_doaps = []
     for doap in doaps:
         if doap.target.group in [builtin_groups.PROJECT_MEMBER, builtin_groups.PROJECT_ADMIN]:
             doap.scope = PUBLIC
-    return doaps
+            modified_doaps.append(doap)
+    return modified_doaps
 
 
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
+    modified_oaps = []
     for oap in oaps:
         if builtin_groups.SYSTEM_ADMIN not in oap.scope.CR:
             oap.scope = oap.scope.add("CR", builtin_groups.SYSTEM_ADMIN)
-    return oaps
+            modified_oaps.append(oap)
+    return modified_oaps
 
 
 def update_aps(
