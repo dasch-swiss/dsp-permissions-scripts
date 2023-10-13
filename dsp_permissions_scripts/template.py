@@ -23,8 +23,8 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     modified_aps = []
     for ap in aps:
         if ap.forGroup == builtin_groups.PROJECT_MEMBER:
-            if ApValue.ProjectAdminOntologyAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminOntologyAllPermission)
+            if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
                 modified_aps.append(ap)
     return modified_aps
 
