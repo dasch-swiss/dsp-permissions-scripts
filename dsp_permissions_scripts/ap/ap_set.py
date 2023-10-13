@@ -58,14 +58,9 @@ def _update_ap(
     return ap_object_updated
 
 
-def _log_and_print_ap_update(
-    ap: Ap,
-    state: Literal["before", "after"],
-) -> None:
-    """
-    Logs and prints the AP before or after the update.
-    """
-    heading = f"AP {state}:"
+def _log_and_print_ap_update(ap: Ap) -> None:
+    """Logs and prints the AP after the update."""
+    heading = "Updated AP as per response from server:"
     body = ap.model_dump_json(indent=2)
     print(f"{heading}\n{'-' * len(heading)}\n{body}\n")
     logger.info(f"{heading}\n{body}")
@@ -88,14 +83,13 @@ def apply_updated_aps_on_server(
     heading = f"{get_timestamp()}: Updating {len(aps)} APs on {host}..."
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for ap in aps:
-        _log_and_print_ap_update(ap=ap, state="before")
         try:
             new_ap = _update_ap(
                 ap=ap,
                 host=host,
                 token=token,
             )
-            _log_and_print_ap_update(ap=new_ap, state="after")
+            _log_and_print_ap_update(ap=new_ap)
         except Exception:  # pylint: disable=broad-exception-caught
             logger.error(f"ERROR while updating Administrative Permission {ap.iri}", exc_info=True)
             warnings.warn(f"ERROR while updating Administrative Permission {ap.iri}")

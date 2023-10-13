@@ -36,14 +36,9 @@ def _update_doap_scope(
     return new_doap
 
 
-def _log_and_print_doap_update(
-    doap: Doap,
-    state: Literal["before", "after"],
-) -> None:
-    """
-    Logs and prints the DOAP before or after the update.
-    """
-    heading = f"DOAP {state}:"
+def _log_and_print_doap_update(doap: Doap) -> None:
+    """Logs and prints the DOAP after the update."""
+    heading = "Updated DOAP as per response from server:"
     body = doap.model_dump_json(indent=2)
     print(f"{heading}\n{'-' * len(heading)}\n{body}\n")
     logger.info(f"{heading}\n{body}")
@@ -66,7 +61,6 @@ def apply_updated_doaps_on_server(
     heading = f"{get_timestamp()}: Updating {len(doaps)} DOAPs on {host}..."
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
-        _log_and_print_doap_update(doap=d, state="before")
         try:
             new_doap = _update_doap_scope(
                 doap_iri=d.doap_iri,
@@ -74,7 +68,7 @@ def apply_updated_doaps_on_server(
                 host=host,
                 token=token,
             )
-            _log_and_print_doap_update(doap=new_doap, state="after")
+            _log_and_print_doap_update(doap=new_doap)
         except Exception:  # pylint: disable=broad-exception-caught
             logger.error(f"ERROR while updating DOAP {d.doap_iri}", exc_info=True)
             warnings.warn(f"ERROR while updating DOAP {d.doap_iri}")
