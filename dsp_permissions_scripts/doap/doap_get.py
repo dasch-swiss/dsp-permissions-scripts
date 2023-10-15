@@ -47,7 +47,7 @@ def _get_all_doaps_of_project(
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError(f"Error while getting DOAPs of project {project_iri}", response.text, response.status_code)
     doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]

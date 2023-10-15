@@ -45,7 +45,7 @@ def _get_onto_iris_of_project(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/ontologies/metadata"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError("Could not get onto IRIs", response.text, response.status_code)
     all_ontologies = response.json().get("@graph")
@@ -61,7 +61,7 @@ def _get_class_iris_of_onto(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/ontologies/allentities/{quote_plus(onto_iri)}"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError("Could not get class IRIs", response.text, response.status_code)
     all_entities = response.json()["@graph"]
@@ -122,7 +122,7 @@ def _get_next_page(
     This means that the page must be incremented until the response contains 0 or 1 resource.
     """
     url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=20)
     if response.status_code != 200:
         raise ApiError("Could not get next page", response.text, response.status_code)
     result = response.json()
@@ -148,7 +148,7 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
     """
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
-    response = requests.get(url, timeout=5)
+    response = requests.get(url, timeout=10)
     if response.status_code != 200:
         raise ApiError("Cannot retrieve project IRI", response.text, response.status_code)
     iri: str = response.json()["project"]["id"]
