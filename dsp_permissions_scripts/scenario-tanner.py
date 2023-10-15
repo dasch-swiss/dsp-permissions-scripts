@@ -106,10 +106,15 @@ def update_oaps(
     shortcode: str,
     token: str,
 ) -> None:
+    excluded_class_iris = [
+        f"http://{host}/ontology/0102/scenario-tanner/v2#Document",
+	    f"http://{host}/ontology/0102/scenario-tanner/v2#Page",
+    ]
     resource_oaps = get_all_resource_oaps_of_project(
         shortcode=shortcode,
         host=host,
         token=token,
+        excluded_class_iris=excluded_class_iris,
     )
     serialize_resource_oaps(
         resource_oaps=resource_oaps,
