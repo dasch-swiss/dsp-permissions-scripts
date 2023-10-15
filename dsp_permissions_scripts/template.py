@@ -22,9 +22,9 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in aps:
-        if ap.forGroup == builtin_groups.PROJECT_MEMBER:
-            if ApValue.ProjectAdminOntologyAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminOntologyAllPermission)
+        if ap.forGroup == builtin_groups.UNKNOWN_USER:
+            if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
                 modified_aps.append(ap)
     return modified_aps
 
@@ -33,7 +33,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in doaps:
-        if doap.target.group in [builtin_groups.PROJECT_MEMBER, builtin_groups.PROJECT_ADMIN]:
+        if doap.target.group == builtin_groups.UNKNOWN_USER:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
@@ -69,7 +69,7 @@ def update_aps(
         host=host,
         token=token,
         existing_aps=project_aps,
-        forGroup=builtin_groups.PROJECT_MEMBER,
+        forGroup=builtin_groups.UNKNOWN_USER,
     )
     modified_aps = modify_aps(remaining_aps)
     apply_updated_aps_on_server(

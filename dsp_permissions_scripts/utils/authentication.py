@@ -2,6 +2,8 @@ import os
 
 import requests
 
+from dsp_permissions_scripts.models.api_error import ApiError
+
 
 def _get_token(host: str, email: str, pw: str) -> str:
     """
@@ -10,7 +12,8 @@ def _get_token(host: str, email: str, pw: str) -> str:
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/authentication"
     response = requests.post(url, json={"email": email, "password": pw}, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError("Could not login", response.text, response.status_code)
     token: str = response.json()["token"]
     return token
 

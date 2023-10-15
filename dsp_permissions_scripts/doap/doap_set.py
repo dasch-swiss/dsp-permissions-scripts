@@ -5,6 +5,7 @@ import requests
 
 from dsp_permissions_scripts.doap.doap_get import create_doap_from_admin_route_response
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
@@ -30,7 +31,8 @@ def _update_doap_scope(
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
     response = requests.put(url, headers=headers, json=payload, timeout=5)
-    assert response.status_code == 200, f"Status {response.status_code}. Error message from DSP-API: {response.text}"
+    if response.status_code != 200:
+        raise ApiError( f"Could not update scope of DOAP {doap_iri}", response.text, response.status_code, payload)
     new_doap = create_doap_from_admin_route_response(response.json()["default_object_access_permission"])
     return new_doap
 
@@ -68,8 +70,8 @@ def apply_updated_doaps_on_server(
                 token=token,
             )
             _log_and_print_doap_update(doap=new_doap)
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.error(f"ERROR while updating DOAP {d.doap_iri}", exc_info=True)
-            warnings.warn(f"ERROR while updating DOAP {d.doap_iri}")
+        except ApiError as err:
+            logger.error(err)
+            warnings.warn(err.message)
 
     print(f"{get_timestamp()}: All DOAPs have been updated.")
