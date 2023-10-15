@@ -47,7 +47,7 @@ def _get_all_aps_of_project(
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/ap/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError("Could not get APs of project", response.text, response.status_code)
     aps: list[dict[str, Any]] = response.json()["administrative_permissions"]

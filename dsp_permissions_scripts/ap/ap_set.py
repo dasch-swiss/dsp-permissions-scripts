@@ -34,7 +34,7 @@ def _delete_single_ap(
     ap_iri = quote_plus(ap.iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{ap_iri}"
-    response = requests.delete(url, headers=headers, timeout=5)
+    response = requests.delete(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError(f"Could not delete Administrative Permission {ap.iri}", response.text, response.status_code)
     logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
@@ -53,7 +53,7 @@ def _update_ap(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
-    response = requests.put(url, headers=headers, json=payload, timeout=5)
+    response = requests.put(url, headers=headers, json=payload, timeout=10)
     if response.status_code != 200:
         raise ApiError(
             message=f"Could not update Administrative Permission {ap.iri}",

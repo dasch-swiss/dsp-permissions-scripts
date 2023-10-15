@@ -49,7 +49,7 @@ def _get_resource(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url, headers=headers, timeout=5)
+    response = requests.get(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
     data: dict[str, Any] = response.json()
@@ -103,7 +103,7 @@ def _update_permissions_for_value(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload, timeout=5)
+    response = requests.put(url, headers=headers, json=payload, timeout=10)
     if response.status_code == 400 and response.text:
         already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
         if already in response.text:
@@ -143,7 +143,7 @@ def _update_permissions_for_resource(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.put(url, headers=headers, json=payload, timeout=5)
+    response = requests.put(url, headers=headers, json=payload, timeout=10)
     if response.status_code != 200:
         raise ApiError(
             message=f"ERROR while updating permissions of resource {resource_iri}",
