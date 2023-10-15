@@ -109,7 +109,7 @@ def update_oaps(
     excluded_class_iris = [
         f"http://{host}/ontology/0102/scenario-tanner/v2#Document",
 	    f"http://{host}/ontology/0102/scenario-tanner/v2#Page",
-    ]
+    ] if "stage" in host else []
     resource_oaps = get_all_resource_oaps_of_project(
         shortcode=shortcode,
         host=host,
