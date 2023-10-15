@@ -86,3 +86,8 @@ PUBLIC = PermissionScope.create(
     D={builtin_groups.CREATOR, builtin_groups.PROJECT_MEMBER},
     V={builtin_groups.UNKNOWN_USER, builtin_groups.KNOWN_USER},
 )
+
+PRIVATE = PermissionScope.create(
+    CR={builtin_groups.PROJECT_ADMIN, builtin_groups.CREATOR},
+    V={builtin_groups.PROJECT_MEMBER},
+)
