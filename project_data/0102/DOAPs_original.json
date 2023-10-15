@@ -1,0 +1,430 @@
+{
+  "Project 0102 has 21 DOAPs": [
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnScreenplayGenesis"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/r-2AQdaFRFu6pjIUJuxj3Q"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#documentsShootingCondition"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/7HaOxZWuRmOv-BBA-HE73g"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#documentHasComment"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/CvaWOquNT_-0YAgFSnW31w"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasAestheticRelatedTopic"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/jh40M72kRbWPtiaQPIzsew"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "group": "http://www.knora.org/ontology/knora-admin#ProjectMember"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": [
+          "http://www.knora.org/ontology/knora-admin#UnknownUser",
+          "http://www.knora.org/ontology/knora-admin#KnownUser"
+        ]
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/tOiUj2MBRnG_daOI0XFg4w"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#imageHasInterest"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/qAEpGoGnRQWIdzr44Ur12w"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasMentionOfGeneva"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/WQxqCLwxQmG60Q9bn1ypeg"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnShootingCondition"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/RK2H8_n2TeeProB98YnbVw"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasGenderRelatedTopic"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/GNsY79GcQwG1ZZUge7xVdA"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnAesthetic"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/UnMYGQdQQyWDJHkO3a3N_w"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#documentsScreenplayDiscourses"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/wcPNfi-TT92mWp94Wsk7pA"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasComparativeComment"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/Qh0iisRzS32FtCrPcqmv-Q"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#interviewHasTranscript"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/ph6rz1drRKeo13ZMYGqvpw"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnGender"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/KCkb5OA2RNCjsdWnQAmZhw"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#documentsScreenplayGenesis"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/lQUNVCszS2aYogCQoRqZNg"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasFictionRelatedTopic"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/YdERVnSQTWaDdGWT-DuDoA"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "resource_class": "http://www.knora.org/ontology/0102/scenario-tanner#Interview"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/-a7xhvcZTWyKM-kCGln7UQ"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnFiction"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/twBZccSZTGihfSEbCiKjZg"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#scriptHasGeneticComment"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/M9hJ2sRaTVmHC3bPUrm7KQ"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/knora-base#hasStillImageFileValue"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": [
+          "http://www.knora.org/ontology/knora-admin#UnknownUser",
+          "http://www.knora.org/ontology/knora-admin#KnownUser"
+        ]
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/psr2tOTXQ-2rv1Ttjy8lJQ"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/0102",
+        "property": "http://www.knora.org/ontology/0102/scenario-tanner#hasCommentOnScreenplay"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator"
+        ],
+        "M": [
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "V": [],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/0102/kdSoJ2_MRTaAlFJ9_wI3Og"
+    }
+  ]
+}
