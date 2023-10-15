@@ -2,6 +2,9 @@
 
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
+from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
+from dsp_permissions_scripts.ap.ap_set import delete_ap
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
@@ -29,6 +32,40 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
         oap.scope = oap.scope.remove("M", builtin_groups.PROJECT_MEMBER)
         oap.scope = oap.scope.add("V", builtin_groups.PROJECT_MEMBER)
     return oaps
+
+
+def update_aps(
+    host: str,
+    shortcode: str,
+    token: str,
+) -> None:
+    """Delete the Administrative Permission that allows the ProjectMember to create resources."""
+    project_aps = get_aps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_aps_of_project(
+        project_aps=project_aps,
+        shortcode=shortcode,
+        mode="original",
+    )
+    _ = delete_ap(
+        host=host,
+        token=token,
+        existing_aps=project_aps,
+        forGroup=builtin_groups.PROJECT_MEMBER,
+    )
+    project_aps_updated = get_aps_of_project(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
+    serialize_aps_of_project(
+        project_aps=project_aps_updated,
+        shortcode=shortcode,
+        mode="modified",
+    )
 
 
 def update_doaps(
@@ -108,6 +145,11 @@ def fix_scenario_tanner() -> None:
     shortcode = "0102"
     token = login(host)
 
+    update_aps(
+        host=host,
+        shortcode=shortcode,
+        token=token,
+    )
     update_doaps(
         host=host,
         shortcode=shortcode,
