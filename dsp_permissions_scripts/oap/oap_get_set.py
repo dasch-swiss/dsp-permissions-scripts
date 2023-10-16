@@ -178,6 +178,8 @@ def _update_permissions_for_resource_and_values(
         token=token,
     )
     for v in values:
+        if v.property == "knora-api:DeletedValue":
+            continue
         _update_permissions_for_value(
             resource_iri=resource_iri,
             value=v,
