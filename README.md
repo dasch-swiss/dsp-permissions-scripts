@@ -42,18 +42,13 @@ The `/admin/permissions` endpoint of DSP-API is documented
 ### APs: Administrative Permissions
 
 A user group can have one or more of the following permissions:
-# is allowed to create resources inside the project
-`ProjectResourceCreateAllPermission`
-# is allowed to create resources of certain classes inside the project
-`ProjectResourceCreateRestrictedPermission`
-# is allowed to do anything on project level
-`ProjectAdminAllPermission`
-# is allowed to modify group info and group membership on all groups belonging to the project
-`ProjectAdminGroupAllPermission`
-# is allowed to modify group info and group membership on certain groups belonging to the project
-`ProjectAdminGroupRestrictedPermission`
-# is allowed to change the permissions on all objects belonging to the project
-`ProjectAdminRightsAllPermission`
+
+- `ProjectResourceCreateAllPermission`: is allowed to create resources inside the project
+- `ProjectResourceCreateRestrictedPermission`: is allowed to create resources of certain classes inside the project
+- `ProjectAdminAllPermission`: is allowed to do anything on project level
+- `ProjectAdminGroupAllPermission`: is allowed to modify group info and group membership on all groups of the project
+- `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
+- `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
 
 
 ### OAPs: Object Access Permissions
