@@ -50,13 +50,12 @@ A user group can have one or more of the following permissions:
 - `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
 - `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
 
->
-> [!NOTE]  
+> **Note**
 > The example file [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json)
 >
 >- grants to `knora-admin:ProjectAdmin` the rights to anything on project level, and to create resources of any class.
 >- grants to `knora-admin:ProjectMember` the rights to create resources of any class.
->
+
 
 ## OAPs: Object Access Permissions
 
@@ -64,6 +63,7 @@ OAPs grant **rights** to certain **user groups**.
 These are mapped to each other using **permission strings** (represented as **scopes** in this repo).
 
 OAPs are attached to either a resource or a value (value of a property), but not to a property.
+
 
 ### 1. Rights
 
@@ -81,6 +81,7 @@ A group can have exactly one of these rights:
   The user is also allowed to permanently delete (erase) a resource.
 
 Every right of this row includes all previous rights.
+
 
 ### 2. User Groups
 
@@ -103,13 +104,11 @@ There are **built-in groups** and **project specific groups**:
 
 **Rights** are mapped to **user groups** using **permission strings** (represented as **scopes** in this repo).
 
->
 > **Note**
 > The example file
 >[project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
 > shows that the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ` has the rights
 > `CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
->
 
 
 ## DOAPs: Default Object Access Permissions
@@ -128,6 +127,7 @@ DOAPs are always project-related, but more specifically, they are:
 > 
 > - If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR knora-admin:ProjectAdmin|D knora-admin:Creator,knora-admin:ProjectMember|V knora-admin:KnownUser,knora-admin:UnknownUser`.
 > - If a `ProjectMember` creates a resource, the resource gets the same permissions.
+
 
 ### Precedence rule
 
