@@ -2,41 +2,72 @@
 
 A collection of scripts to handle permissions in DSP.
 
+
 ## Local setup to run the scripts in this repository
 
 Set up the poetry virtual environment:
 
-- install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
-  (for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/))
-- execute `poetry install`, which will:
+- Install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
+    - for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
+- Execute `poetry install`, which will:
     - create a virtual environment (if there isn't already one)
     - install all dependencies from `poetry.lock`
+- Set the virtual environment's Python interpreter as default interpreter in your IDE,
+  so that your IDE uses the correct Python version and the correct dependencies.
+
 
 ## The DSP permissions system
 
 There are 3 permissions systems:
 
-- **AP**: administrative permissions
-- **OAP**: object access permissions
+- **AP**: Administrative Permissions
+    - define what users of a certain group can do on project level (e.g. create resources, modify groups, etc.)
+- **OAP**: Object Access Permissions
     - define permissions of objects (resources and values)
     - OAPs grant rights to certain user groups.
     - The `<permissions>` tags in the XML of DSP-TOOLS define OAPs.
-- **DOAP**: default object access permissions
+- **DOAP**: Default Object Access Permissions
     - configured on a per-project basis
     - defines what should happen if a resource/property/value is created without OAP.
     - If a new project without DOAPs is created, there is a default DOAP configuration.
       (Until now it isn't possible to specify DOAPs when creating a project.)
 
-### OAPs: Object Access Permissions
+The permissions system of DSP is documented
+[here](https://docs.dasch.swiss/2023.10.01/DSP-API/05-internals/design/api-admin/administration/).
+
+The `/admin/permissions` endpoint of DSP-API is documented
+[here](https://docs.dasch.swiss/2023.10.01/DSP-API/03-endpoints/api-admin/permissions/).
+
+
+## AP: Administrative Permissions
+
+A user group can have one or more of the following permissions:
+
+- `ProjectResourceCreateAllPermission`: is allowed to create resources inside the project
+- `ProjectResourceCreateRestrictedPermission`: is allowed to create resources of certain classes inside the project
+- `ProjectAdminAllPermission`: is allowed to do anything on project level
+- `ProjectAdminGroupAllPermission`: is allowed to modify group info and group membership on all groups of the project
+- `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
+- `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
+
+> 💡 **Note**
+>
+> [This example file](project_data/F18E/APs_original.json)
+> contains 2 APs that:
+>
+>- grant to `knora-admin:ProjectAdmin` the rights to do anything on project level, and to create resources of any class.
+>- grant to `knora-admin:ProjectMember` the rights to create resources of any class.
+
+
+## OAP: Object Access Permissions
 
 OAPs grant **rights** to certain **user groups**.
-[See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permissions)
-for more information.
+These are mapped to each other using **permission strings** (represented as **scopes** in this repo).
 
-OAPs are attached to either a resource or a value (value of a property),
-but not to a property.
+OAPs are attached to either a resource or a value (value of a property), but not to a property.
 
-#### Rights
+
+### 1. Rights
 
 A group can have exactly one of these rights:
 
@@ -53,7 +84,8 @@ A group can have exactly one of these rights:
 
 Every right of this row includes all previous rights.
 
-#### User Groups
+
+### 2. User Groups
 
 The user doesn't hold the permissions directly,
 but belongs to an arbitrary number of groups which hold the permissions.
@@ -69,7 +101,26 @@ There are **built-in groups** and **project specific groups**:
 - **Project specific groups**:
     - projects can define their own groups
 
-### DOAPs: Default Object Access Permissions
+
+### 3. Permission strings / scopes
+
+**Permission strings** (represented as **scopes** in this repo) are used to grant **rights** to certain **user groups**.
+
+> 💡 **Note**
+>
+> [This example file](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
+> contains an OAP that grants the following rights to the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ`:
+> 
+> - Project admins have change rights.
+> - The creator has deletion rights.
+> - Project members have view rights.
+> - All others (logged-in or logged-out users) have restricted view rights.
+>
+> The string representation of this scope would be:
+> `CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
+
+
+## DOAP: Default Object Access Permissions
 
 DOAPs are always project-related, but more specifically, they are:
 
@@ -79,9 +130,21 @@ DOAPs are always project-related, but more specifically, they are:
     - property-related: some properties are public, while other properties are restricted
     - or a combination of class/property-related
 
-Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
+> 💡 **Note**
+>
+> [This example file](project_data/F18E/DOAPs_original.json)
+> contains 2 DOAPs that encode the following information:
+> 
+> - If a `ProjectAdmin` creates a resource, the resource's OAP would grant
+>     - change rights to `ProjectAdmin`
+>     - deletion rights to `Creator` and `ProjectMember`
+>     - view rights to `KnownUser` and `UnknownUser`
+> - If a `ProjectMember` creates a resource, the resources OAP would grant the same permissions to the same user groups.
 
-#### Precedence rule
+
+### Precedence rule
+
+Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
 
 If a user creates a resource, DSP checks the following places for DOAPs:
 
@@ -92,6 +155,7 @@ If a user creates a resource, DSP checks the following places for DOAPs:
 
 [See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules)
 for more details.
+
 
 ## Typical use cases
 
@@ -106,57 +170,3 @@ If permissions need to be changed, it is usually because of one of the following
 
 If we modify DOAPs, we usually have to modify them for the groups `ProjectMember` and `ProjectAdmin`,
 because these are the two groups that always exist.
-
-## Changing DOAPs
-
-### Understanding scopes
-
-A scope is a mapping of groups to rights granted to that group.
-
-Example result of `inspect_permissions()`:
-
-```json
-{
-  "target": {
-    "project": "http://rdfh.ch/projects/y-Hi8o-rTRubFrXDQlhqdw",
-    "group": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-    "resource_class": null,
-    "property": null
-  },
-  "scope": [
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-      "name": "CR"
-    },
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-      "name": "M"
-    }
-  ],
-  "iri": "http://rdfh.ch/permissions/0846/SWssbbAHQCmL5WShpWOI6g"
-},
-{
-  "target": {
-    "project": "http://rdfh.ch/projects/y-Hi8o-rTRubFrXDQlhqdw",
-    "group": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-    "resource_class": null,
-    "property": null
-  },
-  "scope": [
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-      "name": "CR"
-    },
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-      "name": "M"
-    }
-  ],
-  "iri": "http://rdfh.ch/permissions/0846/c2jUyfUHQ3mZtXyOGtMv4Q"
-}
-```
-
-Explanation:
-
-- If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR:ProjectAdmin|M:ProjectMember`.
-- If a `ProjectMember` creates a resource, the resource gets the permissions `CR:ProjectAdmin|M:ProjectMember`.
