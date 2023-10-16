@@ -146,16 +146,6 @@ def update_oaps(
         token=token,
         shortcode=shortcode,
     )
-    resource_oaps_updated = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
-        host=host,
-        token=token,
-    )
-    serialize_resource_oaps(
-        resource_oaps=resource_oaps_updated,
-        shortcode=shortcode,
-        mode="modified",
-    )
 
 
 def main() -> None:
