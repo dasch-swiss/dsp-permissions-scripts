@@ -107,7 +107,14 @@ There are **built-in groups** and **project specific groups**:
 > **Note**
 > The example file
 >[project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
-> shows that the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ` has the rights
+> is an OAP that grants the following rights to the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ`:
+> 
+> - Project admins have change rights.
+> - The creator has deletion rights.
+> - Project members have view rights.
+> - All others (logged-in or logged-out users) have restricted view rights.
+>
+> The string representation of this scope would be:
 > `CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
 
 
@@ -125,8 +132,11 @@ DOAPs are always project-related, but more specifically, they are:
 > The example file [project_data/F18E/DOAPs_original.json](project_data/F18E/DOAPs_original.json)
 > encodes the following information:
 > 
-> - If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR knora-admin:ProjectAdmin|D knora-admin:Creator,knora-admin:ProjectMember|V knora-admin:KnownUser,knora-admin:UnknownUser`.
-> - If a `ProjectMember` creates a resource, the resource gets the same permissions.
+> - If a `ProjectAdmin` creates a resource, the resource's OAP would grant
+>     - change rights to `ProjectAdmin`
+>     - deletion rights to `Creator` and `ProjectMember`
+>     - view rights to `KnownUser` and `UnknownUser`
+> - If a `ProjectMember` creates a resource, the resources OAP would grant the same permissions to the same user groups.
 
 
 ### Precedence rule
