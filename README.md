@@ -50,7 +50,10 @@ A user group can have one or more of the following permissions:
 - `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
 - `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
 
-For an example, see [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json).
+The example file [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json)
+
+- grants to `knora-admin:ProjectAdmin` the rights to anything on project level, and to create resources of any class.
+- grants to `knora-admin:ProjectMember` the rights to create resources of any class.
 
 
 ## OAPs: Object Access Permissions
