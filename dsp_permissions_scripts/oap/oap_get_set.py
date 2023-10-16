@@ -5,6 +5,7 @@ from typing import Any
 from urllib.parse import quote_plus
 
 import requests
+from viztracer import VizTracer
 
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -207,6 +208,13 @@ def apply_updated_oaps_on_server(
     shortcode: str,
 ) -> None:
     """Applies object access permissions on a DSP server."""
+    tracer = VizTracer(
+        minimize_memory=True,
+        ignore_c_function=True,
+        ignore_frozen=True,
+        include_files=["dsp_permissions_scripts/oap/oap_get_set.py"],
+    )
+    tracer.start()
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"{get_timestamp()}: ******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     failed_res_iris: list[str] = []
@@ -226,6 +234,8 @@ def apply_updated_oaps_on_server(
             warnings.warn(err.message)
             failed_res_iris.append(resource_oap.object_iri)
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
+    tracer.stop()
+    tracer.save(output_file="viztracer_report.json")
 
     if failed_res_iris:
         filename = "FAILED_RESOURCES.txt"

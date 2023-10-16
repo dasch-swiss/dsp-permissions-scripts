@@ -13,7 +13,10 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_serialize import (
+    deserialize_resource_oaps,
+    serialize_resource_oaps,
+)
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
@@ -45,6 +48,9 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     for oap in oaps:
         if builtin_groups.SYSTEM_ADMIN not in oap.scope.CR:
             oap.scope = oap.scope.add("CR", builtin_groups.SYSTEM_ADMIN)
+            modified_oaps.append(oap)
+        elif builtin_groups.SYSTEM_ADMIN not in oap.scope.D:
+            oap.scope = oap.scope.add("D", builtin_groups.SYSTEM_ADMIN)
             modified_oaps.append(oap)
     return modified_oaps
 
@@ -129,13 +135,7 @@ def update_oaps(
     token: str,
 ) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
-    resource_oaps = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
-        host=host,
-        token=token,
-    )
-    serialize_resource_oaps(
-        resource_oaps=resource_oaps,
+    resource_oaps = deserialize_resource_oaps(
         shortcode=shortcode,
         mode="original",
     )
@@ -167,20 +167,10 @@ def main() -> None:
     All must first be adapted to your needs.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
+    host = Hosts.get_host("stage")
+    shortcode = "0102"
     token = login(host)
 
-    update_aps(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
-    update_doaps(
-        host=host,
-        shortcode=shortcode,
-        token=token,
-    )
     update_oaps(
         host=host,
         shortcode=shortcode,
