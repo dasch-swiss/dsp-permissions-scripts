@@ -50,15 +50,17 @@ A user group can have one or more of the following permissions:
 - `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
 - `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
 
+For an example, see [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json).
+
 
 ### OAPs: Object Access Permissions
 
 OAPs grant **rights** to certain **user groups**.
+These are mapped to each other using **permission strings** (represented as **scopes** in this repo).
 
-OAPs are attached to either a resource or a value (value of a property),
-but not to a property.
+OAPs are attached to either a resource or a value (value of a property), but not to a property.
 
-#### Rights
+#### 1. Rights
 
 A group can have exactly one of these rights:
 
@@ -75,7 +77,7 @@ A group can have exactly one of these rights:
 
 Every right of this row includes all previous rights.
 
-#### User Groups
+#### 2. User Groups
 
 The user doesn't hold the permissions directly,
 but belongs to an arbitrary number of groups which hold the permissions.
@@ -91,6 +93,16 @@ There are **built-in groups** and **project specific groups**:
 - **Project specific groups**:
     - projects can define their own groups
 
+
+#### 3. Permission strings / scopes
+
+**Rights** are mapped to **user groups** using **permission strings** (represented as **scopes** in this repo).
+The example file
+[project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
+shows that the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ` has the rights
+`CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
+
+
 ### DOAPs: Default Object Access Permissions
 
 DOAPs are always project-related, but more specifically, they are:
@@ -101,9 +113,15 @@ DOAPs are always project-related, but more specifically, they are:
     - property-related: some properties are public, while other properties are restricted
     - or a combination of class/property-related
 
-Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
+The example file [project_data/F18E/DOAPs_original.json](project_data/F18E/DOAPs_original.json)
+encodes the following information:
+
+- If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR knora-admin:ProjectAdmin|D knora-admin:Creator,knora-admin:ProjectMember|V knora-admin:KnownUser,knora-admin:UnknownUser`.
+- If a `ProjectMember` creates a resource, the resource gets the same permissions.
 
 #### Precedence rule
+
+Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
 
 If a user creates a resource, DSP checks the following places for DOAPs:
 
@@ -129,58 +147,3 @@ If permissions need to be changed, it is usually because of one of the following
 
 If we modify DOAPs, we usually have to modify them for the groups `ProjectMember` and `ProjectAdmin`,
 because these are the two groups that always exist.
-
-
-## Changing DOAPs
-
-### Understanding scopes
-
-A scope is a mapping of groups to rights granted to that group.
-
-Example result of `inspect_permissions()`:
-
-```json
-{
-  "target": {
-    "project": "http://rdfh.ch/projects/y-Hi8o-rTRubFrXDQlhqdw",
-    "group": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-    "resource_class": null,
-    "property": null
-  },
-  "scope": [
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-      "name": "CR"
-    },
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-      "name": "M"
-    }
-  ],
-  "iri": "http://rdfh.ch/permissions/0846/SWssbbAHQCmL5WShpWOI6g"
-},
-{
-  "target": {
-    "project": "http://rdfh.ch/projects/y-Hi8o-rTRubFrXDQlhqdw",
-    "group": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-    "resource_class": null,
-    "property": null
-  },
-  "scope": [
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
-      "name": "CR"
-    },
-    {
-      "info": "http://www.knora.org/ontology/knora-admin#ProjectMember",
-      "name": "M"
-    }
-  ],
-  "iri": "http://rdfh.ch/permissions/0846/c2jUyfUHQ3mZtXyOGtMv4Q"
-}
-```
-
-Explanation:
-
-- If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR:ProjectAdmin|M:ProjectMember`.
-- If a `ProjectMember` creates a resource, the resource gets the permissions `CR:ProjectAdmin|M:ProjectMember`.
