@@ -138,6 +138,7 @@ def update_oaps(
         shortcode=shortcode,
         host=host,
         token=token,
+        excluded_class_iris=excluded_class_iris,
     )
     serialize_resource_oaps(
         resource_oaps=resource_oaps_updated,
