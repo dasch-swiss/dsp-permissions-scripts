@@ -50,7 +50,8 @@ A user group can have one or more of the following permissions:
 - `ProjectAdminGroupRestrictedPermission`: is allowed to modify group info and group membership on certain groups of the project
 - `ProjectAdminRightsAllPermission`: is allowed to change the permissions on all objects belonging to the project
 
-> :bulb: **Example file**
+> :bulb: **Note**
+>
 > [This example file](project_data/F18E/APs_original.json)
 > contains 2 APs that:
 >
@@ -105,7 +106,8 @@ There are **built-in groups** and **project specific groups**:
 
 **Permission strings** (represented as **scopes** in this repo) are used to grant **rights** to certain **user groups**.
 
-> :bulb: **Example file**
+> :bulb: **Note**
+>
 > [This example file](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
 > contains an OAP that grants the following rights to the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ`:
 > 
@@ -128,7 +130,8 @@ DOAPs are always project-related, but more specifically, they are:
     - property-related: some properties are public, while other properties are restricted
     - or a combination of class/property-related
 
-> :bulb: **Example file**
+> :bulb: **Note**
+>
 > [This example file](project_data/F18E/DOAPs_original.json)
 > contains 2 DOAPs that encode the following information:
 > 
