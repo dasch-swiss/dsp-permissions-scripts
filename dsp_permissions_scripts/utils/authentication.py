@@ -29,8 +29,11 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     else:
         user = os.getenv("DSP_USER_EMAIL") or ""
         pw = os.getenv("DSP_USER_PASSWORD") or ""
-    assert user
-    assert pw
+    if not user or not pw:
+        raise NameError(
+            "Missing credentials: Your username/password could not be retrieved. "
+            "Please define 'DSP_USER_EMAIL' and 'DSP_USER_PASSWORD' in the file '.env'."
+        )
     return user, pw
 
 
