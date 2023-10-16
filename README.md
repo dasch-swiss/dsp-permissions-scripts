@@ -39,7 +39,7 @@ The `/admin/permissions` endpoint of DSP-API is documented
 [here](https://docs.dasch.swiss/2023.10.01/DSP-API/03-endpoints/api-admin/permissions/).
 
 
-## APs: Administrative Permissions
+## AP: Administrative Permissions
 
 A user group can have one or more of the following permissions:
 
@@ -57,7 +57,7 @@ A user group can have one or more of the following permissions:
 >- grants to `knora-admin:ProjectMember` the rights to create resources of any class.
 
 
-## OAPs: Object Access Permissions
+## OAP: Object Access Permissions
 
 OAPs grant **rights** to certain **user groups**.
 These are mapped to each other using **permission strings** (represented as **scopes** in this repo).
@@ -111,7 +111,7 @@ There are **built-in groups** and **project specific groups**:
 > `CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
 
 
-## DOAPs: Default Object Access Permissions
+## DOAP: Default Object Access Permissions
 
 DOAPs are always project-related, but more specifically, they are:
 
