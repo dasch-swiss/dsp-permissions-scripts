@@ -1,0 +1,48 @@
+{
+  "Project F18E has 2 DOAPs": [
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+        "group": "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator",
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "M": [],
+        "V": [
+          "http://www.knora.org/ontology/knora-admin#KnownUser",
+          "http://www.knora.org/ontology/knora-admin#UnknownUser"
+        ],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/F18E/_fc8cFcQTEiz9K0Y4K0Pew"
+    },
+    {
+      "target": {
+        "project": "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+        "group": "http://www.knora.org/ontology/knora-admin#ProjectMember"
+      },
+      "scope": {
+        "CR": [
+          "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+        ],
+        "D": [
+          "http://www.knora.org/ontology/knora-admin#Creator",
+          "http://www.knora.org/ontology/knora-admin#ProjectMember"
+        ],
+        "M": [],
+        "V": [
+          "http://www.knora.org/ontology/knora-admin#KnownUser",
+          "http://www.knora.org/ontology/knora-admin#UnknownUser"
+        ],
+        "RV": []
+      },
+      "doap_iri": "http://rdfh.ch/permissions/F18E/6ta44L99Q6-EM9EcCEM0fA"
+    }
+  ]
+}

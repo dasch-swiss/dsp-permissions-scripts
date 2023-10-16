@@ -2,36 +2,63 @@
 
 A collection of scripts to handle permissions in DSP.
 
+
 ## Local setup to run the scripts in this repository
 
 Set up the poetry virtual environment:
 
-- install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
+- Install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
   (for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/))
-- execute `poetry install`, which will:
+- Execute `poetry install`, which will:
     - create a virtual environment (if there isn't already one)
     - install all dependencies from `poetry.lock`
+- Set the virtual environment's Python interpreter as default interpreter in your IDE,
+  so that your IDE uses the correct Python version and the correct dependencies.
+
 
 ## The DSP permissions system
 
 There are 3 permissions systems:
 
-- **AP**: administrative permissions
-- **OAP**: object access permissions
+- **AP**: Administrative Permissions
+    - define what users of a certain group can do on project level (e.g. create resources, modify groups, etc.)
+- **OAP**: Object Access Permissions
     - define permissions of objects (resources and values)
     - OAPs grant rights to certain user groups.
     - The `<permissions>` tags in the XML of DSP-TOOLS define OAPs.
-- **DOAP**: default object access permissions
+- **DOAP**: Default Object Access Permissions
     - configured on a per-project basis
     - defines what should happen if a resource/property/value is created without OAP.
     - If a new project without DOAPs is created, there is a default DOAP configuration.
       (Until now it isn't possible to specify DOAPs when creating a project.)
 
+The permissions system of DSP is documented
+[here](https://docs.dasch.swiss/2023.10.01/DSP-API/05-internals/design/api-admin/administration/).
+
+The `/admin/permissions` endpoint of DSP-API is documented
+[here](https://docs.dasch.swiss/2023.10.01/DSP-API/03-endpoints/api-admin/permissions/).
+
+
+### APs: Administrative Permissions
+
+A user group can have one or more of the following permissions:
+# is allowed to create resources inside the project
+`ProjectResourceCreateAllPermission`
+# is allowed to create resources of certain classes inside the project
+`ProjectResourceCreateRestrictedPermission`
+# is allowed to do anything on project level
+`ProjectAdminAllPermission`
+# is allowed to modify group info and group membership on all groups belonging to the project
+`ProjectAdminGroupAllPermission`
+# is allowed to modify group info and group membership on certain groups belonging to the project
+`ProjectAdminGroupRestrictedPermission`
+# is allowed to change the permissions on all objects belonging to the project
+`ProjectAdminRightsAllPermission`
+
+
 ### OAPs: Object Access Permissions
 
 OAPs grant **rights** to certain **user groups**.
-[See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permissions)
-for more information.
 
 OAPs are attached to either a resource or a value (value of a property),
 but not to a property.
@@ -93,6 +120,7 @@ If a user creates a resource, DSP checks the following places for DOAPs:
 [See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules)
 for more details.
 
+
 ## Typical use cases
 
 If permissions need to be changed, it is usually because of one of the following reasons:
@@ -106,6 +134,7 @@ If permissions need to be changed, it is usually because of one of the following
 
 If we modify DOAPs, we usually have to modify them for the groups `ProjectMember` and `ProjectAdmin`,
 because these are the two groups that always exist.
+
 
 ## Changing DOAPs
 
