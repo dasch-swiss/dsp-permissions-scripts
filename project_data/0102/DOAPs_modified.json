@@ -1,5 +1,5 @@
 {
-  "Project 0102 has 21 DOAPs": [
+  "2023-10-16 10:10:41: Project 0102 on host api.stage.dasch.swiss has 21 DOAPs": [
     {
       "target": {
         "project": "http://rdfh.ch/projects/0102",
@@ -97,8 +97,8 @@
           "http://www.knora.org/ontology/knora-admin#ProjectMember"
         ],
         "RV": [
-          "http://www.knora.org/ontology/knora-admin#UnknownUser",
-          "http://www.knora.org/ontology/knora-admin#KnownUser"
+          "http://www.knora.org/ontology/knora-admin#KnownUser",
+          "http://www.knora.org/ontology/knora-admin#UnknownUser"
         ]
       },
       "doap_iri": "http://rdfh.ch/permissions/0102/tOiUj2MBRnG_daOI0XFg4w"
@@ -400,8 +400,8 @@
           "http://www.knora.org/ontology/knora-admin#ProjectMember"
         ],
         "RV": [
-          "http://www.knora.org/ontology/knora-admin#UnknownUser",
-          "http://www.knora.org/ontology/knora-admin#KnownUser"
+          "http://www.knora.org/ontology/knora-admin#KnownUser",
+          "http://www.knora.org/ontology/knora-admin#UnknownUser"
         ]
       },
       "doap_iri": "http://rdfh.ch/permissions/0102/psr2tOTXQ-2rv1Ttjy8lJQ"

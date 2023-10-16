@@ -1,5 +1,5 @@
 {
-  "Project 0102 has 2 APs": [
+  "2023-10-16 10:10:37: Project 0102 on host api.stage.dasch.swiss has 2 APs": [
     {
       "forGroup": "http://www.knora.org/ontology/knora-admin#ProjectMember",
       "forProject": "http://rdfh.ch/projects/0102",
@@ -12,8 +12,8 @@
       "forGroup": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
       "forProject": "http://rdfh.ch/projects/0102",
       "hasPermissions": [
-        "ProjectResourceCreateAllPermission",
-        "ProjectAdminAllPermission"
+        "ProjectAdminAllPermission",
+        "ProjectResourceCreateAllPermission"
       ],
       "iri": "http://rdfh.ch/permissions/0102/5XXPVBlVSeOvTwm4PYfSaw"
     }
