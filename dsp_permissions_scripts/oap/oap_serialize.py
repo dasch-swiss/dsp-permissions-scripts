@@ -30,7 +30,7 @@ def deserialize_resource_oaps(
     """Deserialize the resource OAPs from JSON files."""
     folder = _get_project_data_path(shortcode, mode)
     resource_oaps = []
-    for file in folder.iterdir():
+    for file in [f for f in folder.iterdir() if f.suffix == ".json"]:
         with open(file, mode="r", encoding="utf-8") as f:
             resource_oaps.append(Oap.model_validate_json(f.read()))
     return resource_oaps
