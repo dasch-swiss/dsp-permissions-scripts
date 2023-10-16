@@ -64,6 +64,7 @@ def update_aps(
         project_aps=project_aps,
         shortcode=shortcode,
         mode="original",
+        host=host,
     )
     remaining_aps = delete_ap(
         host=host,
@@ -86,6 +87,7 @@ def update_aps(
         project_aps=project_aps_updated,
         shortcode=shortcode,
         mode="modified",
+        host=host,
     )
 
 
@@ -104,6 +106,7 @@ def update_doaps(
         project_doaps=project_doaps,
         shortcode=shortcode,
         mode="original",
+        host=host,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
     apply_updated_doaps_on_server(
@@ -120,6 +123,7 @@ def update_doaps(
         project_doaps=project_doaps_updated,
         shortcode=shortcode,
         mode="modified",
+        host=host,
     )
 
 
