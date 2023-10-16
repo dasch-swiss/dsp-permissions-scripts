@@ -55,8 +55,8 @@ A user group can have one or more of the following permissions:
 > [This example file](project_data/F18E/APs_original.json)
 > contains 2 APs that:
 >
->- grants to `knora-admin:ProjectAdmin` the rights to do anything on project level, and to create resources of any class.
->- grants to `knora-admin:ProjectMember` the rights to create resources of any class.
+>- grant to `knora-admin:ProjectAdmin` the rights to do anything on project level, and to create resources of any class.
+>- grant to `knora-admin:ProjectMember` the rights to create resources of any class.
 
 
 ## OAP: Object Access Permissions
