@@ -39,7 +39,7 @@ The `/admin/permissions` endpoint of DSP-API is documented
 [here](https://docs.dasch.swiss/2023.10.01/DSP-API/03-endpoints/api-admin/permissions/).
 
 
-### APs: Administrative Permissions
+## APs: Administrative Permissions
 
 A user group can have one or more of the following permissions:
 
@@ -53,14 +53,14 @@ A user group can have one or more of the following permissions:
 For an example, see [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json).
 
 
-### OAPs: Object Access Permissions
+## OAPs: Object Access Permissions
 
 OAPs grant **rights** to certain **user groups**.
 These are mapped to each other using **permission strings** (represented as **scopes** in this repo).
 
 OAPs are attached to either a resource or a value (value of a property), but not to a property.
 
-#### 1. Rights
+### 1. Rights
 
 A group can have exactly one of these rights:
 
@@ -77,7 +77,7 @@ A group can have exactly one of these rights:
 
 Every right of this row includes all previous rights.
 
-#### 2. User Groups
+### 2. User Groups
 
 The user doesn't hold the permissions directly,
 but belongs to an arbitrary number of groups which hold the permissions.
@@ -94,7 +94,7 @@ There are **built-in groups** and **project specific groups**:
     - projects can define their own groups
 
 
-#### 3. Permission strings / scopes
+### 3. Permission strings / scopes
 
 **Rights** are mapped to **user groups** using **permission strings** (represented as **scopes** in this repo).
 The example file
@@ -103,7 +103,7 @@ shows that the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ` has the rig
 `CR knora-admin:ProjectAdmin|D knora-admin:Creator|M knora-admin:ProjectMember|RV knora-admin:UnknownUser,knora-admin:KnownUser`.
 
 
-### DOAPs: Default Object Access Permissions
+## DOAPs: Default Object Access Permissions
 
 DOAPs are always project-related, but more specifically, they are:
 
@@ -119,7 +119,7 @@ encodes the following information:
 - If a `ProjectAdmin` creates a resource, the resource gets the permissions `CR knora-admin:ProjectAdmin|D knora-admin:Creator,knora-admin:ProjectMember|V knora-admin:KnownUser,knora-admin:UnknownUser`.
 - If a `ProjectMember` creates a resource, the resource gets the same permissions.
 
-#### Precedence rule
+### Precedence rule
 
 Group-related and class-related DOAPs cannot be combined, but there is a precedence rule.
 
