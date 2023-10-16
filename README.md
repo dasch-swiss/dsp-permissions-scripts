@@ -8,7 +8,7 @@ A collection of scripts to handle permissions in DSP.
 Set up the poetry virtual environment:
 
 - Install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
-  (for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/))
+    - for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
 - Execute `poetry install`, which will:
     - create a virtual environment (if there isn't already one)
     - install all dependencies from `poetry.lock`
