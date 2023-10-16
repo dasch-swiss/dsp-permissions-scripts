@@ -9,6 +9,7 @@ from dsp_permissions_scripts.ap.ap_serialize import (
     serialize_aps_of_project,
 )
 from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models.host import Hosts
 
 
 class TestApSerialization(unittest.TestCase):
@@ -44,11 +45,13 @@ class TestApSerialization(unittest.TestCase):
             project_aps=[self.ap1, self.ap2],
             shortcode=self.shortcode,
             mode="original",
+            host=Hosts.LOCALHOST,
         )
         with open(self.output_file, mode="r", encoding="utf-8") as f:
             aps_file = json.load(f)
-        self.assertTrue("Project 1234 has 2 APs" in aps_file)
-        aps_as_dicts = aps_file["Project 1234 has 2 APs"]
+        explanation_text = list(aps_file.keys())[0]
+        self.assertRegex(explanation_text, r"Project 1234 on host .+ has \d+ APs")
+        aps_as_dicts = aps_file[explanation_text]
         self.assertEqual(self.ap1, Ap.model_validate(aps_as_dicts[0]))
         self.assertEqual(self.ap2, Ap.model_validate(aps_as_dicts[1]))
 

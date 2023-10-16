@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Literal
 
 from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 
 
 def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
@@ -13,11 +14,12 @@ def serialize_aps_of_project(
     project_aps: list[Ap],
     shortcode: str,
     mode: Literal["original", "modified"],
+    host: str,
 ) -> None:
     """Serialize the APs of a project to a JSON file."""
     filepath = _get_file_path(shortcode, mode)
     filepath.parent.mkdir(parents=True, exist_ok=True)
-    explanation_string = f"Project {shortcode} has {len(project_aps)} APs"
+    explanation_string = f"{get_timestamp()}: Project {shortcode} on host {host} has {len(project_aps)} APs"
     aps_as_dicts = [ap.model_dump(exclude_none=True, mode="json") for ap in project_aps]
     aps_as_dict = {explanation_string: aps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:

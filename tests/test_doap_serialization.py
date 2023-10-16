@@ -8,6 +8,7 @@ from dsp_permissions_scripts.doap.doap_serialize import (
     serialize_doaps_of_project,
 )
 from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
@@ -47,6 +48,7 @@ class TestDoapSerialization(unittest.TestCase):
             project_doaps=[doap1, doap2],
             shortcode=self.shortcode,
             mode="original",
+            host=Hosts.LOCALHOST,
         )
         deserialized_doaps = deserialize_doaps_of_project(
             shortcode=self.shortcode,

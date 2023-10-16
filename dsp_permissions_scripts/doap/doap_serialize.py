@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Literal
 
 from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 
 
 def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
@@ -13,12 +14,13 @@ def serialize_doaps_of_project(
     project_doaps: list[Doap],
     shortcode: str,
     mode: Literal["original", "modified"],
+    host: str,
     target_type: DoapTargetType = DoapTargetType.ALL,
 ) -> None:
     """Serialize the DOAPs of a project to a JSON file."""
     filepath = _get_file_path(shortcode, mode)
     filepath.parent.mkdir(parents=True, exist_ok=True)
-    explanation_string = f"Project {shortcode} has {len(project_doaps)} DOAPs"
+    explanation_string = f"{get_timestamp()}: Project {shortcode} on host {host} has {len(project_doaps)} DOAPs"
     if target_type != DoapTargetType.ALL:
         explanation_string += f" which are related to a {target_type}"
     doaps_as_dicts = [doap.model_dump(exclude_none=True, mode="json") for doap in project_doaps]
