@@ -5,7 +5,7 @@ from typing import Any
 from urllib.parse import quote_plus
 
 import requests
-from viztracer import VizTracer
+from viztracer import VizTracer  # type: ignore[import]
 
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -212,7 +212,6 @@ def apply_updated_oaps_on_server(
         minimize_memory=True,
         ignore_c_function=True,
         ignore_frozen=True,
-        include_files=["dsp_permissions_scripts/oap/oap_get_set.py"],
     )
     tracer.start()
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
