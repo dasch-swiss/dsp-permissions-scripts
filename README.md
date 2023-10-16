@@ -53,7 +53,7 @@ A user group can have one or more of the following permissions:
 > **Note**
 > The example file [project_data/F18E/APs_original.json](project_data/F18E/APs_original.json)
 >
->- grants to `knora-admin:ProjectAdmin` the rights to anything on project level, and to create resources of any class.
+>- grants to `knora-admin:ProjectAdmin` the rights to do anything on project level, and to create resources of any class.
 >- grants to `knora-admin:ProjectMember` the rights to create resources of any class.
 
 
@@ -102,7 +102,7 @@ There are **built-in groups** and **project specific groups**:
 
 ### 3. Permission strings / scopes
 
-**Rights** are mapped to **user groups** using **permission strings** (represented as **scopes** in this repo).
+**Permission strings** (represented as **scopes** in this repo) are used to grant **rights** to certain **user groups**.
 
 > **Note**
 > The example file
