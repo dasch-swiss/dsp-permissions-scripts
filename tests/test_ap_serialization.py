@@ -9,6 +9,7 @@ from dsp_permissions_scripts.ap.ap_serialize import (
     serialize_aps_of_project,
 )
 from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models.host import Hosts
 
 
 class TestApSerialization(unittest.TestCase):
@@ -44,6 +45,7 @@ class TestApSerialization(unittest.TestCase):
             project_aps=[self.ap1, self.ap2],
             shortcode=self.shortcode,
             mode="original",
+            host=Hosts.LOCALHOST,
         )
         with open(self.output_file, mode="r", encoding="utf-8") as f:
             aps_file = json.load(f)
