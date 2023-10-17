@@ -11,7 +11,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 logger = get_logger(__name__)
@@ -209,13 +209,17 @@ def apply_updated_oaps_on_server(
     shortcode: str,
 ) -> None:
     """Applies object access permissions on a DSP server."""
+    if not resource_oaps:
+        logger.warning(f"There are no OAPs to update on {host}")
+        warnings.warn(f"There are no OAPs to update on {host}")
+        return
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
-    print(f"{get_timestamp()}: ******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
+    print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     failed_res_iris: list[str] = []
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
         logger.info(f"====={msg}")
-        print(f"{get_timestamp()}: {msg}")
+        print(msg)
         try:
             _update_permissions_for_resource_and_values(
                 resource_iri=resource_oap.object_iri,

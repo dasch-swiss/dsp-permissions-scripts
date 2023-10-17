@@ -8,7 +8,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
 )
@@ -37,14 +37,6 @@ def _update_doap_scope(
     return new_doap
 
 
-def _log_and_print_doap_update(doap: Doap) -> None:
-    """Logs and prints the DOAP after the update."""
-    heading = "Updated DOAP as per response from server:"
-    body = doap.model_dump_json(indent=2)
-    print(f"{heading}\n{'-' * len(heading)}\n{body}\n")
-    logger.info(f"{heading}\n{body}")
-
-
 def apply_updated_doaps_on_server(
     doaps: list[Doap],
     host: str,
@@ -58,20 +50,21 @@ def apply_updated_doaps_on_server(
         host: the DSP server where the project is located
         token: the access token
     """
-    logger.info(f"******* Updating {len(doaps)} DOAPs on {host} *******")
-    heading = f"{get_timestamp()}: Updating {len(doaps)} DOAPs on {host}..."
-    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    if not doaps:
+        logger.warning(f"There are no DOAPs to update on {host}")
+        warnings.warn(f"There are no DOAPs to update on {host}")
+        return
+    logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
+    print(f"Updating {len(doaps)} DOAPs on {host}...")
     for d in doaps:
         try:
-            new_doap = _update_doap_scope(
+            _ = _update_doap_scope(
                 doap_iri=d.doap_iri,
                 scope=d.scope,
                 host=host,
                 token=token,
             )
-            _log_and_print_doap_update(doap=new_doap)
+            logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
             warnings.warn(err.message)
-
-    print(f"{get_timestamp()}: All DOAPs have been updated.")

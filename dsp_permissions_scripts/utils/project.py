@@ -7,7 +7,7 @@ import requests
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import dereference_prefix
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
@@ -77,7 +77,6 @@ def _get_all_resource_oaps_of_resclass(
     project_iri: str,
     token: str,
 ) -> list[Oap]:
-    print(f"{get_timestamp()}: Getting all resource OAPs of class {resclass_iri}...")
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     protocol = get_protocol(host)
     headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
@@ -100,8 +99,8 @@ def _get_all_resource_oaps_of_resclass(
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
             warnings.warn(f"{err.message}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    print(f"{get_timestamp()}: Retrieved {len(resources)} resource OAPs of class {resclass_iri}.")
-    logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}.")
+    print(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
+    logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
     return resources
 
 
@@ -162,7 +161,7 @@ def get_all_resource_oaps_of_project(
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
-    print(f"{get_timestamp()}: ******* Getting all resource OAPs of project {shortcode} *******")
+    print(f"******* Getting all resource OAPs of project {shortcode} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -183,5 +182,5 @@ def get_all_resource_oaps_of_project(
         )
         all_resource_oaps.extend(resource_oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
-    print(f"{get_timestamp()}: Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    print(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
     return all_resource_oaps

@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import Literal
 
 from dsp_permissions_scripts.ap.ap_model import Ap
-from dsp_permissions_scripts.utils.get_logger import get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+
+logger = get_logger(__name__)
 
 
 def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
@@ -24,6 +26,8 @@ def serialize_aps_of_project(
     aps_as_dict = {explanation_string: aps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(aps_as_dict, ensure_ascii=False, indent=2))
+    print(f"{len(project_aps)} APs have been written to file {str(filepath)}")
+    logger.info(f"{len(project_aps)} APs have been written to file {str(filepath)}")
 
 
 def deserialize_aps_of_project(
