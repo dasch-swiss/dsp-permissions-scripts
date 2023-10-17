@@ -155,6 +155,7 @@ def get_all_resource_oaps_of_project(
     shortcode: str,
     host: str,
     token: str,
+    excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
     print(f"******* Getting all resource OAPs of project {shortcode} *******")
@@ -168,6 +169,7 @@ def get_all_resource_oaps_of_project(
         host=host,
         token=token,
     )
+    resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
         resource_oaps = _get_all_resource_oaps_of_resclass(
             host=host,
