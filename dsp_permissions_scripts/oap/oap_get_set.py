@@ -210,6 +210,7 @@ def apply_updated_oaps_on_server(
 ) -> None:
     """Applies object access permissions on a DSP server."""
     if not resource_oaps:
+        logger.warning(f"There are no OAPs to update on {host}")
         warnings.warn(f"There are no OAPs to update on {host}")
         return
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")

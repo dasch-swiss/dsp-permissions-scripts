@@ -70,6 +70,7 @@ def apply_updated_aps_on_server(
         token: the access token
     """
     if not aps:
+        logger.warning(f"There are no APs to update on {host}")
         warnings.warn(f"There are no APs to update on {host}")
         return
     logger.info(f"Updating {len(aps)} APs on {host}...")
@@ -96,6 +97,7 @@ def delete_ap(
     """Deletes the Administrative Permission of a group."""
     aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
     if not aps_to_delete:
+        logger.warning(f"There are no APs to delete on {host} for group {forGroup}")
         warnings.warn(f"There are no APs to delete on {host} for group {forGroup}")
         return existing_aps
     print(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")

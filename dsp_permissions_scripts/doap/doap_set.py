@@ -51,6 +51,7 @@ def apply_updated_doaps_on_server(
         token: the access token
     """
     if not doaps:
+        logger.warning(f"There are no DOAPs to update on {host}")
         warnings.warn(f"There are no DOAPs to update on {host}")
         return
     logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
