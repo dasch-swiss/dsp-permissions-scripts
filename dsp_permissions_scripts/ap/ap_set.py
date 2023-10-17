@@ -96,7 +96,7 @@ def delete_ap(
     """Deletes the Administrative Permission of a group."""
     aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
     if not aps_to_delete:
-        warnings.warn(f"There are no APs that could be deleted on {host} for group {forGroup}")
+        warnings.warn(f"There are no APs to delete on {host} for group {forGroup}")
         return existing_aps
     print(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
     logger.info(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
