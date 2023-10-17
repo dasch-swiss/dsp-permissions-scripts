@@ -8,7 +8,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
 )
@@ -50,9 +50,11 @@ def apply_updated_doaps_on_server(
         host: the DSP server where the project is located
         token: the access token
     """
-    logger.info(f"******* Updating {len(doaps)} DOAPs on {host} *******")
-    heading = f"{get_timestamp()}: Updating {len(doaps)} DOAPs on {host}..."
-    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    if not doaps:
+        warnings.warn(f"There are no DOAPs to update on {host}")
+        return
+    logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
+    print(f"Updating {len(doaps)} DOAPs on {host}...")
     for d in doaps:
         try:
             _ = _update_doap_scope(
@@ -61,10 +63,7 @@ def apply_updated_doaps_on_server(
                 host=host,
                 token=token,
             )
-            print(f"Successfully updated DOAP {d.doap_iri}")
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
             warnings.warn(err.message)
-
-    print(f"{get_timestamp()}: All DOAPs have been updated.")

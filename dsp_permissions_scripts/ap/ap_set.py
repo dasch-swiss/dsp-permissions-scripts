@@ -11,18 +11,9 @@ from dsp_permissions_scripts.ap.ap_get import (
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)
-
-
-def _filter_aps_by_group(
-    aps: list[Ap],
-    forGroup: str,
-) -> Ap:
-    aps = [ap for ap in aps if ap.forGroup == forGroup]
-    assert len(aps) == 1
-    return aps[0]
 
 
 def _delete_single_ap(
@@ -37,7 +28,6 @@ def _delete_single_ap(
     response = requests.delete(url, headers=headers, timeout=10)
     if response.status_code != 200:
         raise ApiError(f"Could not delete Administrative Permission {ap.iri}", response.text, response.status_code)
-    logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
 
 
 def _update_ap(
@@ -79,9 +69,11 @@ def apply_updated_aps_on_server(
         host: the DSP server where the project is located
         token: the access token
     """
-    logger.info(f"******* Updating {len(aps)} APs on {host} *******")
-    heading = f"{get_timestamp()}: Updating {len(aps)} APs on {host}..."
-    print(f"\n{heading}\n{'=' * len(heading)}\n")
+    if not aps:
+        warnings.warn(f"There are no APs to update on {host}")
+        return
+    logger.info(f"Updating {len(aps)} APs on {host}...")
+    print(f"Updating {len(aps)} APs on {host}...")
     for ap in aps:
         try:
             _ = _update_ap(
@@ -89,13 +81,10 @@ def apply_updated_aps_on_server(
                 host=host,
                 token=token,
             )
-            print(f"Successfully updated AP {ap.iri}")
             logger.info(f"Successfully updated AP {ap.iri}")
         except ApiError as err:
             logger.error(err)
             warnings.warn(err.message)
-
-    print(f"{get_timestamp()}: All APs have been updated.")
 
 
 def delete_ap(
@@ -105,15 +94,18 @@ def delete_ap(
     forGroup: str,
 ) -> list[Ap]:
     """Deletes the Administrative Permission of a group."""
-    logger.info(f"Deleting the Administrative Permission for group {forGroup} on server {host}")
-    ap_to_delete = _filter_aps_by_group(
-        aps=existing_aps,
-        forGroup=forGroup,
-    )
-    _delete_single_ap(
-        ap=ap_to_delete,
-        host=host,
-        token=token,
-    )
-    existing_aps.remove(ap_to_delete)
+    aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
+    if not aps_to_delete:
+        warnings.warn(f"There are no APs that could be deleted on {host} for group {forGroup}")
+        return existing_aps
+    print(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
+    logger.info(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
+    for ap in aps_to_delete:
+        _delete_single_ap(
+            ap=ap,
+            host=host,
+            token=token,
+        )
+        existing_aps.remove(ap)
+        logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
     return existing_aps

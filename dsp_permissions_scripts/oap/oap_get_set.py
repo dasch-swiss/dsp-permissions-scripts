@@ -209,6 +209,9 @@ def apply_updated_oaps_on_server(
     shortcode: str,
 ) -> None:
     """Applies object access permissions on a DSP server."""
+    if not resource_oaps:
+        warnings.warn(f"There are no OAPs to update on {host}")
+        return
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"{get_timestamp()}: ******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     failed_res_iris: list[str] = []
