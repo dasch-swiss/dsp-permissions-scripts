@@ -142,9 +142,6 @@ def _get_next_page(
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
-    """
-    Retrieves the IRI of a project by its shortcode.
-    """
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
     response = requests.get(url, timeout=10)

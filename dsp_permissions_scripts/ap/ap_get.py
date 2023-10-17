@@ -42,7 +42,6 @@ def _get_all_aps_of_project(
     host: str,
     token: str,
 ) -> list[Ap]:
-    """Returns all Administrative Permissions of the given project."""
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)

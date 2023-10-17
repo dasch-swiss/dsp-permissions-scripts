@@ -16,15 +16,12 @@ from dsp_permissions_scripts.utils.scope_serialization import (
 logger = get_logger(__name__)
 
 
-def _update_doap_scope(
+def _update_doap_scope_on_server(
     doap_iri: str,
     scope: PermissionScope,
     host: str,
     token: str,
 ) -> Doap:
-    """
-    Updates the scope of the given DOAP.
-    """
     iri = quote_plus(doap_iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
@@ -42,14 +39,6 @@ def apply_updated_doaps_on_server(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates DOAPs on the server.
-
-    Args:
-        doaps: the DOAPs to be sent to the server
-        host: the DSP server where the project is located
-        token: the access token
-    """
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {host}")
         warnings.warn(f"There are no DOAPs to update on {host}")
@@ -58,7 +47,7 @@ def apply_updated_doaps_on_server(
     print(f"Updating {len(doaps)} DOAPs on {host}...")
     for d in doaps:
         try:
-            _ = _update_doap_scope(
+            _ = _update_doap_scope_on_server(
                 doap_iri=d.doap_iri,
                 scope=d.scope,
                 host=host,

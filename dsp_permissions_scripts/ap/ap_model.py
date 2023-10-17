@@ -27,13 +27,11 @@ class Ap(BaseModel):
     iri: str
 
     def add_permission(self, permission: ApValue) -> None:
-        """Adds a permission to the AP."""
         if permission in self.hasPermissions:
             raise ValueError(f"Permission {permission} is already in the AP")
         self.hasPermissions = self.hasPermissions.union({permission})
 
     def remove_permission(self, permission: ApValue) -> None:
-        """Removes a permission from the AP."""
         if permission not in self.hasPermissions:
             raise ValueError(f"Permission {permission} is not in the AP")
         self.hasPermissions = self.hasPermissions.difference({permission})

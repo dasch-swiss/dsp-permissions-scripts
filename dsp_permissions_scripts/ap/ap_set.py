@@ -16,7 +16,7 @@ from dsp_permissions_scripts.utils.get_logger import get_logger
 logger = get_logger(__name__)
 
 
-def _delete_single_ap(
+def _delete_ap_on_server(
     ap: Ap,
     host: str,
     token: str,
@@ -30,14 +30,11 @@ def _delete_single_ap(
         raise ApiError(f"Could not delete Administrative Permission {ap.iri}", response.text, response.status_code)
 
 
-def _update_ap(
+def _update_ap_on_server(
     ap: Ap,
     host: str,
     token: str,
 ) -> Ap:
-    """
-    Updates the given AP.
-    """
     iri = quote_plus(ap.iri, safe="")
     headers = {"Authorization": f"Bearer {token}"}
     protocol = get_protocol(host)
@@ -61,14 +58,6 @@ def apply_updated_aps_on_server(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates APs on the server.
-
-    Args:
-        aps: the APs to be sent to the server
-        host: the DSP server where the project is located
-        token: the access token
-    """
     if not aps:
         logger.warning(f"There are no APs to update on {host}")
         warnings.warn(f"There are no APs to update on {host}")
@@ -77,7 +66,7 @@ def apply_updated_aps_on_server(
     print(f"Updating {len(aps)} APs on {host}...")
     for ap in aps:
         try:
-            _ = _update_ap(
+            _ = _update_ap_on_server(
                 ap=ap,
                 host=host,
                 token=token,
@@ -88,13 +77,12 @@ def apply_updated_aps_on_server(
             warnings.warn(err.message)
 
 
-def delete_ap(
+def delete_ap_of_group_on_server(
     host: str,
     token: str,
     existing_aps: list[Ap],
     forGroup: str,
 ) -> list[Ap]:
-    """Deletes the Administrative Permission of a group."""
     aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
     if not aps_to_delete:
         logger.warning(f"There are no APs to delete on {host} for group {forGroup}")
@@ -103,7 +91,7 @@ def delete_ap(
     print(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
     logger.info(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
     for ap in aps_to_delete:
-        _delete_single_ap(
+        _delete_ap_on_server(
             ap=ap,
             host=host,
             token=token,
