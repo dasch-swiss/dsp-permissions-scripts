@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
-from dsp_permissions_scripts.ap.ap_set import delete_ap
+from dsp_permissions_scripts.ap.ap_set import delete_ap_of_group_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
@@ -51,7 +51,7 @@ def update_aps(
         mode="original",
         host=host,
     )
-    _ = delete_ap(
+    _ = delete_ap_of_group_on_server(
         host=host,
         token=token,
         existing_aps=project_aps,
