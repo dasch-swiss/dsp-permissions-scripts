@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import Literal
 
 from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
-from dsp_permissions_scripts.utils.get_logger import get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+
+logger = get_logger(__name__)
 
 
 def _get_file_path(shortcode: str, mode: Literal["original", "modified"]) -> Path:
@@ -27,6 +29,8 @@ def serialize_doaps_of_project(
     doaps_as_dict = {explanation_string: doaps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(doaps_as_dict, ensure_ascii=False, indent=2))
+    print(f"{len(project_doaps)} DOAPs have been written to file {str(filepath)}")
+    logger.info(f"{len(project_doaps)} DOAPs have been written to file {str(filepath)}")
 
 
 def deserialize_doaps_of_project(

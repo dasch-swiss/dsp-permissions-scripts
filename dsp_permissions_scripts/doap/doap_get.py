@@ -40,9 +40,6 @@ def _get_all_doaps_of_project(
     host: str,
     token: str,
 ) -> list[Doap]:
-    """
-    Returns all DOAPs of the given project.
-    """
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
@@ -56,9 +53,7 @@ def _get_all_doaps_of_project(
 
 
 def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
-    """
-    Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}
-    """
+    """Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}"""
     scope = create_scope_from_admin_route_object(permission["hasPermissions"])
     doap = Doap(
         target=DoapTarget(
@@ -80,11 +75,10 @@ def get_doaps_of_project(
     target_type: DoapTargetType = DoapTargetType.ALL,
 ) -> list[Doap]:
     """
-    Returns the doaps for a project.
+    Returns the DOAPs for a project.
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
-    logger.info(f"******* Getting DOAPs of project {shortcode} on server {host} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -98,5 +92,9 @@ def get_doaps_of_project(
         doaps=doaps,
         target=target_type,
     )
-    logger.info(f"Found {len(doaps)} DOAPs, {len(filtered_doaps)} of which are related to {target_type}.")
+    msg = f"Retrieved {len(doaps)} DOAPs of project {shortcode} on server {host}"
+    if target_type != DoapTargetType.ALL:
+        msg += f", {len(filtered_doaps)} of which are related to {target_type}."
+    print(msg)
+    logger.info(msg)
     return filtered_doaps

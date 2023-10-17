@@ -8,10 +8,7 @@ from dsp_permissions_scripts.models import builtin_groups
 
 
 class PermissionScope(BaseModel):
-    """
-    A scope is an object encoding the information:
-    "Which user group gets which permissions on a resource/value?"
-    """
+    """A scope is an object encoding the information: Which user group gets which permissions on a resource/value?"""
 
     model_config = ConfigDict(frozen=True)
 

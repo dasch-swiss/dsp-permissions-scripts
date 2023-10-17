@@ -11,16 +11,14 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 logger = get_logger(__name__)
 
 
 def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
-    """
-    Returns a list of values that have permissions and hence should be updated.
-    """
+    """Returns a list of values that have permissions and hence should be updated."""
     res: list[ValueUpdate] = []
     for k, v in resource.items():
         if k in {"@id", "@type", "@context", "rdfs:label"}:
@@ -42,9 +40,7 @@ def _get_resource(
     host: str,
     token: str,
 ) -> dict[str, Any]:
-    """
-    Requests the resource with the given IRI from the API.
-    """
+    """Requests the resource with the given IRI from DSP-API"""
     iri = quote_plus(resource_iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/resources/{iri}"
@@ -56,28 +52,6 @@ def _get_resource(
     return data
 
 
-def _get_lmd(resource: dict[str, Any]) -> str | None:
-    """
-    Gets last modification date from a resource JSON-LD dict.
-    """
-    return resource.get("knora-api:lastModificationDate")
-
-
-def _get_type(resource: dict[str, Any]) -> str:
-    """
-    Gets the type from a resource JSON-LD dict."""
-    t: str = resource["@type"]
-    return t
-
-
-def _get_context(resource: dict[str, Any]) -> dict[str, str]:
-    """
-    Gets the context object from a resource JSON-LD dict.
-    """
-    c: dict[str, str] = resource["@context"]
-    return c
-
-
 def _update_permissions_for_value(
     resource_iri: str,
     value: ValueUpdate,
@@ -87,9 +61,7 @@ def _update_permissions_for_value(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates the permissions for the given value.
-    """
+    """Updates the permissions for the given value (of a property) on a DSP server"""
     payload = {
         "@id": resource_iri,
         "@type": resource_type,
@@ -129,9 +101,7 @@ def _update_permissions_for_resource(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates the permissions for the given resource.
-    """
+    """Updates the permissions for the given resource on a DSP server"""
     payload = {
         "@id": resource_iri,
         "@type": resource_type,
@@ -160,13 +130,11 @@ def _update_permissions_for_resource_and_values(
     host: str,
     token: str,
 ) -> None:
-    """
-    Updates the permissions for the given resource and its values.
-    """
+    """Updates the permissions for the given resource and its values on a DSP server"""
     resource = _get_resource(resource_iri, host, token)
-    lmd = _get_lmd(resource)
-    resource_type = _get_type(resource)
-    context = _get_context(resource)
+    lmd: str | None = resource.get("knora-api:lastModificationDate")
+    resource_type: str = resource["@type"]
+    context: dict[str, str] = resource["@context"]
     values = _get_value_iris(resource)
     _update_permissions_for_resource(
         resource_iri=resource_iri,
@@ -208,14 +176,18 @@ def apply_updated_oaps_on_server(
     token: str,
     shortcode: str,
 ) -> None:
-    """Applies object access permissions on a DSP server."""
+    """Applies modified Object Access Permissions of resources (and their values) on a DSP server."""
+    if not resource_oaps:
+        logger.warning(f"There are no OAPs to update on {host}")
+        warnings.warn(f"There are no OAPs to update on {host}")
+        return
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
-    print(f"{get_timestamp()}: ******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
+    print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     failed_res_iris: list[str] = []
     for index, resource_oap in enumerate(resource_oaps):
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
         logger.info(f"====={msg}")
-        print(f"{get_timestamp()}: {msg}")
+        print(msg)
         try:
             _update_permissions_for_resource_and_values(
                 resource_iri=resource_oap.object_iri,

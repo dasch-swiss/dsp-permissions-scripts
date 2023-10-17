@@ -42,7 +42,6 @@ def _get_all_aps_of_project(
     host: str,
     token: str,
 ) -> list[Ap]:
-    """Returns all Administrative Permissions of the given project."""
     headers = {"Authorization": f"Bearer {token}"}
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
@@ -61,7 +60,6 @@ def get_aps_of_project(
     token: str,
 ) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
-    logger.info(f"******* Getting Administrative Permissions of project {shortcode} on server {host} *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -71,5 +69,6 @@ def get_aps_of_project(
         host=host,
         token=token,
     )
-    logger.info(f"Found {len(aps)} Administrative Permissions")
+    print(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
+    logger.info(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
     return aps

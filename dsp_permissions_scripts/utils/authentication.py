@@ -6,9 +6,7 @@ from dsp_permissions_scripts.models.api_error import ApiError
 
 
 def _get_token(host: str, email: str, pw: str) -> str:
-    """
-    requests an access token from the API, provided host, email and password.
-    """
+    """Requests an access token from DSP-API"""
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/authentication"
     response = requests.post(url, json={"email": email, "password": pw}, timeout=10)
@@ -53,4 +51,5 @@ def login(host: str) -> str:
 
 
 def get_protocol(host: str) -> str:
+    """Returns 'http' if host is localhost, otherwise 'https'"""
     return "http" if host.startswith("localhost") else "https"
