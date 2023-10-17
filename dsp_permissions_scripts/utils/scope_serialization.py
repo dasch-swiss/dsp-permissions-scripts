@@ -15,6 +15,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
 
 
 def create_scope_from_string(permission_string: str) -> PermissionScope:
+    """Deserializes a permission string as used by /v2 routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     scopes = permission_string.split("|")
     for scope in scopes:
@@ -26,6 +27,7 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
 
 
 def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]]) -> PermissionScope:
+    """Deserializes an object returned by /admin/permissions routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     for obj in admin_route_object:
         attr_name: str = obj["name"]
@@ -39,7 +41,7 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
 
 
 def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[dict[str, str | None]]:
-    """Serializes a permission scope to a shape that can be used for requests to /admin/permissions routes."""
+    """Serializes a permission scope to an object that can be used for requests to /admin/permissions routes."""
     scope_elements: list[dict[str, str | None]] = []
     for perm_letter, groups in perm_scope.model_dump(mode="json").items():
         for group in groups:

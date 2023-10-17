@@ -9,9 +9,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 
 
 class Doap(BaseModel):
-    """
-    Model representing a DOAP, containing the target, the scope and the IRI of the DOAP.
-    """
+    """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
     target: DoapTarget
     scope: PermissionScope

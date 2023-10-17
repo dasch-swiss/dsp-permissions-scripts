@@ -9,12 +9,10 @@ def get_logger(name: str) -> logging.Logger:
     and configure it to write to a file in the user's home directory.
 
     Args:
-        name: name of the logger
-        filesize_mb: maximum size per log file in MB, defaults to 5
-        backupcount: number of log files to keep, defaults to 4
+        name: name of the logger (usually __name__ of the calling module)
 
     Returns:
-        the logger instance
+        a logger instance
     """
     _logger = logging.getLogger(name)
     _logger.setLevel(logging.INFO)
