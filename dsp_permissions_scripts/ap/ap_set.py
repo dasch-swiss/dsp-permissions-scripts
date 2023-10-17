@@ -66,14 +66,6 @@ def _update_ap(
     return ap_object_updated
 
 
-def _log_and_print_ap_update(ap: Ap) -> None:
-    """Logs and prints the AP after the update."""
-    heading = "Updated AP as per response from server:"
-    body = ap.model_dump_json(indent=2)
-    print(f"{heading}\n{'-' * len(heading)}\n{body}\n")
-    logger.info(f"{heading}\n{body}")
-
-
 def apply_updated_aps_on_server(
     aps: list[Ap],
     host: str,
@@ -92,12 +84,13 @@ def apply_updated_aps_on_server(
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for ap in aps:
         try:
-            new_ap = _update_ap(
+            _ = _update_ap(
                 ap=ap,
                 host=host,
                 token=token,
             )
-            _log_and_print_ap_update(ap=new_ap)
+            print(f"Successfully updated AP {ap.iri}")
+            logger.info(f"Successfully updated AP {ap.iri}")
         except ApiError as err:
             logger.error(err)
             warnings.warn(err.message)

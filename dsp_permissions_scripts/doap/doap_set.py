@@ -37,14 +37,6 @@ def _update_doap_scope(
     return new_doap
 
 
-def _log_and_print_doap_update(doap: Doap) -> None:
-    """Logs and prints the DOAP after the update."""
-    heading = "Updated DOAP as per response from server:"
-    body = doap.model_dump_json(indent=2)
-    print(f"{heading}\n{'-' * len(heading)}\n{body}\n")
-    logger.info(f"{heading}\n{body}")
-
-
 def apply_updated_doaps_on_server(
     doaps: list[Doap],
     host: str,
@@ -63,13 +55,14 @@ def apply_updated_doaps_on_server(
     print(f"\n{heading}\n{'=' * len(heading)}\n")
     for d in doaps:
         try:
-            new_doap = _update_doap_scope(
+            _ = _update_doap_scope(
                 doap_iri=d.doap_iri,
                 scope=d.scope,
                 host=host,
                 token=token,
             )
-            _log_and_print_doap_update(doap=new_doap)
+            print(f"Successfully updated DOAP {d.doap_iri}")
+            logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
             warnings.warn(err.message)
