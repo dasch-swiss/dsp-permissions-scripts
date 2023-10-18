@@ -12,9 +12,11 @@ logger = get_logger(__name__)
 
 def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str) -> requests.Response:
     """
-    Function that tries 7 times to execute an HTTP request.
-    502 and 404 are catched, and the request is retried after a waiting time.
+    Function that tries 9 times to execute an HTTP request.
+    404 and 500-599 codes are catched, together with some errors raised by the requests library,
+    and the request is retried after a waiting time.
     The waiting times are 1, 2, 4, 8, 16, 32, 64, 128, 256 seconds.
+    If it still fails, the request is executed without any catch, so that the error escalates to the caller.
     Use this only for actions that can be retried without side effects.
 
     Args:
