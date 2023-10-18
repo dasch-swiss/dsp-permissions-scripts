@@ -14,7 +14,7 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
     """
     Function that tries 7 times to execute an HTTP request.
     502 and 404 are catched, and the request is retried after a waiting time.
-    The waiting times are 1, 2, 4, 8, 16, 32, 64 seconds.
+    The waiting times are 1, 2, 4, 8, 16, 32, 64, 128, 256 seconds.
     Use this only for actions that can be retried without side effects.
 
     Args:
@@ -27,7 +27,7 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
     Returns:
         response of the HTTP request
     """
-    for i in range(7):
+    for i in range(9):
         try:
             response: requests.Response = action()
             if response.status_code == 200:
