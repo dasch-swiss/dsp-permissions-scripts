@@ -43,8 +43,8 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
                 continue
             return response
         except (TimeoutError, ReadTimeout, ReadTimeoutError, RequestException, ConnectionError):
-            print(f"{get_timestamp()}: Server Error: Retry request in {2 ** i} seconds...")
-            logger.error(f"Server Error: Retry request in {2 ** i} seconds...", exc_info=True)
+            print(f"{get_timestamp()}: SERVER ERROR: {err_msg}. Retry request in {2 ** i} seconds...")
+            logger.error(f"{err_msg}. Retry request in {2 ** i} seconds...", exc_info=True)
             time.sleep(2**i)
             continue
 
