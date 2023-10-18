@@ -95,20 +95,22 @@ def _get_next_page(
     if response.status_code != 200:
         raise ApiError("Could not get next page", response.text, response.status_code)
     result = response.json()
+
+    # result contains several resources: return them, then continue with next page
     if "@graph" in result:
-        # result contains several resources: return them, then continue with next page
         oaps = []
         for r in result["@graph"]:
             scope = create_scope_from_string(r["knora-api:hasPermissions"])
             oaps.append(Oap(scope=scope, object_iri=r["@id"]))
         return True, oaps
-    elif "@id" in result:
-        # result contains only 1 resource: return it, then stop (there will be no more resources)
+    
+    # result contains only 1 resource: return it, then stop (there will be no more resources)
+    if "@id" in result:
         scope = create_scope_from_string(result["knora-api:hasPermissions"])
         return False, [Oap(scope=scope, object_iri=result["@id"])]
-    else:
-        # there are no more resources
-        return False, []
+
+    # there are no more resources
+    return False, []
 
 
 
