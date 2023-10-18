@@ -1,3 +1,4 @@
+import re
 import time
 from typing import Callable
 
@@ -33,6 +34,11 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
         try:
             response: requests.Response = action()
             if response.status_code == 200:
+                return response
+            if re.search(
+                r"NotFoundException: Resource .+ does not have value .+ as an object of property .+", 
+                response.text
+            ):
                 return response
             retry_code = 500 <= response.status_code < 600 or response.status_code == 404
             try_again_later = "try again later" in response.text
