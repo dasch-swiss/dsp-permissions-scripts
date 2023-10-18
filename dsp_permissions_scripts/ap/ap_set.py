@@ -12,6 +12,7 @@ from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 
 logger = get_logger(__name__)
 
@@ -25,7 +26,10 @@ def _delete_ap_on_server(
     ap_iri = quote_plus(ap.iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{ap_iri}"
-    response = requests.delete(url, headers=headers, timeout=10)
+    response = http_call_with_retry(
+        action=lambda: requests.delete(url, headers=headers, timeout=10),
+        err_msg=f"Could not delete Administrative Permission {ap.iri}",
+    )
     if response.status_code != 200:
         raise ApiError(f"Could not delete Administrative Permission {ap.iri}", response.text, response.status_code)
 
@@ -40,7 +44,10 @@ def _update_ap_on_server(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
-    response = requests.put(url, headers=headers, json=payload, timeout=10)
+    response = http_call_with_retry(
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        err_msg=f"Could not update Administrative Permission {ap.iri}",
+    )
     if response.status_code != 200:
         raise ApiError(
             message=f"Could not update Administrative Permission {ap.iri}",

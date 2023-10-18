@@ -12,6 +12,7 @@ from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
 )
+from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 
 logger = get_logger(__name__)
 
@@ -27,7 +28,10 @@ def _update_doap_scope_on_server(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
-    response = requests.put(url, headers=headers, json=payload, timeout=10)
+    response = http_call_with_retry(
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        err_msg=f"Could not update scope of DOAP {doap_iri}",
+    )
     if response.status_code != 200:
         raise ApiError( f"Could not update scope of DOAP {doap_iri}", response.text, response.status_code, payload)
     new_doap = create_doap_from_admin_route_response(response.json()["default_object_access_permission"])
