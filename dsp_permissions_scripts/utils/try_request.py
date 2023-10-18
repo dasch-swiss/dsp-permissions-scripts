@@ -1,19 +1,16 @@
-
-
 import time
-from typing import Any, Callable
+from typing import Callable
 
 import requests
-from requests import ReadTimeout
+from requests import ReadTimeout, RequestException
+from urllib3.exceptions import ReadTimeoutError
 
 from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 
 logger = get_logger(__name__)
 
 
-def http_call_with_retry(
-    action: Callable[..., Any],
-) -> requests.Response:
+def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str) -> requests.Response:
     """
     Function that tries 7 times to execute an HTTP request.
     502 and 404 are catched, and the request is retried after a waiting time.
@@ -22,27 +19,28 @@ def http_call_with_retry(
 
     Args:
         action: one of requests.get(), requests.post(), requests.put(), requests.delete()
+        err_msg: this message is printed and logged when there is a problem with the call
 
     Raises:
-        ValueError: if the action is not one of one of requests.get/post/put/delete
-        Other Errors: errors from the requests library
+        errors from the requests library
 
     Returns:
         response of the HTTP request
     """
-    if action not in (requests.get, requests.post, requests.put, requests.delete):
-        raise ValueError(
-            "This function can only be used with the methods get, post, put, and delete of the Python requests library."
-        )
     for i in range(7):
         try:
             response: requests.Response = action()
-            if response.status_code in [502, 404]:
-                print(f"{get_timestamp()}: Server Error: Retry request in {2 ** i} seconds...")
-                logger.error(f"Server Error: Retry request in {2 ** i} seconds... ({response.status_code}: {response.text})")
+            if response.status_code == 200:
+                return response
+            retry_code = 500 <= response.status_code < 600 or response.status_code == 404
+            try_again_later = "try again later" in response.text
+            if retry_code or try_again_later:
+                msg = f"{err_msg}. Retry request in {2 ** i} seconds... ({response.status_code}: {response.text})"
+                print(f"{get_timestamp()}: SERVER ERROR: {msg}")
+                logger.error(msg)
                 continue
             return response
-        except (TimeoutError, ReadTimeout, ReadTimeoutError):
+        except (TimeoutError, ReadTimeout, ReadTimeoutError, RequestException, ConnectionError):
             print(f"{get_timestamp()}: Server Error: Retry request in {2 ** i} seconds...")
             logger.error(f"Server Error: Retry request in {2 ** i} seconds...", exc_info=True)
             time.sleep(2**i)
