@@ -18,6 +18,24 @@ from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 logger = get_logger(__name__)
 
 
+def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
+    """Returns a list of values that have permissions and hence should be updated."""
+    res: list[ValueUpdate] = []
+    for k, v in resource.items():
+        if k in {"@id", "@type", "@context", "rdfs:label"}:
+            continue
+        match v:
+            case {
+                "@id": id_,
+                "@type": type_,
+                **properties,
+            } if "/values/" in id_ and "knora-api:hasPermissions" in properties:
+                res.append(ValueUpdate(k, id_, type_))
+            case _:
+                continue
+    return res
+
+
 def _get_resource(
     resource_iri: str,
     host: str,
@@ -36,24 +54,6 @@ def _get_resource(
         raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
     data: dict[str, Any] = response.json()
     return data
-
-
-def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
-    """Returns a list of values that have permissions and hence should be updated."""
-    res: list[ValueUpdate] = []
-    for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label"}:
-            continue
-        match v:
-            case {
-                "@id": id_,
-                "@type": type_,
-                **properties,
-            } if "/values/" in id_ and "knora-api:hasPermissions" in properties:
-                res.append(ValueUpdate(k, id_, type_))
-            case _:
-                continue
-    return res
 
 
 def _update_permissions_for_value(
