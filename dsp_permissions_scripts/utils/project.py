@@ -11,29 +11,6 @@ from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 logger = get_logger(__name__)
 
 
-def get_all_resource_class_iris_of_project(
-    project_iri: str,
-    host: str,
-    token: str,
-) -> list[str]:
-    logger.info(f"Getting all resource class IRIs of project {project_iri}...")
-    project_onto_iris = _get_onto_iris_of_project(
-        project_iri=project_iri,
-        host=host,
-        token=token,
-    )
-    all_class_iris = []
-    for onto_iri in project_onto_iris:
-        class_iris = _get_class_iris_of_onto(
-            host=host,
-            onto_iri=onto_iri,
-            token=token,
-        )
-        all_class_iris.extend(class_iris)
-        logger.info(f"Found {len(class_iris)} resource classes in onto {onto_iri}.")
-    return all_class_iris
-
-
 def _get_onto_iris_of_project(
     project_iri: str,
     host: str,
@@ -72,6 +49,29 @@ def _get_class_iris_of_onto(
     class_ids = [c["@id"] for c in all_entities if c.get("knora-api:isResourceClass")]
     class_iris = [dereference_prefix(class_id, context) for class_id in class_ids]
     return class_iris
+
+
+def get_all_resource_class_iris_of_project(
+    project_iri: str,
+    host: str,
+    token: str,
+) -> list[str]:
+    logger.info(f"Getting all resource class IRIs of project {project_iri}...")
+    project_onto_iris = _get_onto_iris_of_project(
+        project_iri=project_iri,
+        host=host,
+        token=token,
+    )
+    all_class_iris = []
+    for onto_iri in project_onto_iris:
+        class_iris = _get_class_iris_of_onto(
+            host=host,
+            onto_iri=onto_iri,
+            token=token,
+        )
+        all_class_iris.extend(class_iris)
+        logger.info(f"Found {len(class_iris)} resource classes in onto {onto_iri}.")
+    return all_class_iris
 
 
 def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:

@@ -1,5 +1,5 @@
 import warnings
-from typing import Any, Iterable
+from typing import Iterable
 from urllib.parse import quote_plus
 
 import requests
@@ -16,26 +16,6 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 
 logger = get_logger(__name__)
-
-
-def get_resource(
-    resource_iri: str,
-    host: str,
-    token: str,
-) -> dict[str, Any]:
-    """Requests the resource with the given IRI from DSP-API"""
-    iri = quote_plus(resource_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/resources/{iri}"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
-        err_msg=f"Error while getting resource {resource_iri}",
-    )
-    if response.status_code != 200:
-        raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
-    data: dict[str, Any] = response.json()
-    return data
 
 
 def _get_all_resource_oaps_of_resclass(
