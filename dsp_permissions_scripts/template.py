@@ -1,12 +1,10 @@
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
-from dsp_permissions_scripts.ap.ap_set import (
-    apply_updated_aps_on_server,
-    delete_ap_of_group_on_server,
-)
+from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
