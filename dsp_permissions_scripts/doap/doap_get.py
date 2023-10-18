@@ -11,6 +11,7 @@ from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
 )
+from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 
 logger = get_logger(__name__)
 
@@ -44,7 +45,10 @@ def _get_all_doaps_of_project(
     project_iri = quote_plus(project_iri, safe="")
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
-    response = requests.get(url, headers=headers, timeout=10)
+    response = http_call_with_retry(
+        action=lambda: requests.get(url, headers=headers, timeout=10),
+        err_msg=f"Error while getting DOAPs of project {project_iri}",
+    )
     if response.status_code != 200:
         raise ApiError(f"Error while getting DOAPs of project {project_iri}", response.text, response.status_code)
     doaps: list[dict[str, Any]] = response.json()["default_object_access_permissions"]
