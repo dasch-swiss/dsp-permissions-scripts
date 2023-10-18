@@ -14,11 +14,11 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.oap.oap_get_set import apply_updated_oaps_on_server
+from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
-from dsp_permissions_scripts.utils.project import get_all_resource_oaps_of_project
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:

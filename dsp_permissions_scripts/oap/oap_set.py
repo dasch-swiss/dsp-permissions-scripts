@@ -2,13 +2,13 @@
 
 import warnings
 from typing import Any
-from urllib.parse import quote_plus
 
 import requests
 
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
+from dsp_permissions_scripts.oap.oap_get import get_resource
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -34,26 +34,6 @@ def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
             case _:
                 continue
     return res
-
-
-def _get_resource(
-    resource_iri: str,
-    host: str,
-    token: str,
-) -> dict[str, Any]:
-    """Requests the resource with the given IRI from DSP-API"""
-    iri = quote_plus(resource_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/resources/{iri}"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
-        err_msg=f"Error while getting resource {resource_iri}",
-    )
-    if response.status_code != 200:
-        raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
-    data: dict[str, Any] = response.json()
-    return data
 
 
 def _update_permissions_for_value(
@@ -141,7 +121,7 @@ def _update_permissions_for_resource_and_values(
     token: str,
 ) -> None:
     """Updates the permissions for the given resource and its values on a DSP server"""
-    resource = _get_resource(resource_iri, host, token)
+    resource = get_resource(resource_iri, host, token)
     lmd: str | None = resource.get("knora-api:lastModificationDate")
     resource_type: str = resource["@type"]
     context: dict[str, str] = resource["@context"]
