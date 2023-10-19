@@ -1049,3 +1049,82 @@ requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', por
                   '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
  'status_code': 404}
 2023-10-19 12:01:50,003 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-19 14:27:35,778 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg
+2023-10-19 14:27:37,018 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:38,196 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:39,343 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:40,527 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:41,659 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:42,846 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:43,994 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:45,160 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:46,328 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 14:27:46,328 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-19 14:27:47,501 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value '
+            'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-19 14:27:47,503 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

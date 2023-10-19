@@ -19,3 +19,6 @@ Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw>
 Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> 
     does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> 
     as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>
+Resource <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> 
+    does not have value <http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA>
+    as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>
