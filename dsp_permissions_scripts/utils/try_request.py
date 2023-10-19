@@ -40,13 +40,15 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
                 msg = f"{err_msg}. Retry request in {2 ** i} seconds... ({response.status_code}: {response.text})"
                 print(f"{get_timestamp()}: SERVER ERROR: {msg}")
                 logger.error(msg)
+                time.sleep(2**i)
                 continue
             return response
         except (TimeoutError, ReadTimeout, ReadTimeoutError, RequestException, ConnectionError):
-            print(f"{get_timestamp()}: SERVER ERROR: {err_msg}. Retry request in {2 ** i} seconds...")
-            logger.error(f"{err_msg}. Retry request in {2 ** i} seconds...", exc_info=True)
+            msg = f"{err_msg}. Retry request in {2 ** i} seconds..."
+            print(f"{get_timestamp()}: SERVER ERROR: {msg}")
+            logger.error(msg, exc_info=True)
             time.sleep(2**i)
             continue
 
-    logger.error("Permanently unable to execute the API call. See logs for more details.")
+    logger.error("Permanently unable to execute the API call. Execute it a last time and let the error escalate...")
     return action()
