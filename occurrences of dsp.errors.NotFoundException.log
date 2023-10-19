@@ -1,0 +1,1051 @@
+2023-10-18 12:11:56,048 oap_get_set.py            INFO     =====Updating permissions of resource 297/17698: http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ...
+2023-10-18 12:11:56,397 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ
+2023-10-18 12:11:57,616 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/BG-aAxjDRWuCHmY-ICx7EQ
+2023-10-18 12:11:58,831 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/bhZRtfemT4ONr3A9MEDjBg
+2023-10-18 12:12:00,382 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/_u6Ohbe4SwmSYGldL4gDrA
+2023-10-18 12:12:02,115 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/A3yXjO7IQoicd4a_YmUgIw
+2023-10-18 12:12:03,310 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/drP0WAPGQIuEgDO6wORA0g
+2023-10-18 12:12:04,850 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/bxspBd6iRh2-fQBWogriDg
+2023-10-18 12:12:06,393 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/0JbGSWWLSSKDswmX6IyFwQ
+2023-10-18 12:12:07,544 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:08,708 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:09,870 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:11,020 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:12,185 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:13,346 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:14,544 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:15,697 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:16,854 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have value <http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 12:12:16,854 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-18 12:12:18,000 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value '
+            'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ',
+             '@type': 'scenario-tanner:Correspondence',
+             'scenario-tanner:correspondenceHasAuthorValue': {'@id': 'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg',
+                                                              '@type': 'knora-api:LinkValue',
+                                                              'knora-api:hasPermissions': 'CR '
+                                                                                          'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                          'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                          'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                          'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-18 12:12:18,009 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-18 20:12:20,729 oap_get_set.py            INFO     =====Updating permissions of resource 4230/17698: http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ...
+2023-10-18 20:12:20,874 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ
+2023-10-18 20:12:22,008 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:23,204 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:24,382 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:25,560 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:26,740 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:27,936 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:29,083 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:30,248 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:31,410 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have value <http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-18 20:12:31,410 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-18 20:12:32,568 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value '
+            'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-18 20:12:32,570 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-18 22:34:11,574 oap_get_set.py            INFO     =====Updating permissions of resource 5613/17698: http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg...
+2023-10-18 22:34:11,713 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg
+2023-10-18 22:34:13,314 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/slXIG6hJT5mm0s0V_5lypQ
+2023-10-18 22:34:14,884 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/Ij10QsC4SfS3EeN6hC-CLg
+2023-10-18 22:34:16,139 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/uEX2XglNTEmyz_b2ok3Iqg
+2023-10-18 22:34:26,173 try_request.py            ERROR    Server Error: Retry request in 1 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:34:37,282 try_request.py            ERROR    Server Error: Retry request in 2 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:34:49,325 try_request.py            ERROR    Server Error: Retry request in 4 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:35:03,363 try_request.py            ERROR    Server Error: Retry request in 8 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:35:21,412 try_request.py            ERROR    Server Error: Retry request in 16 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:35:47,448 try_request.py            ERROR    Server Error: Retry request in 32 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:36:29,483 try_request.py            ERROR    Server Error: Retry request in 64 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:37:43,527 try_request.py            ERROR    Server Error: Retry request in 128 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:40:01,556 try_request.py            ERROR    Server Error: Retry request in 256 seconds...
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 845, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 791, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 371, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/utils/try_request.py", line 34, in http_call_with_retry
+    response: requests.Response = action()
+                                  ^^^^^^^^
+  File "/Users/admin/Desktop/dsp-permissions-scripts/dsp_permissions_scripts/oap/oap_get_set.py", line 83, in <lambda>
+    action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 130, in put
+    return request("put", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Library/Caches/pypoetry/virtualenvs/dsp-permissions-scripts-iMToRqB1-py3.11/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.dasch.swiss', port=443): Read timed out. (read timeout=10)
+2023-10-18 22:44:17,562 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-18 22:44:18,841 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value '
+            'http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/i9unif3TSaK5l_xedCHdmg',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg',
+             '@type': 'scenario-tanner:Page',
+             'knora-api:hasStillImageFileValue': {'@id': 'http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/i9unif3TSaK5l_xedCHdmg',
+                                                  '@type': 'knora-api:StillImageFileValue',
+                                                  'knora-api:hasPermissions': 'CR '
+                                                                              'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                              'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                              'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                              'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/i9unif3TSaK5l_xedCHdmg> '
+                  'as an object of property '
+                  '<http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-18 22:44:18,842 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-19 05:37:25,282 oap_get_set.py            INFO     =====Updating permissions of resource 9725/17698: http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww...
+2023-10-19 05:37:25,418 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww
+2023-10-19 05:37:26,547 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:27,706 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:28,894 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:30,028 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:31,175 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:32,346 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:33,497 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:34,630 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:35,792 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have value <http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:37:35,792 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-19 05:37:36,940 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value '
+            'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-19 05:37:36,942 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-19 05:53:32,511 oap_get_set.py            INFO     =====Updating permissions of resource 9887/17698: http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ...
+2023-10-19 05:53:32,642 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ
+2023-10-19 05:53:33,767 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:34,937 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:36,064 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:37,199 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:38,340 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:39,505 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:40,706 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:41,890 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:43,052 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have value <http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 05:53:43,053 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-19 05:53:44,226 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value '
+            'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-19 05:53:44,228 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-19 06:59:23,128 oap_get_set.py            INFO     =====Updating permissions of resource 10549/17698: http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw...
+2023-10-19 06:59:23,259 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw
+2023-10-19 06:59:24,432 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:25,610 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:26,752 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:27,931 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:29,096 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:30,241 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:31,402 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:32,562 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:33,736 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have value <http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 06:59:33,736 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-19 06:59:34,875 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value '
+            'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-19 06:59:34,876 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw and its values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2023-10-19 12:01:38,092 oap_get_set.py            INFO     =====Updating permissions of resource 13591/17698: http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ...
+2023-10-19 12:01:38,271 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ
+2023-10-19 12:01:39,533 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 1 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:40,698 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 2 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:41,866 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 4 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:43,036 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 8 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:44,184 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 16 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:45,352 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 32 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:46,513 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 64 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:47,669 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 128 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:48,835 try_request.py            ERROR    Error while updating permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ. Retry request in 256 seconds... (404: {"knora-api:error":"dsp.errors.NotFoundException: Resource <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have value <http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> as an object of property <http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}})
+2023-10-19 12:01:48,835 try_request.py            ERROR    Permanently unable to execute the API call. See logs for more details.
+2023-10-19 12:01:50,001 oap_get_set.py            ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value '
+            'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-19 12:01:50,003 oap_get_set.py            INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ and its values.
