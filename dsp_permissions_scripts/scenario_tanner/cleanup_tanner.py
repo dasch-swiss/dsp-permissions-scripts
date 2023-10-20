@@ -32,11 +32,12 @@ def _inspect_resources(
         elif "knora-api" in aff_res.prop_iri:
             prop_short = aff_res.prop_iri.replace(f"http://{host}/ontology/knora-api/v2#", "knora-api:")
         
-        if response_as_json[prop_short]["@type"] == "knora-api:LinkValue":   
-            assert aff_res.val_iri == response_as_json[prop_short]["@id"]
+        if response_as_json[prop_short]["@type"] == "knora-api:LinkValue": 
+            uuid_match = response_as_json[prop_short]["@id"]
         else:
-            value_has_uuid = response_as_json[prop_short]["knora-api:valueHasUUID"]
-            assert aff_res.val_iri.endswith(value_has_uuid)
+            uuid_match = response_as_json[prop_short]["knora-api:valueHasUUID"]
+            
+        assert aff_res.val_iri.endswith(uuid_match)
 
 
 def cleanup_tanner() -> None:
