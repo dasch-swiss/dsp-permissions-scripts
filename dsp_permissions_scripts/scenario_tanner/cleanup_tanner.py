@@ -103,7 +103,7 @@ def cleanup_tanner() -> None:
         host=host, 
         token=token,
     )
-    pass
+    print("passed")
 
 
 if __name__ == "__main__":
