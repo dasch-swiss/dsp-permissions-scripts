@@ -22,7 +22,7 @@ def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
     """Returns a list of values that have permissions and hence should be updated."""
     res: list[ValueUpdate] = []
     for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label"}:
+        if k in {"@id", "@type", "@context", "rdfs:label", "knora-api:DeletedValue"}:
             continue
         match v:
             case {
@@ -156,8 +156,6 @@ def _update_permissions_for_resource_and_values(
         token=token,
     )
     for v in values:
-        if v.property == "knora-api:DeletedValue":
-            continue
         _update_permissions_for_value(
             resource_iri=resource_iri,
             value=v,
