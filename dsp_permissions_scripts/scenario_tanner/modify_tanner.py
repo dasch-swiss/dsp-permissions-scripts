@@ -139,7 +139,7 @@ def update_oaps(
     )
 
 
-def fix_scenario_tanner() -> None:
+def modify_scenario_tanner() -> None:
     """
     Adapt the project Scenario Tanner on prod:
     Revoke Modify rights from ProjectMember, and grant them View rights.
@@ -167,4 +167,4 @@ def fix_scenario_tanner() -> None:
 
 
 if __name__ == "__main__":
-    fix_scenario_tanner()
+    modify_scenario_tanner()
