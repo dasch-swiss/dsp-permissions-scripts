@@ -137,7 +137,6 @@ def cleanup_tanner() -> None:
     for oap in oaps:
         if builtin_groups.PROJECT_MEMBER in oap.scope.M:
             oap.scope = oap.scope.remove("M", builtin_groups.PROJECT_MEMBER)
-        if builtin_groups.PROJECT_MEMBER not in oap.scope.V:
             oap.scope = oap.scope.add("V", builtin_groups.PROJECT_MEMBER)
     apply_updated_oaps_on_server(
         resource_oaps=oaps,
