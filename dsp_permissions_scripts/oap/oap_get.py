@@ -1,5 +1,5 @@
 import warnings
-from typing import Iterable
+from typing import Any, Iterable
 from urllib.parse import quote_plus
 
 import requests
@@ -92,6 +92,39 @@ def _get_next_page(
     # there are no more resources
     return False, []
 
+
+def get_resource(
+    resource_iri: str,
+    host: str,
+    token: str,
+) -> dict[str, Any]:
+    """Requests the resource with the given IRI from DSP-API"""
+    iri = quote_plus(resource_iri, safe="")
+    protocol = get_protocol(host)
+    url = f"{protocol}://{host}/v2/resources/{iri}"
+    headers = {"Authorization": f"Bearer {token}"}
+    response = http_call_with_retry(
+        action=lambda: requests.get(url, headers=headers, timeout=10),
+        err_msg=f"Error while getting resource {resource_iri}",
+    )
+    if response.status_code != 200:
+        raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
+    data: dict[str, Any] = response.json()
+    return data
+
+
+def get_oap_by_resource_iri(
+    host: str,
+    resource_iri: str,
+    token: str,
+) -> Oap:
+    resource = get_resource(
+        resource_iri=resource_iri,
+        host=host,
+        token=token,
+    )
+    scope = create_scope_from_string(resource["knora-api:hasPermissions"])
+    return Oap(scope=scope, object_iri=resource_iri)
 
 
 def get_all_resource_oaps_of_project(
