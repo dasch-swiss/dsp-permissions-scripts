@@ -77,12 +77,11 @@ def _get_affected_resources(host: str) -> list[AffectedResource]:
     return affected_resources
 
 
-def _get_valueHasUUIDs(
+def _assert_contested_value_exists(
     affected_resources: list[AffectedResource],
     host: str,
     token: str,
-) -> list[str]:
-    valueHasUUIDs: list[str] = []
+) -> None:
     for aff_res in affected_resources:
         headers = {"Authorization": f"Bearer {token}"}
         url = f"https://{host}/v2/resources/{quote_plus(aff_res.res_iri)}"
@@ -99,11 +98,7 @@ def _get_valueHasUUIDs(
             assert aff_res.val_iri == response_as_json[prop_short]["@id"]
         else:
             assert aff_res.val_iri.endswith(response_as_json[prop_short]["knora-api:valueHasUUID"])
-        _uuid = response_as_json[prop_short]["knora-api:valueHasUUID"]
-        valueHasUUIDs.append(_uuid)
     
-    return valueHasUUIDs
-
 
 def _get_new_scope() -> PermissionScope:
     scope = PermissionScope.create(
@@ -133,7 +128,6 @@ def _get_params_for_update(
 
 def _update_permissions_for_affected_value(
     affected_resource: AffectedResource,
-    new_val_iri: str,
     host: str,
     token: str,
 ) -> None:
@@ -141,7 +135,7 @@ def _update_permissions_for_affected_value(
     scope = _get_new_scope()
     _update_permissions_for_value(
         resource_iri=affected_resource.res_iri,
-        value=ValueUpdate(affected_resource.prop_iri, new_val_iri, value_type),
+        value=ValueUpdate(affected_resource.prop_iri, affected_resource.val_iri, value_type),
         resource_type=resource_type,
         context=context,
         scope=scope,
@@ -162,17 +156,14 @@ def cleanup_tanner() -> None:
     token = login(host)
 
     affected_resources = _get_affected_resources(host)
-    valueHasUUIDs = _get_valueHasUUIDs(
+    _assert_contested_value_exists(
         affected_resources=affected_resources,
         host=host, 
         token=token,
     )
-    for aff_res, _uuid in zip(affected_resources, valueHasUUIDs):
-        new_val_iri = re.sub(r"(?<=/values/).+", _uuid, aff_res.val_iri)
-        logger.info(f"Resource {aff_res.res_iri}: try value IRI {new_val_iri} instead of {aff_res.val_iri}")
+    for aff_res in affected_resources:
         _update_permissions_for_affected_value(
             affected_resource=aff_res,
-            new_val_iri=new_val_iri,
             host=host,
             token=token,
         )
