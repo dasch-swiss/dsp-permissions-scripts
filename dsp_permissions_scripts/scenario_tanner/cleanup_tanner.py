@@ -4,14 +4,11 @@ from urllib.parse import quote_plus
 import requests
 from dotenv import load_dotenv
 
+from dsp_permissions_scripts.models import builtin_groups
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.models.value import ValueUpdate
-from dsp_permissions_scripts.oap.oap_set import (
-    _get_resource,
-    _get_values_to_update,
-    _update_permissions_for_value,
-)
+from dsp_permissions_scripts.oap.oap_get import get_oap_by_resource_iri
+from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
@@ -118,36 +115,6 @@ def _get_new_scope() -> PermissionScope:
     return scope
 
 
-def _get_params_for_update(
-    affected_resource: AffectedResource,
-    host: str,
-    token: str,
-) -> tuple[str, str, dict[str, str]]:
-    resource = _get_resource(affected_resource.res_iri, host, token)
-    resource_type: str = resource["@type"]
-    context: dict[str, str] = resource["@context"]
-    affected_value = [x for x in _get_values_to_update(resource) if x.value_iri == affected_resource.val_iri][0]
-    return resource_type, affected_value.value_type, context
-
-
-def _update_permissions_for_affected_value(
-    affected_resource: AffectedResource,
-    host: str,
-    token: str,
-) -> None:
-    resource_type, value_type, context = _get_params_for_update(affected_resource, host, token)
-    scope = _get_new_scope()
-    _update_permissions_for_value(
-        resource_iri=affected_resource.res_iri,
-        value=ValueUpdate(affected_resource.prop_iri, affected_resource.val_iri, value_type),
-        resource_type=resource_type,
-        context=context,
-        scope=scope,
-        host=host,
-        token=token,
-    )
-
-
 def cleanup_tanner() -> None:
     """
     As can be seen in project_data/0102/resources affected by dsp.errors.NotFoundException.txt,
@@ -157,6 +124,7 @@ def cleanup_tanner() -> None:
     """
     load_dotenv()  # set login credentials from .env file as environment variables
     host = Hosts.get_host("stage")
+    shortcode = "0102"
     token = login(host)
 
     affected_resources = _get_affected_resources(host)
@@ -165,12 +133,18 @@ def cleanup_tanner() -> None:
         host=host, 
         token=token,
     )
-    for aff_res in affected_resources:
-        _update_permissions_for_affected_value(
-            affected_resource=aff_res,
-            host=host,
-            token=token,
-        )
+    oaps = [get_oap_by_resource_iri(host, aff_res.res_iri, token) for aff_res in affected_resources]
+    for oap in oaps:
+        if builtin_groups.PROJECT_MEMBER in oap.scope.M:
+            oap.scope = oap.scope.remove("M", builtin_groups.PROJECT_MEMBER)
+        if builtin_groups.PROJECT_MEMBER not in oap.scope.V:
+            oap.scope = oap.scope.add("V", builtin_groups.PROJECT_MEMBER)
+    apply_updated_oaps_on_server(
+        resource_oaps=oaps,
+        host=host,
+        token=token,
+        shortcode=shortcode,
+    )
 
 
 if __name__ == "__main__":
