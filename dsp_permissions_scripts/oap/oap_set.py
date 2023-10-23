@@ -18,7 +18,7 @@ from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 logger = get_logger(__name__)
 
 
-def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
+def _get_values_to_update(resource: dict[str, Any]) -> list[ValueUpdate]:
     """Returns a list of values that have permissions and hence should be updated."""
     res: list[ValueUpdate] = []
     for k, v in resource.items():
@@ -142,15 +142,12 @@ def _update_permissions_for_resource_and_values(
 ) -> None:
     """Updates the permissions for the given resource and its values on a DSP server"""
     resource = _get_resource(resource_iri, host, token)
-    lmd: str | None = resource.get("knora-api:lastModificationDate")
-    resource_type: str = resource["@type"]
-    context: dict[str, str] = resource["@context"]
-    values = _get_value_iris(resource)
+    values = _get_values_to_update(resource)
     _update_permissions_for_resource(
         resource_iri=resource_iri,
-        lmd=lmd,
-        resource_type=resource_type,
-        context=context,
+        lmd=resource.get("knora-api:lastModificationDate"),
+        resource_type=resource["@type"],
+        context=resource["@context"],
         scope=scope,
         host=host,
         token=token,
@@ -159,8 +156,8 @@ def _update_permissions_for_resource_and_values(
         _update_permissions_for_value(
             resource_iri=resource_iri,
             value=v,
-            resource_type=resource_type,
-            context=context,
+            resource_type=resource["@type"],
+            context=resource["@context"],
             scope=scope,
             host=host,
             token=token,
