@@ -144,7 +144,7 @@ def _update_permissions_for_resource_and_values(
     success = True
     try:
         resource = _get_resource(resource_iri, host, token)
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught
         return False
     values = _get_values_to_update(resource)
     
