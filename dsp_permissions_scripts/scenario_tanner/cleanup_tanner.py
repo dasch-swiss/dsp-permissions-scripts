@@ -95,8 +95,13 @@ def _assert_contested_value_exists(
         
         if response_as_json[prop_short]["@type"] == "knora-api:LinkValue": 
             assert aff_res.val_iri == response_as_json[prop_short]["@id"]
+            logger.info(f"Assert: Resource {aff_res.res_iri} has a value {aff_res.val_iri} for property {prop_short}")
         else:
             assert aff_res.val_iri.endswith(response_as_json[prop_short]["knora-api:valueHasUUID"])
+            logger.info(
+                f"Assert: Resource {aff_res.res_iri} does NOT have a value {aff_res.val_iri} "
+                f"for property {prop_short}, but the property's 'valueHasUUID' matches the value's IRI"
+            )
     
 
 def _get_new_scope() -> PermissionScope:
