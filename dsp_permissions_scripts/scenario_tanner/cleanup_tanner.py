@@ -1,4 +1,3 @@
-import re
 from dataclasses import dataclass
 from urllib.parse import quote_plus
 
@@ -10,7 +9,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_set import (
     _get_resource,
-    _get_value_iris,
+    _get_values_to_update,
     _update_permissions_for_value,
 )
 from dsp_permissions_scripts.utils.authentication import login
@@ -122,7 +121,7 @@ def _get_params_for_update(
     resource = _get_resource(affected_resource.res_iri, host, token)
     resource_type: str = resource["@type"]
     context: dict[str, str] = resource["@context"]
-    affected_value = [x for x in _get_value_iris(resource) if x.value_iri == affected_resource.val_iri][0]
+    affected_value = [x for x in _get_values_to_update(resource) if x.value_iri == affected_resource.val_iri][0]
     return resource_type, affected_value.value_type, context
 
 
