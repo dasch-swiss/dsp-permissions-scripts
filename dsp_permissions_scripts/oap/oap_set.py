@@ -144,7 +144,7 @@ def _update_permissions_for_resource_and_values(
     try:
         resource = _get_resource(resource_iri, host, token)
     except Exception as exc:  # pylint: disable=broad-exception-caught
-        logger.error(f"Cannot update resource {resource_iri}", exc_info=True)
+        logger.error(f"Cannot update resource {resource_iri}: {exc}")
         warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
         return False
     values = _get_values_to_update(resource)
