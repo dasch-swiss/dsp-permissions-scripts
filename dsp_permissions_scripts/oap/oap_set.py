@@ -18,7 +18,7 @@ from dsp_permissions_scripts.utils.try_request import http_call_with_retry
 logger = get_logger(__name__)
 
 
-def _get_value_iris(resource: dict[str, Any]) -> list[ValueUpdate]:
+def _get_values_to_update(resource: dict[str, Any]) -> list[ValueUpdate]:
     """Returns a list of values that have permissions and hence should be updated."""
     res: list[ValueUpdate] = []
     for k, v in resource.items():
@@ -139,32 +139,49 @@ def _update_permissions_for_resource_and_values(
     scope: PermissionScope,
     host: str,
     token: str,
-) -> None:
+) -> bool:
     """Updates the permissions for the given resource and its values on a DSP server"""
-    resource = _get_resource(resource_iri, host, token)
-    lmd: str | None = resource.get("knora-api:lastModificationDate")
-    resource_type: str = resource["@type"]
-    context: dict[str, str] = resource["@context"]
-    values = _get_value_iris(resource)
-    _update_permissions_for_resource(
-        resource_iri=resource_iri,
-        lmd=lmd,
-        resource_type=resource_type,
-        context=context,
-        scope=scope,
-        host=host,
-        token=token,
-    )
-    for v in values:
-        _update_permissions_for_value(
+    try:
+        resource = _get_resource(resource_iri, host, token)
+    except Exception as exc:  # pylint: disable=broad-exception-caught
+        logger.error(f"Cannot update resource {resource_iri}: {exc}")
+        warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
+        return False
+    values = _get_values_to_update(resource)
+    
+    success = True
+    try:
+        _update_permissions_for_resource(
             resource_iri=resource_iri,
-            value=v,
-            resource_type=resource_type,
-            context=context,
+            lmd=resource.get("knora-api:lastModificationDate"),
+            resource_type=resource["@type"],
+            context=resource["@context"],
             scope=scope,
             host=host,
             token=token,
         )
+    except ApiError as err:
+        logger.error(err)
+        warnings.warn(err.message)
+        success = False
+    
+    for v in values:
+        try:
+            _update_permissions_for_value(
+                resource_iri=resource_iri,
+                value=v,
+                resource_type=resource["@type"],
+                context=resource["@context"],
+                scope=scope,
+                host=host,
+                token=token,
+            )
+        except ApiError as err:
+            logger.error(err)
+            warnings.warn(err.message)
+            success = False
+    
+    return success
 
 
 def _write_failed_res_iris_to_file(
@@ -196,16 +213,12 @@ def apply_updated_oaps_on_server(
         msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
         logger.info(f"====={msg}")
         print(msg)
-        try:
-            _update_permissions_for_resource_and_values(
-                resource_iri=resource_oap.object_iri,
-                scope=resource_oap.scope,
-                host=host,
-                token=token,
-            )
-        except ApiError as err:
-            logger.error(err)
-            warnings.warn(err.message)
+        if not _update_permissions_for_resource_and_values(
+            resource_iri=resource_oap.object_iri,
+            scope=resource_oap.scope,
+            host=host,
+            token=token,
+        ):
             failed_res_iris.append(resource_oap.object_iri)
         logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
 
