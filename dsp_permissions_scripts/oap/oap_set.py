@@ -139,15 +139,15 @@ def _update_permissions_for_resource_and_values(
     scope: PermissionScope,
     host: str,
     token: str,
-) -> None:
+) -> bool:
     """Updates the permissions for the given resource and its values on a DSP server"""
-    success = True
     try:
         resource = _get_resource(resource_iri, host, token)
     except Exception:  # pylint: disable=broad-exception-caught
         return False
     values = _get_values_to_update(resource)
     
+    success = True
     try:
         _update_permissions_for_resource(
             resource_iri=resource_iri,
