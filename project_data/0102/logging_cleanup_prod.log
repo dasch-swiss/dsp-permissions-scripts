@@ -1,0 +1,238 @@
+2023-10-24 14:19:24,368 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ has a value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg for property scenario-tanner:correspondenceHasAuthorValue
+2023-10-24 14:19:24,516 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ has a value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:24,674 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg does NOT have a value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/i9unif3TSaK5l_xedCHdmg for property knora-api:hasStillImageFileValue, but the property's 'valueHasUUID' matches the value's IRI
+2023-10-24 14:19:24,821 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww has a value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:24,965 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ has a value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:25,115 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw has a value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:25,275 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ has a value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:25,413 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg has a value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA for property scenario-tanner:isPartOfDocumentValue
+2023-10-24 14:19:25,557 cleanup_tanner.py         INFO     Assert: Resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ does NOT have a value http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ/values/3YG-PJhAQkeEzsRS8RMYMA for property scenario-tanner:hasBirthDate, but the property's 'valueHasUUID' matches the value's IRI
+2023-10-24 14:19:27,204 oap_set.py                INFO     ******* Updating OAPs of 9 resources on api.dasch.swiss *******
+2023-10-24 14:19:27,204 oap_set.py                INFO     =====Updating permissions of resource 1/9: http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ...
+2023-10-24 14:19:27,814 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ
+2023-10-24 14:19:29,175 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/fCuWLe09RxidXejQBz6DHg are already up to date
+2023-10-24 14:19:30,454 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/yFUHYUQ9TuCh5r4od0kq_g are already up to date
+2023-10-24 14:19:32,042 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/VIStOdgISfCljbkbDacoiA are already up to date
+2023-10-24 14:19:33,802 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/NvXPGnqJTpmnAFqN60VeGQ are already up to date
+2023-10-24 14:19:35,063 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/rDpjj9CtS3uGNdOJN71z3g are already up to date
+2023-10-24 14:19:36,662 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/oQVGFkCBTZyS8IffGh0Wcw are already up to date
+2023-10-24 14:19:38,442 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/pyIY4jsBQhSQ85jJCFpXoQ are already up to date
+2023-10-24 14:19:39,850 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ, value '
+            'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ',
+             '@type': 'scenario-tanner:Correspondence',
+             'scenario-tanner:correspondenceHasAuthorValue': {'@id': 'http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg',
+                                                              '@type': 'knora-api:LinkValue',
+                                                              'knora-api:hasPermissions': 'CR '
+                                                                                          'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                          'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                          'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                          'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ/values/82yjg3sETmGtflJnwjrJYg> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#correspondenceHasAuthorValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:19:39,856 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/WiFqK8SwTN6a74ioeHWPsQ and its values.
+2023-10-24 14:19:39,856 oap_set.py                INFO     =====Updating permissions of resource 2/9: http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ...
+2023-10-24 14:19:40,204 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ
+2023-10-24 14:19:41,614 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value '
+            'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/WSJFMezeQBWUU4kXDVpKJA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:19:43,295 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/KLUmNhYcRxSI0WBRaggwwQ
+2023-10-24 14:19:44,791 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/qNqJ57nOTseaOjlJTkF5Xg
+2023-10-24 14:19:46,328 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ, value http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ/values/cp7jShj8Q_aKtq-Ni_pY-A
+2023-10-24 14:19:46,334 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/8zpaTce4RDyhUS3h5GilVQ and its values.
+2023-10-24 14:19:46,334 oap_set.py                INFO     =====Updating permissions of resource 3/9: http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg...
+2023-10-24 14:19:46,696 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg
+2023-10-24 14:19:48,289 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/E1o0ZXIbR4KigplGK_MUpw are already up to date
+2023-10-24 14:19:50,012 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/QGXdmS83R4ymkPlK6YJwYA are already up to date
+2023-10-24 14:19:51,291 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/xQdumar0RqO9dLO1X5zA0w are already up to date
+2023-10-24 14:19:52,551 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg, value http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg/values/K3VVBhOkQ0SbGd0bsJHMlw are already up to date
+2023-10-24 14:19:52,554 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/FORXi9-YQYe-s2S99MwiBg and its values.
+2023-10-24 14:19:52,554 oap_set.py                INFO     =====Updating permissions of resource 4/9: http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww...
+2023-10-24 14:19:52,903 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww
+2023-10-24 14:19:54,150 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value '
+            'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/u4wxGYXZQgi-4ws-wQFhiw> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:19:55,780 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/5HOMDg-tRh2MRjEmO5-Mmw
+2023-10-24 14:19:57,131 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/IgaHQ2mwS8e6J0wDkKPHwg
+2023-10-24 14:19:58,499 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww, value http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww/values/qB5rEpZ1QcGyhGnNrgb_yA
+2023-10-24 14:19:58,502 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/Ys4ib1s3RIK-fjmJ8Issww and its values.
+2023-10-24 14:19:58,502 oap_set.py                INFO     =====Updating permissions of resource 5/9: http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ...
+2023-10-24 14:19:58,834 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ
+2023-10-24 14:20:00,091 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value '
+            'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/BNnbMePSS1ybgMWISztRbA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:20:01,733 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/qREbuhOfQR2h7uDQ07LWmQ
+2023-10-24 14:20:03,055 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/yO0liubzRF-f5D5owoS5uQ
+2023-10-24 14:20:04,350 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ, value http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ/values/VvUp9hIgQwu8mUJR5xdkbg
+2023-10-24 14:20:04,354 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/ZVhmsPc6R6ikEbOayTbXgQ and its values.
+2023-10-24 14:20:04,354 oap_set.py                INFO     =====Updating permissions of resource 6/9: http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw...
+2023-10-24 14:20:04,691 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw
+2023-10-24 14:20:06,089 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value '
+            'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/da8ADzMWS3ekUoYxw0bU-g> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:20:07,830 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/xe2cuQSYTp694N8DJEdDzQ
+2023-10-24 14:20:09,264 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/NtRox6BDT1i3rjGG0DJQpw
+2023-10-24 14:20:10,697 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw, value http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw/values/a1SYXtY8T_-Xwm3h54E2GA
+2023-10-24 14:20:10,699 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/bOyXLSH9Q6aGcIKZ3tMfrw and its values.
+2023-10-24 14:20:10,700 oap_set.py                INFO     =====Updating permissions of resource 7/9: http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ...
+2023-10-24 14:20:11,027 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ
+2023-10-24 14:20:12,265 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value '
+            'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/2jiozpbdSrO0KO-VuET_NQ> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:20:13,886 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/3oerHDmBRninUxUR3Gw-yw
+2023-10-24 14:20:15,408 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/wKC3bZ4uQUGtc5Z6nAK-uQ
+2023-10-24 14:20:16,842 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ, value http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ/values/KPngPtNsRhGPmnps595uJw
+2023-10-24 14:20:16,845 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/pUQQVfX2Qvq7eTVKeJrFYQ and its values.
+2023-10-24 14:20:16,845 oap_set.py                INFO     =====Updating permissions of resource 8/9: http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg...
+2023-10-24 14:20:17,197 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg
+2023-10-24 14:20:18,684 oap_set.py                ERROR    {'message': 'Error while updating permissions of resource '
+            'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value '
+            'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA',
+ 'payload': {'@context': {'knora-api': 'http://api.knora.org/ontology/knora-api/v2#',
+                          'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                          'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                          'scenario-tanner': 'http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#',
+                          'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+             '@id': 'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg',
+             '@type': 'scenario-tanner:Page',
+             'scenario-tanner:isPartOfDocumentValue': {'@id': 'http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA',
+                                                       '@type': 'knora-api:LinkValue',
+                                                       'knora-api:hasPermissions': 'CR '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectAdmin|D '
+                                                                                   'http://www.knora.org/ontology/knora-admin#Creator|V '
+                                                                                   'http://www.knora.org/ontology/knora-admin#ProjectMember|RV '
+                                                                                   'http://www.knora.org/ontology/knora-admin#KnownUser,http://www.knora.org/ontology/knora-admin#UnknownUser'}},
+ 'response_text': '{"knora-api:error":"dsp.errors.NotFoundException: Resource '
+                  '<http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg> does not have '
+                  'value '
+                  '<http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/1LRVS8J_SFC3PoYTAQXBKA> '
+                  'as an object of property '
+                  '<http://api.dasch.swiss/ontology/0102/scenario-tanner/v2#isPartOfDocumentValue>","@context":{"knora-api":"http://api.knora.org/ontology/knora-api/v2#"}}',
+ 'status_code': 404}
+2023-10-24 14:20:20,426 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/453TJ4UKR5y3bOq5RE3CrA
+2023-10-24 14:20:21,964 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/zVDLgTgtRjKUFid2E4akwA
+2023-10-24 14:20:23,395 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg, value http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg/values/alEeBVPGT0Kz0LNyo_0L2A
+2023-10-24 14:20:23,401 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/w8uEnv6_QHGJg-Pd6oh6Jg and its values.
+2023-10-24 14:20:23,401 oap_set.py                INFO     =====Updating permissions of resource 9/9: http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ...
+2023-10-24 14:20:24,011 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ
+2023-10-24 14:20:25,750 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ, value http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ/values/63lCzSDhRx6WBr5_JQ3ehg are already up to date
+2023-10-24 14:20:27,360 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ, value http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ/values/ohJGLOqcRzq_PjiLXii_Zw are already up to date
+2023-10-24 14:20:28,720 oap_set.py                WARNING  Permissions of resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ, value http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ/values/ofPUyn-zSAqtBw1pnsgfEg are already up to date
+2023-10-24 14:20:28,726 oap_set.py                INFO     Updated permissions of resource http://rdfh.ch/0102/O_QdkkzASTmdutPo_H2uEQ and its values.
+2023-10-24 14:20:28,729 oap_set.py                ERROR    ERROR: 7 resources could not be updated. They were written to FAILED_RESOURCES.txt.
