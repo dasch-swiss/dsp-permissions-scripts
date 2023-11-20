@@ -10,6 +10,12 @@ from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
 logger = get_logger(__name__)
 
 
+def error_is_temporary(response: requests.Response) -> bool:
+    retry_code = 500 <= response.status_code < 600
+    try_again_later = "try again later" in response.text
+    return retry_code or try_again_later
+
+
 def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str) -> requests.Response:
     """
     Function that tries 9 times to execute an HTTP request.
@@ -34,18 +40,19 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
             response: requests.Response = action()
             if response.status_code == 200:
                 return response
-            retry_code = 500 <= response.status_code < 600 or response.status_code == 404
-            try_again_later = "try again later" in response.text
-            if retry_code or try_again_later:
-                msg = f"{err_msg}. Retry request in {2 ** i} seconds... ({response.status_code}: {response.text})"
-                print(f"{get_timestamp()}: SERVER ERROR: {msg}")
+            if error_is_temporary(response):
+                msg = (
+                    f"SERVER ERROR: {err_msg}. Retry request in {2 ** i} seconds... "
+                    f"({response.status_code}: {response.text})"
+                )
+                print(f"{get_timestamp()}: {msg}")
                 logger.error(msg)
                 time.sleep(2**i)
                 continue
             return response
         except (TimeoutError, ReadTimeout, ReadTimeoutError, RequestException, ConnectionError):
-            msg = f"{err_msg}. Retry request in {2 ** i} seconds..."
-            print(f"{get_timestamp()}: SERVER ERROR: {msg}")
+            msg = f"REQUESTS LIBRARY ERROR: {err_msg}. Retry request in {2 ** i} seconds..."
+            print(f"{get_timestamp()}: {msg}")
             logger.error(msg, exc_info=True)
             time.sleep(2**i)
             continue
