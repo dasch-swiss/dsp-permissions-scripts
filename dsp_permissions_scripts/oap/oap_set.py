@@ -172,7 +172,7 @@ def _write_failed_res_iris_to_file(
     filename: str,
 ) -> None:
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"Failed to update the OAPs of the following resources in project {shortcode} on host {host}:\n")
+        f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}:\n")
         f.write("\n".join(failed_res_iris))
 
 
@@ -231,5 +231,9 @@ def apply_updated_oaps_on_server(
             host=host,
             filename=filename,
         )
-        logger.error(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")
-        warnings.warn(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")
+        msg = (
+            f"ERROR: {len(failed_res_iris)} resources could not (or only partially) be updated. "
+            f"They were written to {filename}."
+        )
+        logger.error(msg)
+        warnings.warn(msg)
