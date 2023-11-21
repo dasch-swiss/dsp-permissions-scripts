@@ -184,7 +184,7 @@ def _launch_thread_pool(
     counter = 0
     total = len(resource_oaps)
     failed_res_iris: list[str] = []
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=4) as pool:
         jobs = [
             pool.submit(
                 _update_permissions_for_resource_and_values,
