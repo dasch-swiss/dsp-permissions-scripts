@@ -28,7 +28,7 @@ def _update_ap_on_server(
     url = f"{protocol}://{host}/admin/permissions/{iri}/hasPermissions"
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
     response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
         err_msg=f"Could not update Administrative Permission {ap.iri}",
     )
     if response.status_code != 200:

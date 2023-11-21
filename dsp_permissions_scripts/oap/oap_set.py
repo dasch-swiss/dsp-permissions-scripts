@@ -61,7 +61,7 @@ def _update_permissions_for_value(
     url = f"{protocol}://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
         err_msg=f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}",
     )
     if response.status_code == 400 and response.text:
@@ -102,7 +102,7 @@ def _update_permissions_for_resource(
     url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
         err_msg=f"ERROR while updating permissions of resource {resource_iri}",
     )
     if response.status_code != 200:

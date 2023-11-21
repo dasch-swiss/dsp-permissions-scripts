@@ -104,7 +104,7 @@ def get_resource(
     url = f"{protocol}://{host}/v2/resources/{iri}"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
+        action=lambda: requests.get(url, headers=headers, timeout=20),
         err_msg=f"Error while getting resource {resource_iri}",
     )
     if response.status_code != 200:

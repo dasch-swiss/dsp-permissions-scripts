@@ -20,7 +20,7 @@ def _get_onto_iris_of_project(
     url = f"{protocol}://{host}/v2/ontologies/metadata"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
+        action=lambda: requests.get(url, headers=headers, timeout=20),
         err_msg="Could not get onto IRIs",
     )
     if response.status_code != 200:
@@ -39,7 +39,7 @@ def _get_class_iris_of_onto(
     url = f"{protocol}://{host}/v2/ontologies/allentities/{quote_plus(onto_iri)}"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
+        action=lambda: requests.get(url, headers=headers, timeout=20),
         err_msg="Could not get class IRIs",
     )
     if response.status_code != 200:
@@ -78,7 +78,7 @@ def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/projects/shortcode/{shortcode}"
     response = http_call_with_retry(
-        action=lambda: requests.get(url, timeout=10),
+        action=lambda: requests.get(url, timeout=20),
         err_msg="Cannot retrieve project IRI",
     )
     if response.status_code != 200:

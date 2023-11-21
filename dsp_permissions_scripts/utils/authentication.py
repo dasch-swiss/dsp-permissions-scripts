@@ -9,7 +9,7 @@ def _get_token(host: str, email: str, pw: str) -> str:
     """Requests an access token from DSP-API"""
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/v2/authentication"
-    response = requests.post(url, json={"email": email, "password": pw}, timeout=10)
+    response = requests.post(url, json={"email": email, "password": pw}, timeout=20)
     if response.status_code != 200:
         raise ApiError("Could not login", response.text, response.status_code)
     token: str = response.json()["token"]
