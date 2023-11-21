@@ -200,8 +200,10 @@ def _launch_thread_pool(
             if not success:
                 failed_res_iris.append(resource_iri)
                 logger.info(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
+                print(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
             else:
                 logger.info(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
+                print(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
     return failed_res_iris
 
 
