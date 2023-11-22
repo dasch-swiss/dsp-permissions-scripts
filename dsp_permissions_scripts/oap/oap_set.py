@@ -2,6 +2,7 @@
 
 import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 from typing import Any
 
 import requests
@@ -172,7 +173,7 @@ def _write_failed_res_iris_to_file(
     filename: str,
 ) -> None:
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}:\n")
+        f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}):\n")
         f.write("\n".join(failed_res_iris))
 
 
@@ -224,7 +225,8 @@ def apply_updated_oaps_on_server(
     failed_res_iris = _launch_thread_pool(resource_oaps, host, token)
 
     if failed_res_iris:
-        filename = "FAILED_RESOURCES.txt"
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"FAILED_RESOURCES_{timestamp}.txt"
         _write_failed_res_iris_to_file(
             failed_res_iris=failed_res_iris,
             shortcode=shortcode,
