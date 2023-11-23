@@ -181,11 +181,12 @@ def _launch_thread_pool(
     resource_oaps: list[Oap],
     host: str,
     token: str,
+    nthreads: int,
 ) -> list[str]:
     counter = 0
     total = len(resource_oaps)
     failed_res_iris: list[str] = []
-    with ThreadPoolExecutor(max_workers=4) as pool:
+    with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [
             pool.submit(
                 _update_permissions_for_resource_and_values,
@@ -213,8 +214,12 @@ def apply_updated_oaps_on_server(
     host: str,
     token: str,
     shortcode: str,
+    nthreads: int = 4,
 ) -> None:
-    """Applies modified Object Access Permissions of resources (and their values) on a DSP server."""
+    """
+    Applies modified Object Access Permissions of resources (and their values) on a DSP server.
+    Don't forget to set a number of threads that doesn't overload the server.
+    """
     if not resource_oaps:
         logger.warning(f"There are no OAPs to update on {host}")
         warnings.warn(f"There are no OAPs to update on {host}")
@@ -222,7 +227,7 @@ def apply_updated_oaps_on_server(
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
 
-    failed_res_iris = _launch_thread_pool(resource_oaps, host, token)
+    failed_res_iris = _launch_thread_pool(resource_oaps, host, token, nthreads)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
