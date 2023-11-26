@@ -48,7 +48,7 @@ def _get_all_aps_of_project(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/ap/{project_iri}"
     response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
+        action=lambda: requests.get(url, headers=headers, timeout=20),
         err_msg=f"Could not get APs of project {project_iri}",
     )
     if response.status_code != 200:

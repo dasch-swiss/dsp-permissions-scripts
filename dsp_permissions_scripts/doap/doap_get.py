@@ -46,7 +46,7 @@ def _get_all_doaps_of_project(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/doap/{project_iri}"
     response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=10),
+        action=lambda: requests.get(url, headers=headers, timeout=20),
         err_msg=f"Error while getting DOAPs of project {project_iri}",
     )
     if response.status_code != 200:
