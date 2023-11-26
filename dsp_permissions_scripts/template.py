@@ -150,6 +150,7 @@ def update_oaps(
         host=host,
         token=token,
         shortcode=shortcode,
+        nthreads=4,
     )
     resource_oaps_updated = get_all_resource_oaps_of_project(
         shortcode=shortcode,

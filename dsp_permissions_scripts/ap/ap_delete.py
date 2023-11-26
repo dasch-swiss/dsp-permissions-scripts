@@ -22,7 +22,7 @@ def _delete_ap_on_server(
     protocol = get_protocol(host)
     url = f"{protocol}://{host}/admin/permissions/{ap_iri}"
     response = http_call_with_retry(
-        action=lambda: requests.delete(url, headers=headers, timeout=10),
+        action=lambda: requests.delete(url, headers=headers, timeout=20),
         err_msg=f"Could not delete Administrative Permission {ap.iri}",
     )
     if response.status_code != 200:

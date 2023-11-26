@@ -1,6 +1,8 @@
 # pylint: disable=too-many-arguments
 
 import warnings
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 from typing import Any
 
 import requests
@@ -60,7 +62,7 @@ def _update_permissions_for_value(
     url = f"{protocol}://{host}/v2/values"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
         err_msg=f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}",
     )
     if response.status_code == 400 and response.text:
@@ -101,7 +103,7 @@ def _update_permissions_for_resource(
     url = f"{protocol}://{host}/v2/resources"
     headers = {"Authorization": f"Bearer {token}"}
     response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=10),
+        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
         err_msg=f"ERROR while updating permissions of resource {resource_iri}",
     )
     if response.status_code != 200:
@@ -119,14 +121,14 @@ def _update_permissions_for_resource_and_values(
     scope: PermissionScope,
     host: str,
     token: str,
-) -> bool:
+) -> tuple[str, bool]:
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
         resource = get_resource(resource_iri, host, token)
     except Exception as exc:  # pylint: disable=broad-exception-caught
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
         warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
-        return False
+        return resource_iri, False
     values = _get_values_to_update(resource)
     
     success = True
@@ -161,7 +163,7 @@ def _update_permissions_for_resource_and_values(
             warnings.warn(err.message)
             success = False
     
-    return success
+    return resource_iri, success
 
 
 def _write_failed_res_iris_to_file(
@@ -171,8 +173,40 @@ def _write_failed_res_iris_to_file(
     filename: str,
 ) -> None:
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"Failed to update the OAPs of the following resources in project {shortcode} on host {host}:\n")
+        f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}):\n")
         f.write("\n".join(failed_res_iris))
+
+
+def _launch_thread_pool(
+    resource_oaps: list[Oap],
+    host: str,
+    token: str,
+    nthreads: int,
+) -> list[str]:
+    counter = 0
+    total = len(resource_oaps)
+    failed_res_iris: list[str] = []
+    with ThreadPoolExecutor(max_workers=nthreads) as pool:
+        jobs = [
+            pool.submit(
+                _update_permissions_for_resource_and_values,
+                resource_oap.object_iri,
+                resource_oap.scope,
+                host,
+                token,
+            ) for resource_oap in resource_oaps
+        ]
+        for result in as_completed(jobs):
+            resource_iri, success = result.result()
+            counter += 1
+            if not success:
+                failed_res_iris.append(resource_iri)
+                logger.info(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
+                print(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
+            else:
+                logger.info(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
+                print(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
+    return failed_res_iris
 
 
 def apply_updated_oaps_on_server(
@@ -180,35 +214,33 @@ def apply_updated_oaps_on_server(
     host: str,
     token: str,
     shortcode: str,
+    nthreads: int = 4,
 ) -> None:
-    """Applies modified Object Access Permissions of resources (and their values) on a DSP server."""
+    """
+    Applies modified Object Access Permissions of resources (and their values) on a DSP server.
+    Don't forget to set a number of threads that doesn't overload the server.
+    """
     if not resource_oaps:
         logger.warning(f"There are no OAPs to update on {host}")
         warnings.warn(f"There are no OAPs to update on {host}")
         return
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
-    failed_res_iris: list[str] = []
-    for index, resource_oap in enumerate(resource_oaps):
-        msg = f"Updating permissions of resource {index + 1}/{len(resource_oaps)}: {resource_oap.object_iri}..."
-        logger.info(f"====={msg}")
-        print(msg)
-        if not _update_permissions_for_resource_and_values(
-            resource_iri=resource_oap.object_iri,
-            scope=resource_oap.scope,
-            host=host,
-            token=token,
-        ):
-            failed_res_iris.append(resource_oap.object_iri)
-        logger.info(f"Updated permissions of resource {resource_oap.object_iri} and its values.")
+
+    failed_res_iris = _launch_thread_pool(resource_oaps, host, token, nthreads)
 
     if failed_res_iris:
-        filename = "FAILED_RESOURCES.txt"
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"FAILED_RESOURCES_{timestamp}.txt"
         _write_failed_res_iris_to_file(
             failed_res_iris=failed_res_iris,
             shortcode=shortcode,
             host=host,
             filename=filename,
         )
-        logger.error(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")
-        warnings.warn(f"ERROR: {len(failed_res_iris)} resources could not be updated. They were written to {filename}.")
+        msg = (
+            f"ERROR: {len(failed_res_iris)} resources could not (or only partially) be updated. "
+            f"They were written to {filename}."
+        )
+        logger.error(msg)
+        warnings.warn(msg)
