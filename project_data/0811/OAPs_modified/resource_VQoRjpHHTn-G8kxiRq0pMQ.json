@@ -1,0 +1,16 @@
+{
+  "scope": {
+    "CR": [
+      "http://www.knora.org/ontology/knora-admin#Creator",
+      "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+    ],
+    "D": [],
+    "M": [],
+    "V": [],
+    "RV": [
+      "http://www.knora.org/ontology/knora-admin#UnknownUser",
+      "http://www.knora.org/ontology/knora-admin#KnownUser"
+    ]
+  },
+  "object_iri": "http://rdfh.ch/0811/VQoRjpHHTn-G8kxiRq0pMQ"
+}
