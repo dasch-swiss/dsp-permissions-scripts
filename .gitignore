@@ -162,5 +162,3 @@ cython_debug/
 .vscode
 
 .DS_Store
-
-project_data
