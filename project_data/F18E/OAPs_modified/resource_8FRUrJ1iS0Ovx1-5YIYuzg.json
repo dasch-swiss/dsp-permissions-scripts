@@ -1,0 +1,19 @@
+{
+  "scope": {
+    "CR": [
+      "http://www.knora.org/ontology/knora-admin#SystemAdmin",
+      "http://www.knora.org/ontology/knora-admin#ProjectAdmin"
+    ],
+    "D": [
+      "http://www.knora.org/ontology/knora-admin#Creator",
+      "http://www.knora.org/ontology/knora-admin#ProjectMember"
+    ],
+    "M": [],
+    "V": [
+      "http://www.knora.org/ontology/knora-admin#KnownUser",
+      "http://www.knora.org/ontology/knora-admin#UnknownUser"
+    ],
+    "RV": []
+  },
+  "object_iri": "http://rdfh.ch/F18E/8FRUrJ1iS0Ovx1-5YIYuzg"
+}
