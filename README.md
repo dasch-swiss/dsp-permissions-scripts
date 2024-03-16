@@ -2,6 +2,11 @@
 
 A collection of scripts to handle permissions in DSP.
 
+> 💡 **Note**
+>
+> The code and logs of accomplished projects can be found on
+> [Google Drive](https://drive.google.com/drive/folders/1TRsQjId97-QbmY-nCuWEUJdgkxlRMGDH)
+
 
 ## Local setup to run the scripts in this repository
 
@@ -52,7 +57,7 @@ A user group can have one or more of the following permissions:
 
 > 💡 **Note**
 >
-> [This example file](project_data/F18E/APs_original.json)
+> [This example file](project_data/F18E_example_project/APs_original.json)
 > contains 2 APs that:
 >
 >- grant to `knora-admin:ProjectAdmin` the rights to do anything on project level, and to create resources of any class.
@@ -108,7 +113,7 @@ There are **built-in groups** and **project specific groups**:
 
 > 💡 **Note**
 >
-> [This example file](project_data/F18E/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
+> [This example file](project_data/F18E_example_project/OAPs_original/resource_XwwqVvWgSmuHRobQubg9uQ.json)
 > contains an OAP that grants the following rights to the resource `http://rdfh.ch/0102/XwwqVvWgSmuHRobQubg9uQ`:
 > 
 > - Project admins have change rights.
@@ -132,7 +137,7 @@ DOAPs are always project-related, but more specifically, they are:
 
 > 💡 **Note**
 >
-> [This example file](project_data/F18E/DOAPs_original.json)
+> [This example file](project_data/F18E_example_project/DOAPs_original.json)
 > contains 2 DOAPs that encode the following information:
 > 
 > - If a `ProjectAdmin` creates a resource, the resource's OAP would grant
