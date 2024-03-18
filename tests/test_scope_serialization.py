@@ -139,6 +139,23 @@ class TestScopeSerialization(unittest.TestCase):
         expected = {"CR": ["knora-admin:ProjectAdmin"], "D": [], "M": ["knora-admin:ProjectMember"], "V": [], "RV": []}
         self.assertDictEqual(expected, _remove_duplicates_from_kwargs_for_permission_scope(original))
 
+    def test_remove_duplicates_from_kwargs_for_permission_scope_mixed_and_multiple(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": [],
+            "M": ["knora-admin:ProjectMember", "knora-admin:ProjectAdmin", "knora-admin:KnownUser"],
+            "V": ["knora-admin:ProjectMember", "knora-admin:ProjectAdmin"],
+            "RV": ["knora-admin:ProjectMember", "knora-admin:KnownUser"],
+        }
+        expected = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": [],
+            "M": ["knora-admin:ProjectMember", "knora-admin:KnownUser"],
+            "V": [],
+            "RV": [],
+        }
+        self.assertDictEqual(expected, _remove_duplicates_from_kwargs_for_permission_scope(original))
+
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
             perm_string_full = self._resolve_prefixes_of_perm_string(perm_string)
