@@ -17,7 +17,11 @@ logger = get_logger(__name__)
 def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope) -> Doap:
     iri = quote_plus(doap_iri, safe="")
     payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
-    response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+    try:
+        response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+    except ApiError as err:
+        err.message = f"Could not update scope of DOAP {doap_iri}"
+        raise err from None
     new_doap = create_doap_from_admin_route_response(response["default_object_access_permission"])
     return new_doap
 

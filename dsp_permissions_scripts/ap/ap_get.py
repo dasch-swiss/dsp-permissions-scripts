@@ -3,6 +3,7 @@ from urllib.parse import quote_plus
 
 
 from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils import connection
@@ -37,7 +38,11 @@ def create_admin_route_object_from_ap(ap: Ap) -> dict[str, Any]:
 
 def _get_all_aps_of_project(project_iri: str) -> list[Ap]:
     project_iri = quote_plus(project_iri, safe="")
-    response = connection.con.get(f"/admin/permissions/ap/{project_iri}")
+    try:
+        response = connection.con.get(f"/admin/permissions/ap/{project_iri}")
+    except ApiError as err:
+        err.message = f"Could not get APs of project {project_iri}"
+        raise err from None
     aps: list[dict[str, Any]] = response["administrative_permissions"]
     ap_objects = [create_ap_from_admin_route_object(ap) for ap in aps]
     return ap_objects

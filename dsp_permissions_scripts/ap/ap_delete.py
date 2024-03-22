@@ -2,6 +2,7 @@ import warnings
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils import connection
 
@@ -10,7 +11,11 @@ logger = get_logger(__name__)
 
 def _delete_ap_on_server(ap: Ap) -> None:
     ap_iri = quote_plus(ap.iri, safe="")
-    connection.con.delete(f"/admin/permissions/{ap_iri}")
+    try:
+        connection.con.delete(f"/admin/permissions/{ap_iri}")
+    except ApiError as err:
+        err.message = f"Could not delete Administrative Permission {ap.iri}"
+        raise err from None
 
 
 def delete_ap_of_group_on_server(

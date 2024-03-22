@@ -55,7 +55,11 @@ def _get_next_page(
     This means that the page must be incremented until the response contains 0 or 1 resource.
     """
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
-    result = connection.con.get(route, headers=headers)
+    try:
+        result = connection.con.get(route, headers=headers)
+    except ApiError as err:
+        err.message = "Could not get next page"
+        raise err from None
 
     # result contains several resources: return them, then continue with next page
     if "@graph" in result:
@@ -77,7 +81,11 @@ def _get_next_page(
 def get_resource(resource_iri: str) -> dict[str, Any]:
     """Requests the resource with the given IRI from DSP-API"""
     iri = quote_plus(resource_iri, safe="")
-    return connection.con.get(f"/v2/resources/{iri}")
+    try:
+        return connection.con.get(f"/v2/resources/{iri}")
+    except ApiError as err:
+        err.message = f"Error while getting resource {resource_iri}"
+        raise err from None
 
 
 def get_oap_by_resource_iri(resource_iri: str) -> Oap:

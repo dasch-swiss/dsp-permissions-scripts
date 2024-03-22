@@ -17,7 +17,11 @@ logger = get_logger(__name__)
 def _update_ap_on_server(ap: Ap) -> Ap:
     iri = quote_plus(ap.iri, safe="")
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
-    response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+    try:
+        response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+    except ApiError as err:
+        err.message = f"Could not update Administrative Permission {ap.iri}"
+        raise err from None
     ap_updated: dict[str, Any] = response["administrative_permission"]
     ap_object_updated = create_ap_from_admin_route_object(ap_updated)
     return ap_object_updated
