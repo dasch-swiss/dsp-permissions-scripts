@@ -176,8 +176,8 @@ def main() -> None:
     All must first be adapted to your needs.
     """
     load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("localhost")
-    shortcode = "4123"
+    host = Hosts.get_host("test")
+    shortcode = "F18E"
     token = login(host)
     log_start_of_script(logger, host, shortcode)
 
