@@ -150,5 +150,5 @@ def get_all_resource_oaps_of_project(
             token=token,
         )
         all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}")
+    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs")
     return all_resource_oaps

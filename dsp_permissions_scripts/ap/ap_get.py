@@ -74,5 +74,5 @@ def get_aps_of_project(
         host=host,
         token=token,
     )
-    logger.info(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
+    logger.info(f"Retrieved {len(aps)} Administrative Permissions")
     return aps

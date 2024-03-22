@@ -35,10 +35,14 @@ def log_start_of_script(logger: logging.Logger, host: str, shortcode: str) -> No
     """
     Make a log entry to make it clear that a new run begins.
     """
-    msg = f"DSP-PERMISSIONS-SCRIPTS: Start script for project {shortcode} on host {host}"
+    msg = f"Start script for project {shortcode} on host {host}"
+    logger.info("")
     logger.info("*" * len(msg))
+    logger.info("DSP-PERMISSIONS-SCRIPTS")
     logger.info(msg)
     logger.info("*" * len(msg))
-    print(msg)
+    logger.info("")
+
+    print(f"\n{msg}")
     logfile = [handler.baseFilename for handler in logger.handlers if isinstance(handler, logging.FileHandler)][0]
     print(f"There will be no print output, only logging to file {logfile}")

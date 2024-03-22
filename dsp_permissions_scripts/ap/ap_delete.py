@@ -46,5 +46,5 @@ def delete_ap_of_group_on_server(
             token=token,
         )
         existing_aps.remove(ap)
-        logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
+        logger.info(f"Deleted Administrative Permission {ap.iri}")
     return existing_aps

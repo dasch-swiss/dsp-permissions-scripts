@@ -56,7 +56,6 @@ def get_all_resource_class_iris_of_project(
     host: str,
     token: str,
 ) -> list[str]:
-    logger.info(f"Getting all resource class IRIs of project {project_iri}...")
     project_onto_iris = _get_onto_iris_of_project(
         project_iri=project_iri,
         host=host,
