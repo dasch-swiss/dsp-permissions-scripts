@@ -16,7 +16,7 @@ from requests import RequestException
 from requests import Response
 from requests import Session
 
-from dsp_permissions_scripts.models.api_error import ApiError
+from dsp_permissions_scripts.models.api_error import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)
@@ -80,7 +80,7 @@ class Connection:
             password: password of the user
 
         Raises:
-            UserError: if DSP-API returns no token with the provided user credentials
+            ApiError: if DSP-API returns no token with the provided user credentials
         """
         response = self.post(
             route="/v2/authentication",
@@ -119,7 +119,7 @@ class Connection:
             response from server
 
         Raises:
-            PermanentConnectionError: if the server returns a permanent error
+            ApiError: if the server returns a permanent error
         """
         if data:
             headers = headers or {}
@@ -145,7 +145,7 @@ class Connection:
             response from server
 
         Raises:
-            PermanentConnectionError: if the server returns a permanent error
+            ApiError: if the server returns a permanent error
         """
         params = RequestParameters("GET", self._make_url(route), self.timeout, headers=headers)
         response = self._try_network_action(params)
@@ -169,7 +169,8 @@ class Connection:
             response from server
 
         Raises:
-            PermanentConnectionError: if the server returns a permanent error
+            ApiError: if the server returns a permanent error
+            PermissionsAlreadyUpToDate: if the permissions are already up to date
         """
         if data:
             headers = headers or {}
@@ -195,7 +196,7 @@ class Connection:
             response from server
 
         Raises:
-            PermanentConnectionError: if the server returns a permanent error
+            ApiError: if the server returns a permanent error
         """
         params = RequestParameters("DELETE", self._make_url(route), self.timeout, headers=headers)
         response = self._try_network_action(params)
@@ -218,8 +219,8 @@ class Connection:
             params: keyword arguments for the HTTP request
 
         Raises:
-            BadCredentialsError: if the server returns a 401 status code on the route /v2/authentication
-            PermanentConnectionError: if the server returns a permanent error
+            ApiError: if the server returns a permanent error
+            PermissionsAlreadyUpToDate: if the permissions are already up to date
             unexpected exceptions: if the action fails with an unexpected exception
 
         Returns:
@@ -230,8 +231,8 @@ class Connection:
             try:
                 self._log_request(params)
                 response = action()
-            except (TimeoutError, ReadTimeout) as err:
-                self._log_and_raise_timeouts(err)
+            except (TimeoutError, ReadTimeout):
+                self._log_and_sleep(reason="Timeout Error raised", retry_counter=i, exc_info=True)
             except (ConnectionError, RequestException):
                 self._renew_session()
                 self._log_and_sleep(reason="Connection Error raised", retry_counter=i, exc_info=True)
@@ -253,8 +254,13 @@ class Connection:
         if should_retry:
             self._log_and_sleep("Transient Error", retry_counter, exc_info=False)
             return None
-        else:
-            raise ApiError("Permanently unable to execute the network action", response.text, response.status_code)
+        
+        already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
+        should_break = response.status_code == 400 and response.text and already in response.text
+        if should_break:
+            raise PermissionsAlreadyUpToDate()
+        
+        raise ApiError("Permanently unable to execute the network action", response.text, response.status_code)
 
     def _renew_session(self) -> None:
         self.session.close()
@@ -268,12 +274,6 @@ class Connection:
         print(f"{datetime.now()}: {msg}")
         logger.error(f"{msg} ({retry_counter=:})", exc_info=exc_info)
         time.sleep(2**retry_counter)
-
-    def _log_and_raise_timeouts(self, error: TimeoutError | ReadTimeout) -> None:
-        msg = f"A '{error.__class__.__name__}' occurred during the connection to the DSP server."
-        print(f"{datetime.now()}: {msg}")
-        logger.exception(msg)
-        raise ApiError(msg) from None
 
     def _log_response(self, response: Response) -> None:
         dumpobj: dict[str, Any] = {

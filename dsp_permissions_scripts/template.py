@@ -91,7 +91,6 @@ def update_aps(
 def update_doaps(
     host: str,
     shortcode: str,
-    token: str,
 ) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(
@@ -124,7 +123,6 @@ def update_doaps(
 def update_oaps(
     host: str,
     shortcode: str,
-    token: str,
 ) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode)
@@ -137,7 +135,6 @@ def update_oaps(
     apply_updated_oaps_on_server(
         resource_oaps=resource_oaps_modified,
         host=host,
-        token=token,
         shortcode=shortcode,
         nthreads=4,
     )
@@ -171,12 +168,10 @@ def main() -> None:
     update_doaps(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     update_oaps(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
 
 

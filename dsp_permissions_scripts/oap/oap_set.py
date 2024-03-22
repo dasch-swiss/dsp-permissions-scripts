@@ -5,17 +5,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any
 
-import requests
-
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
-from dsp_permissions_scripts.utils.try_request import http_call_with_retry
+from dsp_permissions_scripts.utils import connection
 
 logger = get_logger(__name__)
 
@@ -44,8 +41,6 @@ def _update_permissions_for_value(
     resource_type: str,
     context: dict[str, str],
     scope: PermissionScope,
-    host: str,
-    token: str,
 ) -> None:
     """Updates the permissions for the given value (of a property) on a DSP server"""
     payload = {
@@ -58,27 +53,12 @@ def _update_permissions_for_value(
         },
         "@context": context,
     }
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/values"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
-        err_msg=f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}",
-    )
-    if response.status_code == 400 and response.text:
-        already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
-        if already in response.text:
-            msg = f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date"
-            logger.warning(msg)
-    elif response.status_code != 200:
-        raise ApiError(
-            message=f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}",
-            response_text=response.text, 
-            status_code=response.status_code, 
-            payload=payload
-        )
-    else:
-        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
+    try:
+        connection.con.put("/v2/values", data=payload)
+    except ApiError as err:
+        err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
+        raise err from None
+    logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
 def _update_permissions_for_resource(
@@ -88,7 +68,6 @@ def _update_permissions_for_resource(
     context: dict[str, str],
     scope: PermissionScope,
     host: str,
-    token: str,
 ) -> None:
     """Updates the permissions for the given resource on a DSP server"""
     payload = {
@@ -99,20 +78,11 @@ def _update_permissions_for_resource(
     }
     if lmd:
         payload["knora-api:lastModificationDate"] = lmd
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/resources"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = http_call_with_retry(
-        action=lambda: requests.put(url, headers=headers, json=payload, timeout=20),
-        err_msg=f"ERROR while updating permissions of resource {resource_iri}",
-    )
-    if response.status_code != 200:
-        raise ApiError(
-            message=f"ERROR while updating permissions of resource {resource_iri}",
-            response_text=response.text,
-            status_code=response.status_code, 
-            payload=payload, 
-        )
+    try:
+        connection.con.put("/v2/resources", data=payload)
+    except ApiError as err:
+        err.message = f"ERROR while updating permissions of resource {resource_iri}"
+        raise err from None
     logger.info(f"Updated permissions of resource {resource_iri}")
 
 
@@ -120,7 +90,6 @@ def _update_permissions_for_resource_and_values(
     resource_iri: str,
     scope: PermissionScope,
     host: str,
-    token: str,
 ) -> tuple[str, bool]:
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
@@ -140,7 +109,6 @@ def _update_permissions_for_resource_and_values(
             context=resource["@context"],
             scope=scope,
             host=host,
-            token=token,
         )
     except ApiError as err:
         logger.error(err)
@@ -155,8 +123,6 @@ def _update_permissions_for_resource_and_values(
                 resource_type=resource["@type"],
                 context=resource["@context"],
                 scope=scope,
-                host=host,
-                token=token,
             )
         except ApiError as err:
             logger.error(err)
@@ -180,7 +146,6 @@ def _write_failed_res_iris_to_file(
 def _launch_thread_pool(
     resource_oaps: list[Oap],
     host: str,
-    token: str,
     nthreads: int,
 ) -> list[str]:
     counter = 0
@@ -193,7 +158,6 @@ def _launch_thread_pool(
                 resource_oap.object_iri,
                 resource_oap.scope,
                 host,
-                token,
             ) for resource_oap in resource_oaps
         ]
         for result in as_completed(jobs):
@@ -212,7 +176,6 @@ def _launch_thread_pool(
 def apply_updated_oaps_on_server(
     resource_oaps: list[Oap],
     host: str,
-    token: str,
     shortcode: str,
     nthreads: int = 4,
 ) -> None:
@@ -227,7 +190,7 @@ def apply_updated_oaps_on_server(
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
 
-    failed_res_iris = _launch_thread_pool(resource_oaps, host, token, nthreads)
+    failed_res_iris = _launch_thread_pool(resource_oaps, host, nthreads)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

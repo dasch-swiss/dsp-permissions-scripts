@@ -1,16 +1,18 @@
 import pprint
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass
 class ApiError(Exception):
     """Exception raised when an error occurs while calling DSP-API."""
 
     message: str
     response_text: str | None = None
     status_code: int | None = None
-    payload: dict[str, Any] = field(default_factory=dict)
 
     def __str__(self) -> str:
         return pprint.pformat(vars(self))
+
+@dataclass
+class PermissionsAlreadyUpToDate(Exception):
+    message: str = "The submitted permissions are the same as the current ones"
