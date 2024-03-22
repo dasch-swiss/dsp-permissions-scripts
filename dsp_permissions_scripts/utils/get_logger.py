@@ -35,7 +35,7 @@ def log_start_of_script(logger: logging.Logger, host: str, shortcode: str) -> No
     """
     Make a log entry to make it clear that a new run begins.
     """
-    msg = f"Start script for project {shortcode} on host {host}"
+    msg = f"Start script for project {shortcode} on server {host}"
     logger.info("")
     logger.info("*" * len(msg))
     logger.info("DSP-PERMISSIONS-SCRIPTS")

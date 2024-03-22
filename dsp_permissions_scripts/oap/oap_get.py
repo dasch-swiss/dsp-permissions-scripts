@@ -130,7 +130,7 @@ def get_all_resource_oaps_of_project(
     token: str,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
-    logger.info(f"******* Retrieving all resource OAPs of project {shortcode}... *******")
+    logger.info("******* Retrieving all resource OAPs... *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
