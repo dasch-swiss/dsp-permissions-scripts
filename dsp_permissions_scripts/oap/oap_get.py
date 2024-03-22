@@ -2,31 +2,22 @@ import warnings
 from typing import Any, Iterable
 from urllib.parse import quote_plus
 
-import requests
-
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.utils.authentication import get_protocol
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import (
     get_all_resource_class_iris_of_project,
     get_project_iri_by_shortcode,
 )
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
-from dsp_permissions_scripts.utils.try_request import http_call_with_retry
+from dsp_permissions_scripts.utils import connection
 
 logger = get_logger(__name__)
 
 
-def _get_all_resource_oaps_of_resclass(
-    host: str,
-    resclass_iri: str,
-    project_iri: str,
-    token: str,
-) -> list[Oap]:
+def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str) -> list[Oap]:
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
-    protocol = get_protocol(host)
-    headers = {"X-Knora-Accept-Project": project_iri, "Authorization": f"Bearer {token}"}
+    headers = {"X-Knora-Accept-Project": project_iri}
     resources: list[Oap] = []
     page = 0
     more = True
@@ -34,8 +25,6 @@ def _get_all_resource_oaps_of_resclass(
         logger.info(f"Getting page {page}...")
         try:
             more, iris = _get_next_page(
-                protocol=protocol,
-                host=host,
                 resclass_iri=resclass_iri,
                 page=page,
                 headers=headers,
@@ -52,8 +41,6 @@ def _get_all_resource_oaps_of_resclass(
 
 
 def _get_next_page(
-    protocol: str,
-    host: str,
     resclass_iri: str,
     page: int,
     headers: dict[str, str],
@@ -67,14 +54,8 @@ def _get_next_page(
     and an empty response content with status code 200 if there are no resources remaining.
     This means that the page must be incremented until the response contains 0 or 1 resource.
     """
-    url = f"{protocol}://{host}/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
-    response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=20),
-        err_msg="Could not get next page",
-    )
-    if response.status_code != 200:
-        raise ApiError("Could not get next page", response.text, response.status_code)
-    result = response.json()
+    route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
+    result = connection.con.get(route, headers=headers)
 
     # result contains several resources: return them, then continue with next page
     if "@graph" in result:
@@ -93,66 +74,30 @@ def _get_next_page(
     return False, []
 
 
-def get_resource(
-    resource_iri: str,
-    host: str,
-    token: str,
-) -> dict[str, Any]:
+def get_resource(resource_iri: str) -> dict[str, Any]:
     """Requests the resource with the given IRI from DSP-API"""
     iri = quote_plus(resource_iri, safe="")
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/resources/{iri}"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = http_call_with_retry(
-        action=lambda: requests.get(url, headers=headers, timeout=20),
-        err_msg=f"Error while getting resource {resource_iri}",
-    )
-    if response.status_code != 200:
-        raise ApiError( f"Error while getting resource {resource_iri}", response.text, response.status_code)
-    data: dict[str, Any] = response.json()
-    return data
+    return connection.con.get(f"/v2/resources/{iri}")
 
 
-def get_oap_by_resource_iri(
-    host: str,
-    resource_iri: str,
-    token: str,
-) -> Oap:
-    resource = get_resource(
-        resource_iri=resource_iri,
-        host=host,
-        token=token,
-    )
+def get_oap_by_resource_iri(resource_iri: str) -> Oap:
+    resource = get_resource(resource_iri)
     scope = create_scope_from_string(resource["knora-api:hasPermissions"])
     return Oap(scope=scope, object_iri=resource_iri)
 
 
 def get_all_resource_oaps_of_project(
     shortcode: str,
-    host: str,
-    token: str,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
     print(f"******* Getting all resource OAPs of project {shortcode} *******")
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
+    project_iri = get_project_iri_by_shortcode(shortcode)
     all_resource_oaps = []
-    resclass_iris = get_all_resource_class_iris_of_project(
-        project_iri=project_iri,
-        host=host,
-        token=token,
-    )
+    resclass_iris = get_all_resource_class_iris_of_project(project_iri)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_resource_oaps_of_resclass(
-            host=host,
-            resclass_iri=resclass_iri,
-            project_iri=project_iri,
-            token=token,
-        )
+        resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri)
         all_resource_oaps.extend(resource_oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
     print(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")

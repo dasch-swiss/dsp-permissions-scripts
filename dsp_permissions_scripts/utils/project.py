@@ -34,7 +34,7 @@ def get_all_resource_class_iris_of_project(project_iri: str) -> list[str]:
     return all_class_iris
 
 
-def get_project_iri_by_shortcode(shortcode: str, host: str) -> str:
+def get_project_iri_by_shortcode(shortcode: str) -> str:
     response = connection.con.get(f"/admin/projects/shortcode/{shortcode}")
     iri: str = response["project"]["id"]
     return iri

@@ -48,10 +48,7 @@ def get_aps_of_project(
     shortcode: str,
 ) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
-    project_iri = get_project_iri_by_shortcode(
-        shortcode=shortcode,
-        host=host,
-    )
+    project_iri = get_project_iri_by_shortcode(shortcode)
     aps = _get_all_aps_of_project(project_iri)
     print(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
     logger.info(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")

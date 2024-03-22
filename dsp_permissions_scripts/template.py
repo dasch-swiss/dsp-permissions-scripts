@@ -97,7 +97,6 @@ def update_doaps(
     project_doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     serialize_doaps_of_project(
         project_doaps=project_doaps,
@@ -109,12 +108,10 @@ def update_doaps(
     apply_updated_doaps_on_server(
         doaps=project_doaps_modified,
         host=host,
-        token=token,
     )
     project_doaps_updated = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
@@ -130,11 +127,7 @@ def update_oaps(
     token: str,
 ) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
-    resource_oaps = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
-        host=host,
-        token=token,
-    )
+    resource_oaps = get_all_resource_oaps_of_project(shortcode)
     serialize_resource_oaps(
         resource_oaps=resource_oaps,
         shortcode=shortcode,
@@ -148,11 +141,7 @@ def update_oaps(
         shortcode=shortcode,
         nthreads=4,
     )
-    resource_oaps_updated = get_all_resource_oaps_of_project(
-        shortcode=shortcode,
-        host=host,
-        token=token,
-    )
+    resource_oaps_updated = get_all_resource_oaps_of_project(shortcode)
     serialize_resource_oaps(
         resource_oaps=resource_oaps_updated,
         shortcode=shortcode,
@@ -168,7 +157,7 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("stage")
+    host = Hosts.get_host("localhost")
     load_dotenv()  # set login credentials from .env file as environment variables
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
     shortcode = "082A"
