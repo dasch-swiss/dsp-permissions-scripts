@@ -16,7 +16,8 @@ from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
-from dsp_permissions_scripts.utils.authentication import login
+from dsp_permissions_scripts.utils.authentication import get_login_credentials
+from dsp_permissions_scripts.utils import connection
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
@@ -53,13 +54,11 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
 def update_aps(
     host: str,
     shortcode: str,
-    token: str,
 ) -> None:
     """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     serialize_aps_of_project(
         project_aps=project_aps,
@@ -69,7 +68,6 @@ def update_aps(
     )
     remaining_aps = delete_ap_of_group_on_server(
         host=host,
-        token=token,
         existing_aps=project_aps,
         forGroup=builtin_groups.UNKNOWN_USER,
     )
@@ -77,12 +75,10 @@ def update_aps(
     apply_updated_aps_on_server(
         aps=modified_aps,
         host=host,
-        token=token,
     )
     project_aps_updated = get_aps_of_project(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -172,15 +168,16 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
+    host = Hosts.get_host("stage")
     load_dotenv()  # set login credentials from .env file as environment variables
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
-    token = login(host)
+    user, pw = get_login_credentials(host)  # read login credentials from environment variables
+    shortcode = "082A"
+    connection.con = connection.Connection(host)
+    connection.con.login(user, pw)
 
     update_aps(
         host=host,
         shortcode=shortcode,
-        token=token,
     )
     update_doaps(
         host=host,
