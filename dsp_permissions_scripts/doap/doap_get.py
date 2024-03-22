@@ -83,6 +83,7 @@ def get_doaps_of_project(
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
+    logger.info(f"****** Retrieving all DOAPs of project {shortcode} on server {host}... ******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,

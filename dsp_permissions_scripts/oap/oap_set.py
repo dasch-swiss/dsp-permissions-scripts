@@ -217,7 +217,7 @@ def apply_updated_oaps_on_server(
     if not resource_oaps:
         logger.warning(f"There are no OAPs to update on {host}")
         return
-    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
+    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host}... *******")
 
     failed_res_iris = _launch_thread_pool(resource_oaps, host, token, nthreads)
 
@@ -235,3 +235,4 @@ def apply_updated_oaps_on_server(
             f"They were written to {filename}."
         )
         logger.error(msg)
+    logger.info(f"Updated OAPs of {len(resource_oaps)} resources on {host}")

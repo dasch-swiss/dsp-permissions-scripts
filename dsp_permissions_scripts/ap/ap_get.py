@@ -64,6 +64,7 @@ def get_aps_of_project(
     token: str,
 ) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
+    logger.info(f"****** Retrieving all Administrative Permissions of project {shortcode} on server {host}... ******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,

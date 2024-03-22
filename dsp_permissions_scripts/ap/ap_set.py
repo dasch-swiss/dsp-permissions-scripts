@@ -50,7 +50,7 @@ def apply_updated_aps_on_server(
     if not aps:
         logger.warning(f"There are no APs to update on {host}")
         return
-    logger.info(f"Updating {len(aps)} APs on {host}...")
+    logger.info(f"****** Updating {len(aps)} Administrative Permissions on {host}... ******")
     for ap in aps:
         try:
             _ = _update_ap_on_server(
@@ -61,3 +61,4 @@ def apply_updated_aps_on_server(
             logger.info(f"Successfully updated AP {ap.iri}")
         except ApiError as err:
             logger.error(err)
+    logger.info(f"Finished updating {len(aps)} Administrative Permissions on {host}")

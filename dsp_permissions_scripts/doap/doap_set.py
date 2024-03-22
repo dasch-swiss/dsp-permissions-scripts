@@ -45,7 +45,7 @@ def apply_updated_doaps_on_server(
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {host}")
         return
-    logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
+    logger.info(f"****** Updating {len(doaps)} DOAPs on {host}... ******")
     for d in doaps:
         try:
             _ = _update_doap_scope_on_server(
@@ -57,3 +57,4 @@ def apply_updated_doaps_on_server(
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
+    logger.info(f"Finished updating {len(doaps)} DOAPs on {host}")
