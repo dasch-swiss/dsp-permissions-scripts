@@ -1,4 +1,3 @@
-import warnings
 from urllib.parse import quote_plus
 
 import requests
@@ -45,10 +44,8 @@ def apply_updated_doaps_on_server(
 ) -> None:
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {host}")
-        warnings.warn(f"There are no DOAPs to update on {host}")
         return
     logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
-    print(f"Updating {len(doaps)} DOAPs on {host}...")
     for d in doaps:
         try:
             _ = _update_doap_scope_on_server(
@@ -60,4 +57,3 @@ def apply_updated_doaps_on_server(
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
-            warnings.warn(err.message)

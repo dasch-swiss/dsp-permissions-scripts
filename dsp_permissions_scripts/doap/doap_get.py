@@ -99,6 +99,5 @@ def get_doaps_of_project(
     msg = f"Retrieved {len(doaps)} DOAPs of project {shortcode} on server {host}"
     if target_type != DoapTargetType.ALL:
         msg += f", {len(filtered_doaps)} of which are related to {target_type}."
-    print(msg)
     logger.info(msg)
     return filtered_doaps

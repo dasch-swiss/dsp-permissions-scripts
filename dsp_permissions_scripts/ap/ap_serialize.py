@@ -26,7 +26,6 @@ def serialize_aps_of_project(
     aps_as_dict = {explanation_string: aps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(aps_as_dict, ensure_ascii=False, indent=2))
-    print(f"{len(project_aps)} APs have been written to file {str(filepath)}")
     logger.info(f"{len(project_aps)} APs have been written to file {str(filepath)}")
 
 
