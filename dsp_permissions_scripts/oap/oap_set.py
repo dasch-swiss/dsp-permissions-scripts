@@ -67,7 +67,6 @@ def _update_permissions_for_resource(
     resource_type: str,
     context: dict[str, str],
     scope: PermissionScope,
-    host: str,
 ) -> None:
     """Updates the permissions for the given resource on a DSP server"""
     payload = {
@@ -89,7 +88,6 @@ def _update_permissions_for_resource(
 def _update_permissions_for_resource_and_values(
     resource_iri: str,
     scope: PermissionScope,
-    host: str,
 ) -> tuple[str, bool]:
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
@@ -108,7 +106,6 @@ def _update_permissions_for_resource_and_values(
             resource_type=resource["@type"],
             context=resource["@context"],
             scope=scope,
-            host=host,
         )
     except ApiError as err:
         logger.error(err)
@@ -143,11 +140,7 @@ def _write_failed_res_iris_to_file(
         f.write("\n".join(failed_res_iris))
 
 
-def _launch_thread_pool(
-    resource_oaps: list[Oap],
-    host: str,
-    nthreads: int,
-) -> list[str]:
+def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int) -> list[str]:
     counter = 0
     total = len(resource_oaps)
     failed_res_iris: list[str] = []
@@ -157,7 +150,6 @@ def _launch_thread_pool(
                 _update_permissions_for_resource_and_values,
                 resource_oap.object_iri,
                 resource_oap.scope,
-                host,
             ) for resource_oap in resource_oaps
         ]
         for result in as_completed(jobs):
@@ -190,7 +182,7 @@ def apply_updated_oaps_on_server(
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
 
-    failed_res_iris = _launch_thread_pool(resource_oaps, host, nthreads)
+    failed_res_iris = _launch_thread_pool(resource_oaps, nthreads)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
