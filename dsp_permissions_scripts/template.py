@@ -16,8 +16,8 @@ from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
-from dsp_permissions_scripts.utils.authentication import get_login_credentials
 from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils.authentication import get_login_credentials
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
@@ -154,10 +154,10 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("localhost")
     load_dotenv()  # set login credentials from .env file as environment variables
+    host = Hosts.get_host("test")
+    shortcode = "F18E"
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
-    shortcode = "082A"
     connection.con = connection.Connection(host)
     connection.con.login(user, pw)
 
