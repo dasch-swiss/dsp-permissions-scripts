@@ -15,7 +15,7 @@ def get_logger(name: str) -> logging.Logger:
         a logger instance
     """
     _logger = logging.getLogger(name)
-    _logger.setLevel(logging.INFO)
+    _logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(fmt="{asctime} {filename: <25} {levelname: <8} {message}", style="{")
     formatter.default_time_format = "%Y-%m-%d %H:%M:%S"
     handler = logging.FileHandler(
