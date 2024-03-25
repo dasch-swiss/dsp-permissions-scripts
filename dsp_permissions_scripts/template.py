@@ -158,8 +158,8 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "F18E"
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
-    dsp_client.con = dsp_client.DspClient(host)
-    dsp_client.con.login(user, pw)
+    dsp_client.dspClient = dsp_client.DspClient(host)
+    dsp_client.dspClient.login(user, pw)
 
     update_aps(
         host=host,

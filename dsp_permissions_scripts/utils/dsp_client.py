@@ -50,7 +50,7 @@ class RequestParameters:
 @dataclass
 class DspClient:
     """
-    A Connection instance represents a connection to a DSP server.
+    An instance of this class represents a connection to a DSP server.
 
     Attributes:
         server: address of the server, e.g https://api.dasch.swiss
@@ -316,4 +316,4 @@ class DspClient:
         logger.debug(f"REQUEST: {json.dumps(dumpobj)}")
 
 
-con = DspClient("foo")
+dspClient = DspClient("foo")

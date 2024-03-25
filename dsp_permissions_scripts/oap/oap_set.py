@@ -10,9 +10,9 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource
 from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.utils import dsp_client
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
-from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
@@ -54,7 +54,7 @@ def _update_permissions_for_value(
         "@context": context,
     }
     try:
-        dsp_client.con.put("/v2/values", data=payload)
+        dsp_client.dspClient.put("/v2/values", data=payload)
     except ApiError as err:
         err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
         raise err from None
@@ -78,7 +78,7 @@ def _update_permissions_for_resource(
     if lmd:
         payload["knora-api:lastModificationDate"] = lmd
     try:
-        dsp_client.con.put("/v2/resources", data=payload)
+        dsp_client.dspClient.put("/v2/resources", data=payload)
     except ApiError as err:
         err.message = f"ERROR while updating permissions of resource {resource_iri}"
         raise err from None
@@ -97,7 +97,7 @@ def _update_permissions_for_resource_and_values(
         warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
         return resource_iri, False
     values = _get_values_to_update(resource)
-    
+
     success = True
     try:
         _update_permissions_for_resource(
@@ -111,7 +111,7 @@ def _update_permissions_for_resource_and_values(
         logger.error(err)
         warnings.warn(err.message)
         success = False
-    
+
     for v in values:
         try:
             _update_permissions_for_value(
@@ -125,7 +125,7 @@ def _update_permissions_for_resource_and_values(
             logger.error(err)
             warnings.warn(err.message)
             success = False
-    
+
     return resource_iri, success
 
 
@@ -150,7 +150,8 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int) -> list[str]:
                 _update_permissions_for_resource_and_values,
                 resource_oap.object_iri,
                 resource_oap.scope,
-            ) for resource_oap in resource_oaps
+            )
+            for resource_oap in resource_oaps
         ]
         for result in as_completed(jobs):
             resource_iri, success = result.result()

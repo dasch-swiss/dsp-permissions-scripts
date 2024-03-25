@@ -3,12 +3,12 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.models.api_error import ApiError
+from dsp_permissions_scripts.utils import dsp_client
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_scope_from_admin_route_object,
 )
-from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
@@ -36,7 +36,7 @@ def _filter_doaps_by_target(
 def _get_all_doaps_of_project(project_iri: str) -> list[Doap]:
     project_iri = quote_plus(project_iri, safe="")
     try:
-        response = dsp_client.con.get(f"/admin/permissions/doap/{project_iri}")
+        response = dsp_client.dspClient.get(f"/admin/permissions/doap/{project_iri}")
     except ApiError as err:
         err.message = f"Error while getting DOAPs of project {project_iri}"
         raise err from None
