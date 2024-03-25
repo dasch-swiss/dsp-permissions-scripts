@@ -16,7 +16,7 @@ from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
-from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils import dsp_client
 from dsp_permissions_scripts.utils.authentication import get_login_credentials
 
 
@@ -158,8 +158,8 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "F18E"
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
-    connection.con = connection.Connection(host)
-    connection.con.login(user, pw)
+    dsp_client.con = dsp_client.DspClient(host)
+    dsp_client.con.login(user, pw)
 
     update_aps(
         host=host,

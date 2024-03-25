@@ -9,7 +9,7 @@ from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
 )
-from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
@@ -18,7 +18,7 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope) -> Doap:
     iri = quote_plus(doap_iri, safe="")
     payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
     try:
-        response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+        response = dsp_client.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
     except ApiError as err:
         err.message = f"Could not update scope of DOAP {doap_iri}"
         raise err from None

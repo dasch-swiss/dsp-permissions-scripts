@@ -1,22 +1,18 @@
 import json
+import re
 import time
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
 from importlib.metadata import version
-from typing import Any
-from typing import Literal
-from typing import Optional
-from typing import cast
+from typing import Any, Literal, Optional, cast
 
-import re
-from requests import ReadTimeout
-from requests import RequestException
-from requests import Response
-from requests import Session
+from requests import ReadTimeout, RequestException, Response, Session
 
-from dsp_permissions_scripts.models.api_error import ApiError, PermissionsAlreadyUpToDate
+from dsp_permissions_scripts.models.api_error import (
+    ApiError,
+    PermissionsAlreadyUpToDate,
+)
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)
@@ -52,7 +48,7 @@ class RequestParameters:
 
 
 @dataclass
-class Connection:
+class DspClient:
     """
     A Connection instance represents a connection to a DSP server.
 
@@ -254,12 +250,12 @@ class Connection:
         if should_retry:
             self._log_and_sleep("Transient Error", retry_counter, exc_info=False)
             return None
-        
+
         already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
         should_break = response.status_code == 400 and response.text and already in response.text
         if should_break:
             raise PermissionsAlreadyUpToDate()
-        
+
         raise ApiError("Permanently unable to execute the network action", response.text, response.status_code)
 
     def _renew_session(self) -> None:
@@ -319,4 +315,5 @@ class Connection:
             dumpobj["data"] = self._anonymize(params.data)
         logger.debug(f"REQUEST: {json.dumps(dumpobj)}")
 
-con = Connection("foo")
+
+con = DspClient("foo")

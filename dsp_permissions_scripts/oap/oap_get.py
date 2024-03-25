@@ -10,7 +10,7 @@ from dsp_permissions_scripts.utils.project import (
     get_project_iri_by_shortcode,
 )
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
-from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
@@ -56,7 +56,7 @@ def _get_next_page(
     """
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     try:
-        result = connection.con.get(route, headers=headers)
+        result = dsp_client.con.get(route, headers=headers)
     except ApiError as err:
         err.message = "Could not get next page"
         raise err from None
@@ -82,7 +82,7 @@ def get_resource(resource_iri: str) -> dict[str, Any]:
     """Requests the resource with the given IRI from DSP-API"""
     iri = quote_plus(resource_iri, safe="")
     try:
-        return connection.con.get(f"/v2/resources/{iri}")
+        return dsp_client.con.get(f"/v2/resources/{iri}")
     except ApiError as err:
         err.message = f"Error while getting resource {resource_iri}"
         raise err from None

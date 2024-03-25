@@ -9,7 +9,7 @@ from dsp_permissions_scripts.ap.ap_get import (
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
@@ -18,7 +18,7 @@ def _update_ap_on_server(ap: Ap) -> Ap:
     iri = quote_plus(ap.iri, safe="")
     payload = {"hasPermissions": create_admin_route_object_from_ap(ap)["hasPermissions"]}
     try:
-        response = connection.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
+        response = dsp_client.con.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
     except ApiError as err:
         err.message = f"Could not update Administrative Permission {ap.iri}"
         raise err from None

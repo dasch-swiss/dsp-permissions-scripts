@@ -3,14 +3,14 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import dereference_prefix
-from dsp_permissions_scripts.utils import connection
+from dsp_permissions_scripts.utils import dsp_client
 
 logger = get_logger(__name__)
 
 
 def _get_onto_iris_of_project(project_iri: str) -> list[str]:
     try:
-        response = connection.con.get("/v2/ontologies/metadata")
+        response = dsp_client.con.get("/v2/ontologies/metadata")
     except ApiError as err:
         err.message = f"Could not get onto IRIs of project {project_iri}"
         raise err from None
@@ -21,7 +21,7 @@ def _get_onto_iris_of_project(project_iri: str) -> list[str]:
 
 def _get_class_iris_of_onto(onto_iri: str) -> list[str]:
     try:
-        response = connection.con.get(f"/v2/ontologies/allentities/{quote_plus(onto_iri)}")
+        response = dsp_client.con.get(f"/v2/ontologies/allentities/{quote_plus(onto_iri)}")
     except ApiError as err:
         err.message = f"Could not get class IRIs of onto {onto_iri}"
         raise err from None
@@ -45,7 +45,7 @@ def get_all_resource_class_iris_of_project(project_iri: str) -> list[str]:
 
 def get_project_iri_by_shortcode(shortcode: str) -> str:
     try:
-        response = connection.con.get(f"/admin/projects/shortcode/{shortcode}")
+        response = dsp_client.con.get(f"/admin/projects/shortcode/{shortcode}")
     except ApiError as err:
         err.message = f"Could not get project IRI by shortcode {shortcode}"
         raise err from None
