@@ -20,8 +20,3 @@ def get_login_credentials(host: str) -> tuple[str, str]:
             "Please define 'DSP_USER_EMAIL' and 'DSP_USER_PASSWORD' in the file '.env'."
         )
     return user, pw
-
-
-
-def get_protocol(host: str) -> str:
-    return "removethis"
