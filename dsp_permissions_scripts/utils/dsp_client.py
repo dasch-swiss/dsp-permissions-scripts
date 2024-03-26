@@ -30,12 +30,9 @@ class RequestParameters:
     headers: dict[str, str] | None = None
 
     def __post_init__(self) -> None:
-        self.data_serialized = self._serialize_payload(self.data)
-
-    def _serialize_payload(self, payload: dict[str, Any] | None) -> bytes | None:
         # If data is not encoded as bytes, issues can occur with non-ASCII characters,
         # where the content-length of the request will turn out to be different from the actual length.
-        return json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload else None
+        self.data_serialized = json.dumps(self.data, ensure_ascii=False).encode("utf-8") if self.data else None
 
     def as_kwargs(self) -> dict[str, Any]:
         return {
@@ -228,10 +225,11 @@ class DspClient:
                 self._log_request(params)
                 response = action()
             except (TimeoutError, ReadTimeout):
-                self._log_and_sleep(reason="Timeout Error raised", retry_counter=i, exc_info=True)
+                self._log_and_sleep(reason="TimeoutError/ReadTimeout raised", retry_counter=i, exc_info=True)
+                continue
             except (ConnectionError, RequestException):
                 self._renew_session()
-                self._log_and_sleep(reason="Connection Error raised", retry_counter=i, exc_info=True)
+                self._log_and_sleep(reason="ConnectionError/RequestException raised", retry_counter=i, exc_info=True)
                 continue
 
             self._log_response(response)
@@ -267,7 +265,6 @@ class DspClient:
 
     def _log_and_sleep(self, reason: str, retry_counter: int, exc_info: bool) -> None:
         msg = f"{reason}: Try reconnecting to DSP server, next attempt in {2 ** retry_counter} seconds..."
-        print(f"{datetime.now()}: {msg}")
         logger.error(f"{msg} ({retry_counter=:})", exc_info=exc_info)
         time.sleep(2**retry_counter)
 
