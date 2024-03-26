@@ -16,7 +16,7 @@ from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.authentication import get_login_credentials
 
 
@@ -54,11 +54,13 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
 def update_aps(
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
 ) -> None:
     """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     serialize_aps_of_project(
         project_aps=project_aps,
@@ -70,15 +72,18 @@ def update_aps(
         host=host,
         existing_aps=project_aps,
         forGroup=builtin_groups.UNKNOWN_USER,
+        dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
     apply_updated_aps_on_server(
         aps=modified_aps,
         host=host,
+        dsp_client=dsp_client,
     )
     project_aps_updated = get_aps_of_project(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -91,11 +96,13 @@ def update_aps(
 def update_doaps(
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
 ) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     serialize_doaps_of_project(
         project_doaps=project_doaps,
@@ -107,10 +114,12 @@ def update_doaps(
     apply_updated_doaps_on_server(
         doaps=project_doaps_modified,
         host=host,
+        dsp_client=dsp_client,
     )
     project_doaps_updated = get_doaps_of_project(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
@@ -123,9 +132,10 @@ def update_doaps(
 def update_oaps(
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
 ) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
-    resource_oaps = get_all_resource_oaps_of_project(shortcode)
+    resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
     serialize_resource_oaps(
         resource_oaps=resource_oaps,
         shortcode=shortcode,
@@ -136,9 +146,10 @@ def update_oaps(
         resource_oaps=resource_oaps_modified,
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
         nthreads=4,
     )
-    resource_oaps_updated = get_all_resource_oaps_of_project(shortcode)
+    resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
     serialize_resource_oaps(
         resource_oaps=resource_oaps_updated,
         shortcode=shortcode,
@@ -158,20 +169,23 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "F18E"
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
-    dsp_client.dspClient = dsp_client.DspClient(host)
-    dsp_client.dspClient.login(user, pw)
+    dsp_client = DspClient(host)
+    dsp_client.login(user, pw)
 
     update_aps(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     update_doaps(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
     update_oaps(
         host=host,
         shortcode=shortcode,
+        dsp_client=dsp_client,
     )
 
 

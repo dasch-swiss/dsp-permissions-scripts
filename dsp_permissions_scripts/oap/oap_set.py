@@ -10,7 +10,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
@@ -41,6 +41,7 @@ def _update_permissions_for_value(
     resource_type: str,
     context: dict[str, str],
     scope: PermissionScope,
+    dsp_client: DspClient,
 ) -> None:
     """Updates the permissions for the given value (of a property) on a DSP server"""
     payload = {
@@ -54,7 +55,7 @@ def _update_permissions_for_value(
         "@context": context,
     }
     try:
-        dsp_client.dspClient.put("/v2/values", data=payload)
+        dsp_client.put("/v2/values", data=payload)
     except ApiError as err:
         err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
         raise err from None
@@ -67,6 +68,7 @@ def _update_permissions_for_resource(
     resource_type: str,
     context: dict[str, str],
     scope: PermissionScope,
+    dsp_client: DspClient,
 ) -> None:
     """Updates the permissions for the given resource on a DSP server"""
     payload = {
@@ -78,7 +80,7 @@ def _update_permissions_for_resource(
     if lmd:
         payload["knora-api:lastModificationDate"] = lmd
     try:
-        dsp_client.dspClient.put("/v2/resources", data=payload)
+        dsp_client.put("/v2/resources", data=payload)
     except ApiError as err:
         err.message = f"ERROR while updating permissions of resource {resource_iri}"
         raise err from None
@@ -88,10 +90,11 @@ def _update_permissions_for_resource(
 def _update_permissions_for_resource_and_values(
     resource_iri: str,
     scope: PermissionScope,
+    dsp_client: DspClient,
 ) -> tuple[str, bool]:
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
-        resource = get_resource(resource_iri)
+        resource = get_resource(resource_iri, dsp_client)
     except Exception as exc:  # pylint: disable=broad-exception-caught
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
         warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
@@ -106,6 +109,7 @@ def _update_permissions_for_resource_and_values(
             resource_type=resource["@type"],
             context=resource["@context"],
             scope=scope,
+            dsp_client=dsp_client,
         )
     except ApiError as err:
         logger.error(err)
@@ -120,6 +124,7 @@ def _update_permissions_for_resource_and_values(
                 resource_type=resource["@type"],
                 context=resource["@context"],
                 scope=scope,
+                dsp_client=dsp_client,
             )
         except ApiError as err:
             logger.error(err)
@@ -140,7 +145,7 @@ def _write_failed_res_iris_to_file(
         f.write("\n".join(failed_res_iris))
 
 
-def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int) -> list[str]:
+def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
     counter = 0
     total = len(resource_oaps)
     failed_res_iris: list[str] = []
@@ -150,6 +155,7 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int) -> list[str]:
                 _update_permissions_for_resource_and_values,
                 resource_oap.object_iri,
                 resource_oap.scope,
+                dsp_client,
             )
             for resource_oap in resource_oaps
         ]
@@ -170,6 +176,7 @@ def apply_updated_oaps_on_server(
     resource_oaps: list[Oap],
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
     nthreads: int = 4,
 ) -> None:
     """
@@ -183,7 +190,7 @@ def apply_updated_oaps_on_server(
     logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
     print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
 
-    failed_res_iris = _launch_thread_pool(resource_oaps, nthreads)
+    failed_res_iris = _launch_thread_pool(resource_oaps, nthreads, dsp_client)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

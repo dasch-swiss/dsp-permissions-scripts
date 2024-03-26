@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget, DoapTargetType
 from dsp_permissions_scripts.models.api_error import ApiError
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import (
@@ -33,10 +33,10 @@ def _filter_doaps_by_target(
     return filtered_doaps
 
 
-def _get_all_doaps_of_project(project_iri: str) -> list[Doap]:
+def _get_all_doaps_of_project(project_iri: str, dsp_client: DspClient) -> list[Doap]:
     project_iri = quote_plus(project_iri, safe="")
     try:
-        response = dsp_client.dspClient.get(f"/admin/permissions/doap/{project_iri}")
+        response = dsp_client.get(f"/admin/permissions/doap/{project_iri}")
     except ApiError as err:
         err.message = f"Error while getting DOAPs of project {project_iri}"
         raise err from None
@@ -64,6 +64,7 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
 def get_doaps_of_project(
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
     target_type: DoapTargetType = DoapTargetType.ALL,
 ) -> list[Doap]:
     """
@@ -71,8 +72,8 @@ def get_doaps_of_project(
     Optionally, select only the DOAPs that are related to either a group, or a resource class, or a property.
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
-    project_iri = get_project_iri_by_shortcode(shortcode)
-    doaps = _get_all_doaps_of_project(project_iri)
+    project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
+    doaps = _get_all_doaps_of_project(project_iri, dsp_client)
     filtered_doaps = _filter_doaps_by_target(
         doaps=doaps,
         target=target_type,

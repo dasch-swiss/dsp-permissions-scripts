@@ -314,6 +314,3 @@ class DspClient:
         if params.data:
             dumpobj["data"] = self._anonymize(params.data)
         logger.debug(f"REQUEST: {json.dumps(dumpobj)}")
-
-
-dspClient = DspClient("foo")

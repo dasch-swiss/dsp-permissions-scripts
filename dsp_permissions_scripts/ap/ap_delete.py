@@ -3,16 +3,16 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.api_error import ApiError
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)
 
 
-def _delete_ap_on_server(ap: Ap) -> None:
+def _delete_ap_on_server(ap: Ap, dsp_client: DspClient) -> None:
     ap_iri = quote_plus(ap.iri, safe="")
     try:
-        dsp_client.dspClient.delete(f"/admin/permissions/{ap_iri}")
+        dsp_client.delete(f"/admin/permissions/{ap_iri}")
     except ApiError as err:
         err.message = f"Could not delete Administrative Permission {ap.iri}"
         raise err from None
@@ -22,6 +22,7 @@ def delete_ap_of_group_on_server(
     host: str,
     existing_aps: list[Ap],
     forGroup: str,
+    dsp_client: DspClient,
 ) -> list[Ap]:
     aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
     if not aps_to_delete:
@@ -31,7 +32,7 @@ def delete_ap_of_group_on_server(
     print(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
     logger.info(f"Deleting the Administrative Permissions for group {forGroup} on server {host}")
     for ap in aps_to_delete:
-        _delete_ap_on_server(ap)
+        _delete_ap_on_server(ap, dsp_client)
         existing_aps.remove(ap)
         logger.info(f"Deleted Administrative Permission {ap.iri} on host {host}")
     return existing_aps

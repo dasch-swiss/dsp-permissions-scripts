@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
 from dsp_permissions_scripts.models.api_error import ApiError
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
 
@@ -35,10 +35,10 @@ def create_admin_route_object_from_ap(ap: Ap) -> dict[str, Any]:
     return ap_dict
 
 
-def _get_all_aps_of_project(project_iri: str) -> list[Ap]:
+def _get_all_aps_of_project(project_iri: str, dsp_client: DspClient) -> list[Ap]:
     project_iri = quote_plus(project_iri, safe="")
     try:
-        response = dsp_client.dspClient.get(f"/admin/permissions/ap/{project_iri}")
+        response = dsp_client.get(f"/admin/permissions/ap/{project_iri}")
     except ApiError as err:
         err.message = f"Could not get APs of project {project_iri}"
         raise err from None
@@ -50,10 +50,11 @@ def _get_all_aps_of_project(project_iri: str) -> list[Ap]:
 def get_aps_of_project(
     host: str,
     shortcode: str,
+    dsp_client: DspClient,
 ) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
-    project_iri = get_project_iri_by_shortcode(shortcode)
-    aps = _get_all_aps_of_project(project_iri)
+    project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
+    aps = _get_all_aps_of_project(project_iri, dsp_client)
     print(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
     logger.info(f"Retrieved {len(aps)} Administrative Permissions of project {shortcode} on server {host}")
     return aps

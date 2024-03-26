@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.api_error import ApiError
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.utils import dsp_client
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import (
     get_all_resource_class_iris_of_project,
@@ -15,7 +15,7 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 logger = get_logger(__name__)
 
 
-def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str) -> list[Oap]:
+def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient) -> list[Oap]:
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
     resources: list[Oap] = []
@@ -28,6 +28,7 @@ def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str) -> l
                 resclass_iri=resclass_iri,
                 page=page,
                 headers=headers,
+                dsp_client=dsp_client,
             )
             resources.extend(iris)
             page += 1
@@ -44,6 +45,7 @@ def _get_next_page(
     resclass_iri: str,
     page: int,
     headers: dict[str, str],
+    dsp_client: DspClient,
 ) -> tuple[bool, list[Oap]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
@@ -56,7 +58,7 @@ def _get_next_page(
     """
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     try:
-        result = dsp_client.dspClient.get(route, headers=headers)
+        result = dsp_client.get(route, headers=headers)
     except ApiError as err:
         err.message = "Could not get next page"
         raise err from None
@@ -78,34 +80,35 @@ def _get_next_page(
     return False, []
 
 
-def get_resource(resource_iri: str) -> dict[str, Any]:
+def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
     """Requests the resource with the given IRI from DSP-API"""
     iri = quote_plus(resource_iri, safe="")
     try:
-        return dsp_client.dspClient.get(f"/v2/resources/{iri}")
+        return dsp_client.get(f"/v2/resources/{iri}")
     except ApiError as err:
         err.message = f"Error while getting resource {resource_iri}"
         raise err from None
 
 
-def get_oap_by_resource_iri(resource_iri: str) -> Oap:
-    resource = get_resource(resource_iri)
+def get_oap_by_resource_iri(resource_iri: str, dsp_client: DspClient) -> Oap:
+    resource = get_resource(resource_iri, dsp_client)
     scope = create_scope_from_string(resource["knora-api:hasPermissions"])
     return Oap(scope=scope, object_iri=resource_iri)
 
 
 def get_all_resource_oaps_of_project(
     shortcode: str,
+    dsp_client: DspClient,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
     print(f"******* Getting all resource OAPs of project {shortcode} *******")
-    project_iri = get_project_iri_by_shortcode(shortcode)
+    project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
     all_resource_oaps = []
-    resclass_iris = get_all_resource_class_iris_of_project(project_iri)
+    resclass_iris = get_all_resource_class_iris_of_project(project_iri, dsp_client)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri)
+        resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
         all_resource_oaps.extend(resource_oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
     print(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
