@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any
 
-from dsp_permissions_scripts.models.api_error import ApiError
+from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource

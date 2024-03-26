@@ -6,7 +6,7 @@ from dsp_permissions_scripts.ap.ap_get import (
     create_ap_from_admin_route_object,
 )
 from dsp_permissions_scripts.ap.ap_model import Ap
-from dsp_permissions_scripts.models.api_error import ApiError
+from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 

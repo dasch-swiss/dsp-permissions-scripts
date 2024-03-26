@@ -9,7 +9,7 @@ from typing import Any, Literal, Optional, cast
 
 from requests import ReadTimeout, RequestException, Response, Session
 
-from dsp_permissions_scripts.models.api_error import (
+from dsp_permissions_scripts.models.errors import (
     ApiError,
     PermissionsAlreadyUpToDate,
 )
