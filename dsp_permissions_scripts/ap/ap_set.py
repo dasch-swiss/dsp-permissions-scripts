@@ -1,4 +1,3 @@
-import warnings
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -30,14 +29,12 @@ def _update_ap_on_server(ap: Ap, dsp_client: DspClient) -> Ap:
 def apply_updated_aps_on_server(aps: list[Ap], host: str, dsp_client: DspClient) -> None:
     if not aps:
         logger.warning(f"There are no APs to update on {host}")
-        warnings.warn(f"There are no APs to update on {host}")
         return
-    logger.info(f"Updating {len(aps)} APs on {host}...")
-    print(f"Updating {len(aps)} APs on {host}...")
+    logger.info(f"****** Updating {len(aps)} Administrative Permissions on {host}... ******")
     for ap in aps:
         try:
             _ = _update_ap_on_server(ap, dsp_client)
             logger.info(f"Successfully updated AP {ap.iri}")
         except ApiError as err:
             logger.error(err)
-            warnings.warn(err.message)
+    logger.info(f"Finished updating {len(aps)} Administrative Permissions on {host}")

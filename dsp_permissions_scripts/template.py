@@ -18,6 +18,10 @@ from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.authentication import get_login_credentials
+from dsp_permissions_scripts.utils.get_logger import get_logger, log_start_of_script
+
+logger = get_logger(__name__)
+
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
@@ -171,6 +175,7 @@ def main() -> None:
     user, pw = get_login_credentials(host)  # read login credentials from environment variables
     dsp_client = DspClient(host)
     dsp_client.login(user, pw)
+    log_start_of_script(logger, host, shortcode)
 
     update_aps(
         host=host,

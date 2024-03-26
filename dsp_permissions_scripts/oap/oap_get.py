@@ -1,4 +1,3 @@
-import warnings
 from typing import Any, Iterable
 from urllib.parse import quote_plus
 
@@ -34,9 +33,7 @@ def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_
             page += 1
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
-            warnings.warn(f"{err.message}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    print(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
     logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
     return resources
 
@@ -101,8 +98,7 @@ def get_all_resource_oaps_of_project(
     dsp_client: DspClient,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
-    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
-    print(f"******* Getting all resource OAPs of project {shortcode} *******")
+    logger.info("******* Retrieving all resource OAPs... *******")
     project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
     all_resource_oaps = []
     resclass_iris = get_all_resource_class_iris_of_project(project_iri, dsp_client)
@@ -110,6 +106,5 @@ def get_all_resource_oaps_of_project(
     for resclass_iri in resclass_iris:
         resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
         all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
-    print(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs")
     return all_resource_oaps

@@ -1,6 +1,5 @@
 # pylint: disable=too-many-arguments
 
-import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any
@@ -97,7 +96,6 @@ def _update_permissions_for_resource_and_values(
         resource = get_resource(resource_iri, dsp_client)
     except Exception as exc:  # pylint: disable=broad-exception-caught
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
-        warnings.warn(f"Cannot update resource {resource_iri}: {exc}")
         return resource_iri, False
     values = _get_values_to_update(resource)
 
@@ -113,7 +111,6 @@ def _update_permissions_for_resource_and_values(
         )
     except ApiError as err:
         logger.error(err)
-        warnings.warn(err.message)
         success = False
 
     for v in values:
@@ -128,7 +125,6 @@ def _update_permissions_for_resource_and_values(
             )
         except ApiError as err:
             logger.error(err)
-            warnings.warn(err.message)
             success = False
 
     return resource_iri, success
@@ -165,10 +161,8 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
             if not success:
                 failed_res_iris.append(resource_iri)
                 logger.info(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
-                print(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
             else:
                 logger.info(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
-                print(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
     return failed_res_iris
 
 
@@ -185,10 +179,8 @@ def apply_updated_oaps_on_server(
     """
     if not resource_oaps:
         logger.warning(f"There are no OAPs to update on {host}")
-        warnings.warn(f"There are no OAPs to update on {host}")
         return
-    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
-    print(f"******* Updating OAPs of {len(resource_oaps)} resources on {host} *******")
+    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host}... *******")
 
     failed_res_iris = _launch_thread_pool(resource_oaps, nthreads, dsp_client)
 
@@ -206,4 +198,4 @@ def apply_updated_oaps_on_server(
             f"They were written to {filename}."
         )
         logger.error(msg)
-        warnings.warn(msg)
+    logger.info(f"Updated OAPs of {len(resource_oaps)} resources on {host}")

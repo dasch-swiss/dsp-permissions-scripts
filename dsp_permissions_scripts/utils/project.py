@@ -33,7 +33,6 @@ def _get_class_iris_of_onto(onto_iri: str, dsp_client: DspClient) -> list[str]:
 
 
 def get_all_resource_class_iris_of_project(project_iri: str, dsp_client: DspClient) -> list[str]:
-    logger.info(f"Getting all resource class IRIs of project {project_iri}...")
     project_onto_iris = _get_onto_iris_of_project(project_iri, dsp_client)
     all_class_iris = []
     for onto_iri in project_onto_iris:

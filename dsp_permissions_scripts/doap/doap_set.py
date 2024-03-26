@@ -1,4 +1,3 @@
-import warnings
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.doap.doap_get import create_doap_from_admin_route_response
@@ -29,14 +28,12 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
 def apply_updated_doaps_on_server(doaps: list[Doap], host: str, dsp_client: DspClient) -> None:
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {host}")
-        warnings.warn(f"There are no DOAPs to update on {host}")
         return
-    logger.info(f"Updating {len(doaps)} DOAPs on {host}...")
-    print(f"Updating {len(doaps)} DOAPs on {host}...")
+    logger.info(f"****** Updating {len(doaps)} DOAPs on {host}... ******")
     for d in doaps:
         try:
             _ = _update_doap_scope_on_server(d.doap_iri, d.scope, dsp_client)
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
-            warnings.warn(err.message)
+    logger.info(f"Finished updating {len(doaps)} DOAPs on {host}")

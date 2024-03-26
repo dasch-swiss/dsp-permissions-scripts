@@ -29,7 +29,6 @@ def serialize_doaps_of_project(
     doaps_as_dict = {explanation_string: doaps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(doaps_as_dict, ensure_ascii=False, indent=2))
-    print(f"{len(project_doaps)} DOAPs have been written to file {str(filepath)}")
     logger.info(f"{len(project_doaps)} DOAPs have been written to file {str(filepath)}")
 
 

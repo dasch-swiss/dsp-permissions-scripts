@@ -5,7 +5,7 @@ import requests
 from requests import ReadTimeout, RequestException
 from urllib3.exceptions import ReadTimeoutError
 
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -45,14 +45,12 @@ def http_call_with_retry(action: Callable[..., requests.Response], err_msg: str)
                     f"SERVER ERROR: {err_msg}. Retry request in {2 ** i} seconds... "
                     f"({response.status_code}: {response.text})"
                 )
-                print(f"{get_timestamp()}: {msg}")
                 logger.error(msg)
                 time.sleep(2**i)
                 continue
             return response
         except (TimeoutError, ReadTimeout, ReadTimeoutError, RequestException, ConnectionError):
             msg = f"REQUESTS LIBRARY ERROR: {err_msg}. Retry request in {2 ** i} seconds..."
-            print(f"{get_timestamp()}: {msg}")
             logger.error(msg, exc_info=True)
             time.sleep(2**i)
             continue
