@@ -6,7 +6,7 @@ def dereference_prefix(
     context: dict[str, str],
 ) -> str:
     """
-    Replaces the prefix of an identifier by what the prefix stands for, 
+    Replaces the prefix of an identifier by what the prefix stands for,
     and returns the full IRI of the given identifier.
 
     Args:
@@ -28,7 +28,7 @@ def _get_sort_pos_of_custom_group(group: str) -> int:
 
 def sort_groups(groups_original: list[str]) -> list[str]:
     """
-    Sorts groups: 
+    Sorts groups:
      - First according to their power (most powerful first - only applicable for built-in groups)
      - Then alphabetically (custom groups)
     """

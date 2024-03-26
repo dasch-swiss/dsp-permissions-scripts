@@ -15,7 +15,7 @@ def get_logger(name: str) -> logging.Logger:
         a logger instance
     """
     _logger = logging.getLogger(name)
-    _logger.setLevel(logging.INFO)
+    _logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(fmt="{asctime} {filename: <25} {levelname: <8} {message}", style="{")
     formatter.default_time_format = "%Y-%m-%d %H:%M:%S"
     handler = logging.FileHandler(
@@ -31,10 +31,11 @@ def get_timestamp() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def log_start_of_script(logger: logging.Logger, host: str, shortcode: str) -> None:
+def log_start_of_script(host: str, shortcode: str) -> None:
     """
     Make a log entry to make it clear that a new run begins.
     """
+    logger = get_logger(__name__)
     msg = f"Start script for project {shortcode} on server {host}"
     logger.info("")
     logger.info("*" * len(msg))
