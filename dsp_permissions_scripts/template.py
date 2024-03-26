@@ -17,6 +17,9 @@ from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
+from dsp_permissions_scripts.utils.get_logger import get_logger, log_start_of_script
+
+logger = get_logger(__name__)
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
@@ -176,6 +179,7 @@ def main() -> None:
     host = Hosts.get_host("test")
     shortcode = "F18E"
     token = login(host)
+    log_start_of_script(logger, host, shortcode)
 
     update_aps(
         host=host,

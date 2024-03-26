@@ -29,3 +29,20 @@ def get_logger(name: str) -> logging.Logger:
 
 def get_timestamp() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def log_start_of_script(logger: logging.Logger, host: str, shortcode: str) -> None:
+    """
+    Make a log entry to make it clear that a new run begins.
+    """
+    msg = f"Start script for project {shortcode} on server {host}"
+    logger.info("")
+    logger.info("*" * len(msg))
+    logger.info("DSP-PERMISSIONS-SCRIPTS")
+    logger.info(msg)
+    logger.info("*" * len(msg))
+    logger.info("")
+
+    print(f"\n{msg}")
+    logfile = [handler.baseFilename for handler in logger.handlers if isinstance(handler, logging.FileHandler)][0]
+    print(f"There will be no print output, only logging to file {logfile}")

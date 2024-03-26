@@ -1,4 +1,3 @@
-import warnings
 from typing import Any, Iterable
 from urllib.parse import quote_plus
 
@@ -44,9 +43,7 @@ def _get_all_resource_oaps_of_resclass(
             page += 1
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
-            warnings.warn(f"{err.message}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    print(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
     logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
     return resources
 
@@ -133,8 +130,7 @@ def get_all_resource_oaps_of_project(
     token: str,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
-    logger.info(f"******* Getting all resource OAPs of project {shortcode} *******")
-    print(f"******* Getting all resource OAPs of project {shortcode} *******")
+    logger.info("******* Retrieving all resource OAPs... *******")
     project_iri = get_project_iri_by_shortcode(
         shortcode=shortcode,
         host=host,
@@ -154,6 +150,5 @@ def get_all_resource_oaps_of_project(
             token=token,
         )
         all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
-    print(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs of project {shortcode}.")
+    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs")
     return all_resource_oaps
