@@ -13,6 +13,7 @@ class ApiError(Exception):
     def __str__(self) -> str:
         return pprint.pformat(vars(self))
 
+
 @dataclass
 class PermissionsAlreadyUpToDate(Exception):
     message: str = "The submitted permissions are the same as the current ones"
