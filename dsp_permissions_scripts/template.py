@@ -55,11 +55,7 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     return modified_oaps
 
 
-def update_aps(
-    host: str,
-    shortcode: str,
-    dsp_client: DspClient,
-) -> None:
+def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
@@ -75,11 +71,7 @@ def update_aps(
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
-    apply_updated_aps_on_server(
-        aps=modified_aps,
-        host=host,
-        dsp_client=dsp_client,
-    )
+    apply_updated_aps_on_server(modified_aps, host, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -89,16 +81,9 @@ def update_aps(
     )
 
 
-def update_doaps(
-    host: str,
-    shortcode: str,
-    dsp_client: DspClient,
-) -> None:
+def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
-    project_doaps = get_doaps_of_project(
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
+    project_doaps = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps,
         shortcode=shortcode,
@@ -106,15 +91,8 @@ def update_doaps(
         host=host,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
-    apply_updated_doaps_on_server(
-        doaps=project_doaps_modified,
-        host=host,
-        dsp_client=dsp_client,
-    )
-    project_doaps_updated = get_doaps_of_project(
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
+    apply_updated_doaps_on_server(project_doaps_modified, host, dsp_client)
+    project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
         shortcode=shortcode,
@@ -123,18 +101,10 @@ def update_doaps(
     )
 
 
-def update_oaps(
-    host: str,
-    shortcode: str,
-    dsp_client: DspClient,
-) -> None:
+def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(
-        resource_oaps=resource_oaps,
-        shortcode=shortcode,
-        mode="original",
-    )
+    serialize_resource_oaps(resource_oaps, shortcode, mode="original")
     resource_oaps_modified = modify_oaps(oaps=resource_oaps)
     apply_updated_oaps_on_server(
         resource_oaps=resource_oaps_modified,
@@ -144,11 +114,7 @@ def update_oaps(
         nthreads=4,
     )
     resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(
-        resource_oaps=resource_oaps_updated,
-        shortcode=shortcode,
-        mode="modified",
-    )
+    serialize_resource_oaps(resource_oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
