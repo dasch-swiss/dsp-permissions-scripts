@@ -30,12 +30,9 @@ class RequestParameters:
     headers: dict[str, str] | None = None
 
     def __post_init__(self) -> None:
-        self.data_serialized = self._serialize_payload(self.data)
-
-    def _serialize_payload(self, payload: dict[str, Any] | None) -> bytes | None:
         # If data is not encoded as bytes, issues can occur with non-ASCII characters,
         # where the content-length of the request will turn out to be different from the actual length.
-        return json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload else None
+        self.data_serialized = json.dumps(self.data, ensure_ascii=False).encode("utf-8") if self.data else None
 
     def as_kwargs(self) -> dict[str, Any]:
         return {
