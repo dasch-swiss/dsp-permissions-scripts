@@ -1,19 +1,8 @@
+from dotenv import load_dotenv
 import os
 
-import requests
-
-from dsp_permissions_scripts.models.api_error import ApiError
-
-
-def _get_token(host: str, email: str, pw: str) -> str:
-    """Requests an access token from DSP-API"""
-    protocol = get_protocol(host)
-    url = f"{protocol}://{host}/v2/authentication"
-    response = requests.post(url, json={"email": email, "password": pw}, timeout=20)
-    if response.status_code != 200:
-        raise ApiError("Could not login", response.text, response.status_code)
-    token: str = response.json()["token"]
-    return token
+from dsp_permissions_scripts.models.host import Hosts
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
 def _get_login_credentials(host: str) -> tuple[str, str]:
@@ -21,7 +10,7 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     Retrieve user email and password from the environment variables.
     In case of localhost, return the default email/password for localhost.
     """
-    if host.startswith("localhost"):
+    if host == Hosts.LOCALHOST:
         user = "root@example.com"
         pw = "test"
     else:
@@ -35,21 +24,18 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     return user, pw
 
 
-def login(host: str) -> str:
+def login(host: str) -> DspClient:
     """
-    Login with the DSP server
+    Create a DspClient instance that will handle the network traffic to the DSP server.
 
     Args:
         host: DSP server
 
     Returns:
-        token: access token
+        dsp_client: client that knows how to access the DSP server (i.e. that has a token)
     """
+    load_dotenv()  # set login credentials from .env file as environment variables
     user, pw = _get_login_credentials(host)
-    token = _get_token(host, user, pw)
-    return token
-
-
-def get_protocol(host: str) -> str:
-    """Returns 'http' if host is localhost, otherwise 'https'"""
-    return "http" if host.startswith("localhost") else "https"
+    dsp_client = DspClient(host)
+    dsp_client.login(user, pw)
+    return dsp_client
