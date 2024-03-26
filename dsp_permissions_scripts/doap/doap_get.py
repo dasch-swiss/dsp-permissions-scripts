@@ -62,7 +62,6 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
 
 
 def get_doaps_of_project(
-    host: str,
     shortcode: str,
     dsp_client: DspClient,
     target_type: DoapTargetType = DoapTargetType.ALL,

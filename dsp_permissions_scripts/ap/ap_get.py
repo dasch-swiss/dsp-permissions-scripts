@@ -47,11 +47,7 @@ def _get_all_aps_of_project(project_iri: str, dsp_client: DspClient) -> list[Ap]
     return ap_objects
 
 
-def get_aps_of_project(
-    host: str,
-    shortcode: str,
-    dsp_client: DspClient,
-) -> list[Ap]:
+def get_aps_of_project(shortcode: str, dsp_client: DspClient) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
     logger.info("****** Retrieving all Administrative Permissions... ******")
     project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)

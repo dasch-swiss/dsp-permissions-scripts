@@ -61,11 +61,7 @@ def update_aps(
     dsp_client: DspClient,
 ) -> None:
     """Sample function to modify the Administrative Permissions of a project."""
-    project_aps = get_aps_of_project(
-        host=host,
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
+    project_aps = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps,
         shortcode=shortcode,
@@ -84,11 +80,7 @@ def update_aps(
         host=host,
         dsp_client=dsp_client,
     )
-    project_aps_updated = get_aps_of_project(
-        host=host,
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
+    project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
         shortcode=shortcode,
@@ -104,7 +96,6 @@ def update_doaps(
 ) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
     )
@@ -121,7 +112,6 @@ def update_doaps(
         dsp_client=dsp_client,
     )
     project_doaps_updated = get_doaps_of_project(
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
     )
