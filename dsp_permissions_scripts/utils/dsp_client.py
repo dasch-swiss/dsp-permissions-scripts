@@ -225,10 +225,11 @@ class DspClient:
                 self._log_request(params)
                 response = action()
             except (TimeoutError, ReadTimeout):
-                self._log_and_sleep(reason="Timeout Error raised", retry_counter=i, exc_info=True)
+                self._log_and_sleep(reason="TimeoutError/ReadTimeout raised", retry_counter=i, exc_info=True)
+                continue
             except (ConnectionError, RequestException):
                 self._renew_session()
-                self._log_and_sleep(reason="Connection Error raised", retry_counter=i, exc_info=True)
+                self._log_and_sleep(reason="ConnectionError/RequestException raised", retry_counter=i, exc_info=True)
                 continue
 
             self._log_response(response)
@@ -264,7 +265,6 @@ class DspClient:
 
     def _log_and_sleep(self, reason: str, retry_counter: int, exc_info: bool) -> None:
         msg = f"{reason}: Try reconnecting to DSP server, next attempt in {2 ** retry_counter} seconds..."
-        print(f"{datetime.now()}: {msg}")
         logger.error(f"{msg} ({retry_counter=:})", exc_info=exc_info)
         time.sleep(2**retry_counter)
 
