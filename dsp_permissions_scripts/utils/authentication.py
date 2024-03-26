@@ -27,10 +27,10 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
 def login(host: str) -> DspClient:
     """
     Create a DspClient instance that will handle the network traffic to the DSP server.
-    
+
     Args:
         host: DSP server
-    
+
     Returns:
         dsp_client: client that knows how to access the DSP server (i.e. that has a token)
     """
