@@ -40,7 +40,7 @@ class TestApSerialization(unittest.TestCase):
         if self.output_dir.is_dir():
             shutil.rmtree(self.output_dir)
 
-    def test_serialize_aps_of_project(self):
+    def test_serialize_aps_of_project(self) -> None:
         serialize_aps_of_project(
             project_aps=[self.ap1, self.ap2],
             shortcode=self.shortcode,
@@ -55,7 +55,7 @@ class TestApSerialization(unittest.TestCase):
         self.assertEqual(self.ap1, Ap.model_validate(aps_as_dicts[0]))
         self.assertEqual(self.ap2, Ap.model_validate(aps_as_dicts[1]))
 
-    def test_deserialize_aps_of_project(self):
+    def test_deserialize_aps_of_project(self) -> None:
         shutil.copy(src=self.testdata_file, dst=self.output_file)
         aps = deserialize_aps_of_project(
             shortcode=self.shortcode,
