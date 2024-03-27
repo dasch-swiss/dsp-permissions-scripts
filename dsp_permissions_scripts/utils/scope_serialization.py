@@ -10,7 +10,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     for perm_letter, groups in perm_scope.model_dump(mode="json").items():
         if groups:
             as_dict[perm_letter] = sort_groups(groups)
-    strs = [f"{k} {','.join(l)}" for k, l in as_dict.items()]
+    strs = [f"{k} {','.join([x.val for x in l])}" for k, l in as_dict.items()]
     return "|".join(strs)
 
 

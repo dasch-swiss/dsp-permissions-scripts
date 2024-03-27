@@ -4,7 +4,7 @@ from typing import Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models.group import CREATOR, KNOWN_USER, PROJECT_ADMIN, PROJECT_MEMBER, UNKNOWN_USER, Group
 
 
 class PermissionScope(BaseModel):
@@ -12,19 +12,19 @@ class PermissionScope(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    CR: frozenset[str] = frozenset()
-    D: frozenset[str] = frozenset()
-    M: frozenset[str] = frozenset()
-    V: frozenset[str] = frozenset()
-    RV: frozenset[str] = frozenset()
+    CR: frozenset[Group] = frozenset()
+    D: frozenset[Group] = frozenset()
+    M: frozenset[Group] = frozenset()
+    V: frozenset[Group] = frozenset()
+    RV: frozenset[Group] = frozenset()
 
     @staticmethod
     def create(
-        CR: Iterable[str] = (),
-        D: Iterable[str] = (),
-        M: Iterable[str] = (),
-        V: Iterable[str] = (),
-        RV: Iterable[str] = (),
+        CR: Iterable[Group] = (),
+        D: Iterable[Group] = (),
+        M: Iterable[Group] = (),
+        V: Iterable[Group] = (),
+        RV: Iterable[Group] = (),
     ) -> PermissionScope:
         """Factory method to create a PermissionScope from Iterables instead of frozensets."""
         return PermissionScope(
@@ -36,10 +36,11 @@ class PermissionScope(BaseModel):
         )
 
     @model_validator(mode="after")
-    def check_group_occurs_only_once(self):
-        all_groups = []
+    def check_group_occurs_only_once(self) -> PermissionScope:
+        all_groups: list[str] = []
         for field in self.model_fields:
-            all_groups.extend(getattr(self, field))
+            groups: frozenset[Group] = getattr(self, field)
+            all_groups.extend([g.val for g in groups])
         for group in all_groups:
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
@@ -48,14 +49,14 @@ class PermissionScope(BaseModel):
     def add(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: str,
+        group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
-        groups = getattr(self, permission)
-        if group in groups:
+        groups: frozenset[Group] = getattr(self, permission)
+        if group.val in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups = groups | {group}
-        kwargs: dict[str, list[str]] = {permission: groups}
+        kwargs: dict[str, frozenset[Group]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
                 kwargs[perm] = getattr(self, perm)
@@ -64,14 +65,14 @@ class PermissionScope(BaseModel):
     def remove(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: str,
+        group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
-        groups = getattr(self, permission)
-        if group not in groups:
+        groups: frozenset[Group] = getattr(self, permission)
+        if group.val not in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
         groups = groups - {group}
-        kwargs: dict[str, list[str]] = {permission: groups}
+        kwargs: dict[str, frozenset[Group]] = {permission: groups}
         for perm in ["CR", "D", "M", "V", "RV"]:
             if perm != permission:
                 kwargs[perm] = getattr(self, perm)
@@ -79,12 +80,12 @@ class PermissionScope(BaseModel):
 
 
 PUBLIC = PermissionScope.create(
-    CR={builtin_groups.PROJECT_ADMIN},
-    D={builtin_groups.CREATOR, builtin_groups.PROJECT_MEMBER},
-    V={builtin_groups.UNKNOWN_USER, builtin_groups.KNOWN_USER},
+    CR={PROJECT_ADMIN},
+    D={CREATOR, PROJECT_MEMBER},
+    V={UNKNOWN_USER, KNOWN_USER},
 )
 
 PRIVATE = PermissionScope.create(
-    CR={builtin_groups.PROJECT_ADMIN, builtin_groups.CREATOR},
-    V={builtin_groups.PROJECT_MEMBER},
+    CR={PROJECT_ADMIN, CREATOR},
+    V={PROJECT_MEMBER},
 )
