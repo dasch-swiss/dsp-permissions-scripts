@@ -36,7 +36,7 @@ class PermissionScope(BaseModel):
         )
 
     @model_validator(mode="after")
-    def check_group_occurs_only_once(self):
+    def check_group_occurs_only_once(self) -> PermissionScope:
         all_groups = []
         for field in self.model_fields:
             all_groups.extend(getattr(self, field))
