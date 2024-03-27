@@ -21,7 +21,7 @@ class TestDoapSerialization(unittest.TestCase):
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
 
-    def test_doap_serialization(self):
+    def test_doap_serialization(self) -> None:
         doap1 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
