@@ -1,3 +1,4 @@
+from __future__ import annotations
 import re
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -9,7 +10,7 @@ class Group(BaseModel):
     val: str
 
     @model_validator(mode="after")
-    def _check_regex(self):
+    def _check_regex(self) -> Group:
         common_part = re.escape("http://www.knora.org/ontology/knora-admin#")
         if not re.search(f"{common_part}.+", self.val):
             raise ValueError(f"{self.val} is not a valid group IRI")
