@@ -1,8 +1,11 @@
 import re
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class Group(BaseModel):
+
+    model_config = ConfigDict(frozen=True)
+    
     val: str
 
     @model_validator(mode="after")
