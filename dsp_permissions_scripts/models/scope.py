@@ -43,8 +43,7 @@ class PermissionScope(BaseModel):
     def check_group_occurs_only_once(self) -> PermissionScope:
         all_groups = []
         for field in self.model_fields:
-            groups = self.get(field)
-            all_groups.extend([g.val for g in groups])
+            all_groups.extend([g.val for g in self.get(field)])
         for group in all_groups:
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
