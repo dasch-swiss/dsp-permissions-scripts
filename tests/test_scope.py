@@ -19,9 +19,8 @@ class TestScope(unittest.TestCase):
             CR={group.PROJECT_ADMIN},
             V={group.UNKNOWN_USER, group.KNOWN_USER},
         )
-        with self.assertRaisesRegex(
-            ValueError, "Group 'val='http://www.knora.org/ontology/knora-admin#ProjectAdmin'' is already in permission 'CR'"
-        ):
+        rgx = "Group 'val='http://www.knora.org/ontology/knora-admin#ProjectAdmin'' is already in permission 'CR'"
+        with self.assertRaisesRegex(ValueError, rgx):
             _ = scope.add("CR", group.PROJECT_ADMIN)
 
     def test_scope_validation_on_add_to_different_permission(self) -> None:
