@@ -4,7 +4,14 @@ from typing import Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from dsp_permissions_scripts.models.group import CREATOR, KNOWN_USER, PROJECT_ADMIN, PROJECT_MEMBER, UNKNOWN_USER, Group
+from dsp_permissions_scripts.models.group import (
+    CREATOR,
+    KNOWN_USER,
+    PROJECT_ADMIN,
+    PROJECT_MEMBER,
+    UNKNOWN_USER,
+    Group,
+)
 
 
 class PermissionScope(BaseModel):

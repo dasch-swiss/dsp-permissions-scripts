@@ -9,10 +9,7 @@ from typing import Any, Literal, Optional, cast
 
 from requests import ReadTimeout, RequestException, Response, Session
 
-from dsp_permissions_scripts.models.errors import (
-    ApiError,
-    PermissionsAlreadyUpToDate,
-)
+from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)

@@ -1,5 +1,6 @@
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.utils.dsp_client import DspClient

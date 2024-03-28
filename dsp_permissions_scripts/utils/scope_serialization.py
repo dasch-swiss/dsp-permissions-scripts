@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import Any
 
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.helpers import sort_groups
