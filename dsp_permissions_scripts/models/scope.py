@@ -34,6 +34,10 @@ class PermissionScope(BaseModel):
             V=frozenset(V),
             RV=frozenset(RV),
         )
+    
+    @staticmethod
+    def from_dict(d: dict[str, list[str]]) -> PermissionScope:
+        return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in d.items()})
 
     @model_validator(mode="after")
     def check_group_occurs_only_once(self) -> PermissionScope:

@@ -20,7 +20,7 @@ class TestScope(unittest.TestCase):
             V={group.UNKNOWN_USER, group.KNOWN_USER},
         )
         with self.assertRaisesRegex(
-            ValueError, "Group 'http://www.knora.org/ontology/knora-admin#ProjectAdmin' is already in permission 'CR'"
+            ValueError, "Group 'val='http://www.knora.org/ontology/knora-admin#ProjectAdmin'' is already in permission 'CR'"
         ):
             _ = scope.add("CR", group.PROJECT_ADMIN)
 

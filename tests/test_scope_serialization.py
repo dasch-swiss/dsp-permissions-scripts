@@ -17,9 +17,9 @@ def compare_scopes(
     msg: str | None = None,
 ) -> None:
     scope1_dict = scope1.model_dump(mode="json")
-    scope1_dict = {k: sorted(v) for k, v in scope1_dict.items()}
+    scope1_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope1_dict.items()}
     scope2_dict = scope2.model_dump(mode="json")
-    scope2_dict = {k: sorted(v) for k, v in scope2_dict.items()}
+    scope2_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope2_dict.items()}
     unittest.TestCase().assertDictEqual(scope1_dict, scope2_dict, msg=msg)
 
 
