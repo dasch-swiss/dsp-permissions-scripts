@@ -20,7 +20,7 @@ class TestOapSerialization(unittest.TestCase):
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
 
-    def test_oap_serialization(self):
+    def test_oap_serialization(self) -> None:
         oap1 = Oap(
             scope=PermissionScope.create(
                 CR=[builtin_groups.PROJECT_ADMIN],
