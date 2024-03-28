@@ -41,14 +41,21 @@ class PermissionScope(BaseModel):
 
     @model_validator(mode="after")
     def check_group_occurs_only_once(self) -> PermissionScope:
-        all_groups: list[str] = []
+        all_groups = []
         for field in self.model_fields:
-            groups: frozenset[Group] = getattr(self, field)
+            groups = self.get(field)
             all_groups.extend([g.val for g in groups])
         for group in all_groups:
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
         return self
+    
+    def get(self, permission: str) -> frozenset[Group]:
+        """Retrieve the groups that have the given permission."""
+        if permission not in self.model_fields:
+            raise ValueError(f"Permission '{permission}' not in {self.model_fields}")
+        res: frozenset[Group] = getattr(self, permission)
+        return res
 
     def add(
         self,
@@ -56,14 +63,14 @@ class PermissionScope(BaseModel):
         group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
-        groups: frozenset[Group] = getattr(self, permission)
+        groups = self.get(permission)
         if group.val in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups = groups | {group}
         kwargs: dict[str, frozenset[Group]] = {permission: groups}
-        for perm in ["CR", "D", "M", "V", "RV"]:
+        for perm in self.model_fields:
             if perm != permission:
-                kwargs[perm] = getattr(self, perm)
+                kwargs[perm] = self.get(perm)
         return PermissionScope.create(**kwargs)
 
     def remove(
@@ -72,14 +79,14 @@ class PermissionScope(BaseModel):
         group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
-        groups: frozenset[Group] = getattr(self, permission)
+        groups = self.get(permission)
         if group.val not in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
         groups = groups - {group}
         kwargs: dict[str, frozenset[Group]] = {permission: groups}
-        for perm in ["CR", "D", "M", "V", "RV"]:
+        for perm in self.model_fields:
             if perm != permission:
-                kwargs[perm] = getattr(self, perm)
+                kwargs[perm] = self.get(perm)
         return PermissionScope.create(**kwargs)
 
 
