@@ -7,7 +7,7 @@ from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
@@ -23,7 +23,7 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in aps:
-        if ap.forGroup == builtin_groups.UNKNOWN_USER:
+        if ap.forGroup == group.UNKNOWN_USER:
             if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
                 ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
                 modified_aps.append(ap)
@@ -34,7 +34,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in doaps:
-        if doap.target.group == builtin_groups.UNKNOWN_USER:
+        if doap.target.group == group.UNKNOWN_USER:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
@@ -44,8 +44,8 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in oaps:
-        if builtin_groups.SYSTEM_ADMIN not in oap.scope.CR:
-            oap.scope = oap.scope.add("CR", builtin_groups.SYSTEM_ADMIN)
+        if group.SYSTEM_ADMIN not in oap.scope.CR:
+            oap.scope = oap.scope.add("CR", group.SYSTEM_ADMIN)
             modified_oaps.append(oap)
     return modified_oaps
 
@@ -62,7 +62,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     remaining_aps = delete_ap_of_group_on_server(
         host=host,
         existing_aps=project_aps,
-        forGroup=builtin_groups.UNKNOWN_USER,
+        forGroup=group.UNKNOWN_USER,
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)

@@ -8,7 +8,7 @@ from dsp_permissions_scripts.ap.ap_serialize import (
     deserialize_aps_of_project,
     serialize_aps_of_project,
 )
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 
 
@@ -19,7 +19,7 @@ class TestApSerialization(unittest.TestCase):
     output_dir = Path(f"project_data/{shortcode}")
     output_file = output_dir / "APs_original.json"
     ap1 = Ap(
-        forGroup=builtin_groups.PROJECT_ADMIN,
+        forGroup=group.PROJECT_ADMIN,
         forProject=project_iri,
         hasPermissions=frozenset(
             {ApValue.ProjectAdminGroupRestrictedPermission, ApValue.ProjectAdminRightsAllPermission}
@@ -27,7 +27,7 @@ class TestApSerialization(unittest.TestCase):
         iri="http://rdfh.ch/ap-1",
     )
     ap2 = Ap(
-        forGroup=builtin_groups.KNOWN_USER,
+        forGroup=group.KNOWN_USER,
         forProject=project_iri,
         hasPermissions=frozenset({ApValue.ProjectResourceCreateRestrictedPermission}),
         iri="http://rdfh.ch/ap-2",

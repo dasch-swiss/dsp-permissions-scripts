@@ -1,12 +1,12 @@
 import unittest
 
 from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models import group
 
 
 class TestAp(unittest.TestCase):
     ap = Ap(
-        forGroup=builtin_groups.UNKNOWN_USER,
+        forGroup=group.UNKNOWN_USER,
         forProject="http://rdfh.ch/projects/0001",
         hasPermissions=frozenset({ApValue.ProjectResourceCreateAllPermission, ApValue.ProjectAdminGroupAllPermission}),
         iri="http://rdfh.ch/foo",
