@@ -2,7 +2,6 @@ import json
 import re
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
 from functools import partial
 from importlib.metadata import version
 from typing import Any, Literal, Optional, cast
@@ -11,9 +10,11 @@ from requests import ReadTimeout, RequestException, Response, Session
 
 from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.get_package_name import get_package_name
 
 logger = get_logger(__name__)
 
+PACKAGE_NAME = get_package_name()
 HTTP_OK = 200
 
 
@@ -57,7 +58,7 @@ class DspClient:
     timeout: int = field(init=False, default=20)
 
     def __post_init__(self) -> None:
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f'{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}'
         if self.server.endswith("/"):
             self.server = self.server[:-1]
 
@@ -256,7 +257,7 @@ class DspClient:
     def _renew_session(self) -> None:
         self.session.close()
         self.session = Session()
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f'{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}'
         if self.token:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 
