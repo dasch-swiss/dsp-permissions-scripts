@@ -11,7 +11,6 @@ version = "0.1.0"
 python = "^3.11"
 requests = "^2.31.0"
 pydantic = "^2.4.2"
-toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.6.1"
@@ -19,7 +18,6 @@ types-requests = "^2.31.0.10"
 python-dotenv = "^1.0.0"
 black = "^23.10.0"
 pylint = "^3.0.1"
-types-toml = "^0.10.8.20240310"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
@@ -47,6 +45,7 @@ line-length = 120
 
 [tool.isort]
 profile = "black"
+force_single_line = true
 
 [tool.mypy]
 ignore_missing_imports = false

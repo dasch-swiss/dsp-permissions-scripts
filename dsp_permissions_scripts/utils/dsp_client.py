@@ -10,11 +10,10 @@ from requests import ReadTimeout, RequestException, Response, Session
 
 from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.get_package_name import get_package_name
+from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
 
 logger = get_logger(__name__)
 
-PACKAGE_NAME = get_package_name()
 HTTP_OK = 200
 
 
