@@ -2,8 +2,10 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import DoapTargetType
+from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 
 logger = get_logger(__name__)
 

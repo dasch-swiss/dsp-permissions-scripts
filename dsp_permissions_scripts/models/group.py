@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import re
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import model_validator
 
 
 class Group(BaseModel):

@@ -1,6 +1,7 @@
 import unittest
 
-from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models import group
 
 

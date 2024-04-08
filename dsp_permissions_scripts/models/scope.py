@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-from typing import Iterable, Literal
+from typing import Iterable
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import model_validator
 
-from dsp_permissions_scripts.models.group import (
-    CREATOR,
-    KNOWN_USER,
-    PROJECT_ADMIN,
-    PROJECT_MEMBER,
-    UNKNOWN_USER,
-    Group,
-)
+from dsp_permissions_scripts.models.group import CREATOR
+from dsp_permissions_scripts.models.group import KNOWN_USER
+from dsp_permissions_scripts.models.group import PROJECT_ADMIN
+from dsp_permissions_scripts.models.group import PROJECT_MEMBER
+from dsp_permissions_scripts.models.group import UNKNOWN_USER
+from dsp_permissions_scripts.models.group import Group
 
 
 class PermissionScope(BaseModel):

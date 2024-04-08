@@ -5,10 +5,8 @@ from pathlib import Path
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import (
-    deserialize_resource_oaps,
-    serialize_resource_oaps,
-)
+from dsp_permissions_scripts.oap.oap_serialize import deserialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from tests.test_scope_serialization import compare_scopes
 
 

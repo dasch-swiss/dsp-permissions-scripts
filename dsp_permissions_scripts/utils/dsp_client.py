@@ -1,14 +1,22 @@
 import json
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 from functools import partial
 from importlib.metadata import version
-from typing import Any, Literal, Optional, cast
+from typing import Any
+from typing import Literal
+from typing import Optional
+from typing import cast
 
-from requests import ReadTimeout, RequestException, Response, Session
+from requests import ReadTimeout
+from requests import RequestException
+from requests import Response
+from requests import Session
 
-from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
+from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
 

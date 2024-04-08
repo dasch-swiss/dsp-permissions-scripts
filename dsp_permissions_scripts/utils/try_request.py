@@ -2,7 +2,8 @@ import time
 from typing import Callable
 
 import requests
-from requests import ReadTimeout, RequestException
+from requests import ReadTimeout
+from requests import RequestException
 from urllib3.exceptions import ReadTimeoutError
 
 from dsp_permissions_scripts.utils.get_logger import get_logger
