@@ -7,7 +7,7 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import (
     get_all_resource_class_iris_of_project,
-    get_project_iri_by_shortcode,
+    get_project_iri_and_onto_iris_by_shortcode,
 )
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
@@ -99,9 +99,9 @@ def get_all_resource_oaps_of_project(
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info("******* Retrieving all resource OAPs... *******")
-    project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
+    project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     all_resource_oaps = []
-    resclass_iris = get_all_resource_class_iris_of_project(project_iri, dsp_client)
+    resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
         resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
