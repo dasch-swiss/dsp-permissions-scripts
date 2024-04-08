@@ -1,7 +1,9 @@
 from typing import Any
 from urllib.parse import quote_plus
 
-from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget, DoapTargetType
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import DoapTarget
+from dsp_permissions_scripts.doap.doap_model import DoapTargetType
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger

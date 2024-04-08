@@ -1,7 +1,8 @@
 from typing import Any
 from urllib.parse import quote_plus
 
-from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger

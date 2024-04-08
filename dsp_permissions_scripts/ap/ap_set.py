@@ -1,10 +1,8 @@
 from typing import Any
 from urllib.parse import quote_plus
 
-from dsp_permissions_scripts.ap.ap_get import (
-    create_admin_route_object_from_ap,
-    create_ap_from_admin_route_object,
-)
+from dsp_permissions_scripts.ap.ap_get import create_admin_route_object_from_ap
+from dsp_permissions_scripts.ap.ap_get import create_ap_from_admin_route_object
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.utils.dsp_client import DspClient

@@ -5,10 +5,12 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.scope_serialization import (
     create_admin_route_object_from_scope,
-    create_scope_from_admin_route_object,
-    create_scope_from_string,
-    create_string_from_scope,
 )
+from dsp_permissions_scripts.utils.scope_serialization import (
+    create_scope_from_admin_route_object,
+)
+from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
+from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 
 def compare_scopes(
