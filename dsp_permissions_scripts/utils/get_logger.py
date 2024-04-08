@@ -1,6 +1,8 @@
 import logging
 from datetime import datetime
 
+from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
+
 
 def get_logger(name: str) -> logging.Logger:
     """
@@ -39,7 +41,7 @@ def log_start_of_script(host: str, shortcode: str) -> None:
     msg = f"Start script for project {shortcode} on server {host}"
     logger.info("")
     logger.info("*" * len(msg))
-    logger.info("DSP-PERMISSIONS-SCRIPTS")
+    logger.info(PACKAGE_NAME.upper())
     logger.info(msg)
     logger.info("*" * len(msg))
     logger.info("")

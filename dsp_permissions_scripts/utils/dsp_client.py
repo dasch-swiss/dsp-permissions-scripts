@@ -18,6 +18,7 @@ from requests import Session
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
 
 logger = get_logger(__name__)
 
@@ -64,7 +65,7 @@ class DspClient:
     timeout: int = field(init=False, default=20)
 
     def __post_init__(self) -> None:
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
         if self.server.endswith("/"):
             self.server = self.server[:-1]
 
@@ -263,7 +264,7 @@ class DspClient:
     def _renew_session(self) -> None:
         self.session.close()
         self.session = Session()
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f'{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}'
         if self.token:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 

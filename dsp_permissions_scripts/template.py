@@ -123,8 +123,8 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    dsp_client = login(host)
     log_start_of_script(host, shortcode)
+    dsp_client = login(host)
 
     update_aps(
         host=host,
