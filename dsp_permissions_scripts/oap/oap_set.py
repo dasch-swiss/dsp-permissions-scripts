@@ -1,10 +1,12 @@
 # pylint: disable=too-many-arguments
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import as_completed
 from datetime import datetime
 from typing import Any
 
-from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
+from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource

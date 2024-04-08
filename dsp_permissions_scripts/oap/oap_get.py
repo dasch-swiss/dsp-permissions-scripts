@@ -1,12 +1,13 @@
-from typing import Any, Iterable
+from typing import Any
+from typing import Iterable
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.project import get_all_resource_class_iris_of_project
 from dsp_permissions_scripts.utils.project import (
-    get_all_resource_class_iris_of_project,
     get_project_iri_and_onto_iris_by_shortcode,
 )
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string

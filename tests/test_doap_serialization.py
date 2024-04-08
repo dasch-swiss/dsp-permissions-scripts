@@ -2,11 +2,10 @@ import shutil
 import unittest
 from pathlib import Path
 
-from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget
-from dsp_permissions_scripts.doap.doap_serialize import (
-    deserialize_doaps_of_project,
-    serialize_doaps_of_project,
-)
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import DoapTarget
+from dsp_permissions_scripts.doap.doap_serialize import deserialize_doaps_of_project
+from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
