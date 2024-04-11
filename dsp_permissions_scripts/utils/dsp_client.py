@@ -225,7 +225,7 @@ class DspClient:
             the return value of action
         """
         action = partial(self.session.request, **params.as_kwargs())
-        for i in range(7):
+        for i in range(10):
             try:
                 self._log_request(params)
                 response = action()

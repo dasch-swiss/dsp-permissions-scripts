@@ -7,9 +7,7 @@ from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_all_resource_class_iris_of_project
-from dsp_permissions_scripts.utils.project import (
-    get_project_iri_and_onto_iris_by_shortcode,
-)
+from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 logger = get_logger(__name__)
@@ -24,13 +22,13 @@ def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_
     while more:
         logger.info(f"Getting page {page}...")
         try:
-            more, iris = _get_next_page(
+            more, oaps = _get_next_page(
                 resclass_iri=resclass_iri,
                 page=page,
                 headers=headers,
                 dsp_client=dsp_client,
             )
-            resources.extend(iris)
+            resources.extend(oaps)
             page += 1
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
