@@ -5,6 +5,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import DoapTarget
 from dsp_permissions_scripts.doap.doap_model import DoapTargetType
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import (
@@ -55,7 +56,7 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
-            group=permission["forGroup"],
+            group=Group(val=permission["forGroup"]),
             resource_class=permission["forResourceClass"],
             property=permission["forProperty"],
         ),

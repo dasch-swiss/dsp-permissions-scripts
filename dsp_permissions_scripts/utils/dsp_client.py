@@ -62,7 +62,7 @@ class DspClient:
     server: str
     token: Optional[str] = None
     session: Session = field(init=False, default=Session())
-    timeout: int = field(init=False, default=20)
+    timeout: int = field(init=False, default=30)
 
     def __post_init__(self) -> None:
         self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
