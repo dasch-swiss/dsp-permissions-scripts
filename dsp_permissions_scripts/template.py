@@ -21,6 +21,7 @@ from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 
 # pylint: disable=R0801 # Similar lines in 2 files
 
+
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []

@@ -10,7 +10,7 @@ from pydantic import model_validator
 class Group(BaseModel):
 
     model_config = ConfigDict(frozen=True)
-    
+
     val: str
 
     @model_validator(mode="after")
@@ -19,6 +19,7 @@ class Group(BaseModel):
         if not re.search(f"{common_part}.+", self.val):
             raise ValueError(f"{self.val} is not a valid group IRI")
         return self
+
 
 UNKNOWN_USER = Group(val="http://www.knora.org/ontology/knora-admin#UnknownUser")
 KNOWN_USER = Group(val="http://www.knora.org/ontology/knora-admin#KnownUser")

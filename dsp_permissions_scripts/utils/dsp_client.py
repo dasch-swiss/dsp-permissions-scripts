@@ -264,7 +264,7 @@ class DspClient:
     def _renew_session(self) -> None:
         self.session.close()
         self.session = Session()
-        self.session.headers["User-Agent"] = f'{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}'
+        self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
         if self.token:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 
