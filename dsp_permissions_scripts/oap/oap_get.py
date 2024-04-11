@@ -13,7 +13,11 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 logger = get_logger(__name__)
 
 
-def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient) -> list[Oap]:
+def _get_all_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient, prefixed_prop: str | None) -> list[Oap]:
+    """
+    prefixed_prop: retrieve the permissions from values of this property only, 
+    instead of the resource (e.g. "onto-name:propname" or "knora-api:hasStillImageFileValue")
+    """
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
     resources: list[Oap] = []
@@ -27,6 +31,7 @@ def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_
                 page=page,
                 headers=headers,
                 dsp_client=dsp_client,
+                prefixed_prop=prefixed_prop,
             )
             resources.extend(oaps)
             page += 1
@@ -42,6 +47,7 @@ def _get_next_page(
     page: int,
     headers: dict[str, str],
     dsp_client: DspClient,
+    prefixed_prop: str | None,
 ) -> tuple[bool, list[Oap]]:
     """
     Get the resource IRIs of a resource class, one page at a time.
@@ -51,6 +57,9 @@ def _get_next_page(
     1 resource (not packed in a list) if there is only 1 remaining,
     and an empty response content with status code 200 if there are no resources remaining.
     This means that the page must be incremented until the response contains 0 or 1 resource.
+
+    prefixed_prop: retrieve the permissions from values of this property only, 
+    instead of the resource (e.g. "onto-name:propname" or "knora-api:hasStillImageFileValue")
     """
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     try:
@@ -63,8 +72,18 @@ def _get_next_page(
     if "@graph" in result:
         oaps = []
         for r in result["@graph"]:
-            scope = create_scope_from_string(r["knora-api:hasPermissions"])
-            oaps.append(Oap(scope=scope, object_iri=r["@id"]))
+            if not prefixed_prop:
+                scope = create_scope_from_string(r["knora-api:hasPermissions"])
+                oaps.append(Oap(scope=scope, object_iri=r["@id"]))
+            elif prefixed_prop not in r:
+                continue
+            elif "knora-api:hasPermissions" in r[prefixed_prop]:
+                scope = create_scope_from_string(r[prefixed_prop]["knora-api:hasPermissions"])
+                oaps.append(Oap(scope=scope, object_iri=r[prefixed_prop]["@id"]))
+            else:
+                scopes = [create_scope_from_string(x["knora-api:hasPermissions"]) for x in r[prefixed_prop]]
+                ids = [x["@id"] for x in r[prefixed_prop]]
+                oaps.extend([Oap(scope=s, object_iri=i) for s, i in zip(scopes, ids)])
         return True, oaps
 
     # result contains only 1 resource: return it, then stop (there will be no more resources)
@@ -92,18 +111,30 @@ def get_oap_by_resource_iri(resource_iri: str, dsp_client: DspClient) -> Oap:
     return Oap(scope=scope, object_iri=resource_iri)
 
 
+def get_all_value_oaps_of_project(shortcode: str, dsp_client: DspClient, prefixed_prop: str) -> list[Oap]:
+    logger.info("******* Retrieving all value OAPs... *******")
+    value_oaps = _get_all_oaps_of_project(shortcode, dsp_client, prefixed_prop=prefixed_prop)
+    logger.info(f"Retrieved a TOTAL of {len(value_oaps)} value OAPs")
+    return value_oaps
+
+
 def get_all_resource_oaps_of_project(
     shortcode: str,
     dsp_client: DspClient,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info("******* Retrieving all resource OAPs... *******")
+    resource_oaps = _get_all_oaps_of_project(shortcode, dsp_client, excluded_class_iris=excluded_class_iris)
+    logger.info(f"Retrieved a TOTAL of {len(resource_oaps)} resource OAPs")
+    return resource_oaps
+
+
+def _get_all_oaps_of_project(shortcode: str, dsp_client: DspClient, excluded_class_iris: Iterable[str] = (), prefixed_prop: str | None = None) -> list[Oap]:
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     all_resource_oaps = []
     resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
+        resource_oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, prefixed_prop)
         all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs")
     return all_resource_oaps

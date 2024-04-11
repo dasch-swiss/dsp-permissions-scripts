@@ -11,7 +11,7 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
+from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project, get_all_value_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
@@ -101,6 +101,8 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
+    img_val_oaps = get_all_value_oaps_of_project(shortcode, dsp_client, prefixed_prop="knora-api:hasStillImageFileValue")
+    serialize_resource_oaps(img_val_oaps, shortcode, mode="original")
     serialize_resource_oaps(resource_oaps, shortcode, mode="original")
     resource_oaps_modified = modify_oaps(oaps=resource_oaps)
     apply_updated_oaps_on_server(
