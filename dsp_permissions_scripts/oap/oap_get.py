@@ -7,9 +7,7 @@ from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_all_resource_class_iris_of_project
-from dsp_permissions_scripts.utils.project import (
-    get_project_iri_and_onto_iris_by_shortcode,
-)
+from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 logger = get_logger(__name__)
