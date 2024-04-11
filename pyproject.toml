@@ -18,6 +18,7 @@ types-requests = "^2.31.0.20240406"
 python-dotenv = "^1.0.1"
 black = "^24.3.0"
 pylint = "^3.1.0"
+isort = "^5.13.2"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
