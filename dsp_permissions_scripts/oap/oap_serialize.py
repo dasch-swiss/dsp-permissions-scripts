@@ -12,34 +12,34 @@ def _get_project_data_path(shortcode: str, mode: Literal["original", "modified"]
     return Path(f"project_data/{shortcode}/OAPs_{mode}")
 
 
-def serialize_resource_oaps(
-    resource_oaps: list[Oap],
+def serialize_oaps(
+    oaps: list[Oap],
     shortcode: str,
     mode: Literal["original", "modified"],
 ) -> None:
-    """Serialize the resource OAPs to JSON files."""
-    if not resource_oaps:
+    """Serialize the OAPs to JSON files."""
+    if not oaps:
         logger.warning("No OAPs to serialize.")
         return
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Writing {len(resource_oaps)} OAPs into {str(folder)}")
-    for res_oap in resource_oaps:
+    logger.info(f"Writing {len(oaps)} OAPs into {str(folder)}")
+    for res_oap in oaps:
         filename = re.sub(r"http://rdfh\.ch/[^/]+/", "resource_", res_oap.object_iri)
         filename = re.sub(r"/", "_", filename)
         with open(folder / f"{filename}.json", mode="w", encoding="utf-8") as f:
             f.write(res_oap.model_dump_json(indent=2))
-    logger.info(f"Successfully wrote {len(resource_oaps)} OAPs into {str(folder)}")
+    logger.info(f"Successfully wrote {len(oaps)} OAPs into {str(folder)}")
 
 
-def deserialize_resource_oaps(
+def deserialize_oaps(
     shortcode: str,
     mode: Literal["original", "modified"],
 ) -> list[Oap]:
-    """Deserialize the resource OAPs from JSON files."""
+    """Deserialize the OAPs from JSON files."""
     folder = _get_project_data_path(shortcode, mode)
-    resource_oaps = []
+    oaps = []
     for file in [f for f in folder.iterdir() if f.suffix == ".json"]:
         with open(file, mode="r", encoding="utf-8") as f:
-            resource_oaps.append(Oap.model_validate_json(f.read()))
-    return resource_oaps
+            oaps.append(Oap.model_validate_json(f.read()))
+    return oaps
