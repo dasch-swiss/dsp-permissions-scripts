@@ -141,10 +141,10 @@ def _get_all_oaps_of_project(
     shortcode: str, dsp_client: DspClient, excluded_class_iris: Iterable[str] = (), prefixed_prop: str | None = None
 ) -> list[Oap]:
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
-    all_resource_oaps = []
+    all_oaps = []
     resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, prefixed_prop)
-        all_resource_oaps.extend(resource_oaps)
-    return all_resource_oaps
+        oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, prefixed_prop)
+        all_oaps.extend(oaps)
+    return all_oaps
