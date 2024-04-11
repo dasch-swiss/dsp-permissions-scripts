@@ -8,16 +8,16 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-python = "3.12"
+python = "^3.12.0"
 requests = "^2.31.0"
-pydantic = "^2.4.2"
+pydantic = "^2.6.4"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.6.1"
-types-requests = "^2.31.0.10"
-python-dotenv = "^1.0.0"
-black = "^23.10.0"
-pylint = "^3.0.1"
+mypy = "^1.9.0"
+types-requests = "^2.31.0.20240406"
+python-dotenv = "^1.0.1"
+black = "^24.3.0"
+pylint = "^3.1.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
