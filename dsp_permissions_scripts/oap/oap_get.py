@@ -18,9 +18,9 @@ def _get_all_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: D
     prefixed_prop: retrieve the permissions from values of this property only, 
     instead of the resource (e.g. "onto-name:propname" or "knora-api:hasStillImageFileValue")
     """
-    logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
+    logger.info(f"Getting all OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
-    resources: list[Oap] = []
+    all_oaps: list[Oap] = []
     page = 0
     more = True
     while more:
@@ -33,13 +33,13 @@ def _get_all_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: D
                 dsp_client=dsp_client,
                 prefixed_prop=prefixed_prop,
             )
-            resources.extend(oaps)
+            all_oaps.extend(oaps)
             page += 1
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
-    return resources
+    logger.info(f"Retrieved {len(all_oaps)} OAPs of class {resclass_iri}")
+    return all_oaps
 
 
 def _get_next_page(
@@ -70,29 +70,35 @@ def _get_next_page(
 
     # result contains several resources: return them, then continue with next page
     if "@graph" in result:
-        oaps = []
+        oaps: list[Oap] = []
         for r in result["@graph"]:
-            if not prefixed_prop:
-                scope = create_scope_from_string(r["knora-api:hasPermissions"])
-                oaps.append(Oap(scope=scope, object_iri=r["@id"]))
-            elif prefixed_prop not in r:
-                continue
-            elif "knora-api:hasPermissions" in r[prefixed_prop]:
-                scope = create_scope_from_string(r[prefixed_prop]["knora-api:hasPermissions"])
-                oaps.append(Oap(scope=scope, object_iri=r[prefixed_prop]["@id"]))
-            else:
-                scopes = [create_scope_from_string(x["knora-api:hasPermissions"]) for x in r[prefixed_prop]]
-                ids = [x["@id"] for x in r[prefixed_prop]]
-                oaps.extend([Oap(scope=s, object_iri=i) for s, i in zip(scopes, ids)])
+            oaps.extend(_get_oaps_of_one_resource(r, prefixed_prop))
         return True, oaps
 
     # result contains only 1 resource: return it, then stop (there will be no more resources)
     if "@id" in result:
-        scope = create_scope_from_string(result["knora-api:hasPermissions"])
-        return False, [Oap(scope=scope, object_iri=result["@id"])]
+        oaps = _get_oaps_of_one_resource(result, prefixed_prop)
+        return False, oaps
 
     # there are no more resources
     return False, []
+
+
+def _get_oaps_of_one_resource(r: dict[str, Any], prefixed_prop: str | None) -> list[Oap]:
+    oaps = []
+    if not prefixed_prop:
+        scope = create_scope_from_string(r["knora-api:hasPermissions"])
+        oaps.append(Oap(scope=scope, object_iri=r["@id"]))
+    elif prefixed_prop not in r:
+        return []
+    elif "knora-api:hasPermissions" in r[prefixed_prop]:
+        scope = create_scope_from_string(r[prefixed_prop]["knora-api:hasPermissions"])
+        oaps.append(Oap(scope=scope, object_iri=r[prefixed_prop]["@id"]))
+    else:
+        scopes = [create_scope_from_string(x["knora-api:hasPermissions"]) for x in r[prefixed_prop]]
+        ids = [x["@id"] for x in r[prefixed_prop]]
+        oaps.extend([Oap(scope=s, object_iri=i) for s, i in zip(scopes, ids)])
+    return oaps
 
 
 def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
