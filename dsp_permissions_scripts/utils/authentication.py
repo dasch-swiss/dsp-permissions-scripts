@@ -14,13 +14,19 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     if host == Hosts.LOCALHOST:
         user = "root@example.com"
         pw = "test"
+    elif host == Hosts.TEST:
+        user = os.getenv("TEST_EMAIL") or ""
+        pw = os.getenv("TEST_PASSWORD") or ""
+    elif host == Hosts.DEV:
+        user = os.getenv("DEV_EMAIL") or ""
+        pw = os.getenv("DEV_PASSWORD") or ""
     else:
-        user = os.getenv("DSP_USER_EMAIL") or ""
-        pw = os.getenv("DSP_USER_PASSWORD") or ""
+        user = os.getenv("PROD_EMAIL") or ""
+        pw = os.getenv("PROD_PASSWORD") or ""
     if not user or not pw:
         raise NameError(
             "Missing credentials: Your username/password could not be retrieved. "
-            "Please define 'DSP_USER_EMAIL' and 'DSP_USER_PASSWORD' in the file '.env'."
+            "Please define '<ENV>_EMAIL' and '<ENV>_PASSWORD' in the file '.env'."
         )
     return user, pw
 
