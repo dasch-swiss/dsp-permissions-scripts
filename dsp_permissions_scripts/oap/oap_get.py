@@ -13,9 +13,11 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 logger = get_logger(__name__)
 
 
-def _get_all_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient, prefixed_prop: str | None) -> list[Oap]:
+def _get_all_oaps_of_resclass(
+    resclass_iri: str, project_iri: str, dsp_client: DspClient, prefixed_prop: str | None
+) -> list[Oap]:
     """
-    prefixed_prop: retrieve the permissions from values of this property only, 
+    prefixed_prop: retrieve the permissions from values of this property only,
     instead of the resource (e.g. "onto-name:propname" or "knora-api:hasStillImageFileValue")
     """
     logger.info(f"Getting all OAPs of class {resclass_iri}...")
@@ -58,7 +60,7 @@ def _get_next_page(
     and an empty response content with status code 200 if there are no resources remaining.
     This means that the page must be incremented until the response contains 0 or 1 resource.
 
-    prefixed_prop: retrieve the permissions from values of this property only, 
+    prefixed_prop: retrieve the permissions from values of this property only,
     instead of the resource (e.g. "onto-name:propname" or "knora-api:hasStillImageFileValue")
     """
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
@@ -135,7 +137,9 @@ def get_all_resource_oaps_of_project(
     return resource_oaps
 
 
-def _get_all_oaps_of_project(shortcode: str, dsp_client: DspClient, excluded_class_iris: Iterable[str] = (), prefixed_prop: str | None = None) -> list[Oap]:
+def _get_all_oaps_of_project(
+    shortcode: str, dsp_client: DspClient, excluded_class_iris: Iterable[str] = (), prefixed_prop: str | None = None
+) -> list[Oap]:
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     all_resource_oaps = []
     resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)

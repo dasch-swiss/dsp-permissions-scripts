@@ -102,7 +102,9 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    img_val_oaps = get_all_value_oaps_of_project(shortcode, dsp_client, prefixed_prop="knora-api:hasStillImageFileValue")
+    img_val_oaps = get_all_value_oaps_of_project(
+        shortcode, dsp_client, prefixed_prop="knora-api:hasStillImageFileValue"
+    )
     serialize_oaps(img_val_oaps, shortcode, mode="original")
     serialize_oaps(resource_oaps, shortcode, mode="original")
     resource_oaps_modified = modify_oaps(oaps=resource_oaps)
