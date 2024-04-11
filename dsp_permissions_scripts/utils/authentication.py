@@ -26,7 +26,7 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     if not user or not pw:
         raise NameError(
             "Missing credentials: Your username/password could not be retrieved. "
-            "Please define 'DSP_USER_EMAIL' and 'DSP_USER_PASSWORD' in the file '.env'."
+            "Please define '<ENV>_EMAIL' and '<ENV>_PASSWORD' in the file '.env'."
         )
     return user, pw
 
