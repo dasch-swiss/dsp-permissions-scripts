@@ -18,6 +18,9 @@ def serialize_resource_oaps(
     mode: Literal["original", "modified"],
 ) -> None:
     """Serialize the resource OAPs to JSON files."""
+    if not resource_oaps:
+        logger.warning("No OAPs to serialize.")
+        return
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
     logger.info(f"Writing {len(resource_oaps)} OAPs into {str(folder)}")
