@@ -1,39 +1,17 @@
 # pylint: disable=too-many-arguments
 
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from typing import Any
 
-from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
+from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource
-from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 logger = get_logger(__name__)
-
-
-def _get_values_to_update(resource: dict[str, Any]) -> list[ValueUpdate]:
-    """Returns a list of values that have permissions and hence should be updated."""
-    res: list[ValueUpdate] = []
-    for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label", "knora-api:DeletedValue"}:
-            continue
-        match v:
-            case {
-                "@id": id_,
-                "@type": type_,
-                **properties,
-            } if "/values/" in id_ and "knora-api:hasPermissions" in properties:
-                res.append(ValueUpdate(k, id_, type_))
-            case _:
-                continue
-    return res
 
 
 def _update_permissions_for_value(
@@ -145,7 +123,7 @@ def _write_failed_res_iris_to_file(
         f.write("\n".join(failed_res_iris))
 
 
-def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
+def _launch_thread_pool(resource_oaps: list[ResourceOap], nthreads: int, dsp_client: DspClient) -> list[str]:
     counter = 0
     total = len(resource_oaps)
     failed_res_iris: list[str] = []
@@ -153,7 +131,7 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
         jobs = [
             pool.submit(
                 _update_permissions_for_resource_and_values,
-                resource_oap.object_iri,
+                resource_oap.resource_iri,
                 resource_oap.scope,
                 dsp_client,
             )
@@ -170,17 +148,17 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
     return failed_res_iris
 
 
-def _launch_thread_pool_for_values(value_oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
+def _launch_thread_pool_for_values(value_oaps: list[ResourceOap], nthreads: int, dsp_client: DspClient) -> list[str]:
     for oap in value_oaps:
-        resource_iri = re.sub(r"/values/.+$", "", oap.object_iri)
+        resource_iri = re.sub(r"/values/.+$", "", oap.resource_iri)
         _update_permissions_for_value(
             resource_iri=resource_iri,
         )
 
 
 def apply_updated_oaps_on_server(
-    resource_oaps: list[Oap] | None,
-    value_oaps: list[Oap] | None,
+    resource_oaps: list[ResourceOap] | None,
+    value_oaps: list[ResourceOap] | None,
     host: str,
     shortcode: str,
     dsp_client: DspClient,

@@ -1,7 +1,6 @@
 from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
-from dsp_permissions_scripts.ap.ap_model import Ap
-from dsp_permissions_scripts.ap.ap_model import ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
@@ -11,9 +10,12 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
-from dsp_permissions_scripts.oap.oap_get import get_all_value_oaps_of_project
-from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_get import (
+    get_all_oaps_of_project,
+    get_all_resource_oaps_of_project,
+    get_all_value_oaps_of_project,
+)
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig, ResourceOap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -44,7 +46,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return modified_doaps
 
 
-def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+def modify_oaps(oaps: list[ResourceOap]) -> list[ResourceOap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in oaps:
@@ -102,15 +104,14 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
-    resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    img_val_oaps = get_all_value_oaps_of_project(
-        shortcode, dsp_client, prefixed_prop="knora-api:hasStillImageFileValue"
+    oap_config = OapRetrieveConfig(
+        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
     )
-    serialize_oaps(img_val_oaps, shortcode, mode="original")
-    serialize_oaps(resource_oaps, shortcode, mode="original")
-    resource_oaps_modified = modify_oaps(oaps=resource_oaps)
+    oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps, shortcode, mode="original")
+    oaps_modified = modify_oaps(oaps)
     apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_modified,
+        resource_oaps=oaps_modified,
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,

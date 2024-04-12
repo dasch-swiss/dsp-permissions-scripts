@@ -4,9 +4,8 @@ from pathlib import Path
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
-from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
+from dsp_permissions_scripts.oap.oap_model import ResourceOap
+from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps, serialize_oaps
 from tests.test_scope_serialization import compare_scopes
 
 
@@ -19,19 +18,19 @@ class TestOapSerialization(unittest.TestCase):
             shutil.rmtree(testdata_dir)
 
     def test_oap_serialization(self) -> None:
-        oap1 = Oap(
+        oap1 = ResourceOap(
             scope=PermissionScope.create(
                 CR=[group.PROJECT_ADMIN],
                 V=[group.PROJECT_MEMBER],
             ),
-            object_iri=f"http://rdfh.ch/{self.shortcode}/resource-1",
+            resource_iri=f"http://rdfh.ch/{self.shortcode}/resource-1",
         )
-        oap2 = Oap(
+        oap2 = ResourceOap(
             scope=PermissionScope.create(
                 D=[group.SYSTEM_ADMIN],
                 M=[group.KNOWN_USER],
             ),
-            object_iri=f"http://rdfh.ch/{self.shortcode}/resource-2",
+            resource_iri=f"http://rdfh.ch/{self.shortcode}/resource-2",
         )
         serialize_oaps(
             oaps=[oap1, oap2],
@@ -42,13 +41,13 @@ class TestOapSerialization(unittest.TestCase):
             shortcode=self.shortcode,
             mode="original",
         )
-        deserialized_oaps.sort(key=lambda oap: oap.object_iri)
+        deserialized_oaps.sort(key=lambda oap: oap.resource_iri)
         self._compare_oaps(deserialized_oaps[0], oap1)
         self._compare_oaps(deserialized_oaps[1], oap2)
 
-    def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
+    def _compare_oaps(self, oap1: ResourceOap, oap2: ResourceOap) -> None:
         compare_scopes(oap1.scope, oap2.scope)
-        self.assertEqual(oap1.object_iri, oap2.object_iri)
+        self.assertEqual(oap1.resource_iri, oap2.resource_iri)
 
 
 if __name__ == "__main__":
