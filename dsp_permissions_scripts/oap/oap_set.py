@@ -170,8 +170,17 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
     return failed_res_iris
 
 
+def _launch_thread_pool_for_values(value_oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
+    for oap in value_oaps:
+        resource_iri = re.sub(r"/values/.+$", "", oap.object_iri)
+        _update_permissions_for_value(
+            resource_iri=resource_iri,
+        )
+
+
 def apply_updated_oaps_on_server(
-    resource_oaps: list[Oap],
+    resource_oaps: list[Oap] | None,
+    value_oaps: list[Oap] | None,
     host: str,
     shortcode: str,
     dsp_client: DspClient,
@@ -181,12 +190,15 @@ def apply_updated_oaps_on_server(
     Applies modified Object Access Permissions of resources (and their values) on a DSP server.
     Don't forget to set a number of threads that doesn't overload the server.
     """
-    if not resource_oaps:
-        logger.warning(f"There are no OAPs to update on {host}")
+    if not resource_oaps and not value_oaps:
+        logger.warning("There are no OAPs to update")
         return
-    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host}... *******")
-
-    failed_res_iris = _launch_thread_pool(resource_oaps, nthreads, dsp_client)
+    if resource_oaps:
+        logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host}... *******")
+        failed_res_iris = _launch_thread_pool(resource_oaps, nthreads, dsp_client)
+    if value_oaps:
+        logger.info(f"******* Updating OAPs of {len(value_oaps)} values on {host}... *******")
+        failed_value_iris = _launch_thread_pool_for_values(value_oaps, nthreads, dsp_client)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
