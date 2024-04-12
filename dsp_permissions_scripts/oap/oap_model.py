@@ -37,7 +37,7 @@ class ValueOap(BaseModel):
 
 
 class OapRetrieveConfig(BaseModel):
-    
+
     model_config = ConfigDict(frozen=True)
 
     retrieve_resources: bool = True

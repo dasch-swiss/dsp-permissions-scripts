@@ -83,7 +83,7 @@ def _update_batch(
             except Exception as exc:  # pylint: disable=broad-exception-caught
                 logger.error(f"Cannot update resource {resource_iri}: {exc}")
                 failed_iris.append(resource_iri)
-        
+
             try:
                 _update_permissions_for_resource(
                     resource_iri=resource_iri,
@@ -170,8 +170,7 @@ def apply_updated_oaps_on_server(
             filename=filename,
         )
         msg = (
-            f"ERROR: {len(failed_iris)} resources or values could not be updated. "
-            f"They were written to {filename}."
+            f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
         )
         logger.error(msg)
     logger.info(f"Updated OAPs of {len(oaps)} resources on {host}")

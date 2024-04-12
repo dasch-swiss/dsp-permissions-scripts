@@ -86,14 +86,14 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
         resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
     else:
         resource_oap = None
-    
+
     if oap_config.retrieve_values == "none":
         value_oaps = []
     elif oap_config.retrieve_values == "all":
         value_oaps = _get_value_oaps(r)
     else:
         value_oaps = _get_value_oaps(r, oap_config.specified_props)
-    
+
     return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
 
 
@@ -134,10 +134,10 @@ def get_oap_by_resource_iri(resource_iri: str, dsp_client: DspClient) -> Resourc
 
 
 def get_all_oaps_of_project(
-    shortcode: str, 
-    dsp_client: DspClient, 
+    shortcode: str,
+    dsp_client: DspClient,
     oap_config: OapRetrieveConfig,
-    excluded_class_iris: Iterable[str] = (), 
+    excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info("******* Retrieving all OAPs... *******")
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
