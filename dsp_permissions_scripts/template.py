@@ -10,12 +10,8 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
-from dsp_permissions_scripts.oap.oap_get import (
-    get_all_oaps_of_project,
-    get_all_resource_oaps_of_project,
-    get_all_value_oaps_of_project,
-)
-from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig, ResourceOap
+from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import Oap, OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -46,13 +42,18 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return modified_doaps
 
 
-def modify_oaps(oaps: list[ResourceOap]) -> list[ResourceOap]:
+def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in oaps:
-        if group.SYSTEM_ADMIN not in oap.scope.CR:
-            oap.scope = oap.scope.add("CR", group.SYSTEM_ADMIN)
-            modified_oaps.append(oap)
+        if oap.resource_oap:
+            if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
+                oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
+                modified_oaps.append(oap)
+        for value_oap in oap.value_oaps:
+            if group.SYSTEM_ADMIN not in value_oap.scope.CR:
+                value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)
+                modified_oaps.append(oap)
     return modified_oaps
 
 
@@ -111,14 +112,14 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
     apply_updated_oaps_on_server(
-        resource_oaps=oaps_modified,
+        oaps=oaps_modified,
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         nthreads=4,
     )
-    resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_oaps(resource_oaps_updated, shortcode, mode="modified")
+    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
