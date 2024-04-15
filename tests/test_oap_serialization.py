@@ -35,34 +35,34 @@ class TestOapSerialization(unittest.TestCase):
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-1"
         res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
         val1_oap = ValueOap(
-            scope=scope, 
-            property="foo:prop1", 
-            value_type="bar:val1", 
-            value_iri=f"{res_iri}/values/foobar1", 
-            resource_iri=res_iri
+            scope=scope,
+            property="foo:prop1",
+            value_type="bar:val1",
+            value_iri=f"{res_iri}/values/foobar1",
+            resource_iri=res_iri,
         )
         val2_oap = ValueOap(
-            scope=scope, 
-            property="foo:prop2", 
-            value_type="bar:val2", 
-            value_iri=f"{res_iri}/values/foobar2", 
-            resource_iri=res_iri
+            scope=scope,
+            property="foo:prop2",
+            value_type="bar:val2",
+            value_iri=f"{res_iri}/values/foobar2",
+            resource_iri=res_iri,
         )
         oap = Oap(resource_oap=res_oap, value_oaps=[val1_oap, val2_oap])
         return oap
-    
+
     def _get_oap_one_value_only(self) -> Oap:
         scope = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-2"
         val_oap = ValueOap(
-            scope=scope, 
-            property="foo:prop3", 
-            value_type="bar:val3", 
-            value_iri=f"{res_iri}/values/foobar3", 
-            resource_iri=res_iri
+            scope=scope,
+            property="foo:prop3",
+            value_type="bar:val3",
+            value_iri=f"{res_iri}/values/foobar3",
+            resource_iri=res_iri,
         )
         return Oap(resource_oap=None, value_oaps=[val_oap])
-    
+
     def _get_oap_res_only(self) -> Oap:
         scope = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-3"

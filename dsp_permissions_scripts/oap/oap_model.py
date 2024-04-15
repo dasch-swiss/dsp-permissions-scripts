@@ -15,12 +15,14 @@ class Oap(BaseModel):
     If only the resource is of interest, value_oaps will be an empty list.
     If only the values (or a part of them) are of interest, resource_oap will be None.
     """
+
     resource_oap: ResourceOap | None
     value_oaps: list[ValueOap]
 
 
 class ResourceOap(BaseModel):
     """Model representing an object access permission of a resource"""
+
     scope: PermissionScope
     resource_iri: str
 
