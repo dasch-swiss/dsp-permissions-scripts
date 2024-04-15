@@ -8,6 +8,8 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
+
 
 def compare_scopes(
     scope1: PermissionScope,

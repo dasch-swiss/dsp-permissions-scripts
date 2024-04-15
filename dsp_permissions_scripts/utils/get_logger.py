@@ -47,5 +47,5 @@ def log_start_of_script(host: str, shortcode: str) -> None:
     logger.info("")
 
     print(f"\n{msg}")
-    logfile = [handler.baseFilename for handler in logger.handlers if isinstance(handler, logging.FileHandler)][0]
+    logfile = next(handler.baseFilename for handler in logger.handlers if isinstance(handler, logging.FileHandler))
     print(f"There will be no print output, only logging to file {logfile}")

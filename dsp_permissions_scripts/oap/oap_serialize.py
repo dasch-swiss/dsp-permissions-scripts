@@ -23,12 +23,12 @@ def serialize_resource_oaps(
         return
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Writing {len(resource_oaps)} OAPs into {str(folder)}")
+    logger.info(f"Writing {len(resource_oaps)} OAPs into {folder}")
     for res_oap in resource_oaps:
         filename = re.sub(r"http://rdfh\.ch/[^/]+/", "resource_", res_oap.object_iri)
         with open(folder / f"{filename}.json", mode="w", encoding="utf-8") as f:
             f.write(res_oap.model_dump_json(indent=2))
-    logger.info(f"Successfully wrote {len(resource_oaps)} OAPs into {str(folder)}")
+    logger.info(f"Successfully wrote {len(resource_oaps)} OAPs into {folder}")
 
 
 def deserialize_resource_oaps(

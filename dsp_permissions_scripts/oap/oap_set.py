@@ -98,7 +98,7 @@ def _update_permissions_for_resource_and_values(
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
         resource = get_resource(resource_iri, dsp_client)
-    except Exception as exc:  # pylint: disable=broad-exception-caught
+    except Exception as exc:  # noqa: BLE001 (blind exception)
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
         return resource_iri, False
     values = _get_values_to_update(resource)
