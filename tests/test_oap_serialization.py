@@ -20,9 +20,9 @@ class TestOapSerialization(unittest.TestCase):
             shutil.rmtree(testdata_dir)
 
     def test_oap_serialization(self) -> None:
-        oap1 = self._get_oap_1()
-        oap2 = self._get_oap_2()
-        oap3 = self._get_oap_3()
+        oap1 = self._get_oap_full()
+        oap2 = self._get_oap_one_value_only()
+        oap3 = self._get_oap_res_only()
 
         serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")
         deserialized_oaps = deserialize_oaps(self.shortcode, "original")
@@ -30,38 +30,44 @@ class TestOapSerialization(unittest.TestCase):
         self._compare_oaps(deserialized_oaps[1], oap2)
         self._compare_oaps(deserialized_oaps[2], oap3)
 
-    def _get_oap_1(self) -> Oap:
-        scope1 = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
-        res_iri1 = f"http://rdfh.ch/{self.shortcode}/resource-1"
-        res_oap1 = ResourceOap(scope=scope1, resource_iri=res_iri1)
-        val_iri1_1 = f"{res_iri1}/values/foobar1"
-        val_oap1_1 = ValueOap(
-            scope=scope1, property="foo:bar", value_type="bar:baz", value_iri=val_iri1_1, resource_iri=res_iri1
+    def _get_oap_full(self) -> Oap:
+        scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
+        res_iri = f"http://rdfh.ch/{self.shortcode}/resource-1"
+        res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
+        val1_oap = ValueOap(
+            scope=scope, 
+            property="foo:prop1", 
+            value_type="bar:val1", 
+            value_iri=f"{res_iri}/values/foobar1", 
+            resource_iri=res_iri
         )
-        val_iri1_2 = f"{res_iri1}/values/foobar2"
-        val_oap1_2 = ValueOap(
-            scope=scope1, property="foo:bar", value_type="bar:baz", value_iri=val_iri1_2, resource_iri=res_iri1
+        val2_oap = ValueOap(
+            scope=scope, 
+            property="foo:prop2", 
+            value_type="bar:val2", 
+            value_iri=f"{res_iri}/values/foobar2", 
+            resource_iri=res_iri
         )
-        oap1 = Oap(resource_oap=res_oap1, value_oaps=[val_oap1_1, val_oap1_2])
-        return oap1
+        oap = Oap(resource_oap=res_oap, value_oaps=[val1_oap, val2_oap])
+        return oap
     
-    def _get_oap_2(self) -> Oap:
-        scope2 = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
-        res_iri2 = f"http://rdfh.ch/{self.shortcode}/resource-2"
-        res_oap2 = None
-        val_iri2_1 = f"{res_iri2}/values/foobar1"
-        val_oap2_1 = ValueOap(
-            scope=scope2, property="foo:bar", value_type="bar:baz", value_iri=val_iri2_1, resource_iri=res_iri2
+    def _get_oap_one_value_only(self) -> Oap:
+        scope = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
+        res_iri = f"http://rdfh.ch/{self.shortcode}/resource-2"
+        val_oap = ValueOap(
+            scope=scope, 
+            property="foo:prop3", 
+            value_type="bar:val3", 
+            value_iri=f"{res_iri}/values/foobar3", 
+            resource_iri=res_iri
         )
-        oap2 = Oap(resource_oap=res_oap2, value_oaps=[val_oap2_1])
-        return oap2
+        return Oap(resource_oap=None, value_oaps=[val_oap])
     
-    def _get_oap_3(self) -> Oap:
-        scope3 = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
-        res_iri3 = f"http://rdfh.ch/{self.shortcode}/resource-3"
-        res_oap3 = ResourceOap(scope=scope3, resource_iri=res_iri3)
-        oap3 = Oap(resource_oap=res_oap3, value_oaps=[])
-        return oap3
+    def _get_oap_res_only(self) -> Oap:
+        scope = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
+        res_iri = f"http://rdfh.ch/{self.shortcode}/resource-3"
+        res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
+        return Oap(resource_oap=res_oap, value_oaps=[])
 
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         if oap1.resource_oap is None:
