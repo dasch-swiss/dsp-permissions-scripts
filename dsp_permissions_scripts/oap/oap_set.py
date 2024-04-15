@@ -72,7 +72,11 @@ def _update_permissions_for_resource(
 def _update_batch(batch: tuple[Oap, ...], dsp_client: DspClient) -> list[str]:
     failed_iris = []
     for oap in batch:
-        resource_iri = oap.resource_oap.resource_iri if oap.resource_oap else re.sub(r"/values/.+$", "", oap.value_oaps[0].value_iri) 
+        resource_iri = (
+            oap.resource_oap.resource_iri
+            if oap.resource_oap
+            else re.sub(r"/values/.+$", "", oap.value_oaps[0].value_iri)
+        )
         try:
             resource = get_resource(resource_iri, dsp_client)
         except Exception as exc:  # pylint: disable=broad-exception-caught
@@ -121,10 +125,7 @@ def _write_failed_res_iris_to_file(
 def _launch_thread_pool(oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
     all_failed_iris: list[str] = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
-        jobs = [
-            pool.submit(_update_batch, batch, dsp_client)
-            for batch in itertools.batched(oaps, 100)
-        ]
+        jobs = [pool.submit(_update_batch, batch, dsp_client) for batch in itertools.batched(oaps, 100)]
         for result in as_completed(jobs):
             failed_iris = result.result()
             all_failed_iris.extend(failed_iris)
@@ -157,8 +158,6 @@ def apply_updated_oaps_on_server(
             host=host,
             filename=filename,
         )
-        msg = (
-            f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
-        )
+        msg = f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
         logger.error(msg)
     logger.info(f"Updated OAPs of {len(oaps)} resources on {host}")
