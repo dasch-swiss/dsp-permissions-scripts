@@ -49,7 +49,7 @@ def _serialize_oap(oap: ResourceOap | ValueOap, folder: Path) -> None:
 def deserialize_oaps(
     shortcode: str,
     mode: Literal["original", "modified"],
-) -> list[ResourceOap]:
+) -> list[Oap]:
     """Deserialize the OAPs from JSON files."""
     folder = _get_project_data_path(shortcode, mode)
     res_oaps: list[ResourceOap] = []
@@ -62,8 +62,9 @@ def deserialize_oaps(
         else:
             res_oaps.append(ResourceOap.model_validate_json(content))
     
-    oaps = []
+    oaps: list[Oap] = []
     for res_iri, val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
         res_oap = next(filter(lambda x: x.resource_iri == res_iri, res_oaps))
         oaps.append(Oap(resource_oap=res_oap, value_oaps=val_oaps))
+    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri)
     return oaps
