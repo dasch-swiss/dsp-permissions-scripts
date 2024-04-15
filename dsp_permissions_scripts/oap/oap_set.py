@@ -66,10 +66,12 @@ def _update_permissions_for_resource(
         payload["knora-api:lastModificationDate"] = lmd
     try:
         dsp_client.put("/v2/resources", data=payload)
+        logger.info(f"Updated permissions of resource {resource_iri}")
+    except PermissionsAlreadyUpToDate:
+        logger.warning(f"Permissions of resource {resource_iri} are already up to date")
     except ApiError as err:
         err.message = f"ERROR while updating permissions of resource {resource_iri}"
         raise err from None
-    logger.info(f"Updated permissions of resource {resource_iri}")
 
 
 def _update_batch(batch: tuple[Oap, ...], dsp_client: DspClient) -> list[str]:
@@ -126,7 +128,7 @@ def _write_failed_res_iris_to_file(
 
 
 def _launch_thread_pool(oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
-    all_failed_iris: list[str] = []
+    all_failed_iris = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [pool.submit(_update_batch, batch, dsp_client) for batch in itertools.batched(oaps, 100)]
         for result in as_completed(jobs):
@@ -150,13 +152,13 @@ def apply_updated_oaps_on_server(
         logger.warning("There are no OAPs to update")
         return
     logger.info(f"******* Updating OAPs of {len(oaps)} resources on {host}... *******")
-    failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
 
+    failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
     if failed_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"FAILED_RESOURCES_AND_VALUES_{timestamp}.txt"
         _write_failed_res_iris_to_file(
-            failed_iris=failed_iris,
+            failed_iris=sorted(failed_iris),
             shortcode=shortcode,
             host=host,
             filename=filename,

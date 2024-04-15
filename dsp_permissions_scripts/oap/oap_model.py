@@ -10,20 +10,24 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 
 
 class Oap(BaseModel):
+    """
+    Model representing an object access permission of a resource and its values.
+    If only the resource is of interest, value_oaps will be an empty list.
+    If only the values (or a part of them) are of interest, resource_oap will be None.
+    """
     resource_oap: ResourceOap | None
     value_oaps: list[ValueOap]
 
 
 class ResourceOap(BaseModel):
-    """Model representing a resource object access permission, containing a scope and the IRI of the resource"""
-
+    """Model representing an object access permission of a resource"""
     scope: PermissionScope
     resource_iri: str
 
 
 class ValueOap(BaseModel):
     """
-    Model representing a value object access permission.
+    Model representing an object access permission of a value.
 
     Fields:
     scope: permissions of this value

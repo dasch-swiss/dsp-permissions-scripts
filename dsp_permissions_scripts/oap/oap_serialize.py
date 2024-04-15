@@ -31,10 +31,9 @@ def serialize_oaps(
         if oap.resource_oap:
             _serialize_oap(oap.resource_oap, folder)
             counter += 1
-        if oap.value_oaps:
-            for value_oap in oap.value_oaps:
-                _serialize_oap(value_oap, folder)
-                counter += 1
+        for value_oap in oap.value_oaps:
+            _serialize_oap(value_oap, folder)
+            counter += 1
     logger.info(f"Successfully wrote {len(oaps)} OAPs into {counter} files in folder {str(folder)}")
 
 

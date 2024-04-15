@@ -19,7 +19,6 @@ logger = get_logger(__name__)
 def _get_all_oaps_of_resclass(
     resclass_iri: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
 ) -> list[Oap]:
-    logger.info(f"Getting all OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
     all_oaps: list[Oap] = []
     page = 0
@@ -68,7 +67,7 @@ def _get_next_page(
 
     # result contains several resources: return them, then continue with next page
     if "@graph" in result:
-        oaps: list[Oap] = []
+        oaps = []
         for r in result["@graph"]:
             oaps.append(_get_oap_of_one_resource(r, oap_config))
         return True, oaps
@@ -129,7 +128,7 @@ def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
         raise err from None
 
 
-def get_oap_by_resource_iri(resource_iri: str, dsp_client: DspClient) -> ResourceOap:
+def get_resource_oap_by_iri(resource_iri: str, dsp_client: DspClient) -> ResourceOap:
     resource = get_resource(resource_iri, dsp_client)
     scope = create_scope_from_string(resource["knora-api:hasPermissions"])
     return ResourceOap(scope=scope, resource_iri=resource_iri)
