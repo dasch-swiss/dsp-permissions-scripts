@@ -63,8 +63,16 @@ def deserialize_oaps(
             res_oaps.append(ResourceOap.model_validate_json(content))
     
     oaps: list[Oap] = []
+    deserialized_resource_iris = []
     for res_iri, val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
-        res_oap = next(filter(lambda x: x.resource_iri == res_iri, res_oaps))
+        filtered = list(filter(lambda x: x.resource_iri == res_iri, res_oaps))
+        res_oap = filtered[0] if filtered else None
         oaps.append(Oap(resource_oap=res_oap, value_oaps=val_oaps))
+        deserialized_resource_iris.append(res_iri)
+
+    remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
+    for res_oap in remaining_res_oaps:
+        oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
+    
     oaps.sort(key=lambda oap: oap.resource_oap.resource_iri)
     return oaps

@@ -35,21 +35,23 @@ class TestOapSerialization(unittest.TestCase):
 
         scope2 = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
         res_iri2 = f"http://rdfh.ch/{self.shortcode}/resource-2"
-        res_oap2 = ResourceOap(scope=scope2, resource_iri=res_iri2)
+        res_oap2 = None
         val_iri2_1 = f"{res_iri2}/values/foobar1"
         val_oap2_1 = ValueOap(
             scope=scope2, property="foo:bar", value_type="bar:baz", value_iri=val_iri2_1, resource_iri=res_iri2
         )
-        val_iri2_2 = f"{res_iri2}/values/foobar2"
-        val_oap2_2 = ValueOap(
-            scope=scope2, property="foo:bar", value_type="bar:baz", value_iri=val_iri2_2, resource_iri=res_iri2
-        )
-        oap2 = Oap(resource_oap=res_oap2, value_oaps=[val_oap2_1, val_oap2_2])
+        oap2 = Oap(resource_oap=res_oap2, value_oaps=[val_oap2_1])
 
-        serialize_oaps([oap1, oap2], self.shortcode, "original")
+        scope3 = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
+        res_iri3 = f"http://rdfh.ch/{self.shortcode}/resource-3"
+        res_oap3 = ResourceOap(scope=scope3, resource_iri=res_iri3)
+        oap3 = Oap(resource_oap=res_oap3, value_oaps=[])
+
+        serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")
         deserialized_oaps = deserialize_oaps(self.shortcode, "original")
         self._compare_oaps(deserialized_oaps[0], oap1)
         self._compare_oaps(deserialized_oaps[1], oap2)
+        self._compare_oaps(deserialized_oaps[2], oap3)
 
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         if oap1.resource_oap is None:
