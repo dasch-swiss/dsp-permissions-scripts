@@ -20,6 +20,17 @@ class TestOapSerialization(unittest.TestCase):
             shutil.rmtree(testdata_dir)
 
     def test_oap_serialization(self) -> None:
+        oap1 = self._get_oap_1()
+        oap2 = self._get_oap_2()
+        oap3 = self._get_oap_3()
+
+        serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")
+        deserialized_oaps = deserialize_oaps(self.shortcode, "original")
+        self._compare_oaps(deserialized_oaps[0], oap1)
+        self._compare_oaps(deserialized_oaps[1], oap2)
+        self._compare_oaps(deserialized_oaps[2], oap3)
+
+    def _get_oap_1(self) -> Oap:
         scope1 = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
         res_iri1 = f"http://rdfh.ch/{self.shortcode}/resource-1"
         res_oap1 = ResourceOap(scope=scope1, resource_iri=res_iri1)
@@ -32,7 +43,9 @@ class TestOapSerialization(unittest.TestCase):
             scope=scope1, property="foo:bar", value_type="bar:baz", value_iri=val_iri1_2, resource_iri=res_iri1
         )
         oap1 = Oap(resource_oap=res_oap1, value_oaps=[val_oap1_1, val_oap1_2])
-
+        return oap1
+    
+    def _get_oap_2(self) -> Oap:
         scope2 = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
         res_iri2 = f"http://rdfh.ch/{self.shortcode}/resource-2"
         res_oap2 = None
@@ -41,17 +54,14 @@ class TestOapSerialization(unittest.TestCase):
             scope=scope2, property="foo:bar", value_type="bar:baz", value_iri=val_iri2_1, resource_iri=res_iri2
         )
         oap2 = Oap(resource_oap=res_oap2, value_oaps=[val_oap2_1])
-
+        return oap2
+    
+    def _get_oap_3(self) -> Oap:
         scope3 = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
         res_iri3 = f"http://rdfh.ch/{self.shortcode}/resource-3"
         res_oap3 = ResourceOap(scope=scope3, resource_iri=res_iri3)
         oap3 = Oap(resource_oap=res_oap3, value_oaps=[])
-
-        serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")
-        deserialized_oaps = deserialize_oaps(self.shortcode, "original")
-        self._compare_oaps(deserialized_oaps[0], oap1)
-        self._compare_oaps(deserialized_oaps[1], oap2)
-        self._compare_oaps(deserialized_oaps[2], oap3)
+        return oap3
 
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         if oap1.resource_oap is None:
