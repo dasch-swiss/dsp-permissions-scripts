@@ -37,9 +37,10 @@ class ValueOap(BaseModel):
     """
 
     scope: PermissionScope
-    value_iri: str
     property: str
     value_type: str
+    value_iri: str
+    resource_iri: str
 
 
 class OapRetrieveConfig(BaseModel):

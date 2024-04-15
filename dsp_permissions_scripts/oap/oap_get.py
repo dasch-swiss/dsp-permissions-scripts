@@ -112,7 +112,8 @@ def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | Non
                 "knora-api:hasPermissions": perm_str,
             } if "/values/" in id_:
                 scope = create_scope_from_string(perm_str)
-                res.append(ValueOap(scope=scope, value_iri=id_, property=k, value_type=type_))
+                oap = ValueOap(scope=scope, property=k, value_type=type_, value_iri=id_, resource_iri=resource["@id"])
+                res.append(oap)
             case _:
                 continue
     return res

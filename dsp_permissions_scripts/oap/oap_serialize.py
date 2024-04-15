@@ -1,3 +1,4 @@
+import itertools
 import re
 from pathlib import Path
 from typing import Literal
@@ -51,8 +52,18 @@ def deserialize_oaps(
 ) -> list[ResourceOap]:
     """Deserialize the OAPs from JSON files."""
     folder = _get_project_data_path(shortcode, mode)
+    res_oaps: list[ResourceOap] = []
+    val_oaps: list[ValueOap] = []
+    for file in folder.glob("**/*.json"):
+        content = file.read_text(encoding="utf-8")
+        val_oaps = []
+        if "_values_" in file.name:
+            val_oaps.append(ValueOap.model_validate_json(content))
+        else:
+            res_oaps.append(ResourceOap.model_validate_json(content))
+    
     oaps = []
-    for file in [f for f in folder.iterdir() if f.suffix == ".json"]:
-        with open(file, mode="r", encoding="utf-8") as f:
-            oaps.append(ResourceOap.model_validate_json(f.read()))
+    for res_iri, val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
+        res_oap = next(filter(lambda x: x.resource_iri == res_iri, res_oaps))
+        oaps.append(Oap(resource_oap=res_oap, value_oaps=val_oaps))
     return oaps
