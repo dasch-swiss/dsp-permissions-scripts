@@ -51,6 +51,12 @@ def deserialize_oaps(
     mode: Literal["original", "modified"],
 ) -> list[Oap]:
     """Deserialize the OAPs from JSON files."""
+    res_oaps, val_oaps = _read_all_oaps_from_files(shortcode, mode)
+    oaps = _group_oaps_together(res_oaps, val_oaps)
+    return oaps
+
+
+def _read_all_oaps_from_files(shortcode: str, mode: Literal["original", "modified"]) -> tuple[list[ResourceOap], list[ValueOap]]:
     folder = _get_project_data_path(shortcode, mode)
     res_oaps: list[ResourceOap] = []
     val_oaps: list[ValueOap] = []
@@ -61,11 +67,18 @@ def deserialize_oaps(
             val_oaps.append(ValueOap.model_validate_json(content))
         else:
             res_oaps.append(ResourceOap.model_validate_json(content))
+    return res_oaps, val_oaps
+    
+
+def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) -> list[Oap]:
+    def _iri_filter(res_oap: ResourceOap, iri: str) -> bool:
+        return res_oap.resource_iri == iri
     
     oaps: list[Oap] = []
     deserialized_resource_iris = []
+    
     for res_iri, val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
-        filtered = list(filter(lambda x: x.resource_iri == res_iri, res_oaps))
+        filtered = list(filter(_iri_filter, res_oaps))
         res_oap = filtered[0] if filtered else None
         oaps.append(Oap(resource_oap=res_oap, value_oaps=val_oaps))
         deserialized_resource_iris.append(res_iri)
