@@ -3,11 +3,12 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import itertools
+import re
 
 from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_resource
-from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_model import Oap, ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
@@ -17,10 +18,9 @@ logger = get_logger(__name__)
 
 def _update_permissions_for_value(
     resource_iri: str,
-    value: ValueUpdate,
+    value: ValueOap,
     resource_type: str,
     context: dict[str, str],
-    scope: PermissionScope,
     dsp_client: DspClient,
 ) -> None:
     """Updates the permissions for the given value (of a property) on a DSP server"""
@@ -30,18 +30,18 @@ def _update_permissions_for_value(
         value.property: {
             "@id": value.value_iri,
             "@type": value.value_type,
-            "knora-api:hasPermissions": create_string_from_scope(scope),
+            "knora-api:hasPermissions": create_string_from_scope(value.scope),
         },
         "@context": context,
     }
     try:
         dsp_client.put("/v2/values", data=payload)
+        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
     except PermissionsAlreadyUpToDate:
         logger.warning(f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date")
     except ApiError as err:
         err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
         raise err from None
-    logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
 def _update_permissions_for_resource(
@@ -69,48 +69,42 @@ def _update_permissions_for_resource(
     logger.info(f"Updated permissions of resource {resource_iri}")
 
 
-def _update_batch(
-    batch: tuple[Oap, ...],
-    dsp_client: DspClient,
-    total_no: int,
-) -> list[str]:
+def _update_batch(batch: tuple[Oap, ...], dsp_client: DspClient) -> list[str]:
     failed_iris = []
     for oap in batch:
+        resource_iri = oap.resource_oap.resource_iri if oap.resource_oap else re.sub(r"/values/.+$", "", oap.value_oaps[0].value_iri) 
+        try:
+            resource = get_resource(resource_iri, dsp_client)
+        except Exception as exc:  # pylint: disable=broad-exception-caught
+            logger.error(f"Cannot update resource {resource_iri}: {exc}")
+            failed_iris.append(resource_iri)
+            continue
         if oap.resource_oap:
-            resource_iri = oap.resource_oap.resource_iri
-            try:
-                resource = get_resource(resource_iri, dsp_client)
-            except Exception as exc:  # pylint: disable=broad-exception-caught
-                logger.error(f"Cannot update resource {resource_iri}: {exc}")
-                failed_iris.append(resource_iri)
-
             try:
                 _update_permissions_for_resource(
                     resource_iri=resource_iri,
                     lmd=resource.get("knora-api:lastModificationDate"),
                     resource_type=resource["@type"],
                     context=resource["@context"],
-                    scope=scope,
+                    scope=oap.resource_oap.scope,
                     dsp_client=dsp_client,
                 )
             except ApiError as err:
                 logger.error(err)
-
-    for v in values:
-        try:
-            _update_permissions_for_value(
-                resource_iri=resource_iri,
-                value=v,
-                resource_type=resource["@type"],
-                context=resource["@context"],
-                scope=scope,
-                dsp_client=dsp_client,
-            )
-        except ApiError as err:
-            logger.error(err)
-            success = False
-
-    return resource_iri
+                failed_iris.append(resource_iri)
+        for v in oap.value_oaps:
+            try:
+                _update_permissions_for_value(
+                    resource_iri=resource_iri,
+                    value=v,
+                    resource_type=resource["@type"],
+                    context=resource["@context"],
+                    dsp_client=dsp_client,
+                )
+            except ApiError as err:
+                logger.error(err)
+                failed_iris.append(v.value_iri)
+    return failed_iris
 
 
 def _write_failed_res_iris_to_file(
@@ -125,16 +119,10 @@ def _write_failed_res_iris_to_file(
 
 
 def _launch_thread_pool(oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
-    total_no = len(oaps)
     all_failed_iris: list[str] = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [
-            pool.submit(
-                _update_batch,
-                batch,
-                dsp_client,
-                total_no,
-            )
+            pool.submit(_update_batch, batch, dsp_client)
             for batch in itertools.batched(oaps, 100)
         ]
         for result in as_completed(jobs):
