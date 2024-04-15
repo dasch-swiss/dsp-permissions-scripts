@@ -2,7 +2,9 @@ import re
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.oap.oap_model import Oap, ResourceOap, ValueOap
+from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_model import ResourceOap
+from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
 logger = get_logger(__name__)

@@ -1,6 +1,7 @@
 from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
-from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
@@ -11,7 +12,8 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
-from dsp_permissions_scripts.oap.oap_model import Oap, OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
