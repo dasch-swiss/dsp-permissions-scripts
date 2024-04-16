@@ -84,7 +84,7 @@ def _update_batch(batch: tuple[Oap, ...], dsp_client: DspClient) -> list[str]:
         )
         try:
             resource = get_resource(resource_iri, dsp_client)
-        except Exception as exc:  # pylint: disable=broad-exception-caught
+        except Exception as exc:  # noqa: BLE001
             logger.error(f"Cannot update resource {resource_iri}: {exc}")
             failed_iris.append(resource_iri)
             continue

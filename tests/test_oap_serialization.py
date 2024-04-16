@@ -4,13 +4,15 @@ from pathlib import Path
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap.oap_model import Oap, ValueOap
+from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
+from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from tests.test_scope_serialization import compare_scopes
 
 # ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
+
 
 class TestOapSerialization(unittest.TestCase):
     shortcode = "1234"

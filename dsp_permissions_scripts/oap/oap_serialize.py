@@ -26,7 +26,7 @@ def serialize_oaps(
         return
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Writing {len(oaps)} OAPs into {str(folder)}")
+    logger.info(f"Writing {len(oaps)} OAPs into {folder}")
     counter = 0
     for oap in oaps:
         if oap.resource_oap:
@@ -77,7 +77,7 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     deserialized_resource_iris = []
 
     for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
-        res_oap = [x for x in res_oaps if x.resource_iri == res_iri][0]
+        res_oap = next(x for x in res_oaps if x.resource_iri == res_iri)
         oaps.append(Oap(resource_oap=res_oap, value_oaps=_val_oaps))
         deserialized_resource_iris.append(res_iri)
 
