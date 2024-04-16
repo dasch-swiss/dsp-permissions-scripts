@@ -5,11 +5,12 @@ from pathlib import Path
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import deserialize_resource_oaps
-from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from tests.test_scope_serialization import compare_scopes
 
 # ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
+
 
 class TestOapSerialization(unittest.TestCase):
     shortcode = "1234"
@@ -34,12 +35,12 @@ class TestOapSerialization(unittest.TestCase):
             ),
             object_iri=f"http://rdfh.ch/{self.shortcode}/resource-2",
         )
-        serialize_resource_oaps(
-            resource_oaps=[oap1, oap2],
+        serialize_oaps(
+            oaps=[oap1, oap2],
             shortcode=self.shortcode,
             mode="original",
         )
-        deserialized_oaps = deserialize_resource_oaps(
+        deserialized_oaps = deserialize_oaps(
             shortcode=self.shortcode,
             mode="original",
         )

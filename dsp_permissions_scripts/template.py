@@ -13,7 +13,7 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -102,17 +102,17 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(resource_oaps, shortcode, mode="original")
+    serialize_oaps(resource_oaps, shortcode, mode="original")
     resource_oaps_modified = modify_oaps(oaps=resource_oaps)
     apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_modified,
+        oaps=resource_oaps_modified,
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         nthreads=4,
     )
     resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(resource_oaps_updated, shortcode, mode="modified")
+    serialize_oaps(resource_oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
