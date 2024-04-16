@@ -19,6 +19,11 @@ class Oap(BaseModel):
     resource_oap: ResourceOap | None
     value_oaps: list[ValueOap]
 
+    @model_validator(mode="after")
+    def check(self) -> Oap:
+        if not self.resource_oap and not self.value_oaps:
+            raise ValueError("An OAP must have at least one resource_oap or one value_oap")
+
 
 class ResourceOap(BaseModel):
     """Model representing an object access permission of a resource"""
@@ -46,7 +51,6 @@ class ValueOap(BaseModel):
 
 
 class OapRetrieveConfig(BaseModel):
-
     model_config = ConfigDict(frozen=True)
 
     retrieve_resources: bool = True
