@@ -23,8 +23,8 @@ class TestOapSerialization(unittest.TestCase):
             shutil.rmtree(testdata_dir)
 
     def test_oap_serialization(self) -> None:
-        oap1 = self._get_oap_full()
-        oap2 = self._get_oap_one_value_only()
+        oap1 = self._get_oap_one_value_only()
+        oap2 = self._get_oap_full()
         oap3 = self._get_oap_res_only()
 
         serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")

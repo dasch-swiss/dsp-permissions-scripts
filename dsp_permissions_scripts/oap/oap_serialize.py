@@ -64,7 +64,6 @@ def _read_all_oaps_from_files(
     val_oaps: list[ValueOap] = []
     for file in folder.glob("**/*.json"):
         content = file.read_text(encoding="utf-8")
-        val_oaps = []
         if "_values_" in file.name:
             val_oaps.append(ValueOap.model_validate_json(content))
         else:
@@ -77,8 +76,9 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     deserialized_resource_iris = []
 
     for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
-        res_oap = next(x for x in res_oaps if x.resource_iri == res_iri)
-        oaps.append(Oap(resource_oap=res_oap, value_oaps=list(_val_oaps)))
+        res_oaps_filtered = [x for x in res_oaps if x.resource_iri == res_iri]
+        res_oap = res_oaps_filtered[0] if res_oaps_filtered else None
+        oaps.append(Oap(resource_oap=res_oap, value_oaps=sorted(_val_oaps, key=lambda x: x.value_iri)))
         deserialized_resource_iris.append(res_iri)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
