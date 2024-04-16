@@ -4,6 +4,7 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
+# ruff: noqa: PT027 (pytest-unittest-raises-assertion) (remove this line when pytest is used instead of unittest)
 
 class TestScope(unittest.TestCase):
     def test_scope_validation_on_creation(self) -> None:

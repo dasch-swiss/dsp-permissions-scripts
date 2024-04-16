@@ -11,6 +11,7 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
 class TestDoapSerialization(unittest.TestCase):
     shortcode = "1234"

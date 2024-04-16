@@ -3,6 +3,7 @@ import unittest
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.utils.helpers import sort_groups
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
 class TestHelpers(unittest.TestCase):
     def test_sort_groups(self) -> None:

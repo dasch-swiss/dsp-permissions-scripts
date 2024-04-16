@@ -20,6 +20,8 @@ from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
 
+# ruff: noqa: PLR2004 (magic value used in comparison)
+
 logger = get_logger(__name__)
 
 HTTP_OK = 200
@@ -225,7 +227,7 @@ class DspClient:
             the return value of action
         """
         action = partial(self.session.request, **params.as_kwargs())
-        for i in range(7):
+        for i in range(10):
             try:
                 self._log_request(params)
                 response = action()
@@ -264,7 +266,7 @@ class DspClient:
     def _renew_session(self) -> None:
         self.session.close()
         self.session = Session()
-        self.session.headers["User-Agent"] = f'{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}'
+        self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
         if self.token:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 

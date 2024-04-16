@@ -10,6 +10,7 @@ from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
 class TestApSerialization(unittest.TestCase):
     shortcode = "1234"
@@ -48,7 +49,7 @@ class TestApSerialization(unittest.TestCase):
         )
         with open(self.output_file, mode="r", encoding="utf-8") as f:
             aps_file = json.load(f)
-        explanation_text = list(aps_file.keys())[0]
+        explanation_text = next(iter(aps_file.keys()))
         self.assertRegex(explanation_text, r"Project 1234 on host .+ has \d+ APs")
         aps_as_dicts = aps_file[explanation_text]
         self.assertEqual(self.ap1, Ap.model_validate(aps_as_dicts[0]))

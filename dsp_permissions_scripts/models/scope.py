@@ -42,7 +42,7 @@ class PermissionScope(BaseModel):
             V=frozenset(V),
             RV=frozenset(RV),
         )
-    
+
     @staticmethod
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
         return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in d.items()})
@@ -56,7 +56,7 @@ class PermissionScope(BaseModel):
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
         return self
-    
+
     def get(self, permission: str) -> frozenset[Group]:
         """Retrieve the groups that have the given permission."""
         if permission not in self.model_fields:
