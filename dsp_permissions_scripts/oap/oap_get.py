@@ -69,19 +69,22 @@ def _get_next_page(
     if "@graph" in result:
         oaps = []
         for r in result["@graph"]:
-            oaps.append(_get_oap_of_one_resource(r, oap_config))
+            if oap := _get_oap_of_one_resource(r, oap_config):
+                oaps.append(oap)
         return True, oaps
 
     # result contains only 1 resource: return it, then stop (there will be no more resources)
     if "@id" in result:
-        oaps = [_get_oap_of_one_resource(result, oap_config)]
+        oaps = []
+        if oap := _get_oap_of_one_resource(result, oap_config):
+            oaps.append(oap)
         return False, oaps
 
     # there are no more resources
     return False, []
 
 
-def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -> Oap:
+def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -> Oap | None:
     if oap_config.retrieve_resources:
         scope = create_scope_from_string(r["knora-api:hasPermissions"])
         resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
@@ -95,7 +98,10 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
     else:
         value_oaps = _get_value_oaps(r, oap_config.specified_props)
 
-    return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
+    if resource_oap or value_oaps:
+        return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
+    else:
+        return None
 
 
 def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
