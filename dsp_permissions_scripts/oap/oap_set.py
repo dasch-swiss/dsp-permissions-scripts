@@ -149,7 +149,7 @@ def apply_updated_oaps_on_server(
     Don't forget to set a number of threads that doesn't overload the server.
     """
     if not oaps:
-        logger.warning("There are no OAPs to update")
+        logger.warning(f"There are no OAPs to update on {host}")
         return
     logger.info(f"******* Updating OAPs of {len(oaps)} resources on {host}... *******")
 
