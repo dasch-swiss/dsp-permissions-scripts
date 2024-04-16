@@ -4,9 +4,10 @@ from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_proje
 from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
+from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -29,9 +30,12 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in oaps:
-        for user in [group.UNKNOWN_USER, group.KNOWN_USER]:
-            oap.scope = oap.scope.remove("V", user) if user in oap.scope.V else oap.scope
-            oap.scope = oap.scope.add("RV", user) if user not in oap.scope.RV else oap.scope
+        if oap.resource_oap:
+            for user in [group.UNKNOWN_USER, group.KNOWN_USER]:
+                if user in oap.resource_oap.scope.V:
+                    oap.resource_oap.scope = oap.resource_oap.scope.remove("V", user)
+                if user not in oap.resource_oap.scope.RV:
+                    oap.resource_oap.scope = oap.resource_oap.scope.add("RV", user)
         modified_oaps.append(oap)
     return modified_oaps
 
@@ -60,18 +64,21 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient, context: dict[
     """Sample function to modify the Object Access Permissions of a project."""
     context = context or {}
     excluded = [f"{context["fotoarchivkunsthalle"]}Exhibitions"]
-    resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client, excluded_class_iris=excluded)
-    serialize_resource_oaps(resource_oaps, shortcode, mode="original")
-    resource_oaps_modified = modify_oaps(oaps=resource_oaps)
+    oap_config = OapRetrieveConfig(
+        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
+    )
+    oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config, excluded_class_iris=excluded)
+    serialize_oaps(oaps, shortcode, mode="original")
+    oaps_modified = modify_oaps(oaps)
     apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_modified,
+        oaps=oaps_modified,
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         nthreads=4,
     )
-    resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(resource_oaps_updated, shortcode, mode="modified")
+    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config, excluded_class_iris=excluded)
+    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
