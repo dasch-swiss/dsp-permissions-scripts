@@ -1,29 +1,32 @@
 from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
-from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_resource_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
-from dsp_permissions_scripts.oap.oap_serialize import serialize_resource_oaps
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
+
+# pylint: disable=R0801 # Similar lines in 2 files
 
 
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in aps:
-        if ap.forGroup == builtin_groups.UNKNOWN_USER:
+        if ap.forGroup == group.UNKNOWN_USER:
             if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
                 ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
                 modified_aps.append(ap)
@@ -34,7 +37,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in doaps:
-        if doap.target.group == builtin_groups.UNKNOWN_USER:
+        if doap.target.group == group.UNKNOWN_USER:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
@@ -44,8 +47,8 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in oaps:
-        if builtin_groups.SYSTEM_ADMIN not in oap.scope.CR:
-            oap.scope = oap.scope.add("CR", builtin_groups.SYSTEM_ADMIN)
+        if group.SYSTEM_ADMIN not in oap.scope.CR:
+            oap.scope = oap.scope.add("CR", group.SYSTEM_ADMIN)
             modified_oaps.append(oap)
     return modified_oaps
 
@@ -62,7 +65,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     remaining_aps = delete_ap_of_group_on_server(
         host=host,
         existing_aps=project_aps,
-        forGroup=builtin_groups.UNKNOWN_USER,
+        forGroup=group.UNKNOWN_USER,
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
@@ -99,17 +102,17 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     resource_oaps = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(resource_oaps, shortcode, mode="original")
+    serialize_oaps(resource_oaps, shortcode, mode="original")
     resource_oaps_modified = modify_oaps(oaps=resource_oaps)
     apply_updated_oaps_on_server(
-        resource_oaps=resource_oaps_modified,
+        oaps=resource_oaps_modified,
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         nthreads=4,
     )
     resource_oaps_updated = get_all_resource_oaps_of_project(shortcode, dsp_client)
-    serialize_resource_oaps(resource_oaps_updated, shortcode, mode="modified")
+    serialize_oaps(resource_oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
@@ -122,8 +125,8 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    dsp_client = login(host)
     log_start_of_script(host, shortcode)
+    dsp_client = login(host)
 
     update_aps(
         host=host,

@@ -1,11 +1,13 @@
 from typing import Any
 from urllib.parse import quote_plus
 
-from dsp_permissions_scripts.ap.ap_model import Ap, ApValue
+from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_project_iri_by_shortcode
+from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 
 logger = get_logger(__name__)
 
@@ -13,7 +15,7 @@ logger = get_logger(__name__)
 def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
     """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
     ap = Ap(
-        forGroup=permission["forGroup"],
+        forGroup=Group(val=permission["forGroup"]),
         forProject=permission["forProject"],
         hasPermissions=frozenset(ApValue(p["name"]) for p in permission["hasPermissions"]),
         iri=permission["iri"],
@@ -50,7 +52,7 @@ def _get_all_aps_of_project(project_iri: str, dsp_client: DspClient) -> list[Ap]
 def get_aps_of_project(shortcode: str, dsp_client: DspClient) -> list[Ap]:
     """Returns the Administrative Permissions for a project."""
     logger.info("****** Retrieving all Administrative Permissions... ******")
-    project_iri = get_project_iri_by_shortcode(shortcode, dsp_client)
+    project_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     aps = _get_all_aps_of_project(project_iri, dsp_client)
     logger.info(f"Retrieved {len(aps)} Administrative Permissions")
     return aps

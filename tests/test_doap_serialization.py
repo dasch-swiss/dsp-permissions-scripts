@@ -2,16 +2,16 @@ import shutil
 import unittest
 from pathlib import Path
 
-from dsp_permissions_scripts.doap.doap_model import Doap, DoapTarget
-from dsp_permissions_scripts.doap.doap_serialize import (
-    deserialize_doaps_of_project,
-    serialize_doaps_of_project,
-)
-from dsp_permissions_scripts.models import builtin_groups
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import DoapTarget
+from dsp_permissions_scripts.doap.doap_serialize import deserialize_doaps_of_project
+from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
+from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
 class TestDoapSerialization(unittest.TestCase):
     shortcode = "1234"
@@ -25,22 +25,22 @@ class TestDoapSerialization(unittest.TestCase):
         doap1 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group=builtin_groups.PROJECT_ADMIN,
+                group=group.PROJECT_ADMIN,
             ),
             scope=PermissionScope.create(
-                CR=[builtin_groups.PROJECT_ADMIN],
-                V=[builtin_groups.PROJECT_MEMBER],
+                CR=[group.PROJECT_ADMIN],
+                V=[group.PROJECT_MEMBER],
             ),
             doap_iri="http://rdfh.ch/doap-1",
         )
         doap2 = Doap(
             target=DoapTarget(
                 project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
-                group=builtin_groups.PROJECT_MEMBER,
+                group=group.PROJECT_MEMBER,
             ),
             scope=PermissionScope.create(
-                D=[builtin_groups.SYSTEM_ADMIN],
-                M=[builtin_groups.KNOWN_USER],
+                D=[group.SYSTEM_ADMIN],
+                M=[group.KNOWN_USER],
             ),
             doap_iri="http://rdfh.ch/doap-2",
         )

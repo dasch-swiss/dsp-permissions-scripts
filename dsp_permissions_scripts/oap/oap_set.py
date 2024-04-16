@@ -1,10 +1,12 @@
 # pylint: disable=too-many-arguments
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import as_completed
 from datetime import datetime
 from typing import Any
 
-from dsp_permissions_scripts.models.errors import ApiError, PermissionsAlreadyUpToDate
+from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.models.value import ValueUpdate
 from dsp_permissions_scripts.oap.oap_get import get_resource
@@ -34,7 +36,7 @@ def _get_values_to_update(resource: dict[str, Any]) -> list[ValueUpdate]:
     return res
 
 
-def _update_permissions_for_value(
+def _update_permissions_for_value(  # noqa: PLR0913
     resource_iri: str,
     value: ValueUpdate,
     resource_type: str,
@@ -55,15 +57,15 @@ def _update_permissions_for_value(
     }
     try:
         dsp_client.put("/v2/values", data=payload)
+        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
     except PermissionsAlreadyUpToDate:
         logger.warning(f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date")
     except ApiError as err:
         err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
         raise err from None
-    logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
-def _update_permissions_for_resource(
+def _update_permissions_for_resource(  # noqa: PLR0913
     resource_iri: str,
     lmd: str | None,
     resource_type: str,
@@ -82,10 +84,12 @@ def _update_permissions_for_resource(
         payload["knora-api:lastModificationDate"] = lmd
     try:
         dsp_client.put("/v2/resources", data=payload)
+        logger.info(f"Updated permissions of resource {resource_iri}")
+    except PermissionsAlreadyUpToDate:
+        logger.warning(f"Permissions of resource {resource_iri} are already up to date")
     except ApiError as err:
         err.message = f"ERROR while updating permissions of resource {resource_iri}"
         raise err from None
-    logger.info(f"Updated permissions of resource {resource_iri}")
 
 
 def _update_permissions_for_resource_and_values(
@@ -96,7 +100,7 @@ def _update_permissions_for_resource_and_values(
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
         resource = get_resource(resource_iri, dsp_client)
-    except Exception as exc:  # pylint: disable=broad-exception-caught
+    except Exception as exc:  # noqa: BLE001 (blind exception)
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
         return resource_iri, False
     values = _get_values_to_update(resource)
@@ -169,7 +173,7 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
 
 
 def apply_updated_oaps_on_server(
-    resource_oaps: list[Oap],
+    oaps: list[Oap],
     host: str,
     shortcode: str,
     dsp_client: DspClient,
@@ -179,12 +183,12 @@ def apply_updated_oaps_on_server(
     Applies modified Object Access Permissions of resources (and their values) on a DSP server.
     Don't forget to set a number of threads that doesn't overload the server.
     """
-    if not resource_oaps:
+    if not oaps:
         logger.warning(f"There are no OAPs to update on {host}")
         return
-    logger.info(f"******* Updating OAPs of {len(resource_oaps)} resources on {host}... *******")
+    logger.info(f"******* Updating OAPs of {len(oaps)} resources on {host}... *******")
 
-    failed_res_iris = _launch_thread_pool(resource_oaps, nthreads, dsp_client)
+    failed_res_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
 
     if failed_res_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -200,4 +204,4 @@ def apply_updated_oaps_on_server(
             f"They were written to {filename}."
         )
         logger.error(msg)
-    logger.info(f"Updated OAPs of {len(resource_oaps)} resources on {host}")
+    logger.info(f"Updated OAPs of {len(oaps)} resources on {host}")

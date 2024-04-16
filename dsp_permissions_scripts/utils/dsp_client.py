@@ -1,19 +1,26 @@
 import json
 import re
 import time
-from dataclasses import dataclass, field
-from datetime import datetime
+from dataclasses import dataclass
+from dataclasses import field
 from functools import partial
 from importlib.metadata import version
-from typing import Any, Literal, Optional, cast
+from typing import Any
+from typing import Literal
+from typing import Optional
+from typing import cast
 
-from requests import ReadTimeout, RequestException, Response, Session
+from requests import ReadTimeout
+from requests import RequestException
+from requests import Response
+from requests import Session
 
-from dsp_permissions_scripts.models.errors import (
-    ApiError,
-    PermissionsAlreadyUpToDate,
-)
+from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
+
+# ruff: noqa: PLR2004 (magic value used in comparison)
 
 logger = get_logger(__name__)
 
@@ -57,10 +64,10 @@ class DspClient:
     server: str
     token: Optional[str] = None
     session: Session = field(init=False, default=Session())
-    timeout: int = field(init=False, default=20)
+    timeout: int = field(init=False, default=30)
 
     def __post_init__(self) -> None:
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
         if self.server.endswith("/"):
             self.server = self.server[:-1]
 
@@ -220,7 +227,7 @@ class DspClient:
             the return value of action
         """
         action = partial(self.session.request, **params.as_kwargs())
-        for i in range(7):
+        for i in range(10):
             try:
                 self._log_request(params)
                 response = action()
@@ -259,7 +266,7 @@ class DspClient:
     def _renew_session(self) -> None:
         self.session.close()
         self.session = Session()
-        self.session.headers["User-Agent"] = f'DSP-PERMISSION-SCRIPTS/{version("dsp-permissions-scripts")}'
+        self.session.headers["User-Agent"] = f"{PACKAGE_NAME.upper()}/{version(PACKAGE_NAME)}"
         if self.token:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 

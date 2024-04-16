@@ -2,8 +2,10 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from dsp_permissions_scripts.doap.doap_model import Doap, DoapTargetType
-from dsp_permissions_scripts.utils.get_logger import get_logger, get_timestamp
+from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import DoapTargetType
+from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.get_logger import get_timestamp
 
 logger = get_logger(__name__)
 
@@ -29,7 +31,7 @@ def serialize_doaps_of_project(
     doaps_as_dict = {explanation_string: doaps_as_dicts}
     with open(filepath, mode="w", encoding="utf-8") as f:
         f.write(json.dumps(doaps_as_dict, ensure_ascii=False, indent=2))
-    logger.info(f"{len(project_doaps)} DOAPs have been written to file {str(filepath)}")
+    logger.info(f"{len(project_doaps)} DOAPs have been written to file {filepath}")
 
 
 def deserialize_doaps_of_project(
@@ -40,5 +42,5 @@ def deserialize_doaps_of_project(
     filepath = _get_file_path(shortcode, mode)
     with open(filepath, mode="r", encoding="utf-8") as f:
         doaps_as_dict = json.load(f)
-    doaps_as_dicts = list(doaps_as_dict.values())[0]
+    doaps_as_dicts = next(iter(doaps_as_dict.values()))
     return [Doap.model_validate(d) for d in doaps_as_dicts]
