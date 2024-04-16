@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from typing import Iterable
 from typing import Literal
 
@@ -45,7 +46,22 @@ class PermissionScope(BaseModel):
 
     @staticmethod
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
-        return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in d.items()})
+        purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
+        return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in purged_kwargs.items()})
+
+    @staticmethod
+    def _remove_duplicates_from_kwargs(kwargs: dict[str, list[str]]) -> dict[str, list[str]]:
+        res = copy.deepcopy(kwargs)
+        permissions = ["RV", "V", "M", "D", "CR"]
+        permissions = [perm for perm in permissions if perm in kwargs]
+        for perm in permissions:
+            higher_permissions = permissions[permissions.index(perm) + 1 :] if perm != "CR" else []
+            for group in kwargs[perm]:
+                nested_list = [kwargs[hp] for hp in higher_permissions]
+                flat_list = [y for x in nested_list for y in x]
+                if flat_list.count(group) > 0:
+                    res[perm].remove(group)
+        return res
 
     @model_validator(mode="after")
     def check_group_occurs_only_once(self) -> PermissionScope:
