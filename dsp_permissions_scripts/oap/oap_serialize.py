@@ -35,7 +35,7 @@ def serialize_oaps(
         for value_oap in oap.value_oaps:
             _serialize_oap(value_oap, folder)
             counter += 1
-    logger.info(f"Successfully wrote {len(oaps)} OAPs into {counter} files in folder {str(folder)}")
+    logger.info(f"Successfully wrote {len(oaps)} OAPs into {counter} files in folder {folder}")
 
 
 def _serialize_oap(oap: ResourceOap | ValueOap, folder: Path) -> None:

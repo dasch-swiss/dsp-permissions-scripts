@@ -47,7 +47,7 @@ def _update_permissions_for_value(
         raise err from None
 
 
-def _update_permissions_for_resource(
+def _update_permissions_for_resource(  # noqa: PLR0913
     resource_iri: str,
     lmd: str | None,
     resource_type: str,
