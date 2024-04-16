@@ -15,6 +15,7 @@ from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
+from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
@@ -48,11 +49,15 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     modified_oaps = []
     for oap in oaps:
         if oap.resource_oap:
-            if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
-                oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
+            if group.UNKNOWN_USER in oap.resource_oap.scope.V:
+                oap.resource_oap.scope = oap.resource_oap.scope.remove("V", group.UNKNOWN_USER)
+            if group.UNKNOWN_USER not in oap.resource_oap.scope.RV:
+                oap.resource_oap.scope = oap.resource_oap.scope.add("RV", group.UNKNOWN_USER)
         for value_oap in oap.value_oaps:
-            if group.SYSTEM_ADMIN not in value_oap.scope.CR:
-                value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)
+            if group.UNKNOWN_USER in value_oap.scope.V:
+                value_oap.scope = value_oap.scope.remove("V", group.UNKNOWN_USER)
+            if group.UNKNOWN_USER not in value_oap.scope.RV:
+                value_oap.scope = value_oap.scope.add("RV", group.UNKNOWN_USER)
         modified_oaps.append(oap)
     return modified_oaps
 
@@ -112,17 +117,16 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     )
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
-    print(host)
-    # oaps_modified = modify_oaps(oaps)
-    # apply_updated_oaps_on_server(
-    #     oaps=oaps_modified,
-    #     host=host,
-    #     shortcode=shortcode,
-    #     dsp_client=dsp_client,
-    #     nthreads=4,
-    # )
-    # oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    # serialize_oaps(oaps_updated, shortcode, mode="modified")
+    oaps_modified = modify_oaps(oaps)
+    apply_updated_oaps_on_server(
+        oaps=oaps_modified,
+        host=host,
+        shortcode=shortcode,
+        dsp_client=dsp_client,
+        nthreads=4,
+    )
+    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
