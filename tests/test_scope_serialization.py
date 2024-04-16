@@ -8,6 +8,8 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
+
 
 def compare_scopes(
     scope1: PermissionScope,
@@ -22,13 +24,13 @@ def compare_scopes(
 
 
 class TestScopeSerialization(unittest.TestCase):
-    perm_strings = [
+    perm_strings = (
         "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
         "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
         "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
-    ]
-    admin_route_objects = [
+    )
+    admin_route_objects = (
         [
             {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin", "permissionCode": None},
             {"name": "V", "additionalInformation": "knora-admin:CustomGroup", "permissionCode": None},
@@ -49,8 +51,8 @@ class TestScopeSerialization(unittest.TestCase):
             {"name": "D", "additionalInformation": "knora-admin:Creator", "permissionCode": None},
             {"name": "RV", "additionalInformation": "knora-admin:UnknownUser", "permissionCode": None},
         ],
-    ]
-    scopes = [
+    )
+    scopes = (
         PermissionScope.create(
             CR=[group.SYSTEM_ADMIN],
             V=[group.Group(val="http://www.knora.org/ontology/knora-admin#CustomGroup")],
@@ -69,7 +71,7 @@ class TestScopeSerialization(unittest.TestCase):
             D={group.CREATOR},
             RV={group.UNKNOWN_USER},
         ),
-    ]
+    )
 
     def test_create_scope_from_string(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):

@@ -36,7 +36,7 @@ def _get_values_to_update(resource: dict[str, Any]) -> list[ValueUpdate]:
     return res
 
 
-def _update_permissions_for_value(
+def _update_permissions_for_value(  # noqa: PLR0913
     resource_iri: str,
     value: ValueUpdate,
     resource_type: str,
@@ -65,7 +65,7 @@ def _update_permissions_for_value(
     logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
 
 
-def _update_permissions_for_resource(
+def _update_permissions_for_resource(  # noqa: PLR0913
     resource_iri: str,
     lmd: str | None,
     resource_type: str,
@@ -98,7 +98,7 @@ def _update_permissions_for_resource_and_values(
     """Updates the permissions for the given resource and its values on a DSP server"""
     try:
         resource = get_resource(resource_iri, dsp_client)
-    except Exception as exc:  # pylint: disable=broad-exception-caught
+    except Exception as exc:  # noqa: BLE001 (blind exception)
         logger.error(f"Cannot update resource {resource_iri}: {exc}")
         return resource_iri, False
     values = _get_values_to_update(resource)
