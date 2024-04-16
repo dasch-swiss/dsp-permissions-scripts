@@ -16,25 +16,25 @@ logger = get_logger(__name__)
 def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient) -> list[Oap]:
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
-    resources: list[Oap] = []
+    all_oaps: list[Oap] = []
     page = 0
     more = True
     while more:
         logger.info(f"Getting page {page}...")
         try:
-            more, iris = _get_next_page(
+            more, oaps = _get_next_page(
                 resclass_iri=resclass_iri,
                 page=page,
                 headers=headers,
                 dsp_client=dsp_client,
             )
-            resources.extend(iris)
+            all_oaps.extend(oaps)
             page += 1
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    logger.info(f"Retrieved {len(resources)} resource OAPs of class {resclass_iri}")
-    return resources
+    logger.info(f"Retrieved {len(all_oaps)} OAPs of class {resclass_iri}")
+    return all_oaps
 
 
 def _get_next_page(
@@ -86,7 +86,7 @@ def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
         raise err from None
 
 
-def get_oap_by_resource_iri(resource_iri: str, dsp_client: DspClient) -> Oap:
+def get_resource_oap_by_iri(resource_iri: str, dsp_client: DspClient) -> Oap:
     resource = get_resource(resource_iri, dsp_client)
     scope = create_scope_from_string(resource["knora-api:hasPermissions"])
     return Oap(scope=scope, object_iri=resource_iri)
@@ -97,13 +97,13 @@ def get_all_resource_oaps_of_project(
     dsp_client: DspClient,
     excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
-    logger.info("******* Retrieving all resource OAPs... *******")
+    logger.info("******* Retrieving all OAPs... *******")
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
-    all_resource_oaps = []
     resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
+    all_oaps = []
     for resclass_iri in resclass_iris:
-        resource_oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
-        all_resource_oaps.extend(resource_oaps)
-    logger.info(f"Retrieved a TOTAL of {len(all_resource_oaps)} resource OAPs")
-    return all_resource_oaps
+        oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
+        all_oaps.extend(oaps)
+    logger.info(f"Retrieved a TOTAL of {len(all_oaps)} OAPs")
+    return all_oaps
