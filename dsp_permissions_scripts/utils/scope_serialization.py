@@ -1,4 +1,3 @@
-import copy
 from typing import Any
 
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -38,22 +37,7 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
             kwargs[attr_name].append(group)
         else:
             kwargs[attr_name] = [group]
-    purged_kwargs = _remove_duplicates_from_kwargs_for_permission_scope(kwargs)
-    return PermissionScope.from_dict(purged_kwargs)
-
-
-def _remove_duplicates_from_kwargs_for_permission_scope(kwargs: dict[str, list[str]]) -> dict[str, list[str]]:
-    res = copy.deepcopy(kwargs)
-    permissions = ["RV", "V", "M", "D", "CR"]
-    permissions = [perm for perm in permissions if perm in kwargs]
-    for perm in permissions:
-        higher_permissions = permissions[permissions.index(perm) + 1 :] if perm != "CR" else []
-        for group in kwargs[perm]:
-            nested_list = [kwargs[hp] for hp in higher_permissions]
-            flat_list = [y for x in nested_list for y in x]
-            if flat_list.count(group) > 0:
-                res[perm].remove(group)
-    return res
+    return PermissionScope.from_dict(kwargs)
 
 
 def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[dict[str, str | None]]:
