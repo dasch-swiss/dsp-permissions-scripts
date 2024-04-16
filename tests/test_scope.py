@@ -5,6 +5,8 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
 # ruff: noqa: PT027 (pytest-unittest-raises-assertion) (remove this line when pytest is used instead of unittest)
+# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
+
 
 class TestScope(unittest.TestCase):
     def test_scope_validation_on_creation(self) -> None:
@@ -77,6 +79,72 @@ class TestScope(unittest.TestCase):
                 M={group.PROJECT_MEMBER, group.KNOWN_USER},
             ),
         )
+
+    def test_remove_duplicates_from_kwargs_CR(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": ["knora-admin:ProjectAdmin"],
+            "M": ["knora-admin:ProjectAdmin"],
+            "V": ["knora-admin:ProjectAdmin"],
+            "RV": ["knora-admin:ProjectAdmin"],
+        }
+        expected = {"CR": ["knora-admin:ProjectAdmin"], "D": [], "M": [], "V": [], "RV": []}
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
+
+    def test_remove_duplicates_from_kwargs_D(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": [],
+            "D": ["knora-admin:ProjectAdmin"],
+            "M": ["knora-admin:ProjectAdmin"],
+            "V": ["knora-admin:ProjectAdmin"],
+            "RV": ["knora-admin:ProjectAdmin"],
+        }
+        expected = {"CR": [], "D": ["knora-admin:ProjectAdmin"], "M": [], "V": [], "RV": []}
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
+
+    def test_remove_duplicates_from_kwargs_RV(self) -> None:
+        original: dict[str, list[str]] = {"CR": [], "D": [], "M": [], "V": [], "RV": ["knora-admin:ProjectAdmin"]}
+        expected: dict[str, list[str]] = {"CR": [], "D": [], "M": [], "V": [], "RV": ["knora-admin:ProjectAdmin"]}
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
+
+    def test_remove_duplicates_from_kwargs_mixed(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": ["knora-admin:ProjectMember"],
+            "M": ["knora-admin:ProjectMember"],
+            "V": ["knora-admin:ProjectMember"],
+            "RV": ["knora-admin:ProjectMember"],
+        }
+        expected = {"CR": ["knora-admin:ProjectAdmin"], "D": ["knora-admin:ProjectMember"], "M": [], "V": [], "RV": []}
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
+
+    def test_remove_duplicates_from_kwargs_mixed_M(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": [],
+            "M": ["knora-admin:ProjectMember"],
+            "V": ["knora-admin:ProjectMember"],
+            "RV": ["knora-admin:ProjectMember"],
+        }
+        expected = {"CR": ["knora-admin:ProjectAdmin"], "D": [], "M": ["knora-admin:ProjectMember"], "V": [], "RV": []}
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
+
+    def test_remove_duplicates_from_kwargs_mixed_and_multiple(self) -> None:
+        original: dict[str, list[str]] = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": [],
+            "M": ["knora-admin:ProjectMember", "knora-admin:ProjectAdmin", "knora-admin:KnownUser"],
+            "V": ["knora-admin:ProjectMember", "knora-admin:ProjectAdmin"],
+            "RV": ["knora-admin:ProjectMember", "knora-admin:KnownUser"],
+        }
+        expected = {
+            "CR": ["knora-admin:ProjectAdmin"],
+            "D": [],
+            "M": ["knora-admin:ProjectMember", "knora-admin:KnownUser"],
+            "V": [],
+            "RV": [],
+        }
+        self.assertDictEqual(expected, PermissionScope._remove_duplicates_from_kwargs(original))
 
 
 if __name__ == "__main__":
