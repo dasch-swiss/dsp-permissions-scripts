@@ -78,12 +78,12 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
 
     for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
         res_oap = next(x for x in res_oaps if x.resource_iri == res_iri)
-        oaps.append(Oap(resource_oap=res_oap, value_oaps=_val_oaps))
+        oaps.append(Oap(resource_oap=res_oap, value_oaps=list(_val_oaps)))
         deserialized_resource_iris.append(res_iri)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
     for res_oap in remaining_res_oaps:
         oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
 
-    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else oap.resource_oap)
+    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
     return oaps
