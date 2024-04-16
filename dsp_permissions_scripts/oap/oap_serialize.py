@@ -73,15 +73,11 @@ def _read_all_oaps_from_files(
 
 
 def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) -> list[Oap]:
-    def _iri_filter(res_oap: ResourceOap, iri: str) -> bool:
-        return res_oap.resource_iri == iri
-
     oaps: list[Oap] = []
     deserialized_resource_iris = []
 
     for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
-        filtered = list(filter(_iri_filter, res_oaps))
-        res_oap = filtered[0] if filtered else None
+        res_oap = [x for x in res_oaps if x.resource_iri == res_iri][0]
         oaps.append(Oap(resource_oap=res_oap, value_oaps=_val_oaps))
         deserialized_resource_iris.append(res_iri)
 
@@ -89,5 +85,5 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     for res_oap in remaining_res_oaps:
         oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
 
-    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri)
+    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else oap.resource_oap)
     return oaps

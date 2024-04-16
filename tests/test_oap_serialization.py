@@ -72,10 +72,11 @@ class TestOapSerialization(unittest.TestCase):
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         if oap1.resource_oap is None:
             self.assertIsNone(oap2.resource_oap)
-        if oap2.resource_oap is None:
+        elif oap2.resource_oap is None:
             self.assertIsNone(oap1.resource_oap)
-        self.assertEqual(oap1.resource_oap.resource_iri, oap2.resource_oap.resource_iri)
-        compare_scopes(oap1.resource_oap.scope, oap2.resource_oap.scope)
+        else:
+            self.assertEqual(oap1.resource_oap.resource_iri, oap2.resource_oap.resource_iri)
+            compare_scopes(oap1.resource_oap.scope, oap2.resource_oap.scope)
 
         self.assertEqual(len(oap1.value_oaps), len(oap2.value_oaps))
         for val_oap1, val_oap2 in zip(oap1.value_oaps, oap2.value_oaps):
