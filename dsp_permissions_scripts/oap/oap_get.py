@@ -149,5 +149,5 @@ def get_all_oaps_of_project(
     for resclass_iri in resclass_iris:
         oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, oap_config)
         all_oaps.extend(oaps)
-    logger.info(f"Retrieved a TOTAL of {len(oaps)} OAPs")
+    logger.info(f"Retrieved a TOTAL of {len(all_oaps)} OAPs")
     return all_oaps
