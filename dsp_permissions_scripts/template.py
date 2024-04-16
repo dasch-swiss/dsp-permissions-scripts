@@ -15,7 +15,6 @@ from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
-from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
@@ -107,20 +106,23 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oap_config = OapRetrieveConfig(
-        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
+        retrieve_resources=False,
+        retrieve_values="specified_props",
+        specified_props=["knora-api:hasStillImageFileValue"],
     )
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
-    oaps_modified = modify_oaps(oaps)
-    apply_updated_oaps_on_server(
-        oaps=oaps_modified,
-        host=host,
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-        nthreads=4,
-    )
-    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps_updated, shortcode, mode="modified")
+    print(host)
+    # oaps_modified = modify_oaps(oaps)
+    # apply_updated_oaps_on_server(
+    #     oaps=oaps_modified,
+    #     host=host,
+    #     shortcode=shortcode,
+    #     dsp_client=dsp_client,
+    #     nthreads=4,
+    # )
+    # oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    # serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
@@ -136,16 +138,16 @@ def main() -> None:
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
-    update_aps(
-        host=host,
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
-    update_doaps(
-        host=host,
-        shortcode=shortcode,
-        dsp_client=dsp_client,
-    )
+    # update_aps(
+    #     host=host,
+    #     shortcode=shortcode,
+    #     dsp_client=dsp_client,
+    # )
+    # update_doaps(
+    #     host=host,
+    #     shortcode=shortcode,
+    #     dsp_client=dsp_client,
+    # )
     update_oaps(
         host=host,
         shortcode=shortcode,
