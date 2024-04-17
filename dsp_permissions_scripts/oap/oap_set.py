@@ -128,7 +128,7 @@ def _write_failed_res_iris_to_file(
 
 
 def _launch_thread_pool(oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
-    all_failed_iris = []
+    all_failed_iris: list[str] = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [pool.submit(_update_batch, batch, dsp_client) for batch in itertools.batched(oaps, 100)]
         for result in as_completed(jobs):
