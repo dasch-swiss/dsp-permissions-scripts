@@ -13,7 +13,7 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 logger = get_logger(__name__)
 
 
-def _get_all_resource_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient) -> list[Oap]:
+def _get_all_oaps_of_resclass(resclass_iri: str, project_iri: str, dsp_client: DspClient) -> list[Oap]:
     logger.info(f"Getting all resource OAPs of class {resclass_iri}...")
     headers = {"X-Knora-Accept-Project": project_iri}
     all_oaps: list[Oap] = []
@@ -103,7 +103,7 @@ def get_all_resource_oaps_of_project(
     resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
     all_oaps = []
     for resclass_iri in resclass_iris:
-        oaps = _get_all_resource_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
+        oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client)
         all_oaps.extend(oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_oaps)} OAPs")
     return all_oaps
