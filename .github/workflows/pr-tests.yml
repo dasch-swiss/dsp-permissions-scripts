@@ -38,6 +38,6 @@ jobs:
         run: poetry run mypy .
 
       - name: unittests
-        run: poetry run python -m unittest discover tests
+        run: poetry run pytest -s tests
 
 
