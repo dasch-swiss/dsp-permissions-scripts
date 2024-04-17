@@ -53,6 +53,9 @@ select = [
     "B023",     # flake8-bugbear: function-uses-loop-variable
     "FIX",      # flake8-fixme: checks for FIXME, TODO, XXX, etc.
 ]
+ignore = [
+    "ISC001",   # flake8-implicit-str-concat: single-line-implicit-string-concatenation  # incompatible with the formatter
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
