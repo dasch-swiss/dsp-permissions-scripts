@@ -28,3 +28,7 @@ class TestAp:
     def test_remove_permission_not_exists(self) -> None:
         with pytest.raises(ValueError):  # noqa: PT011 (exception too broad)
             self.ap.remove_permission(ApValue.ProjectAdminAllPermission)
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
