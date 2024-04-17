@@ -136,21 +136,21 @@ def _update_permissions_for_resource_and_values(
     return resource_iri, success
 
 
-def _write_failed_res_iris_to_file(
-    failed_res_iris: list[str],
+def _write_failed_iris_to_file(
+    failed_iris: list[str],
     shortcode: str,
     host: str,
     filename: str,
 ) -> None:
     with open(filename, "w", encoding="utf-8") as f:
         f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}):\n")
-        f.write("\n".join(failed_res_iris))
+        f.write("\n".join(failed_iris))
 
 
 def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: DspClient) -> list[str]:
     counter = 0
     total = len(resource_oaps)
-    failed_res_iris: list[str] = []
+    all_failed_iris: list[str] = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [
             pool.submit(
@@ -165,11 +165,11 @@ def _launch_thread_pool(resource_oaps: list[Oap], nthreads: int, dsp_client: Dsp
             resource_iri, success = result.result()
             counter += 1
             if not success:
-                failed_res_iris.append(resource_iri)
+                all_failed_iris.append(resource_iri)
                 logger.info(f"Failed updating resource {counter}/{total} ({resource_iri}) and its values.")
             else:
                 logger.info(f"Updated resource {counter}/{total} ({resource_iri}) and its values.")
-    return failed_res_iris
+    return all_failed_iris
 
 
 def apply_updated_oaps_on_server(
@@ -188,19 +188,18 @@ def apply_updated_oaps_on_server(
         return
     logger.info(f"******* Updating OAPs of {len(oaps)} resources on {host}... *******")
 
-    failed_res_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
-
-    if failed_res_iris:
+    failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
+    if failed_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"FAILED_RESOURCES_{timestamp}.txt"
-        _write_failed_res_iris_to_file(
-            failed_res_iris=failed_res_iris,
+        _write_failed_iris_to_file(
+            failed_iris=failed_iris,
             shortcode=shortcode,
             host=host,
             filename=filename,
         )
         msg = (
-            f"ERROR: {len(failed_res_iris)} resources could not (or only partially) be updated. "
+            f"ERROR: {len(failed_iris)} resources could not (or only partially) be updated. "
             f"They were written to {filename}."
         )
         logger.error(msg)
