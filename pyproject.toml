@@ -54,6 +54,11 @@ select = [
     "FIX",      # flake8-fixme: checks for FIXME, TODO, XXX, etc.
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "S101",     # flake8-bandit: use of assert
+]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
