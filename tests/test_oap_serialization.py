@@ -1,6 +1,8 @@
 import shutil
-import unittest
 from pathlib import Path
+from typing import Iterator
+
+import pytest
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -9,13 +11,13 @@ from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from tests.test_scope_serialization import compare_scopes
 
-# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
-
-class TestOapSerialization(unittest.TestCase):
+class TestOapSerialization:
     shortcode = "1234"
 
-    def tearDown(self) -> None:
+    @pytest.fixture(autouse=True)
+    def _setup_teardown(self) -> Iterator[None]:
+        yield
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
@@ -50,8 +52,8 @@ class TestOapSerialization(unittest.TestCase):
 
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         compare_scopes(oap1.scope, oap2.scope)
-        self.assertEqual(oap1.object_iri, oap2.object_iri)
+        assert oap1.object_iri == oap2.object_iri
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main([__file__])

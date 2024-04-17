@@ -18,14 +18,13 @@ from tests.test_scope_serialization import compare_scopes
 class TestDoapSerialization(unittest.TestCase):
     shortcode = "1234"
 
-    @pytest.fixture()
+    @pytest.fixture(autouse=True)
     def _setup_teardown(self) -> Iterator[None]:
         yield
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
 
-    @pytest.mark.usefixtures("_setup_teardown")
     def test_doap_serialization(self) -> None:
         doap1 = Doap(
             target=DoapTarget(

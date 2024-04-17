@@ -36,14 +36,13 @@ class TestApSerialization(unittest.TestCase):
         iri="http://rdfh.ch/ap-2",
     )
 
-    @pytest.fixture()
+    @pytest.fixture(autouse=True)
     def _setup_teardown(self) -> Iterator[None]:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         yield
         if self.output_dir.is_dir():
             shutil.rmtree(self.output_dir)
 
-    @pytest.mark.usefixtures("_setup_teardown")
     def test_serialize_aps_of_project(self) -> None:
         serialize_aps_of_project(
             project_aps=[self.ap1, self.ap2],
@@ -59,7 +58,6 @@ class TestApSerialization(unittest.TestCase):
         assert self.ap1 == Ap.model_validate(aps_as_dicts[0])
         assert self.ap2 == Ap.model_validate(aps_as_dicts[1])
 
-    @pytest.mark.usefixtures("_setup_teardown")
     def test_deserialize_aps_of_project(self) -> None:
         shutil.copy(src=self.testdata_file, dst=self.output_file)
         aps = deserialize_aps_of_project(
