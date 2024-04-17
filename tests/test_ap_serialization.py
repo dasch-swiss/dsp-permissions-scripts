@@ -12,6 +12,7 @@ from dsp_permissions_scripts.models.host import Hosts
 
 # ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
+
 class TestApSerialization(unittest.TestCase):
     shortcode = "1234"
     project_iri = "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ"

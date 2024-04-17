@@ -29,7 +29,7 @@ jobs:
         run: poetry install
 
       - name: Formatting with ruff
-        run: poetry run ruff format .
+        run: poetry run ruff format --check .
 
       - name: Linting with ruff
         run: poetry run ruff check .
