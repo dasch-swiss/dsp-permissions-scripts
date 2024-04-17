@@ -92,3 +92,7 @@ class TestOapRetrieveConfig:
     def test_no_values_but_specified(self) -> None:
         with pytest.raises(ValueError):
             OapRetrieveConfig(retrieve_resources=False, retrieve_values="none", specified_props=["foo"])
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
