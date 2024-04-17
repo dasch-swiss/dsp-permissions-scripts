@@ -1,6 +1,9 @@
 import shutil
 import unittest
 from pathlib import Path
+from typing import Iterator
+
+import pytest
 
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import DoapTarget
@@ -11,17 +14,18 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
-# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
-
 
 class TestDoapSerialization(unittest.TestCase):
     shortcode = "1234"
 
-    def tearDown(self) -> None:
+    @pytest.fixture()
+    def _setup_teardown(self) -> Iterator[None]:
+        yield
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
 
+    @pytest.mark.usefixtures("_setup_teardown")
     def test_doap_serialization(self) -> None:
         doap1 = Doap(
             target=DoapTarget(
@@ -59,10 +63,10 @@ class TestDoapSerialization(unittest.TestCase):
         self._compare_doaps(deserialized_doaps[1], doap2)
 
     def _compare_doaps(self, doap1: Doap, doap2: Doap) -> None:
-        self.assertEqual(doap1.target, doap2.target)
+        assert doap1.target == doap2.target
         compare_scopes(doap1.scope, doap2.scope)
-        self.assertEqual(doap1.doap_iri, doap2.doap_iri)
+        assert doap1.doap_iri == doap2.doap_iri
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main([__file__])
