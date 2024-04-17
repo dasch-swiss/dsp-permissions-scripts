@@ -1,7 +1,6 @@
 import json
 import re
 import shutil
-import unittest
 from pathlib import Path
 from typing import Iterator
 
@@ -15,7 +14,7 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 
 
-class TestApSerialization(unittest.TestCase):
+class TestApSerialization:
     shortcode = "1234"
     project_iri = "http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ"
     testdata_file = Path("testdata/APs_1234_serialized.json")

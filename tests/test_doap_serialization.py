@@ -1,5 +1,4 @@
 import shutil
-import unittest
 from pathlib import Path
 from typing import Iterator
 
@@ -15,7 +14,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 from tests.test_scope_serialization import compare_scopes
 
 
-class TestDoapSerialization(unittest.TestCase):
+class TestDoapSerialization:
     shortcode = "1234"
 
     @pytest.fixture(autouse=True)
