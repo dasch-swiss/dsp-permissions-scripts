@@ -116,7 +116,7 @@ def _update_batch(batch: tuple[Oap, ...], dsp_client: DspClient) -> list[str]:
     return failed_iris
 
 
-def _write_failed_res_iris_to_file(
+def _write_failed_iris_to_file(
     failed_iris: list[str],
     shortcode: str,
     host: str,
@@ -157,7 +157,7 @@ def apply_updated_oaps_on_server(
     if failed_iris:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"FAILED_RESOURCES_AND_VALUES_{timestamp}.txt"
-        _write_failed_res_iris_to_file(
+        _write_failed_iris_to_file(
             failed_iris=sorted(failed_iris),
             shortcode=shortcode,
             host=host,
