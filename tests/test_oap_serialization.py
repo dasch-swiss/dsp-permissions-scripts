@@ -1,6 +1,8 @@
 import shutil
-import unittest
 from pathlib import Path
+from typing import Iterator
+
+import pytest
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -11,13 +13,13 @@ from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from tests.test_scope_serialization import compare_scopes
 
-# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
-
-class TestOapSerialization(unittest.TestCase):
+class TestOapSerialization:
     shortcode = "1234"
 
-    def tearDown(self) -> None:
+    @pytest.fixture(autouse=True)
+    def _setup_teardown(self) -> Iterator[None]:
+        yield
         testdata_dir = Path(f"project_data/{self.shortcode}")
         if testdata_dir.is_dir():
             shutil.rmtree(testdata_dir)
@@ -74,20 +76,20 @@ class TestOapSerialization(unittest.TestCase):
 
     def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
         if oap1.resource_oap is None:
-            self.assertIsNone(oap2.resource_oap)
+            assert oap2.resource_oap is None
         elif oap2.resource_oap is None:
-            self.assertIsNone(oap1.resource_oap)
+            assert oap1.resource_oap is None
         else:
-            self.assertEqual(oap1.resource_oap.resource_iri, oap2.resource_oap.resource_iri)
+            assert oap1.resource_oap.resource_iri == oap2.resource_oap.resource_iri
             compare_scopes(oap1.resource_oap.scope, oap2.resource_oap.scope)
 
-        self.assertEqual(len(oap1.value_oaps), len(oap2.value_oaps))
+        assert len(oap1.value_oaps) == len(oap2.value_oaps)
         for val_oap1, val_oap2 in zip(oap1.value_oaps, oap2.value_oaps):
-            self.assertEqual(val_oap1.value_iri, val_oap2.value_iri)
-            self.assertEqual(val_oap1.property, val_oap2.property)
-            self.assertEqual(val_oap1.value_type, val_oap2.value_type)
+            assert val_oap1.value_iri == val_oap2.value_iri
+            assert val_oap1.property == val_oap2.property
+            assert val_oap1.value_type == val_oap2.value_type
             compare_scopes(val_oap1.scope, val_oap2.scope)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main([__file__])

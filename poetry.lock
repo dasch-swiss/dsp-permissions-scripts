@@ -467,6 +467,20 @@ pluggy = ">=1.4,<2.0"
 testing = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-unordered"
+version = "0.6.0"
+description = "Test equality of unordered collections in pytest"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytest-unordered-0.6.0.tar.gz", hash = "sha256:f61b4f6e06a60a92db50968954efac93e2f584290a49f53ad135e3f32f57e02a"},
+    {file = "pytest_unordered-0.6.0-py3-none-any.whl", hash = "sha256:86675cade320d1c54864fedd10c2277f685bf2d958ef744c578b3d622000f2ac"},
+]
+
+[package.dependencies]
+pytest = ">=7.0.0"
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -657,4 +671,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.0"
-content-hash = "eced2fcc562d11991fade44a74f72135337b5d9136f090b57df52ba08472a9d7"
+content-hash = "04caee752659b7b49ae4d3d429cf17e68c3070bdb639c6b28f150ab685501a7b"
