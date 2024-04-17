@@ -8,7 +8,6 @@ from pydantic import model_validator
 
 
 class Group(BaseModel):
-
     model_config = ConfigDict(frozen=True)
 
     val: str

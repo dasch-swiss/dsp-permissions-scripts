@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import OapRetrieveConfigEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
@@ -18,6 +21,12 @@ class Oap(BaseModel):
 
     resource_oap: ResourceOap | None
     value_oaps: list[ValueOap]
+
+    @model_validator(mode="after")
+    def check_consistency(self) -> Oap:
+        if not self.resource_oap and not self.value_oaps:
+            raise ValueError("An OAP must have at least one resource_oap or one value_oap")
+        return self
 
 
 class ResourceOap(BaseModel):
@@ -46,7 +55,6 @@ class ValueOap(BaseModel):
 
 
 class OapRetrieveConfig(BaseModel):
-
     model_config = ConfigDict(frozen=True)
 
     retrieve_resources: bool = True
@@ -54,9 +62,15 @@ class OapRetrieveConfig(BaseModel):
     specified_props: list[str] = []
 
     @model_validator(mode="after")
-    def check_consistency(self) -> OapRetrieveConfig:
+    def check_specified_props(self) -> OapRetrieveConfig:
         if self.retrieve_values == "specified_props" and not self.specified_props:
-            raise ValueError("specified_props must not be empty if retrieve_values is 'specified_props'")
+            raise SpecifiedPropsEmptyError()
         if self.retrieve_values != "specified_props" and self.specified_props:
-            raise ValueError("specified_props must be empty if retrieve_values is not 'specified_props'")
+            raise SpecifiedPropsNotEmptyError()
+        return self
+
+    @model_validator(mode="after")
+    def check_config_empty(self) -> OapRetrieveConfig:
+        if not self.retrieve_resources and self.retrieve_values == "none":
+            raise OapRetrieveConfigEmptyError()
         return self

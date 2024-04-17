@@ -1,5 +1,7 @@
-import unittest
 from typing import Any
+
+import pytest
+from pytest_unordered import unordered
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -7,8 +9,6 @@ from dsp_permissions_scripts.utils.scope_serialization import create_admin_route
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
-
-# ruff: noqa: PT009 (pytest-unittest-assertion) (remove this line when pytest is used instead of unittest)
 
 
 def compare_scopes(
@@ -20,10 +20,10 @@ def compare_scopes(
     scope1_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope1_dict.items()}
     scope2_dict = scope2.model_dump(mode="json")
     scope2_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope2_dict.items()}
-    unittest.TestCase().assertDictEqual(scope1_dict, scope2_dict, msg=msg)
+    assert scope1_dict == scope2_dict, msg
 
 
-class TestScopeSerialization(unittest.TestCase):
+class TestScopeSerialization:
     perm_strings = (
         "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
@@ -92,20 +92,13 @@ class TestScopeSerialization(unittest.TestCase):
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
             perm_string_full = self._resolve_prefixes_of_perm_string(perm_string)
-            self.assertEqual(
-                create_string_from_scope(scope),
-                perm_string_full,
-                msg=f"Failed with permission string '{perm_string}'",
-            )
+            assert create_string_from_scope(scope) == perm_string_full, f"Failed with permission string '{perm_string}'"
 
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             admin_route_object_full = self._resolve_prefixes_of_admin_route_object(admin_route_object)
-            self.assertCountEqual(
-                create_admin_route_object_from_scope(scope),
-                admin_route_object_full,
-                msg=f"Failed with admin group object no. {index}",
-            )
+            returned = create_admin_route_object_from_scope(scope)
+            assert unordered(returned) == admin_route_object_full, f"Failed with admin group object no. {index}"
 
     def _resolve_prefixes_of_admin_route_object(self, admin_route_object: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for obj in admin_route_object:
@@ -119,4 +112,4 @@ class TestScopeSerialization(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main([__file__])
