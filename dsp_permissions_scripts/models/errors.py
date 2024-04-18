@@ -20,30 +20,30 @@ class PermissionsAlreadyUpToDate(Exception):
 
 
 @dataclass
-class SpecifiedResClassesEmptyError(ValueError):
+class SpecifiedResClassesEmptyError(Exception):
     message: str = "specified_res_classes must not be empty if retrieve_resources is 'specified_res_classes'"
 
 
 @dataclass
-class SpecifiedResClassesNotEmptyError(ValueError):
+class SpecifiedResClassesNotEmptyError(Exception):
     message: str = "specified_res_classes must be empty if retrieve_resources is not 'specified_res_classes'"
 
 
 @dataclass
-class SpecifiedPropsEmptyError(ValueError):
+class SpecifiedPropsEmptyError(Exception):
     message: str = "specified_props must not be empty if retrieve_values is 'specified_props'"
 
 
 @dataclass
-class SpecifiedPropsNotEmptyError(ValueError):
+class SpecifiedPropsNotEmptyError(Exception):
     message: str = "specified_props must be empty if retrieve_values is not 'specified_props'"
 
 
 @dataclass
-class OapRetrieveConfigEmptyError(ValueError):
+class OapRetrieveConfigEmptyError(Exception):
     message: str = "retrieve_resources cannot be False if retrieve_values is 'none'"
 
 
 @dataclass
-class OapEmptyError(ValueError):
+class OapEmptyError(Exception):
     message: str = "An OAP must specify at least one resource_oap or one value_oap"

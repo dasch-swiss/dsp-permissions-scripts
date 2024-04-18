@@ -100,8 +100,12 @@ class TestOapRetrieveConfig:
         with pytest.raises(SpecifiedPropsNotEmptyError):
             OapRetrieveConfig(retrieve_values="all", specified_props=["foo"])
 
-    def test_no_values_but_specified(self) -> None:
+    def test_specified_values_but_not_specified(self) -> None:
         with pytest.raises(SpecifiedPropsEmptyError):
+            OapRetrieveConfig(retrieve_values="specified_props")
+
+    def test_no_values_but_specified(self) -> None:
+        with pytest.raises(SpecifiedPropsNotEmptyError):
             OapRetrieveConfig(retrieve_values="none", specified_props=["foo"])
 
     def test_all_resources_but_specified(self) -> None:
@@ -109,8 +113,12 @@ class TestOapRetrieveConfig:
             OapRetrieveConfig(retrieve_resources="all", specified_res_classes=["foo"])
 
     def test_no_resources_but_specified(self) -> None:
-        with pytest.raises(SpecifiedResClassesEmptyError):
+        with pytest.raises(SpecifiedResClassesNotEmptyError):
             OapRetrieveConfig(retrieve_resources="none", specified_res_classes=["foo"])
+
+    def test_specified_resources_but_not_specified(self) -> None:
+        with pytest.raises(SpecifiedResClassesEmptyError):
+            OapRetrieveConfig(retrieve_resources="specified_res_classes")
 
 
 if __name__ == "__main__":
