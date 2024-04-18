@@ -1,6 +1,7 @@
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import dereference_prefix
@@ -21,12 +22,16 @@ def _get_class_iris_of_onto(onto_iri: str, dsp_client: DspClient) -> list[str]:
     return class_iris
 
 
-def get_all_resource_class_iris_of_project(onto_iris: list[str], dsp_client: DspClient) -> list[str]:
+def get_all_resource_class_iris_of_project(
+    onto_iris: list[str], dsp_client: DspClient, oap_config: OapRetrieveConfig
+) -> list[str]:
     all_class_iris = []
     for onto_iri in onto_iris:
         class_iris = _get_class_iris_of_onto(onto_iri, dsp_client)
         all_class_iris.extend(class_iris)
         logger.info(f"Found {len(class_iris)} resource classes in onto {onto_iri}.")
+    if oap_config.retrieve_resources == "specified_res_classes":
+        all_class_iris = [x for x in all_class_iris if x in oap_config.specified_res_classes]
     return all_class_iris
 
 

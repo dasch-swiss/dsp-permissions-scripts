@@ -104,10 +104,13 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     )
 
 
-def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
+def update_oaps(host: str, shortcode: str, dsp_client: DspClient, context: dict[str, str]) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oap_config = OapRetrieveConfig(
-        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
+        retrieve_resources="specified_res_classes",
+        specified_res_classes=["my-data-model:Thing"],
+        retrieve_values="specified_props",
+        specified_props=["knora-api:hasStillImageFileValue"],
     )
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
@@ -133,6 +136,8 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
+    onto_name = "my-data-model"
+    context = {onto_name: f"{host}/ontology/{shortcode}/{onto_name}/v2#"}
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
@@ -150,6 +155,7 @@ def main() -> None:
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
+        context=context,
     )
 
 

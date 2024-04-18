@@ -1,5 +1,4 @@
 from typing import Any
-from typing import Iterable
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
@@ -145,12 +144,10 @@ def get_all_oaps_of_project(
     shortcode: str,
     dsp_client: DspClient,
     oap_config: OapRetrieveConfig,
-    excluded_class_iris: Iterable[str] = (),
 ) -> list[Oap]:
     logger.info("******* Retrieving all OAPs... *******")
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
-    resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client)
-    resclass_iris = [x for x in resclass_iris if x not in excluded_class_iris]
+    resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client, oap_config)
     all_oaps = []
     for resclass_iri in resclass_iris:
         oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, oap_config)

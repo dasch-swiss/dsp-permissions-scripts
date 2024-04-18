@@ -1,13 +1,17 @@
 import pytest
 
 from dsp_permissions_scripts.models import group
+from dsp_permissions_scripts.models.errors import OapEmptyError
+from dsp_permissions_scripts.models.errors import OapRetrieveConfigEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedResClassesNotEmptyError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
-
-# ruff: noqa: PT011 (exception too broad)
 
 
 class TestOap:
@@ -62,36 +66,51 @@ class TestOap:
         assert oap.value_oaps == val_oaps
 
     def test_oap_no_res_no_vals(self) -> None:
-        with pytest.raises(ValueError):
+        with pytest.raises(OapEmptyError):
             Oap(resource_oap=None, value_oaps=[])
 
 
 class TestOapRetrieveConfig:
-    def test_with_resource(self) -> None:
-        conf = OapRetrieveConfig(retrieve_resources=True, retrieve_values="none")
-        assert conf.retrieve_resources is True
-        assert conf.retrieve_values == "none"
-        assert conf.specified_props == []
-
-    def test_without_resource(self) -> None:
-        conf = OapRetrieveConfig(retrieve_resources=False, retrieve_values="all")
-        assert conf.retrieve_resources is False
+    def test_all_resources_all_values(self) -> None:
+        conf = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
+        assert conf.retrieve_resources == "all"
+        assert conf.specified_res_classes == []
         assert conf.retrieve_values == "all"
         assert conf.specified_props == []
 
-    def test_empty(self) -> None:
-        with pytest.raises(ValueError):
-            OapRetrieveConfig(retrieve_resources=False, retrieve_values="none")
-        with pytest.raises(ValueError):
-            OapRetrieveConfig(retrieve_resources=False, retrieve_values="none", specified_props=[])
+    def test_all_resources_no_values(self) -> None:
+        conf = OapRetrieveConfig(retrieve_resources="all", retrieve_values="none")
+        assert conf.retrieve_resources == "all"
+        assert conf.specified_res_classes == []
+        assert conf.retrieve_values == "none"
+        assert conf.specified_props == []
+
+    def test_no_resources_all_values(self) -> None:
+        conf = OapRetrieveConfig(retrieve_resources="none", retrieve_values="all")
+        assert conf.retrieve_resources == "none"
+        assert conf.specified_res_classes == []
+        assert conf.retrieve_values == "all"
+        assert conf.specified_props == []
+
+    def test_no_resources_no_values(self) -> None:
+        with pytest.raises(OapRetrieveConfigEmptyError):
+            OapRetrieveConfig(retrieve_resources="none", retrieve_values="none")
 
     def test_all_values_but_specified(self) -> None:
-        with pytest.raises(ValueError):
-            OapRetrieveConfig(retrieve_resources=False, retrieve_values="all", specified_props=["foo"])
+        with pytest.raises(SpecifiedPropsNotEmptyError):
+            OapRetrieveConfig(retrieve_values="all", specified_props=["foo"])
 
     def test_no_values_but_specified(self) -> None:
-        with pytest.raises(ValueError):
-            OapRetrieveConfig(retrieve_resources=False, retrieve_values="none", specified_props=["foo"])
+        with pytest.raises(SpecifiedPropsEmptyError):
+            OapRetrieveConfig(retrieve_values="none", specified_props=["foo"])
+
+    def test_all_resources_but_specified(self) -> None:
+        with pytest.raises(SpecifiedResClassesNotEmptyError):
+            OapRetrieveConfig(retrieve_resources="all", specified_res_classes=["foo"])
+
+    def test_no_resources_but_specified(self) -> None:
+        with pytest.raises(SpecifiedResClassesEmptyError):
+            OapRetrieveConfig(retrieve_resources="none", specified_res_classes=["foo"])
 
 
 if __name__ == "__main__":
