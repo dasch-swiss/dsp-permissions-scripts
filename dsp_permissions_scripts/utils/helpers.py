@@ -24,6 +24,26 @@ def dereference_prefix(
     return context[prefix] + actual_id
 
 
+def shorten_iri_with_prefix(
+    iri: str,
+    context: dict[str, str],
+) -> str:
+    """
+    Transforms a full IRI into its shortened form, using the prefix from the provided context.
+
+    Args:
+        iri: an full IRI, e.g. "http://www.knora.org/ontology/knora-admin#Creator"
+        context: The context to use take the prefix from
+
+    Returns:
+        The prefixed short form of the IRI, e.g. "knora-admin:Creator"
+    """
+    for prefix, full_iri in context.items():
+        if iri.startswith(full_iri):
+            return f"{prefix}:{iri[len(full_iri):]}"
+    raise ValueError(f"Could not find a prefix for IRI {iri}")
+
+
 def _get_sort_pos_of_custom_group(group: str) -> int:
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
     relevant_letter = group.replace("http://www.knora.org/ontology/knora-admin#", "")[0]

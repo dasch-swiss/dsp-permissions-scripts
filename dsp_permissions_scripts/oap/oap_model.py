@@ -64,6 +64,7 @@ class OapRetrieveConfig(BaseModel):
     specified_res_classes: list[str] = []
     retrieve_values: Literal["all", "specified_props", "none"] = "none"
     specified_props: list[str] = []
+    context: dict[str, str] = {}
 
     @model_validator(mode="after")
     def check_specified_res_classes(self) -> OapRetrieveConfig:

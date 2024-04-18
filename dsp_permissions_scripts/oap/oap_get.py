@@ -8,7 +8,8 @@ from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_all_resource_class_iris_of_project
+from dsp_permissions_scripts.utils.helpers import dereference_prefix
+from dsp_permissions_scripts.utils.project import get_all_resource_class_ids_of_project
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
@@ -16,7 +17,7 @@ logger = get_logger(__name__)
 
 
 def _get_all_oaps_of_resclass(
-    resclass_iri: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
+    resclass_id: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
 ) -> list[Oap]:
     headers = {"X-Knora-Accept-Project": project_iri}
     all_oaps: list[Oap] = []
@@ -26,7 +27,7 @@ def _get_all_oaps_of_resclass(
         logger.info(f"Getting page {page}...")
         try:
             more, oaps = _get_next_page(
-                resclass_iri=resclass_iri,
+                resclass_id=resclass_id,
                 page=page,
                 headers=headers,
                 dsp_client=dsp_client,
@@ -37,12 +38,12 @@ def _get_all_oaps_of_resclass(
         except ApiError as err:
             logger.error(f"{err}\nStop getting more pages, return what has been retrieved so far.")
             more = False
-    logger.info(f"Retrieved {len(all_oaps)} OAPs of class {resclass_iri}")
+    logger.info(f"Retrieved {len(all_oaps)} OAPs of class {resclass_id}")
     return all_oaps
 
 
 def _get_next_page(
-    resclass_iri: str,
+    resclass_id: str,
     page: int,
     headers: dict[str, str],
     dsp_client: DspClient,
@@ -57,6 +58,7 @@ def _get_next_page(
     and an empty response content with status code 200 if there are no resources remaining.
     This means that the page must be incremented until the response contains 0 or 1 resource.
     """
+    resclass_iri = dereference_prefix(resclass_id, oap_config.context)
     route = f"/v2/resources?resourceClass={quote_plus(resclass_iri)}&page={page}"
     try:
         result = dsp_client.get(route, headers=headers)
@@ -147,10 +149,10 @@ def get_all_oaps_of_project(
 ) -> list[Oap]:
     logger.info("******* Retrieving all OAPs... *******")
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
-    resclass_iris = get_all_resource_class_iris_of_project(onto_iris, dsp_client, oap_config)
+    resclass_ids = get_all_resource_class_ids_of_project(onto_iris, dsp_client, oap_config)
     all_oaps = []
-    for resclass_iri in resclass_iris:
-        oaps = _get_all_oaps_of_resclass(resclass_iri, project_iri, dsp_client, oap_config)
+    for resclass_id in resclass_ids:
+        oaps = _get_all_oaps_of_resclass(resclass_id, project_iri, dsp_client, oap_config)
         all_oaps.extend(oaps)
     logger.info(f"Retrieved a TOTAL of {len(all_oaps)} OAPs")
     return all_oaps
