@@ -8,6 +8,47 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 
 
 class TestScopeCreation:
+    def test_valid_scope(self) -> None:
+        scope = PermissionScope(
+            CR=frozenset({group.SYSTEM_ADMIN}),
+            D=frozenset({group.PROJECT_ADMIN}),
+            M=frozenset({group.PROJECT_MEMBER, group.KNOWN_USER}),
+            V=frozenset({group.UNKNOWN_USER}),
+        )
+        assert scope.CR == frozenset({group.SYSTEM_ADMIN})
+        assert scope.D == frozenset({group.PROJECT_ADMIN})
+        assert scope.M == frozenset({group.PROJECT_MEMBER, group.KNOWN_USER})
+        assert scope.V == frozenset({group.UNKNOWN_USER})
+        assert scope.RV == frozenset()
+
+    def test_valid_scope_create(self) -> None:
+        scope = PermissionScope.create(
+            CR={group.SYSTEM_ADMIN},
+            D={group.PROJECT_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
+            V={group.UNKNOWN_USER},
+        )
+        assert scope.CR == frozenset({group.SYSTEM_ADMIN})
+        assert scope.D == frozenset({group.PROJECT_ADMIN})
+        assert scope.M == frozenset({group.PROJECT_MEMBER, group.KNOWN_USER})
+        assert scope.V == frozenset({group.UNKNOWN_USER})
+        assert scope.RV == frozenset()
+
+    def test_valid_scope_from_dict(self) -> None:
+        scope = PermissionScope.from_dict(
+            {
+                "CR": [group.SYSTEM_ADMIN.val],
+                "D": [group.PROJECT_ADMIN.val],
+                "M": [group.PROJECT_MEMBER.val, group.KNOWN_USER.val],
+                "V": [group.UNKNOWN_USER.val],
+            }
+        )
+        assert scope.CR == frozenset({group.SYSTEM_ADMIN})
+        assert scope.D == frozenset({group.PROJECT_ADMIN})
+        assert scope.M == frozenset({group.PROJECT_MEMBER, group.KNOWN_USER})
+        assert scope.V == frozenset({group.UNKNOWN_USER})
+        assert scope.RV == frozenset()
+
     def test_create_empty_scope(self) -> None:
         with pytest.raises(EmptyScopeError):
             PermissionScope.create()
