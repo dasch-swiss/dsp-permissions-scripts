@@ -41,7 +41,7 @@ class SpecifiedPropsNotEmptyError(Exception):
 
 @dataclass
 class OapRetrieveConfigEmptyError(Exception):
-    message: str = "retrieve_resources cannot be False if retrieve_values is 'none'"
+    message: str = "retrieve_resources cannot be 'none' if retrieve_values is 'none'"
 
 
 @dataclass
