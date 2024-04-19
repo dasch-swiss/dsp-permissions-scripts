@@ -58,6 +58,16 @@ class ValueOap(BaseModel):
 
 
 class OapRetrieveConfig(BaseModel):
+    """
+    Specify which resources and values to retrieve.
+    Available ontologies: knora-api, and all ontos of your project.
+    Use them as "your-onto-name:your-class-name",
+    or "your-onto-name:your-property-name".
+    The dereferencing of these prefixes happens automatically in the background,
+    because the responses of DSP-API always contain a context,
+    which can be used to resolve the ontology prefixes.
+    """
+
     model_config = ConfigDict(frozen=True)
 
     retrieve_resources: Literal["all", "specified_res_classes", "none"] = "none"

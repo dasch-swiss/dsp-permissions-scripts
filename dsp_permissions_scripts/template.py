@@ -130,8 +130,6 @@ def main() -> None:
     """
     host = Hosts.get_host("test")
     shortcode = "F18E"
-    onto_name = "my-data-model"
-    context = {onto_name: f"{host}/ontology/{shortcode}/{onto_name}/v2#"}
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
@@ -140,7 +138,6 @@ def main() -> None:
         specified_res_classes=["my-data-model:ImageThing"],
         retrieve_values="specified_props",
         specified_props=["knora-api:hasStillImageFileValue"],
-        context=context,
     )
 
     update_aps(

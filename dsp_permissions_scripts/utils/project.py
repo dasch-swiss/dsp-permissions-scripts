@@ -8,24 +8,26 @@ from dsp_permissions_scripts.utils.get_logger import get_logger
 logger = get_logger(__name__)
 
 
-def _get_class_ids_of_onto(onto_iri: str, dsp_client: DspClient) -> list[str]:
+def _get_class_ids_of_onto_and_context(onto_iri: str, dsp_client: DspClient) -> tuple[list[str], dict[str, str]]:
     try:
         response = dsp_client.get(f"/v2/ontologies/allentities/{quote_plus(onto_iri)}")
     except ApiError as err:
         err.message = f"Could not get class IRIs of onto {onto_iri}"
         raise err from None
     all_entities = response["@graph"]
+    context = response["@context"]
     class_ids = [c["@id"] for c in all_entities if c.get("knora-api:isResourceClass")]
-    return class_ids
+    return class_ids, context
 
 
 def get_all_resource_class_ids_of_project(
     onto_iris: list[str], dsp_client: DspClient, oap_config: OapRetrieveConfig
 ) -> list[str]:
-    all_class_ids = []
+    all_class_ids: list[str] = []
     for onto_iri in onto_iris:
-        class_ids = _get_class_ids_of_onto(onto_iri, dsp_client)
+        class_ids, onto_context = _get_class_ids_of_onto_and_context(onto_iri, dsp_client)
         all_class_ids.extend(class_ids)
+        oap_config.context.update(onto_context)
         logger.info(f"Found {len(class_ids)} resource classes in onto {onto_iri}.")
     if oap_config.retrieve_resources == "specified_res_classes":
         all_class_ids = [x for x in all_class_ids if x in oap_config.specified_res_classes]
