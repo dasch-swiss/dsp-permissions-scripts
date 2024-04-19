@@ -49,15 +49,11 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     modified_oaps = []
     for oap in oaps:
         if oap.resource_oap:
-            if group.UNKNOWN_USER in oap.resource_oap.scope.V:
-                oap.resource_oap.scope = oap.resource_oap.scope.remove("V", group.UNKNOWN_USER)
-            if group.UNKNOWN_USER not in oap.resource_oap.scope.RV:
-                oap.resource_oap.scope = oap.resource_oap.scope.add("RV", group.UNKNOWN_USER)
+            if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
+                oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
         for value_oap in oap.value_oaps:
-            if group.UNKNOWN_USER in value_oap.scope.V:
-                value_oap.scope = value_oap.scope.remove("V", group.UNKNOWN_USER)
-            if group.UNKNOWN_USER not in value_oap.scope.RV:
-                value_oap.scope = value_oap.scope.add("RV", group.UNKNOWN_USER)
+            if group.SYSTEM_ADMIN not in value_oap.scope.CR:
+                value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)
         modified_oaps.append(oap)
     return modified_oaps
 
@@ -111,9 +107,7 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oap_config = OapRetrieveConfig(
-        retrieve_resources=False,
-        retrieve_values="specified_props",
-        specified_props=["knora-api:hasStillImageFileValue"],
+        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
     )
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")

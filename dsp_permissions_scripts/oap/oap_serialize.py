@@ -42,8 +42,7 @@ def _serialize_oap(oap: ResourceOap | ValueOap, folder: Path) -> None:
     iri = oap.resource_iri if isinstance(oap, ResourceOap) else oap.value_iri
     filename = re.sub(r"http://rdfh\.ch/[^/]+/", "resource_", iri)
     filename = re.sub(r"/", "_", filename)
-    with open(folder / f"{filename}.json", mode="w", encoding="utf-8") as f:
-        f.write(oap.model_dump_json(indent=2))
+    Path(folder / f"{filename}.json").write_text(oap.model_dump_json(indent=2), encoding="utf-8")
 
 
 def deserialize_oaps(
