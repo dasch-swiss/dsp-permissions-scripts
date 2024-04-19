@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import EmptyScopeError
 from dsp_permissions_scripts.models.group import CREATOR
 from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
@@ -71,6 +72,12 @@ class PermissionScope(BaseModel):
         for group in all_groups:
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
+        return self
+
+    @model_validator(mode="after")
+    def check_scope_not_empty(self) -> PermissionScope:
+        if not any([len(self.get(field)) > 0 for field in self.model_fields]):
+            raise EmptyScopeError()
         return self
 
     def get(self, permission: str) -> frozenset[Group]:

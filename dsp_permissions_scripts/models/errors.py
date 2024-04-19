@@ -32,3 +32,13 @@ class SpecifiedPropsNotEmptyError(ValueError):
 @dataclass
 class OapRetrieveConfigEmptyError(ValueError):
     message: str = "retrieve_resources cannot be False if retrieve_values is 'none'"
+
+
+@dataclass
+class EmptyScopeError(Exception):
+    message: str = "PermissionScope must not be empty"
+
+
+@dataclass
+class InvalidGroupError(Exception):
+    message: str
