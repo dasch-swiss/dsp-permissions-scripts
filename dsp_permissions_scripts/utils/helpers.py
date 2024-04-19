@@ -24,7 +24,7 @@ def dereference_prefix(
     return context[prefix] + actual_id
 
 
-def shorten_iri_with_prefix(
+def shorten_iri_by_prefixing(
     iri: str,
     context: dict[str, str],
 ) -> str:
