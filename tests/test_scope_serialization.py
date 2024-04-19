@@ -11,18 +11,6 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 
-def compare_scopes(
-    scope1: PermissionScope,
-    scope2: PermissionScope,
-    msg: str | None = None,
-) -> None:
-    scope1_dict = scope1.model_dump(mode="json")
-    scope1_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope1_dict.items()}
-    scope2_dict = scope2.model_dump(mode="json")
-    scope2_dict = {k: sorted(v, key=lambda x: x["val"]) for k, v in scope2_dict.items()}
-    assert scope1_dict == scope2_dict, msg
-
-
 class TestScopeSerialization:
     perm_strings = (
         "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
@@ -75,19 +63,12 @@ class TestScopeSerialization:
 
     def test_create_scope_from_string(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            compare_scopes(
-                scope1=create_scope_from_string(perm_string),
-                scope2=scope,
-                msg=f"Failed with permission string '{perm_string}'",
-            )
+            assert create_scope_from_string(perm_string) == scope, f"Failed with permission string '{perm_string}'"
 
     def test_create_scope_from_admin_route_object(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            compare_scopes(
-                scope1=create_scope_from_admin_route_object(admin_route_object),
-                scope2=scope,
-                msg=f"Failed with admin group object no. {index}",
-            )
+            fail_msg = f"Failed with admin group object no. {index}"
+            assert create_scope_from_admin_route_object(admin_route_object) == scope, fail_msg
 
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
