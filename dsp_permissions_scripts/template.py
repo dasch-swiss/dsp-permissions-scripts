@@ -1,3 +1,5 @@
+import copy
+
 from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import Ap
@@ -18,15 +20,19 @@ from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
+from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 
 # pylint: disable=R0801 # Similar lines in 2 files
 
 
+logger = get_logger(__name__)
+
+
 def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
-    for ap in aps:
+    for ap in copy.deepcopy(aps):
         if ap.forGroup == group.UNKNOWN_USER:
             if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
                 ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
@@ -37,7 +43,7 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
-    for doap in doaps:
+    for doap in copy.deepcopy(doaps):
         if doap.target.group == group.UNKNOWN_USER:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
@@ -47,14 +53,18 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
 def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
-    for oap in oaps:
+    for oap in copy.deepcopy(oaps):
+        modified = False
         if oap.resource_oap:
             if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
                 oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
+                modified = True
         for value_oap in oap.value_oaps:
             if group.SYSTEM_ADMIN not in value_oap.scope.CR:
                 value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)
-        modified_oaps.append(oap)
+                modified = True
+        if modified:
+            modified_oaps.append(oap)
     return modified_oaps
 
 
@@ -74,6 +84,9 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
+    if not modified_aps:
+        logger.info("There are no APs to update.")
+        return
     apply_updated_aps_on_server(modified_aps, host, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
@@ -94,6 +107,9 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         host=host,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
+    if not project_doaps_modified:
+        logger.info("There are no DOAPs to update.")
+        return
     apply_updated_doaps_on_server(project_doaps_modified, host, dsp_client)
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
