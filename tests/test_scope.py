@@ -3,16 +3,26 @@ import re
 import pytest
 
 from dsp_permissions_scripts.models import group
+from dsp_permissions_scripts.models.errors import EmptyScopeError
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
-def test_scope_validation_on_creation() -> None:
-    with pytest.raises(ValueError, match=re.escape("must not occur in more than one field")):
-        PermissionScope.create(
-            CR={group.PROJECT_ADMIN},
-            D={group.PROJECT_ADMIN},
-            V={group.UNKNOWN_USER, group.KNOWN_USER},
-        )
+class TestScopeCreation:
+    def test_create_empty_scope(self) -> None:
+        with pytest.raises(EmptyScopeError):
+            PermissionScope.create()
+        with pytest.raises(EmptyScopeError):
+            PermissionScope()
+        with pytest.raises(EmptyScopeError):
+            PermissionScope.from_dict({})
+
+    def test_same_group_in_multiple_fields(self) -> None:
+        with pytest.raises(ValueError, match=re.escape("must not occur in more than one field")):
+            PermissionScope.create(
+                CR={group.PROJECT_ADMIN},
+                D={group.PROJECT_ADMIN},
+                V={group.UNKNOWN_USER, group.KNOWN_USER},
+            )
 
 
 class TestAdd:
