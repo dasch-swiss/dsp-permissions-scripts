@@ -4,7 +4,6 @@ import pytest
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
-from tests.test_scope_serialization import compare_scopes
 
 
 def test_scope_validation_on_creation() -> None:
@@ -17,7 +16,20 @@ def test_scope_validation_on_creation() -> None:
 
 
 class TestAdd:
-    def test_scope_validation_on_add_to_same_permission(self) -> None:
+    def test_add_to_scope(self) -> None:
+        scope = PermissionScope.create(
+            D={group.SYSTEM_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
+        )
+        scope = scope.add("CR", group.PROJECT_ADMIN)
+        scope_expected = PermissionScope.create(
+            CR={group.PROJECT_ADMIN},
+            D={group.SYSTEM_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
+        )
+        assert scope == scope_expected
+
+    def test_add_same_group_to_same_permission(self) -> None:
         scope = PermissionScope.create(
             CR={group.PROJECT_ADMIN},
             V={group.UNKNOWN_USER, group.KNOWN_USER},
@@ -26,7 +38,7 @@ class TestAdd:
         with pytest.raises(ValueError, match=re.escape(rgx)):
             _ = scope.add("CR", group.PROJECT_ADMIN)
 
-    def test_scope_validation_on_add_to_different_permission(self) -> None:
+    def test_add_same_group_to_different_permission(self) -> None:
         scope = PermissionScope.create(
             CR={group.PROJECT_ADMIN},
             V={group.UNKNOWN_USER, group.KNOWN_USER},
@@ -34,23 +46,21 @@ class TestAdd:
         with pytest.raises(ValueError, match=re.escape("must not occur in more than one field")):
             _ = scope.add("RV", group.PROJECT_ADMIN)
 
-    def test_add_to_scope(self) -> None:
+
+class TestRemove:
+    def test_remove_from_scope(self) -> None:
         scope = PermissionScope.create(
+            CR={group.PROJECT_ADMIN},
             D={group.SYSTEM_ADMIN},
             M={group.PROJECT_MEMBER, group.KNOWN_USER},
         )
-        scope_added = scope.add("CR", group.PROJECT_ADMIN)
-        compare_scopes(
-            scope1=scope_added,
-            scope2=PermissionScope.create(
-                CR={group.PROJECT_ADMIN},
-                D={group.SYSTEM_ADMIN},
-                M={group.PROJECT_MEMBER, group.KNOWN_USER},
-            ),
+        scope = scope.remove("CR", group.PROJECT_ADMIN)
+        scope_expected = PermissionScope.create(
+            D={group.SYSTEM_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
         )
+        assert scope == scope_expected
 
-
-class TestRemove:
     def test_remove_inexisting_group(self) -> None:
         scope = PermissionScope.create(
             D={group.SYSTEM_ADMIN},
@@ -67,21 +77,8 @@ class TestRemove:
         with pytest.raises(ValueError, match=re.escape("is not in permission 'CR'")):
             _ = scope.remove("CR", group.PROJECT_ADMIN)
 
-    def test_remove_from_scope(self) -> None:
-        scope = PermissionScope.create(
-            CR={group.PROJECT_ADMIN},
-            D={group.SYSTEM_ADMIN},
-            M={group.PROJECT_MEMBER, group.KNOWN_USER},
-        )
-        scope_removed = scope.remove("CR", group.PROJECT_ADMIN)
-        compare_scopes(
-            scope1=scope_removed,
-            scope2=PermissionScope.create(
-                D={group.SYSTEM_ADMIN},
-                M={group.PROJECT_MEMBER, group.KNOWN_USER},
-            ),
-        )
 
+class TestRemoveDuplicatesFromKwargs:
     def test_remove_duplicates_from_kwargs_CR(self) -> None:
         original: dict[str, list[str]] = {
             "CR": ["knora-admin:ProjectAdmin"],
