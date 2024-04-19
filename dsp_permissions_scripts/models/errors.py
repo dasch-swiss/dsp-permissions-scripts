@@ -17,3 +17,18 @@ class ApiError(Exception):
 @dataclass
 class PermissionsAlreadyUpToDate(Exception):
     message: str = "The submitted permissions are the same as the current ones"
+
+
+@dataclass
+class SpecifiedPropsEmptyError(ValueError):
+    message: str = "specified_props must not be empty if retrieve_values is 'specified_props'"
+
+
+@dataclass
+class SpecifiedPropsNotEmptyError(ValueError):
+    message: str = "specified_props must be empty if retrieve_values is not 'specified_props'"
+
+
+@dataclass
+class OapRetrieveConfigEmptyError(ValueError):
+    message: str = "retrieve_resources cannot be False if retrieve_values is 'none'"
