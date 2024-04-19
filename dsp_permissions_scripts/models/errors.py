@@ -37,3 +37,8 @@ class OapRetrieveConfigEmptyError(ValueError):
 @dataclass
 class EmptyScopeError(Exception):
     message: str = "PermissionScope must not be empty"
+
+
+@dataclass
+class InvalidGroupError(Exception):
+    message: str

@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import InvalidGroupError
+
 
 class Group(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -16,7 +18,7 @@ class Group(BaseModel):
     def _check_regex(self) -> Group:
         common_part = re.escape("http://www.knora.org/ontology/knora-admin#")
         if not re.search(f"{common_part}.+", self.val):
-            raise ValueError(f"{self.val} is not a valid group IRI")
+            raise InvalidGroupError(f"{self.val} is not a valid group IRI")
         return self
 
 
