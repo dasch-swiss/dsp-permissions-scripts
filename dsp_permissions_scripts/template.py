@@ -104,11 +104,8 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     )
 
 
-def update_oaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
+def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
-    oap_config = OapRetrieveConfig(
-        retrieve_resources=True, retrieve_values="specified_props", specified_props=["knora-api:hasStillImageFileValue"]
-    )
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
@@ -136,6 +133,13 @@ def main() -> None:
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
+    oap_config = OapRetrieveConfig(
+        retrieve_resources="specified_res_classes",
+        specified_res_classes=["my-data-model:ImageThing"],
+        retrieve_values="specified_props",
+        specified_props=["knora-api:hasStillImageFileValue"],
+    )
+
     update_aps(
         host=host,
         shortcode=shortcode,
@@ -150,6 +154,7 @@ def main() -> None:
         host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
+        oap_config=oap_config,
     )
 
 

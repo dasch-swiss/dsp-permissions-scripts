@@ -6,9 +6,12 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import OapEmptyError
 from dsp_permissions_scripts.models.errors import OapRetrieveConfigEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
+from dsp_permissions_scripts.models.errors import SpecifiedResClassesNotEmptyError
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
@@ -25,7 +28,7 @@ class Oap(BaseModel):
     @model_validator(mode="after")
     def check_consistency(self) -> Oap:
         if not self.resource_oap and not self.value_oaps:
-            raise ValueError("An OAP must have at least one resource_oap or one value_oap")
+            raise OapEmptyError()
         return self
 
 
@@ -55,11 +58,31 @@ class ValueOap(BaseModel):
 
 
 class OapRetrieveConfig(BaseModel):
+    """
+    Specify which resources and values to retrieve.
+    Available ontologies: knora-api, and all ontos of your project.
+    Use them as "your-onto-name:your-class-name",
+    or "your-onto-name:your-property-name".
+    The dereferencing of these prefixes happens automatically in the background,
+    because the responses of DSP-API always contain a context,
+    which can be used to resolve the ontology prefixes.
+    """
+
     model_config = ConfigDict(frozen=True)
 
-    retrieve_resources: bool = True
+    retrieve_resources: Literal["all", "specified_res_classes", "none"] = "none"
+    specified_res_classes: list[str] = []
     retrieve_values: Literal["all", "specified_props", "none"] = "none"
     specified_props: list[str] = []
+    context: dict[str, str] = {}
+
+    @model_validator(mode="after")
+    def check_specified_res_classes(self) -> OapRetrieveConfig:
+        if self.retrieve_resources == "specified_res_classes" and not self.specified_res_classes:
+            raise SpecifiedResClassesEmptyError()
+        if self.retrieve_resources != "specified_res_classes" and self.specified_res_classes:
+            raise SpecifiedResClassesNotEmptyError()
+        return self
 
     @model_validator(mode="after")
     def check_specified_props(self) -> OapRetrieveConfig:
@@ -71,6 +94,6 @@ class OapRetrieveConfig(BaseModel):
 
     @model_validator(mode="after")
     def check_config_empty(self) -> OapRetrieveConfig:
-        if not self.retrieve_resources and self.retrieve_values == "none":
+        if self.retrieve_resources == "none" and self.retrieve_values == "none":
             raise OapRetrieveConfigEmptyError()
         return self
