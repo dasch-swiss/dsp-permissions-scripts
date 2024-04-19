@@ -125,6 +125,9 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: Oa
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
+    if not oaps_modified:
+        logger.info("There are no OAPs to update.")
+        return
     apply_updated_oaps_on_server(
         oaps=oaps_modified,
         host=host,
