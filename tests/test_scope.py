@@ -129,6 +129,31 @@ class TestRemove:
             _ = scope.remove("CR", group.PROJECT_ADMIN)
 
 
+class TestGet:
+    def test_get(self) -> None:
+        scope = PermissionScope.create(
+            CR={group.PROJECT_ADMIN},
+            D={group.SYSTEM_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
+            V={group.UNKNOWN_USER},
+        )
+        assert scope.get("CR") == frozenset({group.PROJECT_ADMIN})
+        assert scope.get("D") == frozenset({group.SYSTEM_ADMIN})
+        assert scope.get("M") == frozenset({group.PROJECT_MEMBER, group.KNOWN_USER})
+        assert scope.get("V") == frozenset({group.UNKNOWN_USER})
+        assert scope.get("RV") == frozenset()
+
+    def test_get_inexisting_perm(self) -> None:
+        scope = PermissionScope.create(
+            CR={group.PROJECT_ADMIN},
+            D={group.SYSTEM_ADMIN},
+            M={group.PROJECT_MEMBER, group.KNOWN_USER},
+            V={group.UNKNOWN_USER},
+        )
+        with pytest.raises(ValueError, match=re.escape("Permission 'foo' not in")):
+            _ = scope.get("foo")
+
+
 class TestRemoveDuplicatesFromKwargs:
     def test_remove_duplicates_from_kwargs_CR(self) -> None:
         original: dict[str, list[str]] = {
