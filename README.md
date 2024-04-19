@@ -21,6 +21,31 @@ Set up the poetry virtual environment:
   so that your IDE uses the correct Python version and the correct dependencies.
 
 
+## How to use this repo
+
+- Make a copy of `dsp_permissions_scripts/template.py` and adapt it to your needs.
+- The template is the only file you should modify. All other code can be considered as consume-only library.
+- If you interact with a server that needs credentials, set them in a `.env` file:
+
+  ```bash
+  # DO NOT COMMIT THIS FILE TO GIT!
+
+  PROD_EMAIL="your.name@dasch.swiss"
+  PROD_PASSWORD="pw-on-app.dasch.swiss"
+
+  TEST_EMAIL="your-name@dasch.swiss"
+  TEST_PASSWORD="pw-on-app.test.dasch.swiss"
+
+  DEV_EMAIL="your-name@dasch.swiss"
+  DEV_PASSWORD="pw-on-app.dev.dasch.swiss"
+  ```
+
+- For a first, exploratory run, comment out the parts of the template that make the modifications.
+- You will get JSON files in `project_data/<shortcode>/` with the permissions retrieved from the server.
+- Based on these, write your code to modify the permissions.
+- Run the entire script.
+
+
 ## The DSP permissions system
 
 There are 3 permissions systems:
