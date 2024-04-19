@@ -11,7 +11,6 @@ from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_serialize import deserialize_oaps
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
-from tests.test_scope_serialization import compare_scopes
 
 
 class TestOapSerialization:
@@ -28,12 +27,10 @@ class TestOapSerialization:
         oap1 = self._get_oap_one_value_only()
         oap2 = self._get_oap_full()
         oap3 = self._get_oap_res_only()
-
-        serialize_oaps([oap1, oap2, oap3], self.shortcode, "original")
+        oaps_original = [oap1, oap2, oap3]
+        serialize_oaps(oaps_original, self.shortcode, "original")
         deserialized_oaps = deserialize_oaps(self.shortcode, "original")
-        self._compare_oaps(deserialized_oaps[0], oap1)
-        self._compare_oaps(deserialized_oaps[1], oap2)
-        self._compare_oaps(deserialized_oaps[2], oap3)
+        assert oaps_original == deserialized_oaps
 
     def _get_oap_full(self) -> Oap:
         scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
@@ -73,22 +70,6 @@ class TestOapSerialization:
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-3"
         res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
         return Oap(resource_oap=res_oap, value_oaps=[])
-
-    def _compare_oaps(self, oap1: Oap, oap2: Oap) -> None:
-        if oap1.resource_oap is None:
-            assert oap2.resource_oap is None
-        elif oap2.resource_oap is None:
-            assert oap1.resource_oap is None
-        else:
-            assert oap1.resource_oap.resource_iri == oap2.resource_oap.resource_iri
-            compare_scopes(oap1.resource_oap.scope, oap2.resource_oap.scope)
-
-        assert len(oap1.value_oaps) == len(oap2.value_oaps)
-        for val_oap1, val_oap2 in zip(oap1.value_oaps, oap2.value_oaps):
-            assert val_oap1.value_iri == val_oap2.value_iri
-            assert val_oap1.property == val_oap2.property
-            assert val_oap1.value_type == val_oap2.value_type
-            compare_scopes(val_oap1.scope, val_oap2.scope)
 
 
 if __name__ == "__main__":

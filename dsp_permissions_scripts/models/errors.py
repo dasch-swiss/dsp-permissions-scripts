@@ -47,3 +47,13 @@ class OapRetrieveConfigEmptyError(Exception):
 @dataclass
 class OapEmptyError(Exception):
     message: str = "An OAP must specify at least one resource_oap or one value_oap"
+
+
+@dataclass
+class EmptyScopeError(Exception):
+    message: str = "PermissionScope must not be empty"
+
+
+@dataclass
+class InvalidGroupError(Exception):
+    message: str

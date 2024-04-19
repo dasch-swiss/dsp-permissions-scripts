@@ -11,7 +11,6 @@ from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_proje
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
-from tests.test_scope_serialization import compare_scopes
 
 
 class TestDoapSerialization:
@@ -47,8 +46,9 @@ class TestDoapSerialization:
             ),
             doap_iri="http://rdfh.ch/doap-2",
         )
+        doaps_original = [doap1, doap2]
         serialize_doaps_of_project(
-            project_doaps=[doap1, doap2],
+            project_doaps=doaps_original,
             shortcode=self.shortcode,
             mode="original",
             host=Hosts.LOCALHOST,
@@ -57,13 +57,7 @@ class TestDoapSerialization:
             shortcode=self.shortcode,
             mode="original",
         )
-        self._compare_doaps(deserialized_doaps[0], doap1)
-        self._compare_doaps(deserialized_doaps[1], doap2)
-
-    def _compare_doaps(self, doap1: Doap, doap2: Doap) -> None:
-        assert doap1.target == doap2.target
-        compare_scopes(doap1.scope, doap2.scope)
-        assert doap1.doap_iri == doap2.doap_iri
+        assert doaps_original == deserialized_doaps
 
 
 if __name__ == "__main__":
