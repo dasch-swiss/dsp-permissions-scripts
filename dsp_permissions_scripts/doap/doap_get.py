@@ -52,9 +52,9 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
-            group=Group(val=permission["forGroup"]),
-            resource_class=permission["forResourceClass"],
-            property=permission["forProperty"],
+            group=Group(val=permission["forGroup"]) if permission.get("forGroup") else None,
+            resource_class=permission.get("forResourceClass"),
+            property=permission.get("forProperty"),
         ),
         scope=scope,
         doap_iri=permission["iri"],
