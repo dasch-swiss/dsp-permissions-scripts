@@ -23,13 +23,13 @@ def modify_oaps(oaps: list[Oap]) -> list[Oap]:
     """Adapt this sample to your needs."""
     modified_oaps = []
     for oap in copy.deepcopy(oaps):
-        modified = False
+        modified_value_oaps = []
         for value_oap in oap.value_oaps:
             if value_oap.scope == DSP_TOOLS_STASHED:
                 value_oap.scope = WEBERN_INTENDED
-                modified = True
-        if modified:
-            modified_oaps.append(oap)
+                modified_value_oaps.append(value_oap)
+        if modified_value_oaps:
+            modified_oaps.append(Oap(resource_oap=None, value_oaps=modified_value_oaps))
     return modified_oaps
 
 
