@@ -130,3 +130,14 @@ PRIVATE = PermissionScope.create(
     CR={PROJECT_ADMIN, CREATOR},
     V={PROJECT_MEMBER},
 )
+
+DSP_TOOLS_STASHED = PermissionScope.create(
+    CR={PROJECT_ADMIN},
+    M={PROJECT_MEMBER},
+)
+
+WEBERN_INTENDED = PermissionScope.create(
+    CR={PROJECT_ADMIN},
+    D={CREATOR, PROJECT_MEMBER},
+    V={UNKNOWN_USER, KNOWN_USER},
+)
