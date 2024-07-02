@@ -66,7 +66,6 @@ def main() -> None:
     dsp_client = login(host)
 
     prefix = "webern-onto"
-    resclasses = [f"{prefix}:{x}" for x in ["Correspondence", "MusicalPiece", "Opus", "Bibliography"]]
     props = [
         f"{prefix}:{x}"
         for x in [
@@ -79,8 +78,8 @@ def main() -> None:
         ]
     ]
     oap_config = OapRetrieveConfig(
-        retrieve_resources="specified_res_classes",
-        specified_res_classes=resclasses,
+        retrieve_resources="none",
+        specified_res_classes=[],
         retrieve_values="specified_props",
         specified_props=props,
     )
