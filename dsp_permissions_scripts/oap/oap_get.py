@@ -14,6 +14,21 @@ from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 logger = get_logger(__name__)
+NON_PROP_KEYS = {
+    "@id",
+    "@type",
+    "@context",
+    "rdfs:label",
+    "knora-api:DeletedValue",
+    "knora-api:lastModificationDate",
+    "knora-api:arkUrl",
+    "knora-api:versionArkUrl",
+    "knora-api:attachedToUser",
+    "knora-api:hasStandoffLinkToValue",
+    "knora-api:attachedToProject",
+    "knora-api:userHasPermission",
+    "knora-api:creationDate",
+}
 
 
 def _get_all_oaps_of_resclass(
@@ -108,7 +123,7 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
 def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
     res = []
     for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label", "knora-api:DeletedValue"}:
+        if k in NON_PROP_KEYS:
             continue
         if restrict_to_props is not None and k not in restrict_to_props:
             continue
