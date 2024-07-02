@@ -112,17 +112,21 @@ def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | Non
             continue
         if restrict_to_props is not None and k not in restrict_to_props:
             continue
-        match v:
-            case {
-                "@id": id_,
-                "@type": type_,
-                "knora-api:hasPermissions": perm_str,
-            } if "/values/" in id_:
-                scope = create_scope_from_string(perm_str)
-                oap = ValueOap(scope=scope, property=k, value_type=type_, value_iri=id_, resource_iri=resource["@id"])
-                res.append(oap)
-            case _:
-                continue
+        values = v if isinstance(v, list) else [v]
+        for val in values:
+            match val:
+                case {
+                    "@id": id_,
+                    "@type": type_,
+                    "knora-api:hasPermissions": perm_str,
+                } if "/values/" in id_:
+                    scope = create_scope_from_string(perm_str)
+                    oap = ValueOap(
+                        scope=scope, property=k, value_type=type_, value_iri=id_, resource_iri=resource["@id"]
+                    )
+                    res.append(oap)
+                case _:
+                    continue
     return res
 
 
