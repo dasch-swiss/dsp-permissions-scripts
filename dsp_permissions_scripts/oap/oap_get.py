@@ -86,7 +86,7 @@ def _get_next_page(
 
 
 def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -> Oap | None:
-    if oap_config.retrieve_resources:
+    if oap_config.retrieve_resources == "all" or r["@type"] in oap_config.specified_res_classes:
         scope = create_scope_from_string(r["knora-api:hasPermissions"])
         resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
     else:
