@@ -26,7 +26,10 @@ def serialize_oaps(
         return
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Writing {len(oaps)} OAPs into {folder}")
+    value_oap_count = sum(len(oap.value_oaps) for oap in oaps)
+    res_oap_count = sum(1 for oap in oaps if oap.resource_oap)
+    counting_info = f"{len(oaps)} OAPs ({res_oap_count} resource OAPs and {value_oap_count} value OAPs)"
+    logger.info(f"Writing {counting_info} into {folder}")
     counter = 0
     for oap in oaps:
         if oap.resource_oap:
@@ -35,7 +38,7 @@ def serialize_oaps(
         for value_oap in oap.value_oaps:
             _serialize_oap(value_oap, folder)
             counter += 1
-    logger.info(f"Successfully wrote {len(oaps)} OAPs into {counter} files in folder {folder}")
+    logger.info(f"Successfully wrote {counting_info} into {counter} files in folder {folder}")
 
 
 def _serialize_oap(oap: ResourceOap | ValueOap, folder: Path) -> None:
