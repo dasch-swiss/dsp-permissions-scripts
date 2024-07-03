@@ -19,28 +19,32 @@ from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 logger = get_logger(__name__)
 
 
-def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+def modify_oaps(oaps: list[Oap]) -> tuple[list[Oap], list[Oap]]:
     """Adapt this sample to your needs."""
-    modified_oaps = []
+    oaps_original = []
+    oaps_modified = []
     for oap in copy.deepcopy(oaps):
-        modified_value_oaps = []
+        value_oaps_original = []
+        value_oaps_modified = []
         for value_oap in oap.value_oaps:
             if value_oap.scope == DSP_TOOLS_STASHED:
+                value_oaps_original.append(value_oap)
                 value_oap.scope = WEBERN_INTENDED
-                modified_value_oaps.append(value_oap)
-        if modified_value_oaps:
-            modified_oaps.append(Oap(resource_oap=None, value_oaps=modified_value_oaps))
-    return modified_oaps
+                value_oaps_modified.append(value_oap)
+        if value_oaps_modified:
+            oaps_original.append(Oap(resource_oap=None, value_oaps=value_oaps_original))
+            oaps_modified.append(Oap(resource_oap=None, value_oaps=value_oaps_modified))
+    return oaps_original, oaps_modified
 
 
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps, shortcode, mode="original")
-    oaps_modified = modify_oaps(oaps)
+    oaps_original, oaps_modified = modify_oaps(oaps)
     if not oaps_modified:
         logger.info("There are no OAPs to update.")
         return
+    serialize_oaps(oaps_original, shortcode, mode="original")
     apply_updated_oaps_on_server(
         oaps=oaps_modified,
         host=host,
