@@ -23,9 +23,6 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 
-# pylint: disable=R0801 # Similar lines in 2 files
-
-
 logger = get_logger(__name__)
 
 

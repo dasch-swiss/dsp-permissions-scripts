@@ -1,5 +1,3 @@
-# pylint: disable=too-many-arguments
-
 import itertools
 import re
 from concurrent.futures import ThreadPoolExecutor
