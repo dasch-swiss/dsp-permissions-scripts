@@ -145,7 +145,9 @@ def apply_updated_oaps_on_server(
     if not oaps:
         logger.warning(f"There are no OAPs to update on {host}")
         return
-    logger.info(f"******* Updating OAPs of {len(oaps)} resources and/or values on {host}... *******")
+    value_oap_count = sum(isinstance(oap, ValueOap) for oap in oaps)
+    res_oap_count = sum(isinstance(oap, ResourceOap) for oap in oaps)
+    logger.info(f"******* Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {host}... *******")
 
     failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
     if failed_iris:
