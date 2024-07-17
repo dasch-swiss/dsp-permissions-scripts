@@ -21,7 +21,6 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
     for scope in scopes:
         perm_letter, groups_as_str = scope.split(" ")
         groups = groups_as_str.split(",")
-        groups = [g.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#") for g in groups]
         kwargs[perm_letter] = groups
     return PermissionScope.from_dict(kwargs)
 
@@ -32,7 +31,6 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
     for obj in admin_route_object:
         attr_name: str = obj["name"]
         group: str = obj["additionalInformation"]
-        group = group.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#")
         if attr_name in kwargs:
             kwargs[attr_name].append(group)
         else:

@@ -46,7 +46,7 @@ def shorten_iri_by_prefixing(
 
 def _get_sort_pos_of_custom_group(group: str) -> int:
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    relevant_letter = group.replace("http://www.knora.org/ontology/knora-admin#", "")[0]
+    relevant_letter = group.replace("knora-admin:", "")[0]
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
