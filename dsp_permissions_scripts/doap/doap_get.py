@@ -49,10 +49,16 @@ def _get_all_doaps_of_project(project_iri: str, dsp_client: DspClient) -> list[D
 def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     """Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}"""
     scope = create_scope_from_admin_route_object(permission["hasPermissions"])
+    if permission.get("forGroup"):
+        relative_group_iri = permission["forGroup"].replace(
+            "http://www.knora.org/ontology/knora-admin#", "knora-admin:"
+        )
+    else:
+        relative_group_iri = None
     doap = Doap(
         target=DoapTarget(
             project=permission["forProject"],
-            group=Group(val=permission["forGroup"]) if permission.get("forGroup") else None,
+            group=Group(val=relative_group_iri) if relative_group_iri else None,
             resource_class=permission.get("forResourceClass"),
             property=permission.get("forProperty"),
         ),
