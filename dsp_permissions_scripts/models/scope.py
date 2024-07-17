@@ -122,7 +122,7 @@ class PermissionScope(BaseModel):
 
 PUBLIC = PermissionScope.create(
     CR={PROJECT_ADMIN},
-    D={PROJECT_MEMBER},
+    M={PROJECT_MEMBER},
     V={UNKNOWN_USER, KNOWN_USER},
 )
 
