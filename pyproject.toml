@@ -1,5 +1,5 @@
 [tool.poetry]
-authors = ["DaSCH -  Swiss National Data and Service Center for the Humanities <info@dasch.swiss>"]
+authors = ["DaSCH - Swiss National Data and Service Center for the Humanities <info@dasch.swiss>"]
 description = ""
 license = "Apache-2.0"
 name = "dsp-permissions-scripts"
