@@ -78,6 +78,10 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     deserialized_resource_iris = []
 
     def sort_algo(x: ValueOap) -> str:
+        """
+        According to https://docs.python.org/3/library/itertools.html#itertools.groupby,
+        the iterable must be sorted on the same key function, before passing it to itertools.groupby().
+        """
         return x.resource_iri
 
     for res_iri, _val_oaps in itertools.groupby(sorted(val_oaps, key=sort_algo), key=sort_algo):
