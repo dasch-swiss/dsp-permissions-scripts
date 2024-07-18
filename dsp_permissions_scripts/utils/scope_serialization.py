@@ -21,7 +21,7 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
     for scope in scopes:
         perm_letter, groups_as_str = scope.split(" ")
         groups = groups_as_str.split(",")
-        kwargs[perm_letter] = groups
+        kwargs[perm_letter] = [g.replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:") for g in groups]
     return PermissionScope.from_dict(kwargs)
 
 

@@ -15,7 +15,7 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
     iri = quote_plus(doap_iri, safe="")
     payload = {
         "hasPermissions": create_admin_route_object_from_scope(scope),
-        "context": {"knora-admin": "http://www.knora.org/ontology/knora-admin"},
+        "context": {"knora-admin": "http://www.knora.org/ontology/knora-admin#"},
     }
     try:
         response = dsp_client.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)

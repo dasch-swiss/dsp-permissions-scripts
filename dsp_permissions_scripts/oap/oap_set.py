@@ -86,7 +86,7 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
                     resource_iri=oap.resource_iri,
                     lmd=resource.get("knora-api:lastModificationDate"),
                     resource_type=resource["@type"],
-                    context=resource["@context"],
+                    context=resource["@context"] | {"knora-admin": "http://www.knora.org/ontology/knora-admin#"},
                     scope=oap.scope,
                     dsp_client=dsp_client,
                 )
@@ -99,7 +99,7 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
                     resource_iri=oap.resource_iri,
                     value=oap,
                     resource_type=resource["@type"],
-                    context=resource["@context"],
+                    context=resource["@context"] | {"knora-admin": "http://www.knora.org/ontology/knora-admin#"},
                     dsp_client=dsp_client,
                 )
             except ApiError as err:
