@@ -15,6 +15,22 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 
 logger = get_logger(__name__)
 
+IGNORE_KEYS = [
+    "@id",
+    "@type",
+    "@context",
+    "rdfs:label",
+    "knora-api:DeletedValue",
+    "knora-api:lastModificationDate",
+    "knora-api:creationDate",
+    "knora-api:arkUrl",
+    "knora-api:versionArkUrl",
+    "knora-api:attachedToProject",
+    "knora-api:attachedToUser",
+    "knora-api:userHasPermission",
+    "knora-api:hasPermissions",
+]
+
 
 def _get_all_oaps_of_resclass(
     resclass_localname: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
@@ -108,12 +124,14 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
 def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
     res = []
     for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label", "knora-api:DeletedValue"}:
+        if k in IGNORE_KEYS:
             continue
         if restrict_to_props is not None and k not in restrict_to_props:
             continue
         values = v if isinstance(v, list) else [v]
         for val in values:
+            if not isinstance(val, dict) or val.get("knora-api:isDeleted"):
+                continue
             match val:
                 case {
                     "@id": id_,
