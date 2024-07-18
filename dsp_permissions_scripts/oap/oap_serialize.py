@@ -64,12 +64,14 @@ def _read_all_oaps_from_files(
     folder = _get_project_data_path(shortcode, mode)
     res_oaps: list[ResourceOap] = []
     val_oaps: list[ValueOap] = []
-    for file in folder.glob("**/*.json"):
+    all_files = list(folder.glob("**/*.json"))
+    for file in all_files:
         content = file.read_text(encoding="utf-8")
         if "_values_" in file.name:
             val_oaps.append(ValueOap.model_validate_json(content))
         else:
             res_oaps.append(ResourceOap.model_validate_json(content))
+    logger.info(f"Read {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs from {len(all_files)} files")
     return res_oaps, val_oaps
 
 
@@ -91,8 +93,8 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
         deserialized_resource_iris.append(res_iri)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
-    for res_oap in remaining_res_oaps:
-        oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
+    oaps.extend(Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in remaining_res_oaps)
 
     oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
+    logger.debug(f"Grouped {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs into {len(oaps)} OAPs")
     return oaps
