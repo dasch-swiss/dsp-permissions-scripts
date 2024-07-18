@@ -7,6 +7,7 @@ from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_PREFIX
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 
 logger = get_logger(__name__)
@@ -14,7 +15,7 @@ logger = get_logger(__name__)
 
 def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
     """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
-    relative_group_iri = permission["forGroup"].replace("http://www.knora.org/ontology/knora-admin#", "knora-admin:")
+    relative_group_iri = permission["forGroup"].replace(KNORA_ADMIN_ONTO_PREFIX, "knora-admin:")
     ap = Ap(
         forGroup=Group(val=relative_group_iri),
         forProject=permission["forProject"],

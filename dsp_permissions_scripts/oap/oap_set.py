@@ -11,6 +11,7 @@ from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_PREFIX
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 logger = get_logger(__name__)
@@ -86,7 +87,7 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
                     resource_iri=oap.resource_iri,
                     lmd=resource.get("knora-api:lastModificationDate"),
                     resource_type=resource["@type"],
-                    context=resource["@context"] | {"knora-admin": "http://www.knora.org/ontology/knora-admin#"},
+                    context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_PREFIX},
                     scope=oap.scope,
                     dsp_client=dsp_client,
                 )
@@ -99,7 +100,7 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
                     resource_iri=oap.resource_iri,
                     value=oap,
                     resource_type=resource["@type"],
-                    context=resource["@context"] | {"knora-admin": "http://www.knora.org/ontology/knora-admin#"},
+                    context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_PREFIX},
                     dsp_client=dsp_client,
                 )
             except ApiError as err:
