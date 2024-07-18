@@ -90,4 +90,5 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
         oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
 
     oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
+    logger.info(f"Grouped {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs into {len(oaps)} OAPs")
     return oaps
