@@ -79,10 +79,7 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     oaps: list[Oap] = []
     deserialized_resource_iris = []
 
-    def sort_algo(x: ValueOap) -> str:
-        return x.resource_iri
-
-    for res_iri, _val_oaps in itertools.groupby(sorted(val_oaps, key=sort_algo), key=sort_algo):
+    for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
         res_oaps_filtered = [x for x in res_oaps if x.resource_iri == res_iri]
         res_oap = res_oaps_filtered[0] if res_oaps_filtered else None
         oaps.append(Oap(resource_oap=res_oap, value_oaps=sorted(_val_oaps, key=lambda x: x.value_iri)))
