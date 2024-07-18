@@ -64,12 +64,14 @@ def _read_all_oaps_from_files(
     folder = _get_project_data_path(shortcode, mode)
     res_oaps: list[ResourceOap] = []
     val_oaps: list[ValueOap] = []
-    for file in folder.glob("**/*.json"):
+    all_files = list(folder.glob("**/*.json"))
+    for file in all_files:
         content = file.read_text(encoding="utf-8")
         if "_values_" in file.name:
             val_oaps.append(ValueOap.model_validate_json(content))
         else:
             res_oaps.append(ResourceOap.model_validate_json(content))
+    logger.info(f"Read {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs from {len(all_files)} files")
     return res_oaps, val_oaps
 
 
