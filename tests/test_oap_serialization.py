@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Iterator
 
 import pytest
-from pytest_unordered import unordered
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -31,7 +30,7 @@ class TestOapSerialization:
         oaps_original = [oap1, oap2, oap3]
         serialize_oaps(oaps_original, self.shortcode, "original")
         deserialized_oaps = deserialize_oaps(self.shortcode, "original")
-        assert unordered(oaps_original) == deserialized_oaps
+        assert oaps_original == deserialized_oaps
 
     def _get_oap_full(self) -> Oap:
         scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
