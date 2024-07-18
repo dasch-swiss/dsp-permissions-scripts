@@ -64,12 +64,14 @@ def _read_all_oaps_from_files(
     folder = _get_project_data_path(shortcode, mode)
     res_oaps: list[ResourceOap] = []
     val_oaps: list[ValueOap] = []
-    for file in folder.glob("**/*.json"):
+    all_files = list(folder.glob("**/*.json"))
+    for file in all_files:
         content = file.read_text(encoding="utf-8")
         if "_values_" in file.name:
             val_oaps.append(ValueOap.model_validate_json(content))
         else:
             res_oaps.append(ResourceOap.model_validate_json(content))
+    logger.info(f"Read {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs from {len(all_files)} files")
     return res_oaps, val_oaps
 
 
@@ -77,15 +79,22 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     oaps: list[Oap] = []
     deserialized_resource_iris = []
 
-    for res_iri, _val_oaps in itertools.groupby(val_oaps, key=lambda x: x.resource_iri):
+    def sort_algo(x: ValueOap) -> str:
+        """
+        According to https://docs.python.org/3/library/itertools.html#itertools.groupby,
+        the iterable must be sorted on the same key function, before passing it to itertools.groupby().
+        """
+        return x.resource_iri
+
+    for res_iri, _val_oaps in itertools.groupby(sorted(val_oaps, key=sort_algo), key=sort_algo):
         res_oaps_filtered = [x for x in res_oaps if x.resource_iri == res_iri]
         res_oap = res_oaps_filtered[0] if res_oaps_filtered else None
         oaps.append(Oap(resource_oap=res_oap, value_oaps=sorted(_val_oaps, key=lambda x: x.value_iri)))
         deserialized_resource_iris.append(res_iri)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
-    for res_oap in remaining_res_oaps:
-        oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
+    oaps.extend(Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in remaining_res_oaps)
 
     oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
+    logger.debug(f"Grouped {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs into {len(oaps)} OAPs")
     return oaps
