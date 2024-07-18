@@ -79,18 +79,17 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
     oaps: list[Oap] = []
     deserialized_resource_iris = []
 
-    _iterator = itertools.groupby(sorted(val_oaps, key=lambda x: x.resource_iri), key=lambda x: x.resource_iri)
-    for res_iri, _val_oaps in _iterator:
+    def sort_algo(x: ValueOap) -> str:
+        return x.resource_iri
+
+    for res_iri, _val_oaps in itertools.groupby(sorted(val_oaps, key=sort_algo), key=sort_algo):
         res_oaps_filtered = [x for x in res_oaps if x.resource_iri == res_iri]
         res_oap = res_oaps_filtered[0] if res_oaps_filtered else None
         oaps.append(Oap(resource_oap=res_oap, value_oaps=sorted(_val_oaps, key=lambda x: x.value_iri)))
         deserialized_resource_iris.append(res_iri)
-    msg = f"After val oap grouping, there are {len(oaps)} OAPs and {len(deserialized_resource_iris)} resource IRIs"
-    logger.debug(msg)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
     oaps.extend(Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in remaining_res_oaps)
-    logger.debug(f"Added {len(remaining_res_oaps)} remaining resource OAPs to OAPs: {remaining_res_oaps}")
 
     oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
     logger.debug(f"Grouped {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs into {len(oaps)} OAPs")
