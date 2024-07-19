@@ -6,6 +6,7 @@ from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 
 logger = get_logger(__name__)
@@ -13,7 +14,10 @@ logger = get_logger(__name__)
 
 def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_client: DspClient) -> Doap:
     iri = quote_plus(doap_iri, safe="")
-    payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
+    payload = {
+        "hasPermissions": create_admin_route_object_from_scope(scope),
+        "context": {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+    }
     try:
         response = dsp_client.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
     except ApiError as err:
