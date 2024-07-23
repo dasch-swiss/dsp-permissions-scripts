@@ -33,7 +33,13 @@ IGNORE_KEYS = [
     "knora-api:userHasPermission",
     "knora-api:hasPermissions",
 ]
-KB_RESCLASSES = [f"knora-api:{res}" for res in ["VideoSegment", "AudioSegment", "Region", "Annotation", "LinkObj"]]
+KB_RESCLASSES = [
+    "knora-api:VideoSegment",
+    "knora-api:AudioSegment",
+    "knora-api:Region",
+    "knora-api:Annotation",
+    "knora-api:LinkObj",
+]
 
 
 def _get_oaps_of_kb_resources(dsp_client: DspClient, project_iri: str, oap_config: OapRetrieveConfig) -> list[Oap]:
