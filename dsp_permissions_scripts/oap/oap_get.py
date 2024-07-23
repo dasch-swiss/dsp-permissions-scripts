@@ -39,17 +39,12 @@ def _get_oaps_of_knora_base_resources(
 ) -> list[Oap]:
     if oap_config.retrieve_resources == "none":
         return []
-    knora_base_resource_classes = [
-        f"knora-api:{res}" for res in ["VideoSegment", "AudioSegment", "Region", "Annotation", "LinkObj"]
-    ]
+    kb_resclasses = [f"knora-api:{res}" for res in ["VideoSegment", "AudioSegment", "Region", "Annotation", "LinkObj"]]
+    if oap_config.retrieve_resources == "specified_res_classes":
+        kb_resclasses = [x for x in kb_resclasses if x in oap_config.specified_res_classes]
     all_oaps: list[Oap] = []
-    for resclass in knora_base_resource_classes:
+    for resclass in kb_resclasses:
         oaps: list[Oap] = []
-        if (
-            oap_config.retrieve_resources == "specified_res_classes"
-            and resclass not in oap_config.specified_res_classes
-        ):
-            continue
         mayHaveMoreResults: bool = True
         offset = 0
         while mayHaveMoreResults:
