@@ -50,35 +50,40 @@ def _get_oaps_of_knora_base_resources(
             and resclass not in oap_config.specified_res_classes
         ):
             continue
-        payload = """
-        PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-
-        CONSTRUCT {
-            ?linkobj knora-api:isMainResource true .
-        } WHERE {
-            BIND(<%(project_iri)s> as ?project_iri) .
-            ?linkobj a %(resclass)s .
-            ?linkobj knora-api:attachedToProject ?project_iri .
-        }
-        """ % {"resclass": resclass, "project_iri": project_iri}  # noqa: UP031 (printf-string-formatting)
-        payload_stripped = re.sub(r"\s+", " ", payload).strip()
         mayHaveMoreResults: bool = True
+        offset = 0
         while mayHaveMoreResults:
-            response = dsp_client.get(f"/v2/searchextended/{quote(payload_stripped, safe='')}")
-            mayHaveMoreResults = bool(response.get("knora-api:mayHaveMoreResults", False))
-            for json_resource in response["@graph"]:
+            payload = """
+            PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+
+            CONSTRUCT {
+                ?linkobj knora-api:isMainResource true .
+            } WHERE {
+                BIND(<%(project_iri)s> as ?project_iri) .
+                ?linkobj a %(resclass)s .
+                ?linkobj knora-api:attachedToProject ?project_iri .
+            }
+            OFFSET %(offset)s
+            """ % {"resclass": resclass, "project_iri": project_iri, "offset": offset}  # noqa: UP031 (printf-string-formatting)
+            payload_stripped = re.sub(r"\s+", " ", payload).strip()
+            if not (response := dsp_client.get(f"/v2/searchextended/{quote(payload_stripped, safe='')}")):
+                break
+            json_resources = response.get("@graph", [response])
+            for json_resource in json_resources:
                 scope = create_scope_from_string(json_resource["knora-api:hasPermissions"])
                 res_oap = ResourceOap(scope=scope, resource_iri=json_resource["@id"])
                 oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
+            mayHaveMoreResults = bool(response.get("knora-api:mayHaveMoreResults", False))
+            offset += 1
         all_oaps.extend(oaps)
 
     if oap_config.retrieve_values == "none":
         return all_oaps
     for oap in all_oaps:
-        full_resource = dsp_client.get(f"/v2/resources/{oap.resource_oap.resource_iri}")  # type: ignore[union-attr]
+        full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")  # type: ignore[union-attr]
         restrict_to_props = oap_config.specified_props if oap_config.retrieve_values == "specified_props" else None
         oap.value_oaps = _get_value_oaps(full_resource, restrict_to_props)
-    return []
+    return all_oaps
 
 
 def _get_all_oaps_of_resclass(
