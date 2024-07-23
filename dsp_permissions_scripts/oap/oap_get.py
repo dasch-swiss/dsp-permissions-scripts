@@ -37,20 +37,22 @@ KB_RESCLASSES = [f"knora-api:{res}" for res in ["VideoSegment", "AudioSegment", 
 
 
 def _get_oaps_of_kb_resources(dsp_client: DspClient, project_iri: str, oap_config: OapRetrieveConfig) -> list[Oap]:
-    if oap_config.retrieve_resources == "none":
-        return []
-    elif oap_config.retrieve_resources == "specified_res_classes":
-        kb_resclasses = [x for x in KB_RESCLASSES if x in oap_config.specified_res_classes]
-        res_only_oaps = _get_oaps_of_specified_kb_resources(dsp_client, project_iri, kb_resclasses)
-    else:
-        res_only_oaps = _get_oaps_of_specified_kb_resources(dsp_client, project_iri, KB_RESCLASSES)
+    match oap_config.retrieve_resources:
+        case "none":
+            return []
+        case "specified_res_classes":
+            kb_resclasses = [x for x in KB_RESCLASSES if x in oap_config.specified_res_classes]
+            res_only_oaps = _get_oaps_of_specified_kb_resources(dsp_client, project_iri, kb_resclasses)
+        case "all":
+            res_only_oaps = _get_oaps_of_specified_kb_resources(dsp_client, project_iri, KB_RESCLASSES)
 
-    if oap_config.retrieve_values == "none":
-        return res_only_oaps
-    elif oap_config.retrieve_values == "specified_props":
-        enriched_oaps = _enrich_with_value_oaps(dsp_client, res_only_oaps, oap_config.specified_props)
-    else:
-        enriched_oaps = _enrich_with_value_oaps(dsp_client, res_only_oaps)
+    match oap_config.retrieve_values:
+        case "none":
+            return res_only_oaps
+        case "specified_props":
+            enriched_oaps = _enrich_with_value_oaps(dsp_client, res_only_oaps, oap_config.specified_props)
+        case "all":
+            enriched_oaps = _enrich_with_value_oaps(dsp_client, res_only_oaps)
 
     return enriched_oaps
 
