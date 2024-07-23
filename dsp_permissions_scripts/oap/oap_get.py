@@ -32,6 +32,52 @@ IGNORE_KEYS = [
 ]
 
 
+def _get_oaps_of_knora_base_resources(
+    dsp_client: DspClient, project_iri: str, oap_config: OapRetrieveConfig
+) -> list[Oap]:
+    if oap_config.retrieve_resources == "none":
+        return []
+    knora_base_resource_classes = [
+        f"knora-api:{res}" for res in ["VideoSegment", "AudioSegment", "Region", "Annotation", "LinkObj"]
+    ]
+    all_oaps: list[Oap] = []
+    for resclass in knora_base_resource_classes:
+        oaps: list[Oap] = []
+        if (
+            oap_config.retrieve_resources == "specified_res_classes"
+            and resclass not in oap_config.specified_res_classes
+        ):
+            continue
+        payload = """
+        PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+
+        CONSTRUCT {
+            ?linkobj knora-api:isMainResource true .
+        } WHERE {
+            #BIND(<%(project_iri)s> as ?project_iri) .
+            ?linkobj a %(resclass)s .
+            #?linkobj knora-api:attachedToProject ?project_iri .
+        }
+        """ % {"resclass": resclass, "project_iri": project_iri}  # noqa: UP031 (printf-string-formatting)
+        mayHaveMoreResults: bool = True
+        while mayHaveMoreResults:
+            response = dsp_client.post("/v2/searchextended", data=payload)
+            mayHaveMoreResults = bool(response.get("knora-api:mayHaveMoreResults", False))
+            for json_resource in response["@graph"]:
+                scope = create_scope_from_string(json_resource["knora-api:hasPermissions"])
+                res_oap = ResourceOap(scope=scope, resource_iri=json_resource["@id"])
+                oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
+        all_oaps.extend(oaps)
+
+    if oap_config.retrieve_values == "none":
+        return all_oaps
+    for oap in all_oaps:
+        full_resource = dsp_client.get(f"/v2/resources/{oap.resource_oap.resource_iri}")  # type: ignore[union-attr]
+        restrict_to_props = oap_config.specified_props if oap_config.retrieve_values == "specified_props" else None
+        oap.value_oaps = _get_value_oaps(full_resource, restrict_to_props)
+    return []
+
+
 def _get_all_oaps_of_resclass(
     resclass_localname: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
 ) -> list[Oap]:
@@ -172,9 +218,10 @@ def get_all_oaps_of_project(
     logger.info("******* Retrieving all OAPs... *******")
     project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     resclass_localnames = get_all_resource_class_localnames_of_project(onto_iris, dsp_client, oap_config)
-    all_oaps = []
+    all_oaps: list[Oap] = []
     for resclass_localname in resclass_localnames:
         oaps = _get_all_oaps_of_resclass(resclass_localname, project_iri, dsp_client, oap_config)
         all_oaps.extend(oaps)
+    all_oaps.extend(_get_oaps_of_knora_base_resources(dsp_client, project_iri, oap_config))
     logger.info(f"Retrieved a TOTAL of {len(all_oaps)} OAPs")
     return all_oaps
