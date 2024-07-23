@@ -54,9 +54,9 @@ def _get_oaps_of_knora_base_resources(
         CONSTRUCT {
             ?linkobj knora-api:isMainResource true .
         } WHERE {
-            #BIND(<%(project_iri)s> as ?project_iri) .
+            BIND(<%(project_iri)s> as ?project_iri) .
             ?linkobj a %(resclass)s .
-            #?linkobj knora-api:attachedToProject ?project_iri .
+            ?linkobj knora-api:attachedToProject ?project_iri .
         }
         """ % {"resclass": resclass, "project_iri": project_iri}  # noqa: UP031 (printf-string-formatting)
         mayHaveMoreResults: bool = True
