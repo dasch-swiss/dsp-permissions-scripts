@@ -1,4 +1,6 @@
+import re
 from typing import Any
+from urllib.parse import quote
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
@@ -59,9 +61,10 @@ def _get_oaps_of_knora_base_resources(
             ?linkobj knora-api:attachedToProject ?project_iri .
         }
         """ % {"resclass": resclass, "project_iri": project_iri}  # noqa: UP031 (printf-string-formatting)
+        payload_stripped = re.sub(r"\s+", " ", payload).strip()
         mayHaveMoreResults: bool = True
         while mayHaveMoreResults:
-            response = dsp_client.post("/v2/searchextended", data=payload)
+            response = dsp_client.get(f"/v2/searchextended/{quote(payload_stripped, safe='')}")
             mayHaveMoreResults = bool(response.get("knora-api:mayHaveMoreResults", False))
             for json_resource in response["@graph"]:
                 scope = create_scope_from_string(json_resource["knora-api:hasPermissions"])
