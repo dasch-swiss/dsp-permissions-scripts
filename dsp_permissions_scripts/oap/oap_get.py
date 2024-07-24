@@ -47,8 +47,8 @@ def _get_oaps_of_kb_resclasses(dsp_client: DspClient, project_iri: str, oap_conf
         case "none":
             return []
         case "specified_res_classes":
-            kb_resclasses = [x for x in KB_RESCLASSES if x in oap_config.specified_res_classes]
-            res_only_oaps = _get_oaps_of_specified_kb_resclasses(dsp_client, project_iri, kb_resclasses)
+            specified_kb_resclasses = [x for x in KB_RESCLASSES if x in oap_config.specified_res_classes]
+            res_only_oaps = _get_oaps_of_specified_kb_resclasses(dsp_client, project_iri, specified_kb_resclasses)
         case "all":
             res_only_oaps = _get_oaps_of_specified_kb_resclasses(dsp_client, project_iri, KB_RESCLASSES)
 
