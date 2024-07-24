@@ -5,7 +5,7 @@ import pytest
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import _get_oap_of_one_resource
-from dsp_permissions_scripts.oap.oap_get import _get_value_oaps
+from dsp_permissions_scripts.oap.oap_get import get_value_oaps
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
@@ -75,7 +75,7 @@ def test_oap_get_multiple_values_per_prop() -> None:
             resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
         ),
     ]
-    returned = _get_value_oaps(resource)
+    returned = get_value_oaps(resource)
     assert expected == returned
 
 
