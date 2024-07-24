@@ -227,22 +227,6 @@ def get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None
     return res
 
 
-def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
-    """Requests the resource with the given IRI from DSP-API"""
-    iri = quote_plus(resource_iri, safe="")
-    try:
-        return dsp_client.get(f"/v2/resources/{iri}")
-    except ApiError as err:
-        err.message = f"Error while getting resource {resource_iri}"
-        raise err from None
-
-
-def get_resource_oap_by_iri(resource_iri: str, dsp_client: DspClient) -> ResourceOap:
-    resource = get_resource(resource_iri, dsp_client)
-    scope = create_scope_from_string(resource["knora-api:hasPermissions"])
-    return ResourceOap(scope=scope, resource_iri=resource_iri)
-
-
 def get_all_oaps_of_project(
     shortcode: str,
     dsp_client: DspClient,
