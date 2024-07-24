@@ -280,3 +280,9 @@ def test_get_oaps_of_one_kb_resclass_4_results_on_2_pages(
     ]
     expected = [Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in expected_res_oaps]
     assert res == expected
+
+    assert len(dsp_client.get.call_args_list) == 2  # noqa: PLR2004 (magic value used in comparison)
+    called_route_1 = dsp_client.get.call_args_list[0].args[0]
+    called_route_2 = dsp_client.get.call_args_list[1].args[0]
+    assert quote("OFFSET 0", safe="") in called_route_1
+    assert quote("OFFSET 1", safe="") in called_route_2
