@@ -2,11 +2,11 @@ import itertools
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import as_completed
 from datetime import datetime
+from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap.oap_get import get_resource
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -76,9 +76,12 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
     failed_iris = []
     for oap in batch:
         try:
-            resource = get_resource(oap.resource_iri, dsp_client)
-        except Exception as exc:  # noqa: BLE001
-            logger.error(f"Cannot update resource {oap.resource_iri}: {exc}")
+            resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_iri, safe='')}")
+        except ApiError as exc:
+            logger.error(
+                f"Cannot update resource {oap.resource_iri}. "
+                f"The resource cannot be retrieved for the following reason: {exc.message}"
+            )
             failed_iris.append(oap.resource_iri)
             continue
         if isinstance(oap, ResourceOap):
