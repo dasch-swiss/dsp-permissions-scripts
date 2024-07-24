@@ -304,18 +304,6 @@ class Test_get_oaps_of_kb_resclasses:
         oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
         oap_get._enrich_with_value_oaps.assert_called_once_with(dsp_client, ["res_only_oap_1", "res_only_oap_2"])
 
-    def test_get_oaps_of_kb_resclasses_all_resclasses_no_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
-        dsp_client = Mock(spec=DspClient)
-        oap_config = OapRetrieveConfig(
-            retrieve_resources="all",
-            retrieve_values="none",
-        )
-        _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
-        oap_get._enrich_with_value_oaps.assert_not_called()
-
     def test_get_oaps_of_kb_resclasses_all_resclasses_specified_values(self) -> None:
         oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
         oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
@@ -330,6 +318,18 @@ class Test_get_oaps_of_kb_resclasses:
         oap_get._enrich_with_value_oaps.assert_called_once_with(
             dsp_client, ["res_only_oap_1", "res_only_oap_2"], ["onto:prop_1", "onto:prop_2"]
         )
+
+    def test_get_oaps_of_kb_resclasses_all_resclasses_no_values(self) -> None:
+        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
+        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+        dsp_client = Mock(spec=DspClient)
+        oap_config = OapRetrieveConfig(
+            retrieve_resources="all",
+            retrieve_values="none",
+        )
+        _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
+        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
+        oap_get._enrich_with_value_oaps.assert_not_called()
 
     def test_get_oaps_of_kb_resclasses_some_resclasses_no_values(self) -> None:
         oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
