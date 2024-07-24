@@ -91,11 +91,11 @@ def _get_oaps_of_one_kb_resclass(dsp_client: DspClient, project_iri: str, rescla
         PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 
         CONSTRUCT {
-            ?linkobj knora-api:isMainResource true .
+            ?kb_resclass knora-api:isMainResource true .
         } WHERE {
             BIND(<%(project_iri)s> as ?project_iri) .
-            ?linkobj a %(resclass)s .
-            ?linkobj knora-api:attachedToProject ?project_iri .
+            ?kb_resclass a %(resclass)s .
+            ?kb_resclass knora-api:attachedToProject ?project_iri .
         }
         OFFSET %(offset)s
         """ % {"resclass": resclass, "project_iri": project_iri, "offset": offset}  # noqa: UP031 (printf-string-formatting)
