@@ -53,10 +53,9 @@ def modify_oaps(oaps: list[Oap]) -> list[ResourceOap | ValueOap]:
     """Adapt this sample to your needs."""
     modified_oaps: list[ResourceOap | ValueOap] = []
     for oap in copy.deepcopy(oaps):
-        if oap.resource_oap:
-            if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
-                oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
-                modified_oaps.append(oap.resource_oap)
+        if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
+            oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
+            modified_oaps.append(oap.resource_oap)
         for value_oap in oap.value_oaps:
             if group.SYSTEM_ADMIN not in value_oap.scope.CR:
                 value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)

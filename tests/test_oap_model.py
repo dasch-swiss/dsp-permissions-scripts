@@ -1,7 +1,6 @@
 import pytest
 
 from dsp_permissions_scripts.models import group
-from dsp_permissions_scripts.models.errors import OapEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
@@ -47,26 +46,6 @@ class TestOap:
         oap = Oap(resource_oap=res_oap, value_oaps=[val_oap_1, val_oap_2])
         assert oap.resource_oap == res_oap
         assert oap.value_oaps == [val_oap_1, val_oap_2]
-
-    def test_oap_no_res(self) -> None:
-        res_iri = "http://rdfh.ch/0803/foo"
-        scope = PermissionScope.create(D=[group.UNKNOWN_USER])
-        val_oaps = [
-            ValueOap(
-                scope=scope,
-                property="foo:prop",
-                value_type="foo:valtype",
-                value_iri=f"{res_iri}/values/bar",
-                resource_iri=res_iri,
-            )
-        ]
-        oap = Oap(resource_oap=None, value_oaps=val_oaps)
-        assert oap.resource_oap is None
-        assert oap.value_oaps == val_oaps
-
-    def test_oap_no_res_no_vals(self) -> None:
-        with pytest.raises(OapEmptyError):
-            Oap(resource_oap=None, value_oaps=[])
 
 
 class TestOapRetrieveConfig:

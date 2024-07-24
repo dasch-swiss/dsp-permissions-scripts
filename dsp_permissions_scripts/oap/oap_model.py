@@ -6,7 +6,6 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from dsp_permissions_scripts.models.errors import OapEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
@@ -18,17 +17,10 @@ class Oap(BaseModel):
     """
     Model representing an object access permission of a resource and its values.
     If only the resource is of interest, value_oaps will be an empty list.
-    If only the values (or a part of them) are of interest, resource_oap will be None.
     """
 
-    resource_oap: ResourceOap | None
+    resource_oap: ResourceOap
     value_oaps: list[ValueOap]
-
-    @model_validator(mode="after")
-    def check_consistency(self) -> Oap:
-        if not self.resource_oap and not self.value_oaps:
-            raise OapEmptyError()
-        return self
 
 
 class ResourceOap(BaseModel):

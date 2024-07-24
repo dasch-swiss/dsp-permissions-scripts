@@ -102,11 +102,10 @@ def _get_next_page(
 
 
 def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -> Oap | None:
-    if oap_config.retrieve_resources == "all" or r["@type"] in oap_config.specified_res_classes:
-        scope = create_scope_from_string(r["knora-api:hasPermissions"])
-        resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
-    else:
-        resource_oap = None
+    if oap_config.retrieve_resources != "all" and r["@type"] not in oap_config.specified_res_classes:
+        return None
+    scope = create_scope_from_string(r["knora-api:hasPermissions"])
+    resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
 
     if oap_config.retrieve_values == "none":
         value_oaps = []
@@ -115,10 +114,7 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
     else:
         value_oaps = _get_value_oaps(r, oap_config.specified_props)
 
-    if resource_oap or value_oaps:
-        return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
-    else:
-        return None
+    return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
 
 
 def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
