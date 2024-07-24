@@ -1,5 +1,6 @@
 from typing import Any
 from unittest.mock import Mock
+from urllib.parse import quote
 
 import pytest
 
@@ -32,6 +33,49 @@ def resource() -> dict[str, Any]:
             "@type": "knora-api:TextValue",
         },
     }
+
+
+@pytest.fixture()
+def gravsearch_1_link_obj() -> dict[str, Any]:
+    return {
+        "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
+        "@type": "knora-api:LinkObj",
+        "@id": "http://rdfh.ch/0806/5moPQcfeS0mfhh-Oed3tPA",
+    }
+
+
+@pytest.fixture()
+def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
+    page_1 = {
+        "@graph": [
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
+                "@type": "knora-api:LinkObj",
+                "@id": "http://rdfh.ch/0806/5moPQcfeS0mfhh-Oed3tPA",
+            },
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
+                "@type": "knora-api:LinkObj",
+                "@id": "http://rdfh.ch/0806/8DGe7ai1TFmyTD0XN56ubg",
+            },
+        ],
+        "knora-api:mayHaveMoreResults": True,
+    }
+    page_2 = {
+        "@graph": [
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
+                "@type": "knora-api:LinkObj",
+                "@id": "http://rdfh.ch/0806/BmnN7X_zR7C0f7B4ibAZ6A",
+            },
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
+                "@type": "knora-api:LinkObj",
+                "@id": "http://rdfh.ch/0806/_n8QtGaXTVG14jtYU5H33Q",
+            },
+        ]
+    }
+    return [page_1, page_2]
 
 
 def test_oap_get_multiple_values_per_prop() -> None:
@@ -196,7 +240,7 @@ def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, An
 
 def test_get_oaps_of_one_kb_resclass_0_results() -> None:
     dsp_client = Mock(spec=DspClient)
-    dsp_client.get = Mock(return_value={})
+    dsp_client.get = Mock(side_effect=[{}])
     res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
     assert res == []
     assert len(dsp_client.get.call_args_list) == 1
@@ -204,11 +248,35 @@ def test_get_oaps_of_one_kb_resclass_0_results() -> None:
     assert called_route.startswith("/v2/searchextended/")
     assert "proj_iri" in called_route
     assert "resclass" in called_route
+    assert quote("OFFSET 0", safe="") in called_route
 
 
-def test_get_oaps_of_one_kb_resclass_1_result() -> None:
-    pass
+def test_get_oaps_of_one_kb_resclass_1_result(gravsearch_1_link_obj: dict[str, Any]) -> None:
+    dsp_client = Mock(spec=DspClient)
+    dsp_client.get = Mock(side_effect=[gravsearch_1_link_obj])
+    res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
+    expected = Oap(
+        resource_oap=ResourceOap(
+            scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], D=[group.PROJECT_MEMBER]),
+            resource_iri="http://rdfh.ch/0806/5moPQcfeS0mfhh-Oed3tPA",
+        ),
+        value_oaps=[],
+    )
+    assert res == [expected]
 
 
-def test_get_oaps_of_one_kb_resclass_4_results_on_2_pages() -> None:
-    pass
+def test_get_oaps_of_one_kb_resclass_4_results_on_2_pages(
+    gravsearch_4_link_objs_on_2_pages: list[dict[str, Any]],
+) -> None:
+    dsp_client = Mock(spec=DspClient)
+    dsp_client.get = Mock(side_effect=gravsearch_4_link_objs_on_2_pages)
+    res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
+    expected_scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], D=[group.PROJECT_MEMBER])
+    expected_res_oaps = [
+        ResourceOap(scope=expected_scope, resource_iri="http://rdfh.ch/0806/5moPQcfeS0mfhh-Oed3tPA"),
+        ResourceOap(scope=expected_scope, resource_iri="http://rdfh.ch/0806/8DGe7ai1TFmyTD0XN56ubg"),
+        ResourceOap(scope=expected_scope, resource_iri="http://rdfh.ch/0806/BmnN7X_zR7C0f7B4ibAZ6A"),
+        ResourceOap(scope=expected_scope, resource_iri="http://rdfh.ch/0806/_n8QtGaXTVG14jtYU5H33Q"),
+    ]
+    expected = [Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in expected_res_oaps]
+    assert res == expected
