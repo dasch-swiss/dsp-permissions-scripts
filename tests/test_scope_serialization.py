@@ -1,5 +1,3 @@
-from typing import Any
-
 import pytest
 from pytest_unordered import unordered
 
@@ -43,7 +41,7 @@ class TestScopeSerialization:
     scopes = (
         PermissionScope.create(
             CR=[group.SYSTEM_ADMIN],
-            V=[group.Group(val="http://www.knora.org/ontology/knora-admin#CustomGroup")],
+            V=[group.Group(val="knora-admin:CustomGroup")],
         ),
         PermissionScope.create(
             D={group.PROJECT_ADMIN},
@@ -72,24 +70,12 @@ class TestScopeSerialization:
 
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            perm_string_full = self._resolve_prefixes_of_perm_string(perm_string)
-            assert create_string_from_scope(scope) == perm_string_full, f"Failed with permission string '{perm_string}'"
+            assert create_string_from_scope(scope) == perm_string, f"Failed with permission string '{perm_string}'"
 
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            admin_route_object_full = self._resolve_prefixes_of_admin_route_object(admin_route_object)
             returned = create_admin_route_object_from_scope(scope)
-            assert unordered(returned) == admin_route_object_full, f"Failed with admin group object no. {index}"
-
-    def _resolve_prefixes_of_admin_route_object(self, admin_route_object: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        for obj in admin_route_object:
-            obj["additionalInformation"] = obj["additionalInformation"].replace(
-                "knora-admin:", "http://www.knora.org/ontology/knora-admin#"
-            )
-        return admin_route_object
-
-    def _resolve_prefixes_of_perm_string(self, perm_string: str) -> str:
-        return perm_string.replace("knora-admin:", "http://www.knora.org/ontology/knora-admin#")
+            assert unordered(returned) == admin_route_object, f"Failed with admin group object no. {index}"
 
 
 if __name__ == "__main__":

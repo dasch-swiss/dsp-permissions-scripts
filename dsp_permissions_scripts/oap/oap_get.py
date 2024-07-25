@@ -15,6 +15,22 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 
 logger = get_logger(__name__)
 
+IGNORE_KEYS = [
+    "@id",
+    "@type",
+    "@context",
+    "rdfs:label",
+    "knora-api:DeletedValue",
+    "knora-api:lastModificationDate",
+    "knora-api:creationDate",
+    "knora-api:arkUrl",
+    "knora-api:versionArkUrl",
+    "knora-api:attachedToProject",
+    "knora-api:attachedToUser",
+    "knora-api:userHasPermission",
+    "knora-api:hasPermissions",
+]
+
 
 def _get_all_oaps_of_resclass(
     resclass_localname: str, project_iri: str, dsp_client: DspClient, oap_config: OapRetrieveConfig
@@ -108,12 +124,14 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
 def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
     res = []
     for k, v in resource.items():
-        if k in {"@id", "@type", "@context", "rdfs:label", "knora-api:DeletedValue"}:
+        if k in IGNORE_KEYS:
             continue
         if restrict_to_props is not None and k not in restrict_to_props:
             continue
         values = v if isinstance(v, list) else [v]
         for val in values:
+            if not isinstance(val, dict) or val.get("knora-api:isDeleted"):
+                continue
             match val:
                 case {
                     "@id": id_,
@@ -128,22 +146,6 @@ def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | Non
                 case _:
                     continue
     return res
-
-
-def get_resource(resource_iri: str, dsp_client: DspClient) -> dict[str, Any]:
-    """Requests the resource with the given IRI from DSP-API"""
-    iri = quote_plus(resource_iri, safe="")
-    try:
-        return dsp_client.get(f"/v2/resources/{iri}")
-    except ApiError as err:
-        err.message = f"Error while getting resource {resource_iri}"
-        raise err from None
-
-
-def get_resource_oap_by_iri(resource_iri: str, dsp_client: DspClient) -> ResourceOap:
-    resource = get_resource(resource_iri, dsp_client)
-    scope = create_scope_from_string(resource["knora-api:hasPermissions"])
-    return ResourceOap(scope=scope, resource_iri=resource_iri)
 
 
 def get_all_oaps_of_project(
