@@ -102,10 +102,8 @@ def main() -> None:
     dsp_client = login(host)
 
     oap_config = OapRetrieveConfig(
-        retrieve_resources="specified_res_classes",
-        specified_res_classes=["my-data-model:ImageThing"],
-        retrieve_values="specified_props",
-        specified_props=["knora-api:hasStillImageFileValue"],
+        retrieve_resources="all",
+        retrieve_values="all",
     )
 
     update_doaps(
