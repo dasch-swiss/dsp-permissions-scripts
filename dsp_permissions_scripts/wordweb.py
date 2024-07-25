@@ -10,6 +10,8 @@ from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_model import ResourceOap
+from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -29,21 +31,18 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return modified_doaps
 
 
-def modify_oaps(oaps: list[Oap]) -> list[Oap]:
+def modify_oaps(oaps: list[Oap]) -> list[ResourceOap | ValueOap]:
     """Adapt this sample to your needs."""
-    modified_oaps = []
+    modified_oaps: list[ResourceOap | ValueOap] = []
     for oap in copy.deepcopy(oaps):
-        modified = False
         if oap.resource_oap:
             if group.UNKNOWN_USER not in oap.resource_oap.scope.V:
                 oap.resource_oap.scope = oap.resource_oap.scope.add("V", group.UNKNOWN_USER)
-                modified = True
+                modified_oaps.append(oap.resource_oap)
         for value_oap in oap.value_oaps:
             if group.UNKNOWN_USER not in value_oap.scope.V:
                 value_oap.scope = value_oap.scope.add("V", group.UNKNOWN_USER)
-                modified = True
-        if modified:
-            modified_oaps.append(oap)
+                modified_oaps.append(value_oap)
     return modified_oaps
 
 

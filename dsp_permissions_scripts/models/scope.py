@@ -10,7 +10,6 @@ from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import EmptyScopeError
 from dsp_permissions_scripts.models.group import CREATOR
-from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
@@ -123,7 +122,7 @@ class PermissionScope(BaseModel):
 PUBLIC = PermissionScope.create(
     CR={PROJECT_ADMIN},
     M={PROJECT_MEMBER},
-    V={UNKNOWN_USER, KNOWN_USER},
+    V={UNKNOWN_USER},
 )
 
 PRIVATE = PermissionScope.create(
