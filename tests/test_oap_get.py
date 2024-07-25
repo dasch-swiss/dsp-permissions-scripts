@@ -81,6 +81,94 @@ def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
     return [page_1, page_2]
 
 
+@pytest.fixture()
+def video_segment() -> dict[str, Any]:  # https://ark.stage.dasch.swiss/ark:/72163/1/0812/l32ehsHuTfaQAKVTRiuBRAR
+    return {
+        "knora-api:hasSegmentBounds": {
+            "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+            "@type": "knora-api:IntervalValue",
+            "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/vBYk7HEERHWNMy0IagG97A",
+        },
+        "knora-api:relatesToValue": {
+            "knora-api:linkValueHasTarget": {
+                "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+                "@type": "ekws:Agent",
+                "@id": "http://rdfh.ch/0812/DUB459kJWDmO8o_GyvQJMg",
+            },
+            "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+            "@type": "knora-api:LinkValue",
+            "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/stMJC52VRYSAJEI_bllNmQ",
+        },
+        "knora-api:hasTitle": {
+            "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+            "@type": "knora-api:TextValue",
+            "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/ggBMLia9Q-iZFzj5T1zsgg",
+        },
+        "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+        "knora-api:isVideoSegmentOfValue": {
+            "knora-api:linkValueHasTarget": {
+                "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+                "@type": "ekws:MovingImageRepresentation",
+                "@id": "http://rdfh.ch/0812/eIsPNAgNQLCoczIkuos9zw",
+            },
+            "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+            "@type": "knora-api:LinkValue",
+            "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/eylWw-RCQOOdircrcfCzFA",
+        },
+        "@type": "knora-api:VideoSegment",
+        "knora-api:hasDescription": {
+            "knora-api:hasPermissions": "CR knora-admin:Creator|V knora-admin:KnownUser,knora-admin:UnknownUser",
+            "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/WP1q4naiTty1CEcv9cglaA",
+            "@type": "knora-api:TextValue",
+        },
+        "@id": "http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+    }
+
+
+@pytest.fixture()
+def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/Os_5VvgkSC2saUlSUdcLhA
+    return {
+        "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+        "@type": "knora-api:LinkObj",
+        "knora-api:hasLinkToValue": [
+            {
+                "knora-api:linkValueHasTarget": {
+                    "knora-api:hasPermissions": "V knora-admin:KnownUser|RV knora-admin:UnknownUser",
+                    "@type": "invalid-jwt-token:DocumentRepresentation",
+                    "@id": "http://rdfh.ch/F18E/1ft22XVzQ1Gk2eYMvybhGA",
+                },
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+                "@type": "knora-api:LinkValue",
+                "@id": "http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA/values/YlwXFucHSVq5VfETR3dc0Q",
+            },
+            {
+                "knora-api:linkValueHasTarget": {
+                    "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+                    "@type": "invalid-jwt-token:DocumentRepresentation",
+                    "@id": "http://rdfh.ch/F18E/3BlLqRdlRZCpYcGzTlK8Iw",
+                },
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+                "@type": "knora-api:LinkValue",
+                "@id": "http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA/values/yUA0UsnBReuYJ8zmQjvG3A",
+            },
+        ],
+        "@id": "http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA",
+        "knora-api:hasComment": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+            "@type": "knora-api:TextValue",
+            "@id": "http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA/values/TGyIeaV2QBqxAl8NxCs_Vw",
+        },
+    }
+
+
+def test_that_uses_video_segment(video_segment: dict[str, Any]) -> None:
+    pytest.fail(f"Please write a test for {video_segment}")
+
+
+def test_that_uses_linkobj(linkobj: dict[str, Any]) -> None:
+    pytest.fail(f"Please write a test for {linkobj}")
+
+
 def test_oap_get_multiple_values_per_prop() -> None:
     resource = {
         "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
