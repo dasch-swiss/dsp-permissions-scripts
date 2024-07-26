@@ -165,4 +165,4 @@ def apply_updated_oaps_on_server(
         )
         msg = f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
         logger.error(msg)
-    logger.info(f"Updated OAPs of {len(oaps)} resources on {host}")
+    logger.info(f"Updated {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {host}... *******")
