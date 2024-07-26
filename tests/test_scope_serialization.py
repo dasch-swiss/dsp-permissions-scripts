@@ -3,6 +3,7 @@ from pytest_unordered import unordered
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
@@ -18,24 +19,32 @@ class TestScopeSerialization:
     )
     admin_route_objects = (
         [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin", "permissionCode": None},
-            {"name": "V", "additionalInformation": "knora-admin:CustomGroup", "permissionCode": None},
+            {"name": "CR", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}SystemAdmin", "permissionCode": None},
+            {"name": "V", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}CustomGroup", "permissionCode": None},
         ],
         [
-            {"name": "D", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
-            {"name": "RV", "additionalInformation": "knora-admin:ProjectMember", "permissionCode": None},
+            {"name": "D", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin", "permissionCode": None},
+            {
+                "name": "RV",
+                "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectMember",
+                "permissionCode": None,
+            },
         ],
         [
-            {"name": "M", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
-            {"name": "V", "additionalInformation": "knora-admin:Creator", "permissionCode": None},
-            {"name": "V", "additionalInformation": "knora-admin:KnownUser", "permissionCode": None},
-            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser", "permissionCode": None},
+            {"name": "M", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin", "permissionCode": None},
+            {"name": "V", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}Creator", "permissionCode": None},
+            {"name": "V", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}KnownUser", "permissionCode": None},
+            {"name": "RV", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}UnknownUser", "permissionCode": None},
         ],
         [
-            {"name": "CR", "additionalInformation": "knora-admin:SystemAdmin", "permissionCode": None},
-            {"name": "CR", "additionalInformation": "knora-admin:ProjectAdmin", "permissionCode": None},
-            {"name": "D", "additionalInformation": "knora-admin:Creator", "permissionCode": None},
-            {"name": "RV", "additionalInformation": "knora-admin:UnknownUser", "permissionCode": None},
+            {"name": "CR", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}SystemAdmin", "permissionCode": None},
+            {
+                "name": "CR",
+                "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin",
+                "permissionCode": None,
+            },
+            {"name": "D", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}Creator", "permissionCode": None},
+            {"name": "RV", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}UnknownUser", "permissionCode": None},
         ],
     )
     scopes = (

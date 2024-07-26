@@ -40,14 +40,17 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
 
 
 def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[dict[str, str | None]]:
-    """Serializes a permission scope to an object that can be used for requests to /admin/permissions routes."""
+    """
+    Serializes a permission scope to an object that can be used for requests to /admin/permissions routes.
+    Note: This route doesn't accept relative IRIs.
+    """
     scope_elements: list[dict[str, str | None]] = []
     for perm_letter in perm_scope.model_fields:
         groups = perm_scope.get(perm_letter)
         for group in groups:
             scope_elements.append(
                 {
-                    "additionalInformation": group.val,
+                    "additionalInformation": group.val.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE),
                     "name": perm_letter,
                     "permissionCode": None,
                 }
