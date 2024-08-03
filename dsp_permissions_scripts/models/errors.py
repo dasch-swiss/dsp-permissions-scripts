@@ -40,11 +40,6 @@ class SpecifiedPropsNotEmptyError(Exception):
 
 
 @dataclass
-class OapRetrieveConfigEmptyError(Exception):
-    message: str = "retrieve_resources cannot be 'none' if retrieve_values is 'none'"
-
-
-@dataclass
 class OapEmptyError(Exception):
     message: str = "An OAP must specify at least one resource_oap or one value_oap"
 

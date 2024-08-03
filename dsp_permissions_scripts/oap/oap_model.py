@@ -7,7 +7,6 @@ from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import OapEmptyError
-from dsp_permissions_scripts.models.errors import OapRetrieveConfigEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
@@ -19,10 +18,9 @@ class Oap(BaseModel):
     """
     Model representing an object access permission of a resource and its values.
     If only the resource is of interest, value_oaps will be an empty list.
-    If only the values (or a part of them) are of interest, resource_oap will be None.
     """
 
-    resource_oap: ResourceOap | None
+    resource_oap: ResourceOap
     value_oaps: list[ValueOap]
 
     @model_validator(mode="after")
@@ -70,7 +68,7 @@ class OapRetrieveConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    retrieve_resources: Literal["all", "specified_res_classes", "none"] = "none"
+    retrieve_resources: Literal["all", "specified_res_classes"] = "all"
     specified_res_classes: list[str] = []
     retrieve_values: Literal["all", "specified_props", "none"] = "none"
     specified_props: list[str] = []
@@ -90,10 +88,4 @@ class OapRetrieveConfig(BaseModel):
             raise SpecifiedPropsEmptyError()
         if self.retrieve_values != "specified_props" and self.specified_props:
             raise SpecifiedPropsNotEmptyError()
-        return self
-
-    @model_validator(mode="after")
-    def check_config_empty(self) -> OapRetrieveConfig:
-        if self.retrieve_resources == "none" and self.retrieve_values == "none":
-            raise OapRetrieveConfigEmptyError()
         return self

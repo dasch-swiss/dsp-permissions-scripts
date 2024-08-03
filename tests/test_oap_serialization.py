@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Iterator
 
 import pytest
+from pytest_unordered import unordered
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -24,15 +25,15 @@ class TestOapSerialization:
             shutil.rmtree(testdata_dir)
 
     def test_oap_serialization(self) -> None:
-        oap1 = self._get_oap_one_value_only()
-        oap2 = self._get_oap_full()
-        oap3 = self._get_oap_res_only()
+        oap1 = self._get_oap_with_one_value()
+        oap2 = self._get_oap_with_multiple_values()
+        oap3 = self._get_oap_with_res_only()
         oaps_original = [oap1, oap2, oap3]
         serialize_oaps(oaps_original, self.shortcode, "original")
         deserialized_oaps = deserialize_oaps(self.shortcode, "original")
-        assert oaps_original == deserialized_oaps
+        assert unordered(oaps_original) == deserialized_oaps
 
-    def _get_oap_full(self) -> Oap:
+    def _get_oap_with_multiple_values(self) -> Oap:
         scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.PROJECT_MEMBER])
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-1"
         res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
@@ -53,9 +54,10 @@ class TestOapSerialization:
         oap = Oap(resource_oap=res_oap, value_oaps=[val1_oap, val2_oap])
         return oap
 
-    def _get_oap_one_value_only(self) -> Oap:
+    def _get_oap_with_one_value(self) -> Oap:
         scope = PermissionScope.create(D=[group.SYSTEM_ADMIN], M=[group.KNOWN_USER])
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-2"
+        res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
         val_oap = ValueOap(
             scope=scope,
             property="foo:prop3",
@@ -63,9 +65,9 @@ class TestOapSerialization:
             value_iri=f"{res_iri}/values/foobar3",
             resource_iri=res_iri,
         )
-        return Oap(resource_oap=None, value_oaps=[val_oap])
+        return Oap(resource_oap=res_oap, value_oaps=[val_oap])
 
-    def _get_oap_res_only(self) -> Oap:
+    def _get_oap_with_res_only(self) -> Oap:
         scope = PermissionScope.create(V=[group.KNOWN_USER], RV=[group.UNKNOWN_USER])
         res_iri = f"http://rdfh.ch/{self.shortcode}/resource-3"
         res_oap = ResourceOap(scope=scope, resource_iri=res_iri)
