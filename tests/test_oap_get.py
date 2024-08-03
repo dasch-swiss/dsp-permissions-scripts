@@ -79,59 +79,6 @@ def test_oap_get_multiple_values_per_prop() -> None:
     assert expected == returned
 
 
-def test_get_oap_of_one_resource_no_classes() -> None:
-    resource = {
-        "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-        "@type": "my-data-model:ImageThing",
-        "knora-api:hasPermissions": "CR knora-admin:ProjectMember|V knora-admin:UnknownUser",
-    }
-    config = OapRetrieveConfig(retrieve_resources="none", retrieve_values="all")
-    res = _get_oap_of_one_resource(resource, config)
-    assert not res
-
-
-def test_get_oap_of_one_resource_no_classes_all_values() -> None:
-    resource = {
-        "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-        "@type": "my-data-model:ImageThing",
-        "knora-api:hasPermissions": "CR knora-admin:ProjectMember|V knora-admin:UnknownUser",
-        "my-data-model:hasFirstProp": {
-            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
-            "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
-            "@type": "knora-api:TextValue",
-        },
-    }
-    config = OapRetrieveConfig(retrieve_resources="none", retrieve_values="all")
-    expected_val_oap = ValueOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
-        property="my-data-model:hasFirstProp",
-        value_type="knora-api:TextValue",
-        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected = Oap(resource_oap=None, value_oaps=[expected_val_oap])
-    res = _get_oap_of_one_resource(resource, config)
-    assert res == expected
-
-
-def test_get_oap_of_one_resource_no_classes_some_values(resource: dict[str, Any]) -> None:
-    config = OapRetrieveConfig(
-        retrieve_resources="none",
-        retrieve_values="specified_props",
-        specified_props=["my-data-model:hasFirstProp"],
-    )
-    expected_val_oap = ValueOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
-        property="my-data-model:hasFirstProp",
-        value_type="knora-api:TextValue",
-        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected = Oap(resource_oap=None, value_oaps=[expected_val_oap])
-    res = _get_oap_of_one_resource(resource, config)
-    assert res == expected
-
-
 def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
     config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
     expected_res_oap = ResourceOap(

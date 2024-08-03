@@ -27,18 +27,12 @@ def serialize_oaps(
     folder = _get_project_data_path(shortcode, mode)
     folder.mkdir(parents=True, exist_ok=True)
     value_oap_count = sum(len(oap.value_oaps) for oap in oaps)
-    res_oap_count = sum(1 for oap in oaps if oap.resource_oap)
-    counting_info = f"{len(oaps)} OAPs ({res_oap_count} resource OAPs and {value_oap_count} value OAPs)"
-    logger.info(f"Writing {counting_info} into {folder}")
-    counter = 0
+    logger.info(f"Writing {len(oaps)} resource OAPs and {value_oap_count} value OAPs into {folder}")
     for oap in oaps:
-        if oap.resource_oap:
-            _serialize_oap(oap.resource_oap, folder)
-            counter += 1
+        _serialize_oap(oap.resource_oap, folder)
         for value_oap in oap.value_oaps:
             _serialize_oap(value_oap, folder)
-            counter += 1
-    logger.info(f"Successfully wrote {counting_info} into {counter} files in folder {folder}")
+    logger.info(f"Successfully wrote {len(oaps)} resource OAPs and {value_oap_count} value OAPs into folder {folder}")
 
 
 def _serialize_oap(oap: ResourceOap | ValueOap, folder: Path) -> None:
@@ -87,14 +81,13 @@ def _group_oaps_together(res_oaps: list[ResourceOap], val_oaps: list[ValueOap]) 
         return x.resource_iri
 
     for res_iri, _val_oaps in itertools.groupby(sorted(val_oaps, key=sort_algo), key=sort_algo):
-        res_oaps_filtered = [x for x in res_oaps if x.resource_iri == res_iri]
-        res_oap = res_oaps_filtered[0] if res_oaps_filtered else None
+        res_oap = next(x for x in res_oaps if x.resource_iri == res_iri)
         oaps.append(Oap(resource_oap=res_oap, value_oaps=sorted(_val_oaps, key=lambda x: x.value_iri)))
         deserialized_resource_iris.append(res_iri)
 
     remaining_res_oaps = [oap for oap in res_oaps if oap.resource_iri not in deserialized_resource_iris]
     oaps.extend(Oap(resource_oap=res_oap, value_oaps=[]) for res_oap in remaining_res_oaps)
 
-    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri if oap.resource_oap else "")
+    oaps.sort(key=lambda oap: oap.resource_oap.resource_iri)
     logger.debug(f"Grouped {len(res_oaps)} resource OAPs and {len(val_oaps)} value OAPs into {len(oaps)} OAPs")
     return oaps
