@@ -238,7 +238,45 @@ class Test_get_value_oaps:
         assert returned == unordered(expected)
 
     def test_video_segment_full(self, video_segment: dict[str, Any]) -> None:
-        pytest.fail(f"Please write a test for {video_segment}")
+        perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
+        exp_1 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:hasSegmentBounds",
+            value_type="knora-api:IntervalValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/vBYk7HEERHWNMy0IagG97A",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        exp_2 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:relatesToValue",
+            value_type="knora-api:LinkValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/stMJC52VRYSAJEI_bllNmQ",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        exp_3 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:isVideoSegmentOfValue",
+            value_type="knora-api:LinkValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/eylWw-RCQOOdircrcfCzFA",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        exp_4 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:hasTitle",
+            value_type="knora-api:TextValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/ggBMLia9Q-iZFzj5T1zsgg",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        exp_5 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:hasDescription",
+            value_type="knora-api:TextValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/WP1q4naiTty1CEcv9cglaA",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        expected = [exp_1, exp_2, exp_3, exp_4, exp_5]
+        returned = _get_value_oaps(video_segment)
+        assert returned == unordered(expected)
 
     def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any]) -> None:
         _ = _get_value_oaps(video_segment, ["knora-api:relatesToValue"])
