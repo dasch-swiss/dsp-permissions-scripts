@@ -100,6 +100,8 @@ def _get_oaps_of_one_kb_resclass(dsp_client: DspClient, project_iri: str, rescla
         sparql_query_stripped = re.sub(r"\s+", " ", sparql_query).strip()
         if not (response := dsp_client.get(f"/v2/searchextended/{quote(sparql_query_stripped, safe='')}")):
             break  # if there are 0 results, the response is an empty dict
+        # 1 result: the resource is returned as a single dict
+        # >1 results: the resource is returned as a list of dicts
         for json_resource in response.get("@graph", [response]):
             scope = create_scope_from_string(json_resource["knora-api:hasPermissions"])
             res_oap = ResourceOap(scope=scope, resource_iri=json_resource["@id"])
