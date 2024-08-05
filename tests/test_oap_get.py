@@ -162,65 +162,6 @@ def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/O
     }
 
 
-def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
-    config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
-    expected_res_oap = ResourceOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected_val_oap_1 = ValueOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
-        property="my-data-model:hasFirstProp",
-        value_type="knora-api:TextValue",
-        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected_val_oap_2 = ValueOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
-        property="my-data-model:hasSecondProp",
-        value_type="knora-api:TextValue",
-        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/ziOT-nhmQiqvCV8LSxAyHA",
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap_1, expected_val_oap_2])
-    res = _get_oap_of_one_resource(resource, config)
-    assert res == expected
-
-
-def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any]) -> None:
-    config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="none")
-    expected_res_oap = ResourceOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected = Oap(resource_oap=expected_res_oap, value_oaps=[])
-    res = _get_oap_of_one_resource(resource, config)
-    assert res == expected
-
-
-def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any]) -> None:
-    config = OapRetrieveConfig(
-        retrieve_resources="specified_res_classes",
-        specified_res_classes=["my-data-model:ImageThing"],
-        retrieve_values="specified_props",
-        specified_props=["my-data-model:hasSecondProp"],
-    )
-    expected_res_oap = ResourceOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected_val_oap = ValueOap(
-        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
-        property="my-data-model:hasSecondProp",
-        value_type="knora-api:TextValue",
-        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/ziOT-nhmQiqvCV8LSxAyHA",
-        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
-    )
-    expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap])
-    res = _get_oap_of_one_resource(resource, config)
-    assert res == expected
-
-
 class Test_get_value_oaps:
     def test_oap_get_multiple_values_per_prop(self) -> None:
         resource = {
@@ -306,6 +247,65 @@ class Test_get_value_oaps:
     def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any]) -> None:
         _ = _get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
         pytest.fail("Please write a test")
+
+
+def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
+    config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
+    expected_res_oap = ResourceOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected_val_oap_1 = ValueOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
+        property="my-data-model:hasFirstProp",
+        value_type="knora-api:TextValue",
+        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected_val_oap_2 = ValueOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
+        property="my-data-model:hasSecondProp",
+        value_type="knora-api:TextValue",
+        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/ziOT-nhmQiqvCV8LSxAyHA",
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap_1, expected_val_oap_2])
+    res = _get_oap_of_one_resource(resource, config)
+    assert res == expected
+
+
+def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any]) -> None:
+    config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="none")
+    expected_res_oap = ResourceOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected = Oap(resource_oap=expected_res_oap, value_oaps=[])
+    res = _get_oap_of_one_resource(resource, config)
+    assert res == expected
+
+
+def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any]) -> None:
+    config = OapRetrieveConfig(
+        retrieve_resources="specified_res_classes",
+        specified_res_classes=["my-data-model:ImageThing"],
+        retrieve_values="specified_props",
+        specified_props=["my-data-model:hasSecondProp"],
+    )
+    expected_res_oap = ResourceOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected_val_oap = ValueOap(
+        scope=PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER]),
+        property="my-data-model:hasSecondProp",
+        value_type="knora-api:TextValue",
+        value_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/ziOT-nhmQiqvCV8LSxAyHA",
+        resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+    )
+    expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap])
+    res = _get_oap_of_one_resource(resource, config)
+    assert res == expected
 
 
 class Test_get_oaps_of_one_kb_resclass:
