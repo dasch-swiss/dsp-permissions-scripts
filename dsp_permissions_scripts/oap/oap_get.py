@@ -75,7 +75,7 @@ def _enrich_with_value_oaps(
 ) -> list[Oap]:
     complete_oaps = copy.deepcopy(res_only_oaps)
     for oap in complete_oaps:
-        full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")  # type: ignore[union-attr]
+        full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")
         oap.value_oaps = _get_value_oaps(full_resource, restrict_to_props)
     return complete_oaps
 
