@@ -279,12 +279,37 @@ class Test_get_value_oaps:
         assert returned == unordered(expected)
 
     def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any]) -> None:
-        _ = _get_value_oaps(video_segment, ["knora-api:relatesToValue"])
-        pytest.fail("Please write a test")
+        perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
+        exp_1 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:relatesToValue",
+            value_type="knora-api:LinkValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/stMJC52VRYSAJEI_bllNmQ",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        expected = [exp_1]
+        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue"])
+        assert returned == unordered(expected)
 
     def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any]) -> None:
-        _ = _get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
-        pytest.fail("Please write a test")
+        perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
+        exp_1 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:relatesToValue",
+            value_type="knora-api:LinkValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/stMJC52VRYSAJEI_bllNmQ",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        exp_2 = ValueOap(
+            scope=perm_scope_expected,
+            property="knora-api:hasTitle",
+            value_type="knora-api:TextValue",
+            value_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA/values/ggBMLia9Q-iZFzj5T1zsgg",
+            resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
+        )
+        expected = [exp_1, exp_2]
+        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
+        assert returned == unordered(expected)
 
 
 def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
