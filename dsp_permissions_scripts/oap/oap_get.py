@@ -64,19 +64,25 @@ def get_oaps_of_kb_resclasses(dsp_client: DspClient, project_iri: str, oap_confi
 def _get_oaps_of_specified_kb_resclasses(
     dsp_client: DspClient, project_iri: str, kb_resclasses: list[str]
 ) -> list[Oap]:
+    logger.info(f"Retrieving OAPs from the knora-base resource classes {kb_resclasses}...")
     all_oaps: list[Oap] = []
     for resclass in kb_resclasses:
-        all_oaps.extend(_get_oaps_of_one_kb_resclass(dsp_client, project_iri, resclass))
+        oaps = _get_oaps_of_one_kb_resclass(dsp_client, project_iri, resclass)
+        logger.info(f"Retrieved {len(oaps)} OAPs from class {resclass}.")
+        all_oaps.extend(oaps)
+    logger.info(f"Retrieved a total of {len(all_oaps)} OAPs from knora-base resource classes.")
     return all_oaps
 
 
 def _enrich_with_value_oaps(
     dsp_client: DspClient, res_only_oaps: list[Oap], restrict_to_props: list[str] | None = None
 ) -> list[Oap]:
+    logger.info(f"Enriching {len(res_only_oaps)} OAPs of knora-base resources with their value OAPs...")
     complete_oaps = copy.deepcopy(res_only_oaps)
     for oap in complete_oaps:
         full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")
         oap.value_oaps = _get_value_oaps(full_resource, restrict_to_props)
+    logger.info(f"Enriched {len(complete_oaps)} OAPs of knora-base resources with their value OAPs.")
     return complete_oaps
 
 
