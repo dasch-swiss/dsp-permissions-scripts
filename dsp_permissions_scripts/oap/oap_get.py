@@ -1,5 +1,4 @@
 import copy
-import re
 from typing import Any
 from urllib.parse import quote
 from urllib.parse import quote_plus
@@ -103,8 +102,7 @@ def _get_oaps_of_one_kb_resclass(dsp_client: DspClient, project_iri: str, rescla
         }
         OFFSET %(offset)s
         """ % {"resclass": resclass, "project_iri": project_iri, "offset": offset}  # noqa: UP031 (printf-string-formatting)
-        sparql_query_stripped = re.sub(r"\s+", " ", sparql_query).strip()
-        if not (response := dsp_client.get(f"/v2/searchextended/{quote(sparql_query_stripped, safe='')}")):
+        if not (response := dsp_client.get(f"/v2/searchextended/{quote(sparql_query, safe='')}")):
             break  # if there are 0 results, the response is an empty dict
         # 1 result: the resource is returned as a single dict
         # >1 results: the resource is returned as a list of dicts
