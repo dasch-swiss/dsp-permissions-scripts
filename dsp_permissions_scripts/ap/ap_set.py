@@ -52,7 +52,7 @@ def create_new_ap_on_server(
         "forGroup": forGroup.val,
         "forProject": proj_iri,
         "hasPermissions": [
-            {"additionalInformation": None, "name": ap_val, "permissionCode": None} for ap_val in hasPermissions
+            {"additionalInformation": None, "name": ap_val.value, "permissionCode": None} for ap_val in hasPermissions
         ],
     }
     try:
