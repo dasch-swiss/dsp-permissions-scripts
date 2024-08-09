@@ -19,7 +19,7 @@ class Doap(BaseModel):
 
 
 class DoapTarget(BaseModel):
-    project: str
+    project_iri: str
     group: Group | None = None
     resource_class: str | None = None
     property: str | None = None

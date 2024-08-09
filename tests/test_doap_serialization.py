@@ -26,7 +26,7 @@ class TestDoapSerialization:
     def test_doap_serialization(self) -> None:
         doap1 = Doap(
             target=DoapTarget(
-                project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+                project_iri="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group=group.PROJECT_ADMIN,
             ),
             scope=PermissionScope.create(
@@ -37,7 +37,7 @@ class TestDoapSerialization:
         )
         doap2 = Doap(
             target=DoapTarget(
-                project="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
+                project_iri="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group=group.PROJECT_MEMBER,
             ),
             scope=PermissionScope.create(

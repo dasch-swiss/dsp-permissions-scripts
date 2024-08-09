@@ -23,15 +23,15 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
     return new_doap
 
 
-def apply_updated_doaps_on_server(doaps: list[Doap], host: str, dsp_client: DspClient) -> None:
+def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], host: str, dsp_client: DspClient) -> None:
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {host}")
         return
-    logger.info(f"****** Updating {len(doaps)} DOAPs on {host}... ******")
+    logger.info(f"****** Updating scopes of {len(doaps)} DOAPs on {host}... ******")
     for d in doaps:
         try:
             _ = _update_doap_scope_on_server(d.doap_iri, d.scope, dsp_client)
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
-    logger.info(f"Finished updating {len(doaps)} DOAPs on {host}")
+    logger.info(f"Finished updating scopes of {len(doaps)} DOAPs on {host}")
