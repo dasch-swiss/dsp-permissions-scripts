@@ -3,7 +3,7 @@ class Hosts:
 
     LOCALHOST = "http://0.0.0.0:3333"
     PROD = "https://api.dasch.swiss"
-    TEST = "https://api.test.dasch.swiss"
+    RDU_STAGE = "https://api.rdu-stage.dasch.swiss"
     DEV = "https://api.dev.dasch.swiss"
     LS_PROD = "https://api.ls-prod.admin.ch"
     STAGE = "https://api.stage.dasch.swiss"
