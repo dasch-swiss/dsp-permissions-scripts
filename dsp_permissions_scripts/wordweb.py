@@ -7,7 +7,6 @@ from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
-from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -35,7 +34,6 @@ def modify_oaps(oaps: list[Oap]) -> list[ResourceOap | ValueOap]:
 def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
     if not oaps_modified:
         logger.info("There are no OAPs to update.")
@@ -47,8 +45,6 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: Oa
         dsp_client=dsp_client,
         nthreads=4,
     )
-    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
@@ -59,7 +55,7 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("stage")
+    host = Hosts.get_host("prod")
     shortcode = "0826"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
