@@ -5,11 +5,11 @@ from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
-from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
+from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
-from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
+from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC, PermissionScope
@@ -32,9 +32,9 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in copy.deepcopy(aps):
-        if ap.forGroup == group.UNKNOWN_USER:
-            if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
+        if ap.forGroup == group.PROJECT_ADMIN:
+            if ApValue.ProjectAdminRightsAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminRightsAllPermission)
                 modified_aps.append(ap)
     return modified_aps
 
@@ -43,7 +43,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
-        if doap.target.group == group.UNKNOWN_USER:
+        if doap.target.group == group.PROJECT_ADMIN:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
@@ -75,7 +75,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     remaining_aps = delete_ap_of_group_on_server(
         host=host,
         existing_aps=project_aps,
-        forGroup=group.UNKNOWN_USER,
+        forGroup=group.PROJECT_MEMBER,
         dsp_client=dsp_client,
     )
      _ = create_new_ap_on_server(  # noqa: F821
@@ -88,7 +88,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not modified_aps:
         logger.info("There are no APs to update.")
         return
-    apply_updated_aps_on_server(modified_aps, host, dsp_client)
+    apply_updated_scopes_of_aps_on_server(modified_aps, host, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -117,7 +117,7 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
         return
-    apply_updated_doaps_on_server(project_doaps_modified, host, dsp_client)
+    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, host, dsp_client)
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
@@ -154,14 +154,14 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("test")
-    shortcode = "F18E"
+    host = Hosts.get_host("localhost")
+    shortcode = "4123"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
     oap_config = OapRetrieveConfig(
         retrieve_resources="specified_res_classes",
-        specified_res_classes=["my-data-model:ImageThing"],
+        specified_res_classes=["testonto:ImageThing"],
         retrieve_values="specified_props",
         specified_props=["knora-api:hasStillImageFileValue"],
     )
