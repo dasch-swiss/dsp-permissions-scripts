@@ -5,11 +5,11 @@ from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
-from dsp_permissions_scripts.ap.ap_set import apply_updated_aps_on_server
+from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
-from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
+from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
@@ -82,7 +82,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not modified_aps:
         logger.info("There are no APs to update.")
         return
-    apply_updated_aps_on_server(modified_aps, host, dsp_client)
+    apply_updated_scopes_of_aps_on_server(modified_aps, host, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -105,7 +105,7 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
         return
-    apply_updated_doaps_on_server(project_doaps_modified, host, dsp_client)
+    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, host, dsp_client)
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
