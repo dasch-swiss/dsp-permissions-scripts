@@ -44,17 +44,19 @@ def create_new_doap_on_server(
     shortcode: str,
     scope: PermissionScope,
     dsp_client: DspClient,
-) -> Doap:
-    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode)
+) -> Doap | None:
+    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": target.group,
+        "forGroup": target.group.val if target.group else None,
         "forProject": proj_iri,
         "forProperty": target.property,
         "forResourceClass": target.resource_class,
         "hasPermissions": create_admin_route_object_from_scope(scope),
     }
     try:
-        dsp_client.post("/admin/permissions/doap", data=payload)
+        response = dsp_client.post("/admin/permissions/doap", data=payload)
         logger.info(f"Successfully created new DOAP for target {target}")
+        return create_doap_from_admin_route_response(response["default_object_access_permission"])
     except ApiError:
         logger.error(f"Could not create new DOAP for target {target}")
+        return None
