@@ -8,11 +8,14 @@ from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
+from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import PUBLIC, PermissionScope
+from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
@@ -78,10 +81,10 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         forGroup=group.PROJECT_MEMBER,
         dsp_client=dsp_client,
     )
-     _ = create_new_ap_on_server(  # noqa: F821
+    _ = create_new_ap_on_server(
         forGroup=group.CREATOR,
         shortcode=shortcode,
-        hasPermissions=frozenset({ApValue.ProjectResourceCreateAllPermission}),
+        hasPermissions=[ApValue.ProjectResourceCreateAllPermission],
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
@@ -107,8 +110,8 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         host=host,
     )
-     _ = create_new_doap_on_server(  # noqa: F821
-        target=group.CREATOR,  # solve this differently: it should be a DoapTarget, but the project IRI is not known yet. it could be for a group, for a class, or a property
+    _ = create_new_doap_on_server(
+        target=NewDoapTarget(group=group.CREATOR),
         shortcode=shortcode,
         scope=PermissionScope(),
         dsp_client=dsp_client,

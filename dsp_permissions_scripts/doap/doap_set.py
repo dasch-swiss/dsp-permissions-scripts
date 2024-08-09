@@ -2,10 +2,12 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.doap.doap_get import create_doap_from_admin_route_response
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 
 logger = get_logger(__name__)
@@ -35,3 +37,24 @@ def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], host: str, dsp_cl
         except ApiError as err:
             logger.error(err)
     logger.info(f"Finished updating scopes of {len(doaps)} DOAPs on {host}")
+
+
+def create_new_doap_on_server(
+    target: NewDoapTarget,
+    shortcode: str,
+    scope: PermissionScope,
+    dsp_client: DspClient,
+) -> Doap:
+    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode)
+    payload = {
+        "forGroup": target.group,
+        "forProject": proj_iri,
+        "forProperty": target.property,
+        "forResourceClass": target.resource_class,
+        "hasPermissions": create_admin_route_object_from_scope(scope),
+    }
+    try:
+        dsp_client.post("/admin/permissions/doap", data=payload)
+        logger.info(f"Successfully created new DOAP for target {target}")
+    except ApiError:
+        logger.error(f"Could not create new DOAP for target {target}")
