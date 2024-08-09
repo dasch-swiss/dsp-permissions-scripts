@@ -32,9 +32,9 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in copy.deepcopy(aps):
-        if ap.forGroup == group.UNKNOWN_USER:
-            if ApValue.ProjectAdminGroupAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminGroupAllPermission)
+        if ap.forGroup == group.PROJECT_ADMIN:
+            if ApValue.ProjectAdminRightsAllPermission not in ap.hasPermissions:
+                ap.add_permission(ApValue.ProjectAdminRightsAllPermission)
                 modified_aps.append(ap)
     return modified_aps
 
@@ -43,7 +43,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
-        if doap.target.group == group.UNKNOWN_USER:
+        if doap.target.group == group.PROJECT_ADMIN:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
@@ -75,7 +75,7 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     remaining_aps = delete_ap_of_group_on_server(
         host=host,
         existing_aps=project_aps,
-        forGroup=group.UNKNOWN_USER,
+        forGroup=group.PROJECT_MEMBER,
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
@@ -149,7 +149,7 @@ def main() -> None:
 
     oap_config = OapRetrieveConfig(
         retrieve_resources="specified_res_classes",
-        specified_res_classes=["my-data-model:ImageThing"],
+        specified_res_classes=["testonto:ImageThing"],
         retrieve_values="specified_props",
         specified_props=["knora-api:hasStillImageFileValue"],
     )
