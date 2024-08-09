@@ -1,4 +1,5 @@
 import os
+import re
 
 from dotenv import load_dotenv
 
@@ -14,9 +15,12 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     if host == Hosts.LOCALHOST:
         user = "root@example.com"
         pw = "test"
-    elif host == Hosts.TEST:
-        user = os.getenv("TEST_EMAIL") or ""
-        pw = os.getenv("TEST_PASSWORD") or ""
+    elif host == Hosts.RDU_STAGE:
+        user = os.getenv("RDU_STAGE_EMAIL") or ""
+        pw = os.getenv("RDU_STAGE_PASSWORD") or ""
+    elif re.search(r"api.rdu-\d\d.dasch.swiss", host):
+        user = os.getenv("RDU_TEST_EMAIL") or ""
+        pw = os.getenv("RDU_TEST_PASSWORD") or ""
     elif host == Hosts.DEV:
         user = os.getenv("DEV_EMAIL") or ""
         pw = os.getenv("DEV_PASSWORD") or ""
