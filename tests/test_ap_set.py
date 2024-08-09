@@ -12,7 +12,8 @@ from dsp_permissions_scripts.models import group
 @pytest.fixture()
 def create_new_ap_request() -> dict[str, Any]:
     return {
-        "forGroup": "knora-admin:Creator",  # surprisingly, this works without context. Almost a bit uncanny...
+        "forGroup": "http://www.knora.org/ontology/knora-admin#Creator",
+        # surprisingly, it also works with "knora-admin:Creator", without context.
         "forProject": "http://rdfh.ch/projects/QykAkmHJTPS7ervbGynSHw",
         "hasPermissions": [
             {"additionalInformation": None, "name": "ProjectResourceCreateAllPermission", "permissionCode": None}

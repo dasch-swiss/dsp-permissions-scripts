@@ -7,6 +7,7 @@ from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 
@@ -47,7 +48,7 @@ def create_new_doap_on_server(
 ) -> Doap | None:
     proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": target.group.val if target.group else None,
+        "forGroup": target.group.val.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE) if target.group else None,
         "forProject": proj_iri,
         "forProperty": target.property,
         "forResourceClass": target.resource_class,

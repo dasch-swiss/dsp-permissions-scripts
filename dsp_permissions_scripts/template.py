@@ -114,7 +114,7 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     _ = create_new_doap_on_server(
         target=NewDoapTarget(group=group.CREATOR),
         shortcode=shortcode,
-        scope=PermissionScope(),
+        scope=PermissionScope.create(CR=[group.SYSTEM_ADMIN]),
         dsp_client=dsp_client,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
