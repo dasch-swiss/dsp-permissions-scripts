@@ -56,7 +56,7 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
         relative_group_iri = None
     doap = Doap(
         target=DoapTarget(
-            project=permission["forProject"],
+            project_iri=permission["forProject"],
             group=Group(val=relative_group_iri) if relative_group_iri else None,
             resource_class=permission.get("forResourceClass"),
             property=permission.get("forProperty"),
