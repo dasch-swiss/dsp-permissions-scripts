@@ -12,7 +12,7 @@ from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_proje
 from dsp_permissions_scripts.doap.doap_set import apply_updated_doaps_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.models.scope import PUBLIC, PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
@@ -78,6 +78,12 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         forGroup=group.UNKNOWN_USER,
         dsp_client=dsp_client,
     )
+     _ = create_new_ap_on_server(  # noqa: F821
+        forGroup=group.CREATOR,
+        shortcode=shortcode,
+        hasPermissions=frozenset({ApValue.ProjectResourceCreateAllPermission}),
+        dsp_client=dsp_client,
+    )
     modified_aps = modify_aps(remaining_aps)
     if not modified_aps:
         logger.info("There are no APs to update.")
@@ -100,6 +106,12 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         shortcode=shortcode,
         mode="original",
         host=host,
+    )
+     _ = create_new_doap_on_server(  # noqa: F821
+        target=group.CREATOR,  # solve this differently: it should be a DoapTarget, but the project IRI is not known yet. it could be for a group, for a class, or a property
+        shortcode=shortcode,
+        scope=PermissionScope(),
+        dsp_client=dsp_client,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
     if not project_doaps_modified:
