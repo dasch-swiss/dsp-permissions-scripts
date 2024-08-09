@@ -126,6 +126,6 @@ PUBLIC = PermissionScope.create(
 )
 
 PRIVATE = PermissionScope.create(
-    CR={PROJECT_ADMIN, CREATOR},
-    V={PROJECT_MEMBER},
+    CR={PROJECT_ADMIN},
+    M={PROJECT_MEMBER},
 )
