@@ -22,7 +22,7 @@ IGNORE_KEYS = [
     "@type",
     "@context",
     "rdfs:label",
-    "knora-api:DeletedValue",
+    # "knora-api:DeletedValue",
     "knora-api:lastModificationDate",
     "knora-api:creationDate",
     "knora-api:arkUrl",

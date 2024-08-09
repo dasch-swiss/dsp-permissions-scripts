@@ -40,6 +40,80 @@ def resource() -> dict[str, Any]:
 
 
 @pytest.fixture()
+def deleted_resource() -> dict[str, Any]:
+    # This isn't possible, because "Resources marked as deleted are not found in search queries."
+    # https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-v2/editing-resources/#requesting-deleted-resources
+    return {
+        "rdfs:label": "Deleted Resource",
+        "knora-api:isDeleted": True,
+        "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+        "@type": "knora-api:DeletedResource",
+        "knora-api:hasPermissions": "CR knora-admin:ProjectMember|V knora-admin:UnknownUser",
+        "my-data-model:hasFirstProp": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+            "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
+            "@type": "knora-api:TextValue",
+        },
+        "my-data-model:hasSecondProp": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+            "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/ziOT-nhmQiqvCV8LSxAyHA",
+            "@type": "knora-api:TextValue",
+        },
+    }
+
+
+@pytest.fixture()
+def resource_with_one_deleted_value() -> dict[str, Any]:
+    return {
+        "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+        "@type": "my-data-model:ImageThing",
+        "knora-api:hasPermissions": "CR knora-admin:ProjectMember|V knora-admin:UnknownUser",
+        "my-data-model:hasFirstProp": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+            "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
+            "@type": "knora-api:TextValue",
+        },
+        "knora-api:DeletedValue": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|M knora-admin:ProjectMember",
+            "knora-api:isDeleted": True,
+            "@type": "knora-api:DeletedValue",
+            "http://www.knora.org/ontology/knora-base#DeletedValue": "DeletedValue",
+            "@id": "http://rdfh.ch/4123/CXXSgnapQ9mNsjnAJNaiSA/values/Hrz9FEkARzO6R0G1JhjPwQ",
+        },
+    }
+
+
+@pytest.fixture()
+def resource_with_multiple_deleted_values() -> dict[str, Any]:
+    return {
+        "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
+        "@type": "my-data-model:ImageThing",
+        "knora-api:hasPermissions": "CR knora-admin:ProjectMember|V knora-admin:UnknownUser",
+        "my-data-model:hasFirstProp": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
+            "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q/values/o0313dsSQTSPGua4NSWkeQ",
+            "@type": "knora-api:TextValue",
+        },
+        "knora-api:DeletedValue": [
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|M knora-admin:ProjectMember",
+                "knora-api:isDeleted": True,
+                "@type": "knora-api:DeletedValue",
+                "http://www.knora.org/ontology/knora-base#DeletedValue": "DeletedValue",
+                "@id": "http://rdfh.ch/4123/CXXSgnapQ9mNsjnAJNaiSA/values/Hrz9FEkARzO6R0G1JhjPwQ",
+            },
+            {
+                "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|M knora-admin:ProjectMember",
+                "knora-api:isDeleted": True,
+                "@type": "knora-api:DeletedValue",
+                "http://www.knora.org/ontology/knora-base#DeletedValue": "DeletedValue",
+                "@id": "http://rdfh.ch/4123/CXXSgnapQ9mNsjnAJNaiSA/values/pu_15FiGT9OoGd_odCcqcQ",
+            },
+        ],
+    }
+
+
+@pytest.fixture()
 def gravsearch_1_link_obj() -> dict[str, Any]:
     return {
         "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
