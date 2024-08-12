@@ -50,7 +50,7 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
         for group in groups:
             scope_elements.append(
                 {
-                    "additionalInformation": group.val.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE),
+                    "additionalInformation": group.full_iri(),
                     "name": perm_letter,
                     "permissionCode": None,
                 }

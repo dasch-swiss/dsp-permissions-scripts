@@ -5,6 +5,7 @@ from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 
 class Group(BaseModel):
@@ -17,6 +18,9 @@ class Group(BaseModel):
         if not self.val.startswith("knora-admin:"):
             raise InvalidGroupError(f"{self.val} is not a valid group IRI")
         return self
+
+    def full_iri(self) -> str:
+        return self.val.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE)
 
 
 UNKNOWN_USER = Group(val="knora-admin:UnknownUser")
