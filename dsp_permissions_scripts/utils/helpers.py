@@ -3,7 +3,6 @@ from typing import Iterable
 from dsp_permissions_scripts.models import group
 
 PACKAGE_NAME = "dsp-permissions-scripts"
-KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
 def dereference_prefix(

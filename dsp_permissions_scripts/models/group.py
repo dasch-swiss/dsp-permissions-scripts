@@ -7,7 +7,8 @@ from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
-from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
+
+KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
 class Group(BaseModel):
@@ -16,7 +17,10 @@ class Group(BaseModel):
     val: str
 
     @model_validator(mode="before")
-    def _shorten_iri(self, data: dict[str, Any]) -> dict[str, Any]:
+    @classmethod
+    def _shorten_iri(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
         data["val"] = data["val"].replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
         return data
 
