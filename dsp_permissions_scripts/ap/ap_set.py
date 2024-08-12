@@ -4,9 +4,13 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.ap.ap_get import create_admin_route_object_from_ap
 from dsp_permissions_scripts.ap.ap_get import create_ap_from_admin_route_object
 from dsp_permissions_scripts.ap.ap_model import Ap
+from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
+from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 
 logger = get_logger(__name__)
 
@@ -36,3 +40,26 @@ def apply_updated_scopes_of_aps_on_server(aps: list[Ap], host: str, dsp_client: 
         except ApiError as err:
             logger.error(err)
     logger.info(f"Finished updating scopes of {len(aps)} Administrative Permissions on {host}")
+
+
+def create_new_ap_on_server(
+    forGroup: Group,
+    shortcode: str,
+    hasPermissions: list[ApValue],
+    dsp_client: DspClient,
+) -> Ap | None:
+    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    payload = {
+        "forGroup": forGroup.val.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE),
+        "forProject": proj_iri,
+        "hasPermissions": [
+            {"additionalInformation": None, "name": ap_val.value, "permissionCode": None} for ap_val in hasPermissions
+        ],
+    }
+    try:
+        response = dsp_client.post("/admin/permissions/ap", data=payload)
+        logger.info(f"Successfully created new AP for group {forGroup.val}")
+        return create_ap_from_admin_route_object(response["administrative_permission"])
+    except ApiError:
+        logger.error(f"Could not create new AP for group {forGroup}")
+        return None
