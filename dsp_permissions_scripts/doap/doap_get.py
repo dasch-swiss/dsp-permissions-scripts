@@ -4,6 +4,8 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import DoapTarget
 from dsp_permissions_scripts.doap.doap_model import DoapTargetType
+from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
+from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -49,17 +51,20 @@ def _get_all_doaps_of_project(project_iri: str, dsp_client: DspClient) -> list[D
 def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     """Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}"""
     scope = create_scope_from_admin_route_object(permission["hasPermissions"])
-    doap = Doap(
-        target=DoapTarget(
+    target: DoapTarget
+    if permission.get("forGroup"):
+        target = GroupDoapTarget(project_iri=permission["forProject"], group=Group(val=permission["forGroup"]))
+    else:
+        target = EntityDoapTarget(
             project_iri=permission["forProject"],
-            group=Group(val=permission["forGroup"]) if permission.get("forGroup") else None,
             resource_class=permission.get("forResourceClass"),
             property=permission.get("forProperty"),
-        ),
+        )
+    return Doap(
+        target=target,
         scope=scope,
         doap_iri=permission["iri"],
     )
-    return doap
 
 
 def get_doaps_of_project(

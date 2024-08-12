@@ -9,6 +9,7 @@ from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_ser
 from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
@@ -47,7 +48,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
-        if doap.target.group == group.PROJECT_ADMIN:
+        if isinstance(doap.target, GroupDoapTarget) and doap.target.group == group.PROJECT_ADMIN:
             doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps

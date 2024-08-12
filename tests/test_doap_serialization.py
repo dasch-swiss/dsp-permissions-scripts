@@ -5,7 +5,7 @@ from typing import Iterator
 import pytest
 
 from dsp_permissions_scripts.doap.doap_model import Doap
-from dsp_permissions_scripts.doap.doap_model import DoapTarget
+from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import deserialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.models import group
@@ -25,7 +25,7 @@ class TestDoapSerialization:
 
     def test_doap_serialization(self) -> None:
         doap1 = Doap(
-            target=DoapTarget(
+            target=GroupDoapTarget(
                 project_iri="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group=group.PROJECT_ADMIN,
             ),
@@ -36,7 +36,7 @@ class TestDoapSerialization:
             doap_iri="http://rdfh.ch/doap-1",
         )
         doap2 = Doap(
-            target=DoapTarget(
+            target=GroupDoapTarget(
                 project_iri="http://rdfh.ch/projects/MsOaiQkcQ7-QPxsYBKckfQ",
                 group=group.PROJECT_MEMBER,
             ),
