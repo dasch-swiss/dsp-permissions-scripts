@@ -8,11 +8,14 @@ from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
+from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
@@ -100,6 +103,12 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         shortcode=shortcode,
         mode="original",
         host=host,
+    )
+    _ = create_new_doap_on_server(
+        target=NewDoapTarget(group=group.CREATOR),
+        shortcode=shortcode,
+        scope=PermissionScope.create(CR=[group.SYSTEM_ADMIN]),
+        dsp_client=dsp_client,
     )
     project_doaps_modified = modify_doaps(doaps=project_doaps)
     if not project_doaps_modified:
