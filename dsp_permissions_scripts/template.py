@@ -6,6 +6,7 @@ from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
+from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
@@ -79,6 +80,12 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
         host=host,
         existing_aps=project_aps,
         forGroup=group.PROJECT_MEMBER,
+        dsp_client=dsp_client,
+    )
+    _ = create_new_ap_on_server(
+        forGroup=group.CREATOR,
+        shortcode=shortcode,
+        hasPermissions=[ApValue.ProjectResourceCreateAllPermission],
         dsp_client=dsp_client,
     )
     modified_aps = modify_aps(remaining_aps)
