@@ -2,10 +2,8 @@ from __future__ import annotations
 
 from typing import Protocol
 from typing import Self
-from typing import runtime_checkable
 
 from pydantic import BaseModel
-from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.group import Group
@@ -15,14 +13,11 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 class Doap(BaseModel):
     """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
     target: DoapTarget
     scope: PermissionScope
     doap_iri: str
 
 
-@runtime_checkable
 class DoapTarget(Protocol):
     """
     A DOAP can be defined for either a Group, or for a ResourceClass, or for a Property,
