@@ -8,7 +8,6 @@ from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 
@@ -50,14 +49,10 @@ def _get_all_doaps_of_project(project_iri: str, dsp_client: DspClient) -> list[D
 def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     """Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}"""
     scope = create_scope_from_admin_route_object(permission["hasPermissions"])
-    if permission.get("forGroup"):
-        relative_group_iri = permission["forGroup"].replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
-    else:
-        relative_group_iri = None
     doap = Doap(
         target=DoapTarget(
             project_iri=permission["forProject"],
-            group=Group(val=relative_group_iri) if relative_group_iri else None,
+            group=Group(val=permission["forGroup"]) if permission.get("forGroup") else None,
             resource_class=permission.get("forResourceClass"),
             property=permission.get("forProperty"),
         ),
