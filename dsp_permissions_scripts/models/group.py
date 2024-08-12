@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
@@ -12,6 +14,11 @@ class Group(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     val: str
+
+    @model_validator(mode="before")
+    def _shorten_iri(self, data: dict[str, Any]) -> dict[str, Any]:
+        data["val"] = data["val"].replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
+        return data
 
     @model_validator(mode="after")
     def _check_regex(self) -> Group:

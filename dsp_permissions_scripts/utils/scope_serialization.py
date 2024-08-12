@@ -1,7 +1,6 @@
 from typing import Any
 
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
@@ -22,7 +21,7 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
     for scope in scopes:
         perm_letter, groups_as_str = scope.split(" ")
         groups = groups_as_str.split(",")
-        kwargs[perm_letter] = [g.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:") for g in groups]
+        kwargs[perm_letter] = groups
     return PermissionScope.from_dict(kwargs)
 
 
@@ -31,11 +30,10 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
     kwargs: dict[str, list[str]] = {}
     for obj in admin_route_object:
         attr_name: str = obj["name"]
-        group: str = obj["additionalInformation"].replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
         if attr_name in kwargs:
-            kwargs[attr_name].append(group)
+            kwargs[attr_name].append(obj["additionalInformation"])
         else:
-            kwargs[attr_name] = [group]
+            kwargs[attr_name] = [obj["additionalInformation"]]
     return PermissionScope.from_dict(kwargs)
 
 
