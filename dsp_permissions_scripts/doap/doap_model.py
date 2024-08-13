@@ -1,15 +1,32 @@
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Any
 from typing import Self
-from typing import runtime_checkable
+from typing import Union
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
+from pydantic import Discriminator
+from pydantic import Tag
 from pydantic import model_validator
+from typing_extensions import Annotated
 
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
+
+
+def model_x_discriminator(v: GroupDoapTarget | EntityDoapTarget | dict[str, Any]) -> str:
+    if isinstance(v, GroupDoapTarget):
+        return "GroupDoapTarget"
+    if isinstance(v, EntityDoapTarget):
+        return "EntityDoapTarget"
+    if isinstance(v, dict):
+        if "group" in v:
+            return "GroupDoapTarget"
+        if "resource_class" in v or "property" in v:
+            return "EntityDoapTarget"
+        else:
+            raise ValueError("Invalid dict for GroupDoapTarget or EntityDoapTarget")
 
 
 class Doap(BaseModel):
@@ -17,20 +34,20 @@ class Doap(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    target: DoapTarget
+    target: Annotated[
+        Union[
+            Annotated[GroupDoapTarget, Tag("GroupDoapTarget")],
+            Annotated[EntityDoapTarget, Tag("EntityDoapTarget")],
+        ],
+        Discriminator(
+            model_x_discriminator,
+            custom_error_type="invalid_doap_target_union_member",
+            custom_error_message="Invalid DoapTarget union member",
+            custom_error_context={"discriminator": "GroupDoapTarget_or_EntityDoapTarget"},
+        ),
+    ]
     scope: PermissionScope
     doap_iri: str
-
-
-@runtime_checkable
-class DoapTarget(Protocol):
-    """
-    A DOAP can be defined for either a Group, or for a ResourceClass, or for a Property,
-    or for a combination of ResourceClass and Property.
-    In order to simplify these constraints, classes can implement this protocol.
-    """
-
-    project_iri: str
 
 
 class GroupDoapTarget(BaseModel):
