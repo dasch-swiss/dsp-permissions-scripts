@@ -5,7 +5,6 @@ from typing import Any
 from typing import Self
 
 from pydantic import BaseModel
-from pydantic import ConfigDict
 from pydantic import Discriminator
 from pydantic import Tag
 from pydantic import model_validator
@@ -15,29 +14,20 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 
 
 def discriminator(v: GroupDoapTarget | EntityDoapTarget | dict[str, Any]) -> str:
-    if isinstance(v, GroupDoapTarget):
+    if isinstance(v, GroupDoapTarget) or "group" in v:
         return "GroupDoapTarget"
-    if isinstance(v, EntityDoapTarget):
+    if isinstance(v, EntityDoapTarget) or "resource_class" in v or "property" in v:
         return "EntityDoapTarget"
-    if isinstance(v, dict):
-        if "group" in v:
-            return "GroupDoapTarget"
-        if "resource_class" in v or "property" in v:
-            return "EntityDoapTarget"
-        else:
-            raise ValueError("Invalid dict for GroupDoapTarget or EntityDoapTarget")
+    else:
+        raise ValueError("Invalid dict for GroupDoapTarget or EntityDoapTarget")
 
 
 class Doap(BaseModel):
     """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
     target: Annotated[
         Annotated[GroupDoapTarget, Tag("GroupDoapTarget")] | Annotated[EntityDoapTarget, Tag("EntityDoapTarget")],
-        Discriminator(
-            discriminator, custom_error_type="invalid_doap_target", custom_error_message="Invalid DoapTarget"
-        ),
+        Discriminator(discriminator, custom_error_type="inv_doap_target", custom_error_message="Invalid DoapTarget"),
     ]
     scope: PermissionScope
     doap_iri: str
