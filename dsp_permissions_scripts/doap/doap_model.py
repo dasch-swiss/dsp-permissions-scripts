@@ -1,34 +1,20 @@
 from __future__ import annotations
 
-from typing import Annotated
-from typing import Any
 from typing import Self
+from typing import Union
 
 from pydantic import BaseModel
-from pydantic import Discriminator
-from pydantic import Tag
+from pydantic import Field
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
-def discriminator(v: GroupDoapTarget | EntityDoapTarget | dict[str, Any]) -> str:
-    if isinstance(v, GroupDoapTarget) or "group" in v:
-        return "GroupDoapTarget"
-    if isinstance(v, EntityDoapTarget) or "resource_class" in v or "property" in v:
-        return "EntityDoapTarget"
-    else:
-        raise ValueError("Invalid dict for GroupDoapTarget or EntityDoapTarget")
-
-
 class Doap(BaseModel):
     """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
-    target: Annotated[
-        Annotated[GroupDoapTarget, Tag("GroupDoapTarget")] | Annotated[EntityDoapTarget, Tag("EntityDoapTarget")],
-        Discriminator(discriminator, custom_error_type="inv_doap_target", custom_error_message="Invalid DoapTarget"),
-    ]
+    target: Union[GroupDoapTarget, EntityDoapTarget] = Field(union_mode="smart")
     scope: PermissionScope
     doap_iri: str
 
