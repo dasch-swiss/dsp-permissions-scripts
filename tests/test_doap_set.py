@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 from dsp_permissions_scripts.doap import doap_set
-from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
+from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -55,7 +55,7 @@ def test_create_new_doap_on_server(
     dsp_client = Mock()
     dsp_client.post = Mock(return_value=create_new_doap_response)
     _ = create_new_doap_on_server(
-        target=NewDoapTarget(group=group.KNOWN_USER),
+        target=NewGroupDoapTarget(group=group.KNOWN_USER),
         shortcode="0000",
         scope=PermissionScope.create(V={group.UNKNOWN_USER}),
         dsp_client=dsp_client,
