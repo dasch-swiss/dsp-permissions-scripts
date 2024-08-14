@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from enum import Enum
 from typing import Self
 
 from pydantic import BaseModel
@@ -57,10 +56,3 @@ class NewDoapTarget(BaseModel):
             case _:
                 raise ValueError("Invalid combination of group, resource_class and property")
         return self
-
-
-class DoapTargetType(Enum):
-    ALL = "all"
-    GROUP = "group"
-    RESOURCE_CLASS = "resource_class"
-    PROPERTY = "property"
