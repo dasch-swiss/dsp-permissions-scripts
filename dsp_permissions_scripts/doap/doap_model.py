@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from typing import Self
-from typing import Union
 
 from pydantic import BaseModel
-from pydantic import Field
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.group import Group
@@ -14,7 +12,7 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 class Doap(BaseModel):
     """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
-    target: Union[GroupDoapTarget, EntityDoapTarget] = Field(union_mode="smart")
+    target: GroupDoapTarget | EntityDoapTarget
     scope: PermissionScope
     doap_iri: str
 
