@@ -30,14 +30,13 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     """Deserializes a DOAP from JSON as returned by /admin/permissions/doap/{project_iri}"""
     scope = create_scope_from_admin_route_object(permission["hasPermissions"])
     target: GroupDoapTarget | EntityDoapTarget
-    if permission.get("forGroup"):
-        target = GroupDoapTarget(project_iri=permission["forProject"], group=Group(val=permission["forGroup"]))
-    else:
-        target = EntityDoapTarget(
-            project_iri=permission["forProject"],
-            resource_class=permission.get("forResourceClass"),
-            property=permission.get("forProperty"),
-        )
+    match permission:
+        case {"forProject": project_iri, "forGroup": group}:
+            target = GroupDoapTarget(project_iri=project_iri, group=Group(val=group))
+        case {"forProject": project_iri, **p}:
+            target = EntityDoapTarget(
+                project_iri=project_iri, resource_class=p.get("forResourceClass"), property=p.get("forProperty")
+            )
     return Doap(
         target=target,
         scope=scope,
