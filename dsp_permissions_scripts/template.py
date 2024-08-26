@@ -16,7 +16,7 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import PUBLIC
+from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import Oap
@@ -49,7 +49,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
         if isinstance(doap.target, GroupDoapTarget) and doap.target.group == group.PROJECT_ADMIN:
-            doap.scope = PUBLIC
+            doap.scope = OPEN
             modified_doaps.append(doap)
     return modified_doaps
 
