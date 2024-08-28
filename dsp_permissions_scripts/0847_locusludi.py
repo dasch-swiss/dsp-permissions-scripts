@@ -95,7 +95,7 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("stage")
+    host = Hosts.get_host("rdu")
     shortcode = "0847"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
