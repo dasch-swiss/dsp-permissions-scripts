@@ -22,7 +22,6 @@ from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
-from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -60,7 +59,7 @@ def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     for oap in copy.deepcopy(oaps):
         new_oap = ModifiedOap()
         if oap.resource_oap.scope != OPEN:
-            new_oap.resource_oap = ResourceOap(resource_iri=oap.resource_oap.resource_iri, scope=OPEN)
+            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": OPEN})
         for value_oap in oap.value_oaps:
             if value_oap.scope != OPEN:
                 new_oap.value_oaps.append(value_oap.model_copy(update={"scope": OPEN}))
