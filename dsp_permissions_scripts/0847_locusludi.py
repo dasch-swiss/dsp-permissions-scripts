@@ -7,10 +7,9 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
-from dsp_permissions_scripts.oap.oap_model import ResourceOap
-from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -31,17 +30,18 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return modified_doaps
 
 
-def modify_oaps(oaps: list[Oap]) -> list[ResourceOap | ValueOap]:
+def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     """Adapt this sample to your needs."""
-    modified_oaps: list[ResourceOap | ValueOap] = []
+    modified_oaps: list[ModifiedOap] = []
     for oap in copy.deepcopy(oaps):
+        new_oap = ModifiedOap()
         if oap.resource_oap.scope != OPEN:
-            oap.resource_oap.scope = OPEN
-            modified_oaps.append(oap.resource_oap)
+            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": OPEN})
         for value_oap in oap.value_oaps:
             if value_oap.scope != OPEN:
-                value_oap.scope = OPEN
-                modified_oaps.append(value_oap)
+                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": OPEN}))
+        if not new_oap.is_empty():
+            modified_oaps.append(new_oap)
     return modified_oaps
 
 
