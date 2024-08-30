@@ -117,11 +117,12 @@ def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClie
 def _write_failed_iris_to_file(
     failed_iris: list[str],
     shortcode: str,
-    host: str,
+    server: str,
     filename: str,
 ) -> None:
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"Problems occurred while updating the OAPs of these resources (project {shortcode}, host {host}):\n")
+        msg = f"Problems occurred while updating the OAPs of these resources (project {shortcode}, server {server}):\n"
+        f.write(msg)
         f.write("\n".join(failed_iris))
 
 
@@ -137,7 +138,6 @@ def _launch_thread_pool(oaps: list[ResourceOap | ValueOap], nthreads: int, dsp_c
 
 def apply_updated_oaps_on_server(
     oaps: list[ResourceOap | ValueOap],
-    host: str,
     shortcode: str,
     dsp_client: DspClient,
     nthreads: int = 4,
@@ -147,11 +147,12 @@ def apply_updated_oaps_on_server(
     Don't forget to set a number of threads that doesn't overload the server.
     """
     if not oaps:
-        logger.warning(f"There are no OAPs to update on {host}")
+        logger.warning(f"There are no OAPs to update on {dsp_client.server}")
         return
     value_oap_count = sum(isinstance(oap, ValueOap) for oap in oaps)
     res_oap_count = sum(isinstance(oap, ResourceOap) for oap in oaps)
-    logger.info(f"******* Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {host}... *******")
+    msg = f"Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}..."
+    logger.info(f"******* {msg} *******")
 
     failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
     if failed_iris:
@@ -160,9 +161,10 @@ def apply_updated_oaps_on_server(
         _write_failed_iris_to_file(
             failed_iris=sorted(failed_iris),
             shortcode=shortcode,
-            host=host,
+            server=dsp_client.server,
             filename=filename,
         )
         msg = f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
         logger.error(msg)
-    logger.info(f"Updated {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {host}... *******")
+    msg = f"Updated {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}... *******"
+    logger.info(msg)
