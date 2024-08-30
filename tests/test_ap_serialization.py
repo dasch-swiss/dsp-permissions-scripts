@@ -47,7 +47,7 @@ class TestApSerialization:
             project_aps=[self.ap1, self.ap2],
             shortcode=self.shortcode,
             mode="original",
-            host=Hosts.LOCALHOST,
+            server=Hosts.LOCALHOST,
         )
         with open(self.output_file, mode="r", encoding="utf-8") as f:
             aps_file = json.load(f)
