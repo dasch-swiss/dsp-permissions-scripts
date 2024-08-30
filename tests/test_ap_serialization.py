@@ -52,7 +52,7 @@ class TestApSerialization:
         with open(self.output_file, mode="r", encoding="utf-8") as f:
             aps_file = json.load(f)
         explanation_text = next(iter(aps_file.keys()))
-        assert re.search(r"Project 1234 on host .+ has \d+ APs", explanation_text)
+        assert re.search(r"Project 1234 on server .+ has \d+ APs", explanation_text)
         aps_as_dicts = aps_file[explanation_text]
         assert self.ap1 == Ap.model_validate(aps_as_dicts[0])
         assert self.ap2 == Ap.model_validate(aps_as_dicts[1])
