@@ -20,7 +20,6 @@ def _delete_doap_on_server(doap: Doap, dsp_client: DspClient) -> None:
 
 
 def delete_doap_of_group_on_server(
-    host: str,
     existing_doaps: list[Doap],
     forGroup: Group,
     dsp_client: DspClient,
@@ -29,9 +28,9 @@ def delete_doap_of_group_on_server(
         doap for doap in existing_doaps if isinstance(doap.target, GroupDoapTarget) and doap.target.group == forGroup
     ]
     if not doaps_to_delete:
-        logger.warning(f"There are no DOAPs to delete on {host} for group {forGroup}")
+        logger.warning(f"There are no DOAPs to delete on {dsp_client.server} for group {forGroup}")
         return existing_doaps
-    logger.info(f"Deleting the DOAP for group {forGroup} on server {host}")
+    logger.info(f"Deleting the DOAP for group {forGroup} on server {dsp_client.server}")
     for doap in doaps_to_delete:
         _delete_doap_on_server(doap, dsp_client)
         existing_doaps.remove(doap)

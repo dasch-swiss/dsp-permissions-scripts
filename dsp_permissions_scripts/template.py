@@ -113,7 +113,6 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         server=dsp_client.server,
     )
     remaining_doaps = delete_doap_of_group_on_server(
-        host=host,
         existing_doaps=project_doaps,
         forGroup=group.PROJECT_MEMBER,
         dsp_client=dsp_client,
