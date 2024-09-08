@@ -20,10 +20,9 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
-from dsp_permissions_scripts.oap.oap_model import ResourceOap
-from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
@@ -55,31 +54,31 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     return modified_doaps
 
 
-def modify_oaps(oaps: list[Oap]) -> list[ResourceOap | ValueOap]:
+def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     """Adapt this sample to your needs."""
-    modified_oaps: list[ResourceOap | ValueOap] = []
+    modified_oaps: list[ModifiedOap] = []
     for oap in copy.deepcopy(oaps):
-        if group.SYSTEM_ADMIN not in oap.resource_oap.scope.CR:
-            oap.resource_oap.scope = oap.resource_oap.scope.add("CR", group.SYSTEM_ADMIN)
-            modified_oaps.append(oap.resource_oap)
+        new_oap = ModifiedOap()
+        if oap.resource_oap.scope != OPEN:
+            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": OPEN})
         for value_oap in oap.value_oaps:
-            if group.SYSTEM_ADMIN not in value_oap.scope.CR:
-                value_oap.scope = value_oap.scope.add("CR", group.SYSTEM_ADMIN)
-                modified_oaps.append(value_oap)
+            if value_oap.scope != OPEN:
+                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": OPEN}))
+        if not new_oap.is_empty():
+            modified_oaps.append(new_oap)
     return modified_oaps
 
 
-def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
+def update_aps(shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps,
         shortcode=shortcode,
         mode="original",
-        host=host,
+        server=dsp_client.server,
     )
     remaining_aps = delete_ap_of_group_on_server(
-        host=host,
         existing_aps=project_aps,
         forGroup=group.PROJECT_MEMBER,
         dsp_client=dsp_client,
@@ -94,24 +93,24 @@ def update_aps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not modified_aps:
         logger.info("There are no APs to update.")
         return
-    apply_updated_scopes_of_aps_on_server(modified_aps, host, dsp_client)
+    apply_updated_scopes_of_aps_on_server(modified_aps, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
         shortcode=shortcode,
         mode="modified",
-        host=host,
+        server=dsp_client.server,
     )
 
 
-def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
+def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps,
         shortcode=shortcode,
         mode="original",
-        host=host,
+        server=dsp_client.server,
     )
     remaining_doaps = delete_doap_of_group_on_server(
         host=host,
@@ -129,17 +128,17 @@ def update_doaps(host: str, shortcode: str, dsp_client: DspClient) -> None:
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
         return
-    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, host, dsp_client)
+    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, dsp_client)
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
         shortcode=shortcode,
         mode="modified",
-        host=host,
+        server=dsp_client.server,
     )
 
 
-def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
+def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps, shortcode, mode="original")
@@ -149,7 +148,6 @@ def update_oaps(host: str, shortcode: str, dsp_client: DspClient, oap_config: Oa
         return
     apply_updated_oaps_on_server(
         oaps=oaps_modified,
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         nthreads=4,
@@ -179,17 +177,14 @@ def main() -> None:
     )
 
     update_aps(
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
     )
     update_doaps(
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
     )
     update_oaps(
-        host=host,
         shortcode=shortcode,
         dsp_client=dsp_client,
         oap_config=oap_config,

@@ -27,18 +27,18 @@ def _update_ap_scope_on_server(ap: Ap, dsp_client: DspClient) -> Ap:
     return ap_object_updated
 
 
-def apply_updated_scopes_of_aps_on_server(aps: list[Ap], host: str, dsp_client: DspClient) -> None:
+def apply_updated_scopes_of_aps_on_server(aps: list[Ap], dsp_client: DspClient) -> None:
     if not aps:
-        logger.warning(f"There are no APs to update on {host}")
+        logger.warning(f"There are no APs to update on {dsp_client.server}")
         return
-    logger.info(f"****** Updating scopes of {len(aps)} Administrative Permissions on {host}... ******")
+    logger.info(f"****** Updating scopes of {len(aps)} Administrative Permissions on {dsp_client.server}... ******")
     for ap in aps:
         try:
             _ = _update_ap_scope_on_server(ap, dsp_client)
             logger.info(f"Successfully updated AP {ap.iri}")
         except ApiError as err:
             logger.error(err)
-    logger.info(f"Finished updating scopes of {len(aps)} Administrative Permissions on {host}")
+    logger.info(f"Finished updating scopes of {len(aps)} Administrative Permissions on {dsp_client.server}")
 
 
 def create_new_ap_on_server(
