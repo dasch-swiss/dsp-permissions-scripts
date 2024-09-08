@@ -51,7 +51,7 @@ class TestDoapSerialization:
             project_doaps=doaps_original,
             shortcode=self.shortcode,
             mode="original",
-            host=Hosts.LOCALHOST,
+            server=Hosts.LOCALHOST,
         )
         deserialized_doaps = deserialize_doaps_of_project(
             shortcode=self.shortcode,
