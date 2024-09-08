@@ -8,7 +8,7 @@ from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap.oap_model import ResourceOap
+from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -72,45 +72,44 @@ def _update_permissions_for_resource(  # noqa: PLR0913
         raise err from None
 
 
-def _update_batch(batch: tuple[ResourceOap | ValueOap, ...], dsp_client: DspClient) -> list[str]:
+def _update_batch(batch: tuple[ModifiedOap, ...], dsp_client: DspClient) -> list[str]:
     failed_iris = []
     for oap in batch:
+        res_iri = oap.resource_oap.resource_iri if oap.resource_oap else oap.value_oaps[0].resource_iri
         try:
-            resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_iri, safe='')}")
+            resource = dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
         except ApiError as exc:
             logger.error(
-                f"Cannot update resource {oap.resource_iri}. "
+                f"Cannot update resource {res_iri}. "
                 f"The resource cannot be retrieved for the following reason: {exc.message}"
             )
-            failed_iris.append(oap.resource_iri)
+            failed_iris.append(res_iri)
             continue
-        if isinstance(oap, ResourceOap):
+        if oap.resource_oap:
             try:
                 _update_permissions_for_resource(
-                    resource_iri=oap.resource_iri,
+                    resource_iri=oap.resource_oap.resource_iri,
                     lmd=resource.get("knora-api:lastModificationDate"),
                     resource_type=resource["@type"],
                     context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
-                    scope=oap.scope,
+                    scope=oap.resource_oap.scope,
                     dsp_client=dsp_client,
                 )
             except ApiError as err:
                 logger.error(err)
-                failed_iris.append(oap.resource_iri)
-        elif isinstance(oap, ValueOap):
+                failed_iris.append(oap.resource_oap.resource_iri)
+        for val_oap in oap.value_oaps:
             try:
                 _update_permissions_for_value(
-                    resource_iri=oap.resource_iri,
-                    value=oap,
+                    resource_iri=val_oap.resource_iri,
+                    value=val_oap,
                     resource_type=resource["@type"],
                     context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                     dsp_client=dsp_client,
                 )
             except ApiError as err:
                 logger.error(err)
-                failed_iris.append(oap.value_iri)
-        else:
-            raise ValueError(f"The provided OAP is neither a resource OAP nor a value OAP: {oap}")
+                failed_iris.append(val_oap.value_iri)
     return failed_iris
 
 
@@ -126,7 +125,7 @@ def _write_failed_iris_to_file(
         f.write("\n".join(failed_iris))
 
 
-def _launch_thread_pool(oaps: list[ResourceOap | ValueOap], nthreads: int, dsp_client: DspClient) -> list[str]:
+def _launch_thread_pool(oaps: list[ModifiedOap], nthreads: int, dsp_client: DspClient) -> list[str]:
     all_failed_iris: list[str] = []
     with ThreadPoolExecutor(max_workers=nthreads) as pool:
         jobs = [pool.submit(_update_batch, batch, dsp_client) for batch in itertools.batched(oaps, 100)]
@@ -137,7 +136,7 @@ def _launch_thread_pool(oaps: list[ResourceOap | ValueOap], nthreads: int, dsp_c
 
 
 def apply_updated_oaps_on_server(
-    oaps: list[ResourceOap | ValueOap],
+    oaps: list[ModifiedOap],
     shortcode: str,
     dsp_client: DspClient,
     nthreads: int = 4,
@@ -146,11 +145,12 @@ def apply_updated_oaps_on_server(
     Applies modified Object Access Permissions of resources (and their values) on a DSP server.
     Don't forget to set a number of threads that doesn't overload the server.
     """
+    oaps = [oap for oap in oaps if oap.resource_oap or oap.value_oaps]
     if not oaps:
         logger.warning(f"There are no OAPs to update on {dsp_client.server}")
         return
-    value_oap_count = sum(isinstance(oap, ValueOap) for oap in oaps)
-    res_oap_count = sum(isinstance(oap, ResourceOap) for oap in oaps)
+    value_oap_count = sum(len(oap.value_oaps) for oap in oaps)
+    res_oap_count = sum(1 if oap.resource_oap else 0 for oap in oaps)
     msg = f"Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}..."
     logger.info(f"******* {msg} *******")
 
