@@ -7,6 +7,7 @@ from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
+from dsp_permissions_scripts.doap.doap_delete import delete_doap_of_group_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
@@ -111,13 +112,18 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         server=dsp_client.server,
     )
+    remaining_doaps = delete_doap_of_group_on_server(
+        existing_doaps=project_doaps,
+        forGroup=group.PROJECT_MEMBER,
+        dsp_client=dsp_client,
+    )
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.CREATOR),
         shortcode=shortcode,
         scope=PermissionScope.create(CR=[group.SYSTEM_ADMIN]),
         dsp_client=dsp_client,
     )
-    project_doaps_modified = modify_doaps(doaps=project_doaps)
+    project_doaps_modified = modify_doaps(doaps=remaining_doaps)
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
         return
