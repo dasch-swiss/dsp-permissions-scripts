@@ -36,9 +36,12 @@ class IRIUpdater(metaclass=ABCMeta):
     def from_string(string: str, dsp_client: DspClient) -> ResourceIRIUpdater | ValueIRIUpdater:
         res_iri = re.sub(r"/values/[^/]+$", "", string)
         res_dict = _get_res_dict(res_iri, dsp_client)
-        if re.search(r"http://rdfh\.ch/[^/]{4}/[^/]+/values/[^/]+", string):
+        if re.search(r"^http://rdfh\.ch/[^/]{4}/[^/]{22}/values/[^/]{22}$", string):
             return ValueIRIUpdater(string, res_dict)
-        return ResourceIRIUpdater(string, res_dict)
+        elif re.search(r"^http://rdfh\.ch/[^/]{4}/[^/]{22}$", string):
+            return ResourceIRIUpdater(string, res_dict)
+        else:
+            raise ValueError(f"Could not parse IRI {string}")
 
 
 @cache
@@ -97,6 +100,7 @@ def update_iris(
 
 
 def _initialize_iri_updaters(iri_file: Path, dsp_client: DspClient) -> list[ResourceIRIUpdater | ValueIRIUpdater]:
+    logger.info(f"Read IRIs from file {iri_file} and initialize IRI updaters...")
     iris_raw = iri_file.read_text().splitlines()
     iri_updaters = [IRIUpdater.from_string(iri, dsp_client) for iri in iris_raw]
     res_counter = sum(isinstance(x, ResourceIRIUpdater) for x in iri_updaters)
@@ -109,9 +113,9 @@ def _initialize_iri_updaters(iri_file: Path, dsp_client: DspClient) -> list[Reso
 
 
 def _tidy_up(iri_updaters: list[ResourceIRIUpdater | ValueIRIUpdater], iri_file: Path) -> None:
-    if failed_updates := [x for x in iri_updaters if x.err_msg]:
+    if failed_updaters := [x for x in iri_updaters if x.err_msg]:
         failed_iris_file = iri_file.with_stem(f"{iri_file.stem}_failed")
-        failed_iris_file.write_text("\n".join([f"{x.iri}\t\t{x.err_msg}" for x in failed_updates]))
+        failed_iris_file.write_text("\n".join([f"{x.iri}\t\t{x.err_msg}" for x in failed_updaters]))
         logger.info(f"Some updates failed. The failed IRIs and error messages have been saved to {failed_iris_file}.")
     else:
         logger.info(f"All {len(iri_updaters)} updates were successful.")
