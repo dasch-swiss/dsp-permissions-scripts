@@ -4,6 +4,7 @@ import re
 from abc import ABCMeta
 from abc import abstractmethod
 from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
@@ -24,8 +25,8 @@ logger = get_logger(__name__)
 @dataclass
 class IRIUpdater(metaclass=ABCMeta):
     iri: str
-    success = False
-    _res_dict: dict[str, Any]
+    res_dict: dict[str, Any]
+    err_msg: str | None = field(init=False, default=None)
 
     @abstractmethod
     def update_iri(self, new_scope: PermissionScope, dsp_client: DspClient) -> None:
@@ -46,15 +47,15 @@ class ResourceIRIUpdater(IRIUpdater):
         try:
             update_permissions_for_resource(
                 resource_iri=self.iri,
-                lmd=self._res_dict["lastModificationDate"],
-                resource_type=self._res_dict["@type"],
-                context=self._res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+                lmd=self.res_dict["lastModificationDate"],
+                resource_type=self.res_dict["@type"],
+                context=self.res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                 scope=new_scope,
                 dsp_client=dsp_client,
             )
-            self.success = True
         except ApiError as err:
-            logger.error(err)
+            self.err_msg = err.message
+            logger.error(self.err_msg)
 
 
 @dataclass
@@ -62,23 +63,24 @@ class ValueIRIUpdater(IRIUpdater):
     def update_iri(self, new_scope: PermissionScope, dsp_client: DspClient) -> None:
         val_oap = self._get_val_oap()
         if not val_oap:
-            logger.error(f"Could not find value {self.iri} in resource {self._res_dict['@id']}")
+            self.err_msg = f"Could not find value {self.iri} in resource {self.res_dict['@id']}"
+            logger.error(self.err_msg)
             return
         val_oap.scope = new_scope
         try:
             update_permissions_for_value(
                 resource_iri=self.iri,
                 value=val_oap,
-                resource_type=self._res_dict["@type"],
-                context=self._res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+                resource_type=self.res_dict["@type"],
+                context=self.res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                 dsp_client=dsp_client,
             )
-            self.success = True
         except ApiError as err:
-            logger.error(err)
+            self.err_msg = err.message
+            logger.error(self.err_msg)
 
     def _get_val_oap(self) -> ValueOap | None:
-        val_oaps = _get_value_oaps(self._res_dict)
+        val_oaps = _get_value_oaps(self.res_dict)
         return next((v for v in val_oaps if v.value_iri == self.iri), None)
 
 
@@ -87,7 +89,28 @@ def update_iris(
     new_scope: PermissionScope,
     dsp_client: DspClient,
 ) -> None:
-    iris_raw = iri_file.read_text().splitlines()
-    iris = [IRIUpdater.from_string(iri, dsp_client) for iri in iris_raw]
-    for iri in iris:
+    iri_updaters = _initialize_iri_updaters(iri_file, dsp_client)
+    for iri in iri_updaters:
         iri.update_iri(new_scope, dsp_client)
+    _tidy_up(iri_updaters, iri_file)
+
+
+def _initialize_iri_updaters(iri_file: Path, dsp_client: DspClient) -> list[ResourceIRIUpdater | ValueIRIUpdater]:
+    iris_raw = iri_file.read_text().splitlines()
+    iri_updaters = [IRIUpdater.from_string(iri, dsp_client) for iri in iris_raw]
+    res_counter = sum(isinstance(x, ResourceIRIUpdater) for x in iri_updaters)
+    val_counter = sum(isinstance(x, ValueIRIUpdater) for x in iri_updaters)
+    logger.info(
+        f"Perform {len(iri_updaters)} updates ({res_counter} resources and {val_counter} values) "
+        f"on server {dsp_client.server}..."
+    )
+    return iri_updaters
+
+
+def _tidy_up(iri_updaters: list[ResourceIRIUpdater | ValueIRIUpdater], iri_file: Path) -> None:
+    if failed_updates := [x for x in iri_updaters if x.err_msg]:
+        failed_iris_file = iri_file.with_stem(f"{iri_file.stem}_failed")
+        failed_iris_file.write_text("\n".join([f"{x.iri}\t\t{x.err_msg}" for x in failed_updates]))
+        logger.info(f"Some updates failed. The failed IRIs and error messages have been saved to {failed_iris_file}.")
+    else:
+        logger.info(f"All {len(iri_updaters)} updates were successful.")
