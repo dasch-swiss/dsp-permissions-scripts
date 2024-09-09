@@ -12,7 +12,7 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap.oap_get import _get_value_oaps
+from dsp_permissions_scripts.oap.oap_get import get_value_oaps
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.oap_set import update_permissions_for_resource
 from dsp_permissions_scripts.oap.oap_set import update_permissions_for_value
@@ -80,7 +80,7 @@ class ValueIRIUpdater(IRIUpdater):
             logger.error(self.err_msg)
 
     def _get_val_oap(self) -> ValueOap | None:
-        val_oaps = _get_value_oaps(self.res_dict)
+        val_oaps = get_value_oaps(self.res_dict)
         return next((v for v in val_oaps if v.value_iri == self.iri), None)
 
 
