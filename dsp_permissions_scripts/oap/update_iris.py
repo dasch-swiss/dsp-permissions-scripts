@@ -5,6 +5,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field
+from functools import cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
@@ -34,10 +35,15 @@ class IRIUpdater(metaclass=ABCMeta):
     @staticmethod
     def from_string(string: str, dsp_client: DspClient) -> ResourceIRIUpdater | ValueIRIUpdater:
         res_iri = re.sub(r"/values/[^/]+$", "", string)
-        res_dict = dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
+        res_dict = _get_res_dict(res_iri, dsp_client)
         if re.search(r"http://rdfh\.ch/[^/]{4}/[^/]+/values/[^/]+", string):
             return ValueIRIUpdater(string, res_dict)
         return ResourceIRIUpdater(string, res_dict)
+
+
+@cache
+def _get_res_dict(res_iri: str, dsp_client: DspClient) -> dict[str, Any]:
+    return dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
 
 
 @dataclass

@@ -3,7 +3,6 @@ import re
 import time
 from dataclasses import dataclass
 from dataclasses import field
-from functools import cache
 from functools import partial
 from importlib.metadata import version
 from typing import Any
@@ -130,7 +129,6 @@ class DspClient:
         response = self._try_network_action(params)
         return cast(dict[str, Any], response.json())
 
-    @cache
     def get(
         self,
         route: str,
