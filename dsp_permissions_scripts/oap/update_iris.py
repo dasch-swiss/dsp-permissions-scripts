@@ -99,7 +99,7 @@ def update_iris(
 
 def _initialize_iri_updaters(iri_file: Path, dsp_client: DspClient) -> list[ResourceIRIUpdater | ValueIRIUpdater]:
     logger.info(f"Read IRIs from file {iri_file} and initialize IRI updaters...")
-    iris_raw = [x for x in iri_file.read_text().splitlines() if re.search(r"\w", x)]
+    iris_raw = {x for x in iri_file.read_text().splitlines() if re.search(r"\w", x)}
     iri_updaters = [IRIUpdater.from_string(iri, dsp_client) for iri in iris_raw]
     res_counter = sum(isinstance(x, ResourceIRIUpdater) for x in iri_updaters)
     val_counter = sum(isinstance(x, ValueIRIUpdater) for x in iri_updaters)
