@@ -13,9 +13,9 @@ def main() -> None:
     The text file should contain the IRIs of the resources/values (one per line) to update.
     Resource IRIs and value IRIs can be mixed in the text file.
     """
-    host = Hosts.get_host("rdu")
-    shortcode = "0812"
-    iri_file = Path("project_data/0812/iris_to_update.txt")
+    host = Hosts.get_host("localhost")
+    shortcode = "4123"
+    iri_file = Path("project_data/4123/iris_to_update.txt")
     new_scope = OPEN
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
