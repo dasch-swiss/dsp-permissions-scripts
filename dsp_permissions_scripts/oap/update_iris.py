@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import re
-from abc import ABCMeta
+from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field
-from functools import cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
@@ -23,10 +22,9 @@ logger = get_logger(__name__)
 
 
 @dataclass
-class IRIUpdater(metaclass=ABCMeta):
+class IRIUpdater(ABC):
     iri: str
     dsp_client: DspClient
-    res_dict: dict[str, Any] = field(init=False)
     err_msg: str | None = field(init=False, default=None)
 
     @abstractmethod
@@ -42,23 +40,20 @@ class IRIUpdater(metaclass=ABCMeta):
         else:
             raise ValueError(f"Could not parse IRI {string}")
 
-    @cache
     def _get_res_dict(self, res_iri: str) -> dict[str, Any]:
         return self.dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
 
 
 @dataclass
 class ResourceIRIUpdater(IRIUpdater):
-    def __post_init__(self) -> None:
-        self.res_dict = self._get_res_dict(self.iri, self.dsp_client)
-
     def update_iri(self, new_scope: PermissionScope) -> None:
+        res_dict = self._get_res_dict(self.iri)
         try:
             update_permissions_for_resource(
                 resource_iri=self.iri,
-                lmd=self.res_dict["lastModificationDate"],
-                resource_type=self.res_dict["@type"],
-                context=self.res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+                lmd=res_dict["lastModificationDate"],
+                resource_type=res_dict["@type"],
+                context=res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                 scope=new_scope,
                 dsp_client=self.dsp_client,
             )
@@ -69,14 +64,12 @@ class ResourceIRIUpdater(IRIUpdater):
 
 @dataclass
 class ValueIRIUpdater(IRIUpdater):
-    def __post_init__(self) -> None:
-        res_iri = re.sub(r"/values/[^/]{22}$", "", self.iri)
-        self.res_dict = self._get_res_dict(res_iri, self.dsp_client)
-
     def update_iri(self, new_scope: PermissionScope) -> None:
-        val_oap = next((v for v in get_value_oaps(self.res_dict) if v.value_iri == self.iri), None)
+        res_iri = re.sub(r"/values/[^/]{22}$", "", self.iri)
+        res_dict = self._get_res_dict(res_iri)
+        val_oap = next((v for v in get_value_oaps(res_dict) if v.value_iri == self.iri), None)
         if not val_oap:
-            self.err_msg = f"Could not find value {self.iri} in resource {self.res_dict['@id']}"
+            self.err_msg = f"Could not find value {self.iri} in resource {res_dict['@id']}"
             logger.error(self.err_msg)
             return
         val_oap.scope = new_scope
@@ -84,8 +77,8 @@ class ValueIRIUpdater(IRIUpdater):
             update_permissions_for_value(
                 resource_iri=self.iri,
                 value=val_oap,
-                resource_type=self.res_dict["@type"],
-                context=self.res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+                resource_type=res_dict["@type"],
+                context=res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                 dsp_client=self.dsp_client,
             )
         except ApiError as err:
