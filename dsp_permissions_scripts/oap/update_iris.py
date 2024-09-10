@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 class IRIUpdater(metaclass=ABCMeta):
     iri: str
     dsp_client: DspClient
-    res_dict: dict[str, Any]
+    res_dict: dict[str, Any] = field(init=False)
     err_msg: str | None = field(init=False, default=None)
 
     @abstractmethod
@@ -36,23 +36,22 @@ class IRIUpdater(metaclass=ABCMeta):
     @staticmethod
     def from_string(string: str, dsp_client: DspClient) -> ResourceIRIUpdater | ValueIRIUpdater:
         if re.search(r"^http://rdfh\.ch/[^/]{4}/[^/]{22}/values/[^/]{22}$", string):
-            res_iri = re.sub(r"/values/[^/]{22}$", "", string)
-            res_dict = _get_res_dict(res_iri, dsp_client)
-            return ValueIRIUpdater(string, dsp_client, res_dict)
+            return ValueIRIUpdater(string, dsp_client)
         elif re.search(r"^http://rdfh\.ch/[^/]{4}/[^/]{22}$", string):
-            res_dict = _get_res_dict(string, dsp_client)
-            return ResourceIRIUpdater(string, dsp_client, res_dict)
+            return ResourceIRIUpdater(string, dsp_client)
         else:
             raise ValueError(f"Could not parse IRI {string}")
 
-
-@cache
-def _get_res_dict(res_iri: str, dsp_client: DspClient) -> dict[str, Any]:
-    return dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
+    @cache
+    def _get_res_dict(self, res_iri: str) -> dict[str, Any]:
+        return self.dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
 
 
 @dataclass
 class ResourceIRIUpdater(IRIUpdater):
+    def __post_init__(self) -> None:
+        self.res_dict = self._get_res_dict(self.iri, self.dsp_client)
+
     def update_iri(self, new_scope: PermissionScope) -> None:
         try:
             update_permissions_for_resource(
@@ -70,6 +69,10 @@ class ResourceIRIUpdater(IRIUpdater):
 
 @dataclass
 class ValueIRIUpdater(IRIUpdater):
+    def __post_init__(self) -> None:
+        res_iri = re.sub(r"/values/[^/]{22}$", "", self.iri)
+        self.res_dict = self._get_res_dict(res_iri, self.dsp_client)
+
     def update_iri(self, new_scope: PermissionScope) -> None:
         val_oap = next((v for v in get_value_oaps(self.res_dict) if v.value_iri == self.iri), None)
         if not val_oap:
