@@ -75,7 +75,7 @@ class ValueIRIUpdater(IRIUpdater):
         val_oap.scope = new_scope
         try:
             update_permissions_for_value(
-                resource_iri=self.iri,
+                resource_iri=res_iri,
                 value=val_oap,
                 resource_type=res_dict["@type"],
                 context=res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
