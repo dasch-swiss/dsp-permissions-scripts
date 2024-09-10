@@ -51,7 +51,7 @@ class ResourceIRIUpdater(IRIUpdater):
         try:
             update_permissions_for_resource(
                 resource_iri=self.iri,
-                lmd=res_dict["lastModificationDate"],
+                lmd=res_dict["knora-api:lastModificationDate"],
                 resource_type=res_dict["@type"],
                 context=res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
                 scope=new_scope,
