@@ -124,7 +124,6 @@ def test_ValueIRIUpdater_2_props(res_dict_2_props: dict[str, Any]) -> None:
     IRIUpdater.from_string(val_oap.value_iri, dsp_client).update_iri(val_oap.scope)
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
     update_iris.update_permissions_for_value.assert_called_once_with(  # type: ignore[attr-defined]
-        resource_iri="http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
         value=val_oap,
         resource_type=res_dict_2_props["@type"],
         context=res_dict_2_props["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
@@ -145,7 +144,6 @@ def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
     IRIUpdater.from_string(val_oap.value_iri, dsp_client).update_iri(val_oap.scope)
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
     update_iris.update_permissions_for_value.assert_called_once_with(  # type: ignore[attr-defined]
-        resource_iri="http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
         value=val_oap,
         resource_type=res_dict_2_vals["@type"],
         context=res_dict_2_vals["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
