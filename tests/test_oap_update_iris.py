@@ -132,6 +132,27 @@ def test_ValueIRIUpdater_2_props(res_dict_2_props: dict[str, Any]) -> None:
     )
 
 
+def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
+    dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_vals))
+    update_iris.update_permissions_for_value = Mock()  # type: ignore[attr-defined]
+    val_oap = ValueOap(
+        scope=PermissionScope.create(D=[PROJECT_ADMIN]),
+        property="testonto:hasSimpleText",
+        value_type="knora-api:TextValue",
+        value_iri="http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw/values/4bf-72HPTXSUdTxY8udGew",
+        resource_iri="http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
+    )
+    IRIUpdater.from_string(val_oap.value_iri, dsp_client).update_iri(val_oap.scope)
+    dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
+    update_iris.update_permissions_for_value.assert_called_once_with(  # type: ignore[attr-defined]
+        resource_iri="http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
+        value=val_oap,
+        resource_type=res_dict_2_vals["@type"],
+        context=res_dict_2_vals["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+        dsp_client=dsp_client,
+    )
+
+
 # test with 2 properties
 # test with 2 values in the same property
 # test  IRI that is not contained in the resource
