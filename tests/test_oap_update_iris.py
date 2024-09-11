@@ -153,6 +153,14 @@ def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
     )
 
 
-# test with 2 properties
-# test with 2 values in the same property
-# test  IRI that is not contained in the resource
+def test_ValueIRIUpdater_invalid_iri(res_dict_2_vals: dict[str, Any], caplog: pytest.LogCaptureFixture) -> None:
+    """test what happens if a value IRI is provided that is not part of the current resource"""
+    dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_vals))
+    update_iris.update_permissions_for_value = Mock()  # type: ignore[attr-defined]
+    val_iri = "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw/values/eD0ii5mIS9y18M6fMy1Fkw"
+    IRIUpdater.from_string(val_iri, dsp_client).update_iri(PermissionScope.create(D=[PROJECT_ADMIN]))
+    dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
+    update_iris.update_permissions_for_value.assert_not_called()  # type: ignore[attr-defined]
+    assert len(caplog.records) == 1
+    log_msg_expected = f"Could not find value {val_iri} in resource http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw"
+    assert caplog.records[0].message == log_msg_expected
