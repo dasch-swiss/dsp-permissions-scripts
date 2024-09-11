@@ -18,7 +18,6 @@ logger = get_logger(__name__)
 
 
 def update_permissions_for_value(
-    resource_iri: str,
     value: ValueOap,
     resource_type: str,
     context: dict[str, str],
@@ -26,7 +25,7 @@ def update_permissions_for_value(
 ) -> None:
     """Updates the permissions for the given value (of a property) on a DSP server"""
     payload = {
-        "@id": resource_iri,
+        "@id": value.resource_iri,
         "@type": resource_type,
         value.property: {
             "@id": value.value_iri,
@@ -37,11 +36,11 @@ def update_permissions_for_value(
     }
     try:
         dsp_client.put("/v2/values", data=payload)
-        logger.info(f"Updated permissions of resource {resource_iri}, value {value.value_iri}")
+        logger.info(f"Updated permissions of resource {value.resource_iri}, value {value.value_iri}")
     except PermissionsAlreadyUpToDate:
-        logger.warning(f"Permissions of resource {resource_iri}, value {value.value_iri} are already up to date")
+        logger.warning(f"Permissions of resource {value.resource_iri}, value {value.value_iri} are already up to date")
     except ApiError as err:
-        err.message = f"Error while updating permissions of resource {resource_iri}, value {value.value_iri}"
+        err.message = f"Error while updating permissions of resource {value.resource_iri}, value {value.value_iri}"
         raise err from None
 
 
@@ -101,7 +100,6 @@ def _update_batch(batch: tuple[ModifiedOap, ...], dsp_client: DspClient) -> list
         for val_oap in oap.value_oaps:
             try:
                 update_permissions_for_value(
-                    resource_iri=val_oap.resource_iri,
                     value=val_oap,
                     resource_type=resource["@type"],
                     context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
