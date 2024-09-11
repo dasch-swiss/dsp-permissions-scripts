@@ -57,7 +57,7 @@ def test_create_new_doap_on_server(
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.KNOWN_USER),
         shortcode="0000",
-        scope=PermissionScope.create(V={group.UNKNOWN_USER}),
+        scope=PermissionScope.create(V=[group.UNKNOWN_USER]),
         dsp_client=dsp_client,
     )
     dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=create_new_doap_request)
