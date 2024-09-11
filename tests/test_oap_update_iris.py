@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -12,6 +12,26 @@ from dsp_permissions_scripts.oap.update_iris import IRIUpdater
 from dsp_permissions_scripts.oap.update_iris import ResourceIRIUpdater
 from dsp_permissions_scripts.oap.update_iris import ValueIRIUpdater
 from dsp_permissions_scripts.utils.dsp_client import DspClient
+
+
+@pytest.fixture()
+def res_dict() -> dict[str, Any]:
+    return {
+        "knora-api:lastModificationDate": {"@value": "2024-09-10T18:07:10.753289758Z", "@type": "xsd:dateTimeStamp"},
+        "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:UnknownUser",
+        "@type": "testonto:CompoundThing",
+        "@id": "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
+        "testonto:hasSimpleText": {
+            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:UnknownUser",
+            "@type": "knora-api:TextValue",
+            "@id": "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw/values/FWSVNZFJRai8-4OQu5pU8Q",
+        },
+        "@context": {
+            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
+            "testonto": "http://0.0.0.0:3333/ontology/4123/testonto/v2#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+        },
+    }
 
 
 def test_factory_with_res_iri() -> None:
@@ -41,36 +61,18 @@ def test_factory_with_invalid_iri() -> None:
             IRIUpdater.from_string(inv, dsp_client)
 
 
-class TestResourceIRIUpdater:
-    res_dict: ClassVar = {
-        "knora-api:lastModificationDate": {"@value": "2024-09-10T18:07:10.753289758Z", "@type": "xsd:dateTimeStamp"},
-        "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:UnknownUser",
-        "@type": "testonto:CompoundThing",
-        "@id": "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw",
-        "testonto:hasSimpleText": {
-            "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:UnknownUser",
-            "@type": "knora-api:TextValue",
-            "@id": "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw/values/FWSVNZFJRai8-4OQu5pU8Q",
-        },
-        "@context": {
-            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
-            "testonto": "http://0.0.0.0:3333/ontology/4123/testonto/v2#",
-            "xsd": "http://www.w3.org/2001/XMLSchema#",
-        },
-    }
-
-    def test_ResourceIRIUpdater(self) -> None:
-        dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=self.res_dict))
-        update_iris.update_permissions_for_resource = Mock()  # type: ignore[attr-defined]
-        new_scope = PermissionScope.create(D=[PROJECT_ADMIN])
-        res_iri = "http://rdfh.ch/4123/2ETqDXKeRrS5JSd6TxFO5g"
-        IRIUpdater.from_string(res_iri, dsp_client).update_iri(new_scope)
-        dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2F2ETqDXKeRrS5JSd6TxFO5g")
-        update_iris.update_permissions_for_resource.assert_called_once_with(  # type: ignore[attr-defined]
-            resource_iri=res_iri,
-            lmd=self.res_dict["knora-api:lastModificationDate"],
-            resource_type=self.res_dict["@type"],
-            context=self.res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
-            scope=new_scope,
-            dsp_client=dsp_client,
-        )
+def test_ResourceIRIUpdater(res_dict: dict[str, Any]) -> None:
+    dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict))
+    update_iris.update_permissions_for_resource = Mock()  # type: ignore[attr-defined]
+    new_scope = PermissionScope.create(D=[PROJECT_ADMIN])
+    res_iri = "http://rdfh.ch/4123/2ETqDXKeRrS5JSd6TxFO5g"
+    IRIUpdater.from_string(res_iri, dsp_client).update_iri(new_scope)
+    dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2F2ETqDXKeRrS5JSd6TxFO5g")
+    update_iris.update_permissions_for_resource.assert_called_once_with(  # type: ignore[attr-defined]
+        resource_iri=res_iri,
+        lmd=res_dict["knora-api:lastModificationDate"],
+        resource_type=res_dict["@type"],
+        context=res_dict["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
+        scope=new_scope,
+        dsp_client=dsp_client,
+    )
