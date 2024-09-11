@@ -47,3 +47,8 @@ class EmptyScopeError(Exception):
 @dataclass
 class InvalidGroupError(Exception):
     message: str
+
+
+@dataclass
+class InvalidIRIError(Exception):
+    message: str

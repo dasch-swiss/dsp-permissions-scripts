@@ -10,6 +10,7 @@ from typing import Any
 from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_value_oaps
@@ -38,7 +39,7 @@ class IRIUpdater(ABC):
         elif re.search(r"^http://rdfh\.ch/[^/]{4}/[^/]{22}$", string):
             return ResourceIRIUpdater(string, dsp_client)
         else:
-            raise ValueError(f"Could not parse IRI {string}")
+            raise InvalidIRIError(f"Could not parse IRI {string}")
 
     def _get_res_dict(self, res_iri: str) -> dict[str, Any]:
         return self.dsp_client.get(f"/v2/resources/{quote_plus(res_iri, safe='')}")
