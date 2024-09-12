@@ -120,18 +120,18 @@ class PermissionScope(BaseModel):
 
 
 OPEN = PermissionScope.create(
-    CR={PROJECT_ADMIN},
-    D={PROJECT_MEMBER},
-    V={KNOWN_USER, UNKNOWN_USER},
+    CR=[PROJECT_ADMIN],
+    D=[PROJECT_MEMBER],
+    V=[KNOWN_USER, UNKNOWN_USER],
 )
 
 RESTRICTED_VIEW = PermissionScope.create(
-    CR={PROJECT_ADMIN},
-    D={PROJECT_MEMBER},
-    RV={KNOWN_USER, UNKNOWN_USER},
+    CR=[PROJECT_ADMIN],
+    D=[PROJECT_MEMBER],
+    RV=[KNOWN_USER, UNKNOWN_USER],
 )
 
 RESTRICTED = PermissionScope.create(
-    CR={PROJECT_ADMIN},
-    D={PROJECT_MEMBER},
+    CR=[PROJECT_ADMIN],
+    D=[PROJECT_MEMBER],
 )
