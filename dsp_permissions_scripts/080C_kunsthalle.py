@@ -34,10 +34,13 @@ def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     modified_oaps: list[ModifiedOap] = []
     for oap in copy.deepcopy(oaps):
         new_oap = ModifiedOap()
-        new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": RESTRICTED_VIEW})
+        if oap.resource_oap.scope != RESTRICTED_VIEW:
+            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": RESTRICTED_VIEW})
         for value_oap in oap.value_oaps:
-            new_oap.value_oaps.append(value_oap.model_copy(update={"scope": RESTRICTED_VIEW}))
-        modified_oaps.append(new_oap)
+            if value_oap.scope != RESTRICTED_VIEW:
+                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": RESTRICTED_VIEW}))
+        if not new_oap.is_empty():
+            modified_oaps.append(new_oap)
     return modified_oaps
 
 
