@@ -92,13 +92,16 @@ def main() -> None:
     shortcode = "080C"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
+    oap_config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
 
-    project_doaps = get_doaps_of_project(shortcode, dsp_client)
-    serialize_doaps_of_project(
-        project_doaps=project_doaps,
+    update_doaps(
         shortcode=shortcode,
-        mode="original",
-        server=dsp_client.server,
+        dsp_client=dsp_client,
+    )
+    update_oaps(
+        shortcode=shortcode,
+        dsp_client=dsp_client,
+        oap_config=oap_config,
     )
 
 
