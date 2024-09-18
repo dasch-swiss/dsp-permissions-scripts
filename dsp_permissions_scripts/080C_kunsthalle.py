@@ -24,8 +24,9 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
-        doap.scope = RESTRICTED_VIEW
-        modified_doaps.append(doap)
+        if doap.scope != RESTRICTED_VIEW:
+            doap.scope = RESTRICTED_VIEW
+            modified_doaps.append(doap)
     return modified_doaps
 
 
