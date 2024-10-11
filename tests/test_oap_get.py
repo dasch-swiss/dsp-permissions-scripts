@@ -20,7 +20,7 @@ from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
-@pytest.fixture()
+@pytest.fixture
 def resource() -> dict[str, Any]:
     return {
         "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
@@ -39,7 +39,7 @@ def resource() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def gravsearch_1_link_obj() -> dict[str, Any]:
     return {
         "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
@@ -48,7 +48,7 @@ def gravsearch_1_link_obj() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
     page_1 = {
         "@graph": [
@@ -82,7 +82,7 @@ def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
     return [page_1, page_2]
 
 
-@pytest.fixture()
+@pytest.fixture
 def video_segment() -> dict[str, Any]:  # https://ark.stage.dasch.swiss/ark:/72163/1/0812/l32ehsHuTfaQAKVTRiuBRAR
     return {
         "knora-api:hasSegmentBounds": {
@@ -126,7 +126,7 @@ def video_segment() -> dict[str, Any]:  # https://ark.stage.dasch.swiss/ark:/721
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/Os_5VvgkSC2saUlSUdcLhA
     return {
         "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",

@@ -9,7 +9,7 @@ from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
 from dsp_permissions_scripts.models import group
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_new_ap_request() -> dict[str, Any]:
     return {
         "forGroup": "http://www.knora.org/ontology/knora-admin#Creator",
@@ -21,7 +21,7 @@ def create_new_ap_request() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_new_ap_response() -> dict[str, Any]:
     return {
         "administrative_permission": {
