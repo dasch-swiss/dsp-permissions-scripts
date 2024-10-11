@@ -11,8 +11,8 @@ from dsp_permissions_scripts.oap import oap_get
 from dsp_permissions_scripts.oap.oap_get import KB_RESCLASSES
 from dsp_permissions_scripts.oap.oap_get import _get_oap_of_one_resource
 from dsp_permissions_scripts.oap.oap_get import _get_oaps_of_one_kb_resclass
-from dsp_permissions_scripts.oap.oap_get import _get_value_oaps
 from dsp_permissions_scripts.oap.oap_get import get_oaps_of_kb_resclasses
+from dsp_permissions_scripts.oap.oap_get import get_value_oaps
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
@@ -207,7 +207,7 @@ class Test_get_value_oaps:
                 resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
             ),
         ]
-        returned = _get_value_oaps(resource)
+        returned = get_value_oaps(resource)
         assert expected == returned
 
     def test_linkobj_full(self, linkobj: dict[str, Any]) -> None:
@@ -234,7 +234,7 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA",
         )
         expected = [exp_1, exp_2, exp_3]
-        returned = _get_value_oaps(linkobj)
+        returned = get_value_oaps(linkobj)
         assert returned == unordered(expected)
 
     def test_video_segment_full(self, video_segment: dict[str, Any]) -> None:
@@ -275,7 +275,7 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2, exp_3, exp_4, exp_5]
-        returned = _get_value_oaps(video_segment)
+        returned = get_value_oaps(video_segment)
         assert returned == unordered(expected)
 
     def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any]) -> None:
@@ -288,7 +288,7 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1]
-        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue"])
+        returned = get_value_oaps(video_segment, ["knora-api:relatesToValue"])
         assert returned == unordered(expected)
 
     def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any]) -> None:
@@ -308,7 +308,7 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2]
-        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
+        returned = get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
         assert returned == unordered(expected)
 
 

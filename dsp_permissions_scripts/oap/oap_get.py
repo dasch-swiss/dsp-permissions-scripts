@@ -81,7 +81,7 @@ def _enrich_with_value_oaps(
     complete_oaps = copy.deepcopy(res_only_oaps)
     for oap in complete_oaps:
         full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")
-        oap.value_oaps = _get_value_oaps(full_resource, restrict_to_props)
+        oap.value_oaps = get_value_oaps(full_resource, restrict_to_props)
     logger.info(f"Enriched {len(complete_oaps)} OAPs of knora-base resources with their value OAPs.")
     return complete_oaps
 
@@ -194,14 +194,14 @@ def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -
     if oap_config.retrieve_values == "none":
         value_oaps = []
     elif oap_config.retrieve_values == "all":
-        value_oaps = _get_value_oaps(r)
+        value_oaps = get_value_oaps(r)
     else:
-        value_oaps = _get_value_oaps(r, oap_config.specified_props)
+        value_oaps = get_value_oaps(r, oap_config.specified_props)
 
     return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
 
 
-def _get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
+def get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
     res = []
     for k, v in resource.items():
         if k in IGNORE_KEYS:
