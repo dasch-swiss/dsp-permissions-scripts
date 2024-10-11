@@ -162,7 +162,12 @@ def apply_updated_oaps_on_server(
             server=dsp_client.server,
             filename=filename,
         )
-        msg = f"ERROR: {len(failed_iris)} resources or values could not be updated. They were written to {filename}."
+        msg = (
+            f"{len(failed_iris)} resources or values "
+            f"(out of the {res_oap_count} resource OAPs and {value_oap_count} value OAPs) "
+            f"could not be updated. They were written to {filename}."
+        )
         logger.error(msg)
-    msg = f"Updated {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}... *******"
-    logger.info(msg)
+    else:
+        msg = f"Updated {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}."
+        logger.info(f"******* {msg} *******")
