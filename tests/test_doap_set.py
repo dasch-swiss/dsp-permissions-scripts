@@ -10,7 +10,7 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_new_doap_request() -> dict[str, Any]:
     return {
         "forGroup": "http://www.knora.org/ontology/knora-admin#KnownUser",
@@ -27,7 +27,7 @@ def create_new_doap_request() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_new_doap_response() -> dict[str, Any]:
     return {
         "default_object_access_permission": {

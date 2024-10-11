@@ -15,7 +15,7 @@ from dsp_permissions_scripts.oap.update_iris import ValueIRIUpdater
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
-@pytest.fixture()
+@pytest.fixture
 def res_dict_2_props() -> dict[str, Any]:
     return {
         "knora-api:lastModificationDate": {"@value": "2024-09-10T18:07:10.753289758Z", "@type": "xsd:dateTimeStamp"},
@@ -40,7 +40,7 @@ def res_dict_2_props() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def res_dict_2_vals() -> dict[str, Any]:
     return {
         "knora-api:lastModificationDate": {"@value": "2024-09-10T18:07:10.753289758Z", "@type": "xsd:dateTimeStamp"},
