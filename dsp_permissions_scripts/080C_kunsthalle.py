@@ -71,8 +71,9 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
 def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     """Sample function to modify the Object Access Permissions of a project."""
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
+    one_batch = oaps_modified[:10_000]
+    logger.info(f"Modifying {len(one_batch)}/{len(oaps_modified)} OAPs...")
     if not oaps_modified:
         logger.info("There are no OAPs to update.")
         return
@@ -92,7 +93,7 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("rdu")
+    host = Hosts.get_host("prod")
     shortcode = "080C"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
