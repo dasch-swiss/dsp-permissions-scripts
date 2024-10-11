@@ -124,6 +124,11 @@ OPEN = PermissionScope.create(
     D=[PROJECT_MEMBER],
     V=[KNOWN_USER, UNKNOWN_USER],
 )
+LIMC_OPEN = PermissionScope.create(
+    CR=[PROJECT_ADMIN],
+    D=["limc:limc-editors"],
+    V=[PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER],
+)
 
 RESTRICTED_VIEW = PermissionScope.create(
     CR=[PROJECT_ADMIN],
