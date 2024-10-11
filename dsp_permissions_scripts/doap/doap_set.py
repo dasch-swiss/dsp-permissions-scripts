@@ -2,7 +2,8 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.doap.doap_get import create_doap_from_admin_route_response
 from dsp_permissions_scripts.doap.doap_model import Doap
-from dsp_permissions_scripts.doap.doap_model import NewDoapTarget
+from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
+from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -25,32 +26,32 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
     return new_doap
 
 
-def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], host: str, dsp_client: DspClient) -> None:
+def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], dsp_client: DspClient) -> None:
     if not doaps:
-        logger.warning(f"There are no DOAPs to update on {host}")
+        logger.warning(f"There are no DOAPs to update on {dsp_client.server}")
         return
-    logger.info(f"****** Updating scopes of {len(doaps)} DOAPs on {host}... ******")
+    logger.info(f"****** Updating scopes of {len(doaps)} DOAPs on {dsp_client.server}... ******")
     for d in doaps:
         try:
             _ = _update_doap_scope_on_server(d.doap_iri, d.scope, dsp_client)
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
-    logger.info(f"Finished updating scopes of {len(doaps)} DOAPs on {host}")
+    logger.info(f"Finished updating scopes of {len(doaps)} DOAPs on {dsp_client.server}")
 
 
 def create_new_doap_on_server(
-    target: NewDoapTarget,
+    target: NewGroupDoapTarget | NewEntityDoapTarget,
     shortcode: str,
     scope: PermissionScope,
     dsp_client: DspClient,
 ) -> Doap | None:
     proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": target.group.full_iri() if target.group else None,
+        "forGroup": target.group.full_iri() if isinstance(target, NewGroupDoapTarget) else None,
         "forProject": proj_iri,
-        "forProperty": target.property,
-        "forResourceClass": target.resource_class,
+        "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
+        "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,
         "hasPermissions": create_admin_route_object_from_scope(scope),
     }
     try:

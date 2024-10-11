@@ -53,18 +53,18 @@ class TestScopeSerialization:
             V=[group.Group(val="knora-admin:CustomGroup")],
         ),
         PermissionScope.create(
-            D={group.PROJECT_ADMIN},
-            RV={group.PROJECT_MEMBER},
+            D=[group.PROJECT_ADMIN],
+            RV=[group.PROJECT_MEMBER],
         ),
         PermissionScope.create(
-            M={group.PROJECT_ADMIN},
-            V={group.CREATOR, group.KNOWN_USER},
-            RV={group.UNKNOWN_USER},
+            M=[group.PROJECT_ADMIN],
+            V=[group.CREATOR, group.KNOWN_USER],
+            RV=[group.UNKNOWN_USER],
         ),
         PermissionScope.create(
-            CR={group.SYSTEM_ADMIN, group.PROJECT_ADMIN},
-            D={group.CREATOR},
-            RV={group.UNKNOWN_USER},
+            CR=[group.SYSTEM_ADMIN, group.PROJECT_ADMIN],
+            D=[group.CREATOR],
+            RV=[group.UNKNOWN_USER],
         ),
     )
 

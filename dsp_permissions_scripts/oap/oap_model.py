@@ -4,9 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
+from pydantic import Field
 from pydantic import model_validator
 
-from dsp_permissions_scripts.models.errors import OapEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedPropsNotEmptyError
 from dsp_permissions_scripts.models.errors import SpecifiedResClassesEmptyError
@@ -23,11 +23,18 @@ class Oap(BaseModel):
     resource_oap: ResourceOap
     value_oaps: list[ValueOap]
 
-    @model_validator(mode="after")
-    def check_consistency(self) -> Oap:
-        if not self.resource_oap and not self.value_oaps:
-            raise OapEmptyError()
-        return self
+
+class ModifiedOap(BaseModel):
+    """
+    Model representing a modified object access permission of a resource and its values.
+    This model is used to represent only the modified parts of an OAP, so it can be incomplete.
+    """
+
+    resource_oap: ResourceOap | None = None
+    value_oaps: list[ValueOap] = Field(default_factory=list)
+
+    def is_empty(self) -> bool:
+        return not (self.resource_oap or self.value_oaps)
 
 
 class ResourceOap(BaseModel):

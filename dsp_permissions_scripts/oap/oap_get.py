@@ -31,6 +31,7 @@ IGNORE_KEYS = [
     "knora-api:attachedToUser",
     "knora-api:userHasPermission",
     "knora-api:hasPermissions",
+    "knora-api:hasStandoffLinkToValue",
 ]
 KB_RESCLASSES = [
     "knora-api:VideoSegment",
