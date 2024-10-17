@@ -30,7 +30,7 @@ def _get_sort_pos_of_custom_group(group: str) -> int:
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
-def sort_groups(groups_original: Iterable[group.Group]) -> list[group.Group]:
+def sort_groups(groups_original: Iterable[group.BuiltinGroup]) -> list[group.BuiltinGroup]:
     """
     Sorts groups:
      - First according to their power (most powerful first - only applicable for built-in groups)

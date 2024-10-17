@@ -13,7 +13,7 @@ from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
-from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import BuiltinGroup
 
 
 class PermissionScope(BaseModel):
@@ -21,19 +21,19 @@ class PermissionScope(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    CR: frozenset[Group] = frozenset()
-    D: frozenset[Group] = frozenset()
-    M: frozenset[Group] = frozenset()
-    V: frozenset[Group] = frozenset()
-    RV: frozenset[Group] = frozenset()
+    CR: frozenset[BuiltinGroup] = frozenset()
+    D: frozenset[BuiltinGroup] = frozenset()
+    M: frozenset[BuiltinGroup] = frozenset()
+    V: frozenset[BuiltinGroup] = frozenset()
+    RV: frozenset[BuiltinGroup] = frozenset()
 
     @staticmethod
     def create(
-        CR: Iterable[Group] = (),
-        D: Iterable[Group] = (),
-        M: Iterable[Group] = (),
-        V: Iterable[Group] = (),
-        RV: Iterable[Group] = (),
+        CR: Iterable[BuiltinGroup] = (),
+        D: Iterable[BuiltinGroup] = (),
+        M: Iterable[BuiltinGroup] = (),
+        V: Iterable[BuiltinGroup] = (),
+        RV: Iterable[BuiltinGroup] = (),
     ) -> PermissionScope:
         """Factory method to create a PermissionScope from Iterables instead of frozensets."""
         return PermissionScope(
@@ -47,7 +47,7 @@ class PermissionScope(BaseModel):
     @staticmethod
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
         purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
-        return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in purged_kwargs.items()})
+        return PermissionScope.model_validate({k: [BuiltinGroup(val=v) for v in vs] for k, vs in purged_kwargs.items()})
 
     @staticmethod
     def _remove_duplicates_from_kwargs(kwargs: dict[str, list[str]]) -> dict[str, list[str]]:
@@ -79,24 +79,24 @@ class PermissionScope(BaseModel):
             raise EmptyScopeError()
         return self
 
-    def get(self, permission: str) -> frozenset[Group]:
+    def get(self, permission: str) -> frozenset[BuiltinGroup]:
         """Retrieve the groups that have the given permission."""
         if permission not in self.model_fields:
             raise ValueError(f"Permission '{permission}' not in {self.model_fields}")
-        res: frozenset[Group] = getattr(self, permission)
+        res: frozenset[BuiltinGroup] = getattr(self, permission)
         return res
 
     def add(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: Group,
+        group: BuiltinGroup,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
         groups = self.get(permission)
         if group.val in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups = groups | {group}
-        kwargs: dict[str, frozenset[Group]] = {permission: groups}
+        kwargs: dict[str, frozenset[BuiltinGroup]] = {permission: groups}
         for perm in self.model_fields:
             if perm != permission:
                 kwargs[perm] = self.get(perm)
@@ -105,14 +105,14 @@ class PermissionScope(BaseModel):
     def remove(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: Group,
+        group: BuiltinGroup,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
         groups = self.get(permission)
         if group.val not in [g.val for g in groups]:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
         groups = groups - {group}
-        kwargs: dict[str, frozenset[Group]] = {permission: groups}
+        kwargs: dict[str, frozenset[BuiltinGroup]] = {permission: groups}
         for perm in self.model_fields:
             if perm != permission:
                 kwargs[perm] = self.get(perm)
