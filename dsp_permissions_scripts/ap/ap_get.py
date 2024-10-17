@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
     """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
     ap = Ap(
-        forGroup=BuiltinGroup(val=permission["forGroup"]),
+        forGroup=BuiltinGroup.from_prefixed_iri(permission["forGroup"]),
         forProject=permission["forProject"],
         hasPermissions=frozenset(ApValue(p["name"]) for p in permission["hasPermissions"]),
         iri=permission["iri"],

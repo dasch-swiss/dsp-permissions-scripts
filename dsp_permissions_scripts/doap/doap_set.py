@@ -48,7 +48,7 @@ def create_new_doap_on_server(
 ) -> Doap | None:
     proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": target.group.full_iri() if isinstance(target, NewGroupDoapTarget) else None,
+        "forGroup": target.group.full_iri if isinstance(target, NewGroupDoapTarget) else None,
         "forProject": proj_iri,
         "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
         "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,

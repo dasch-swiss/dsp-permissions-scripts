@@ -49,7 +49,7 @@ def create_new_ap_on_server(
 ) -> Ap | None:
     proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": forGroup.full_iri(),
+        "forGroup": forGroup.full_iri,
         "forProject": proj_iri,
         "hasPermissions": [
             {"additionalInformation": None, "name": ap_val.value, "permissionCode": None} for ap_val in hasPermissions
@@ -57,7 +57,7 @@ def create_new_ap_on_server(
     }
     try:
         response = dsp_client.post("/admin/permissions/ap", data=payload)
-        logger.info(f"Successfully created new AP for group {forGroup.val}")
+        logger.info(f"Successfully created new AP for group {forGroup.prefixed_iri}")
         return create_ap_from_admin_route_object(response["administrative_permission"])
     except ApiError:
         logger.error(f"Could not create new AP for group {forGroup}")
