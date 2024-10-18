@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
+PACKAGE_NAME = "dsp-permissions-scripts"
 
 
 def get_logger(name: str) -> logging.Logger:
