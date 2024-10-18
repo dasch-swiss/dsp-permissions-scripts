@@ -14,6 +14,7 @@ from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
+from dsp_permissions_scripts.models.group import Group
 
 
 class PermissionScope(BaseModel):
@@ -21,19 +22,19 @@ class PermissionScope(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    CR: frozenset[BuiltinGroup] = frozenset()
-    D: frozenset[BuiltinGroup] = frozenset()
-    M: frozenset[BuiltinGroup] = frozenset()
-    V: frozenset[BuiltinGroup] = frozenset()
-    RV: frozenset[BuiltinGroup] = frozenset()
+    CR: frozenset[Group] = frozenset()
+    D: frozenset[Group] = frozenset()
+    M: frozenset[Group] = frozenset()
+    V: frozenset[Group] = frozenset()
+    RV: frozenset[Group] = frozenset()
 
     @staticmethod
     def create(
-        CR: Iterable[BuiltinGroup] = (),
-        D: Iterable[BuiltinGroup] = (),
-        M: Iterable[BuiltinGroup] = (),
-        V: Iterable[BuiltinGroup] = (),
-        RV: Iterable[BuiltinGroup] = (),
+        CR: Iterable[Group] = (),
+        D: Iterable[Group] = (),
+        M: Iterable[Group] = (),
+        V: Iterable[Group] = (),
+        RV: Iterable[Group] = (),
     ) -> PermissionScope:
         """Factory method to create a PermissionScope from Iterables instead of frozensets."""
         return PermissionScope(
@@ -48,7 +49,7 @@ class PermissionScope(BaseModel):
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
         purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
         return PermissionScope.model_validate(
-            {k: [BuiltinGroup.from_prefixed_iri(v) for v in vs] for k, vs in purged_kwargs.items()}
+            {k: [Group.from_prefixed_iri(v) for v in vs] for k, vs in purged_kwargs.items()}
         )
 
     @staticmethod
