@@ -19,7 +19,7 @@ class Group(Protocol):
     full_iri: str
 
 
-class BuiltinGroup(BaseModel):
+class BuiltinGroup(BaseModel, Group):
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
@@ -44,7 +44,7 @@ class BuiltinGroup(BaseModel):
         return BuiltinGroup(prefixed_iri=prefixed_iri, full_iri=full_iri)
 
 
-class CustomGroup(BaseModel):
+class CustomGroup(BaseModel, Group):
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
