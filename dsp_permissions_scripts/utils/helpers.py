@@ -2,8 +2,6 @@ from typing import Iterable
 
 from dsp_permissions_scripts.models import group
 
-PACKAGE_NAME = "dsp-permissions-scripts"
-
 
 def dereference_prefix(
     identifier: str,
@@ -30,7 +28,7 @@ def _get_sort_pos_of_custom_group(group: str) -> int:
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
-def sort_groups(groups_original: Iterable[group.Group]) -> list[group.Group]:
+def sort_groups(groups_original: Iterable[group.BuiltinGroup]) -> list[group.BuiltinGroup]:
     """
     Sorts groups:
      - First according to their power (most powerful first - only applicable for built-in groups)
@@ -45,5 +43,5 @@ def sort_groups(groups_original: Iterable[group.Group]) -> list[group.Group]:
         group.UNKNOWN_USER,
     ]
     groups = list(groups_original)
-    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x.val))
+    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x.prefixed_iri))
     return groups

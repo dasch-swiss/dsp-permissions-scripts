@@ -18,13 +18,13 @@ from requests import Session
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.helpers import PACKAGE_NAME
 
 # ruff: noqa: PLR2004 (magic value used in comparison)
 
 logger = get_logger(__name__)
 
 HTTP_OK = 200
+PACKAGE_NAME = "dsp-permissions-scripts"
 
 
 @dataclass
