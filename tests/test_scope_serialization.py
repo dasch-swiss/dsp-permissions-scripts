@@ -10,6 +10,7 @@ from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
@@ -89,7 +90,7 @@ class TestScopeSerialization:
 
     def test_create_admin_route_object_from_scope(self) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            returned = create_admin_route_object_from_scope(scope)
+            returned = create_admin_route_object_from_scope(scope, DspClient("foo"), "1234")
             assert unordered(returned) == admin_route_object, f"Failed with admin group object no. {index}"
 
 

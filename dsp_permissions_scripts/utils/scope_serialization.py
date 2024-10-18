@@ -1,7 +1,9 @@
 from typing import Any
 
+from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
 def create_string_from_scope(perm_scope: PermissionScope) -> str:
@@ -37,7 +39,9 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
     return PermissionScope.from_dict(kwargs)
 
 
-def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[dict[str, str | None]]:
+def create_admin_route_object_from_scope(
+    perm_scope: PermissionScope, dsp_client: DspClient, shortcode: str
+) -> list[dict[str, str | None]]:
     """
     Serializes a permission scope to an object that can be used for requests to /admin/permissions routes.
     Note: This route doesn't accept relative IRIs.
@@ -46,9 +50,10 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
     for perm_letter in perm_scope.model_fields:
         groups = perm_scope.get(perm_letter)
         for group in groups:
+            full_iri = group.full_iri() if isinstance(group, BuiltinGroup) else group.full_iri(dsp_client, shortcode)
             scope_elements.append(
                 {
-                    "additionalInformation": group.full_iri(),
+                    "additionalInformation": full_iri,
                     "name": perm_letter,
                     "permissionCode": None,
                 }

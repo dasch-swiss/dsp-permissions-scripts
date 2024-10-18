@@ -14,9 +14,9 @@ from dsp_permissions_scripts.utils.scope_serialization import create_admin_route
 logger = get_logger(__name__)
 
 
-def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_client: DspClient) -> Doap:
+def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_client: DspClient, shortcode: str) -> Doap:
     iri = quote_plus(doap_iri, safe="")
-    payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
+    payload = {"hasPermissions": create_admin_route_object_from_scope(scope, dsp_client, shortcode)}
     try:
         response = dsp_client.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
     except ApiError as err:
@@ -26,14 +26,14 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
     return new_doap
 
 
-def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], dsp_client: DspClient) -> None:
+def apply_updated_scopes_of_doaps_on_server(doaps: list[Doap], dsp_client: DspClient, shortcode: str) -> None:
     if not doaps:
         logger.warning(f"There are no DOAPs to update on {dsp_client.server}")
         return
     logger.info(f"****** Updating scopes of {len(doaps)} DOAPs on {dsp_client.server}... ******")
     for d in doaps:
         try:
-            _ = _update_doap_scope_on_server(d.doap_iri, d.scope, dsp_client)
+            _ = _update_doap_scope_on_server(d.doap_iri, d.scope, dsp_client, shortcode)
             logger.info(f"Successfully updated DOAP {d.doap_iri}")
         except ApiError as err:
             logger.error(err)
@@ -52,7 +52,7 @@ def create_new_doap_on_server(
         "forProject": proj_iri,
         "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
         "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,
-        "hasPermissions": create_admin_route_object_from_scope(scope),
+        "hasPermissions": create_admin_route_object_from_scope(scope, dsp_client, shortcode),
     }
     try:
         response = dsp_client.post("/admin/permissions/doap", data=payload)
