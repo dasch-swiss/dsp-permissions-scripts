@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 def create_ap_from_admin_route_object(permission: dict[str, Any]) -> Ap:
     """Deserializes a AP from JSON as returned by /admin/permissions/ap/{project_iri}"""
     ap = Ap(
-        forGroup=Group(val=permission["forGroup"]),
+        forGroup=group_builder(permission["forGroup"]),
         forProject=permission["forProject"],
         hasPermissions=frozenset(ApValue(p["name"]) for p in permission["hasPermissions"]),
         iri=permission["iri"],

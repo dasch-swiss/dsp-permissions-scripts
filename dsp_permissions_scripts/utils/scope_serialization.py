@@ -1,7 +1,7 @@
 from typing import Any
 
+from dsp_permissions_scripts.models.group import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.utils.helpers import sort_groups
 
 
 def create_string_from_scope(perm_scope: PermissionScope) -> str:
@@ -10,7 +10,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     for perm_letter in perm_scope.model_fields:
         if groups := perm_scope.get(perm_letter):
             as_dict[perm_letter] = sort_groups(groups)
-    strs = [f"{k} {','.join([x.val for x in v])}" for k, v in as_dict.items()]
+    strs = [f"{k} {','.join([x.prefixed_iri for x in v])}" for k, v in as_dict.items()]
     return "|".join(strs)
 
 

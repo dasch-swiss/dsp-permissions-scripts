@@ -14,6 +14,7 @@ from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import group_builder
 
 
 class PermissionScope(BaseModel):
@@ -47,7 +48,7 @@ class PermissionScope(BaseModel):
     @staticmethod
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
         purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
-        return PermissionScope.model_validate({k: [Group(val=v) for v in vs] for k, vs in purged_kwargs.items()})
+        return PermissionScope.model_validate({k: [group_builder(v) for v in vs] for k, vs in purged_kwargs.items()})
 
     @staticmethod
     def _remove_duplicates_from_kwargs(kwargs: dict[str, list[str]]) -> dict[str, list[str]]:
@@ -67,7 +68,7 @@ class PermissionScope(BaseModel):
     def check_group_occurs_only_once(self) -> PermissionScope:
         all_groups = []
         for field in self.model_fields:
-            all_groups.extend([g.val for g in self.get(field)])
+            all_groups.extend([g.prefixed_iri for g in self.get(field)])
         for group in all_groups:
             if all_groups.count(group) > 1:
                 raise ValueError(f"Group {group} must not occur in more than one field")
@@ -93,7 +94,7 @@ class PermissionScope(BaseModel):
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
         groups = self.get(permission)
-        if group.val in [g.val for g in groups]:
+        if group.prefixed_iri in [g.prefixed_iri for g in groups]:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups = groups | {group}
         kwargs: dict[str, frozenset[Group]] = {permission: groups}
@@ -109,7 +110,7 @@ class PermissionScope(BaseModel):
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
         groups = self.get(permission)
-        if group.val not in [g.val for g in groups]:
+        if group.prefixed_iri not in [g.prefixed_iri for g in groups]:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
         groups = groups - {group}
         kwargs: dict[str, frozenset[Group]] = {permission: groups}
@@ -134,4 +135,10 @@ RESTRICTED_VIEW = PermissionScope.create(
 RESTRICTED = PermissionScope.create(
     CR=[PROJECT_ADMIN],
     D=[PROJECT_MEMBER],
+)
+
+LIMC_OPEN = PermissionScope.create(
+    CR=[PROJECT_ADMIN],
+    D=[group_builder("limc:limc-editors")],
+    V=[PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER],
 )

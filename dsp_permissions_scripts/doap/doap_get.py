@@ -5,7 +5,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
@@ -32,7 +32,7 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
     target: GroupDoapTarget | EntityDoapTarget
     match permission:
         case {"forProject": project_iri, "forGroup": group}:
-            target = GroupDoapTarget(project_iri=project_iri, group=Group(val=group))
+            target = GroupDoapTarget(project_iri=project_iri, group=group_builder(group))
         case {"forProject": project_iri, **p}:
             target = EntityDoapTarget(
                 project_iri=project_iri, resource_class=p.get("forResourceClass"), property=p.get("forProperty")
