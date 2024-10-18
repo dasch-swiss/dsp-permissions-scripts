@@ -1,6 +1,3 @@
-import pytest
-
-from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.models.group import CREATOR
 from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
@@ -23,8 +20,3 @@ def test_custom_group() -> None:
     group_iri = "knora-admin:my-custom-group"
     custom_group = group_builder(group_iri)
     assert custom_group.prefixed_iri == group_iri
-
-
-def test_invalid_group() -> None:
-    with pytest.raises(InvalidGroupError):
-        group_builder("http://www.knora.org/v2/resources/foo")

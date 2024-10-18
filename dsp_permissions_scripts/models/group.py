@@ -22,10 +22,13 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
-def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
-    if prefixed_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
+def group_builder(prefixed_or_full_iri: str) -> BuiltinGroup | CustomGroup:
+    if prefixed_or_full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
+        prefixed_iri = prefixed_or_full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
         return BuiltinGroup(prefixed_iri=prefixed_iri)
-    return CustomGroup(prefixed_iri=prefixed_iri)
+    elif prefixed_or_full_iri.startswith("knora-admin:"):
+        return BuiltinGroup(prefixed_iri=prefixed_or_full_iri)
+    return CustomGroup(prefixed_iri=prefixed_or_full_iri)
 
 
 class Group(BaseModel, ABC):
