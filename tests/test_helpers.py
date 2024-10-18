@@ -12,13 +12,13 @@ from dsp_permissions_scripts.models.group import sort_groups
 
 def test_sort_groups() -> None:
     groups_original = [
-        group_builder("knora-admin:C_CustomGroup"),
+        group_builder("shortname:C_CustomGroup"),
         UNKNOWN_USER,
         PROJECT_ADMIN,
         PROJECT_MEMBER,
         CREATOR,
-        group_builder("knora-admin:A_CustomGroup"),
-        group_builder("knora-admin:B_CustomGroup"),
+        group_builder("shortname:A_CustomGroup"),
+        group_builder("shortname:B_CustomGroup"),
         KNOWN_USER,
         SYSTEM_ADMIN,
     ]
@@ -29,9 +29,9 @@ def test_sort_groups() -> None:
         PROJECT_MEMBER,
         KNOWN_USER,
         UNKNOWN_USER,
-        group_builder("knora-admin:A_CustomGroup"),
-        group_builder("knora-admin:B_CustomGroup"),
-        group_builder("knora-admin:C_CustomGroup"),
+        group_builder("shortname:A_CustomGroup"),
+        group_builder("shortname:B_CustomGroup"),
+        group_builder("shortname:C_CustomGroup"),
     ]
     groups_returned = sort_groups(groups_original)
     assert groups_returned == groups_expected
