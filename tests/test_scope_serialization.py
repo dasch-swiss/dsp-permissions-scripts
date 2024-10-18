@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 from pytest_unordered import unordered
 
@@ -16,10 +18,15 @@ from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
+SHORTNAME = "shortname"
+SHORTCODE = "1234"
+CUSTOM_GROUP_NAME = "CustomGroup"
+CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/{SHORTCODE}/abcdef"
+
 
 class TestScopeSerialization:
     perm_strings = (
-        "CR knora-admin:SystemAdmin|V shortname:CustomGroup",
+        f"CR knora-admin:SystemAdmin|V {SHORTNAME}:{CUSTOM_GROUP_NAME}",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
         "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
         "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
@@ -27,7 +34,7 @@ class TestScopeSerialization:
     admin_route_objects = (
         [
             {"name": "CR", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}SystemAdmin", "permissionCode": None},
-            {"name": "V", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}CustomGroup", "permissionCode": None},
+            {"name": "V", "additionalInformation": CUSTOM_GROUP_FULL_IRI, "permissionCode": None},
         ],
         [
             {"name": "D", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin", "permissionCode": None},
@@ -57,7 +64,7 @@ class TestScopeSerialization:
     scopes = (
         PermissionScope.create(
             CR=[SYSTEM_ADMIN],
-            V=[group_builder("shortname:CustomGroup")],
+            V=[group_builder(f"{SHORTNAME}:{CUSTOM_GROUP_NAME}")],
         ),
         PermissionScope.create(
             D=[PROJECT_ADMIN],
@@ -89,8 +96,12 @@ class TestScopeSerialization:
             assert create_string_from_scope(scope) == perm_string, f"Failed with permission string '{perm_string}'"
 
     def test_create_admin_route_object_from_scope(self) -> None:
+        get_response = {
+            "groups": [{"name": CUSTOM_GROUP_NAME, "id": CUSTOM_GROUP_FULL_IRI, "project": {"shortcode": SHORTCODE}}]
+        }
+        dsp_client_mock = Mock(spec=DspClient, get=Mock(return_value=get_response))
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            returned = create_admin_route_object_from_scope(scope, DspClient("foo"), "1234")
+            returned = create_admin_route_object_from_scope(scope, dsp_client_mock, SHORTCODE)
             assert unordered(returned) == admin_route_object, f"Failed with admin group object no. {index}"
 
 
