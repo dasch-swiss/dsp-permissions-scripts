@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from abc import ABC
 from abc import abstractmethod
 from typing import Any
 from typing import Iterable
@@ -22,7 +23,7 @@ def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
     return CustomGroup(prefixed_iri=prefixed_iri)
 
 
-class Group(BaseModel):
+class Group(BaseModel, ABC):
     prefixed_iri: str
 
     @abstractmethod
