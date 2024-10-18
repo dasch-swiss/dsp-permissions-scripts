@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.models.scope import PermissionScope
 
 
@@ -19,7 +20,7 @@ class Doap(BaseModel):
 
 class GroupDoapTarget(BaseModel):
     project_iri: str
-    group: Group
+    group: GroupType
 
 
 class EntityDoapTarget(BaseModel):

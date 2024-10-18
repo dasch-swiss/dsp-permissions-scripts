@@ -6,10 +6,15 @@ from abc import abstractmethod
 from typing import Any
 from typing import Iterable
 from typing import Self
+from typing import TypeAlias
+from typing import Union
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
+from pydantic import Discriminator
+from pydantic import Tag
 from pydantic import model_validator
+from typing_extensions import Annotated
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -74,6 +79,22 @@ class CustomGroup(Group):
             )
         full_iri: str = group[0]["id"]
         return full_iri
+
+
+def group_discriminator(v: Any) -> str:
+    if isinstance(v, dict):
+        return "builtin" if v["prefixed_iri"].startswith("knora-admin:") else "custom"
+    else:
+        return "builtin" if getattr(v, "prefixed_iri").startswith("knora-admin:") else "custom"
+
+
+GroupType: TypeAlias = Annotated[
+    Union[
+        Annotated[BuiltinGroup, Tag("builtin")],
+        Annotated[CustomGroup, Tag("custom")],
+    ],
+    Discriminator(group_discriminator),
+]
 
 
 def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
