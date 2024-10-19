@@ -21,6 +21,16 @@ from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
+PREFIXED_IRI_REGEX = r"^[\w-]+:[\w-]+$"
+
+
+def is_prefixed_iri(iri: str) -> bool:
+    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/")):
+        return False
+    elif re.search(PREFIXED_IRI_REGEX, iri):
+        return True
+    else:
+        raise InvalidIRIError(f"{iri} is not a valid IRI")
 
 
 def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
@@ -41,7 +51,7 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
 def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
     if prefixed_iri.startswith("knora-admin:"):
         return BuiltinGroup(prefixed_iri=prefixed_iri)
-    elif re.search(r"^[\w-]+:[\w-]+$", prefixed_iri):
+    elif re.search(PREFIXED_IRI_REGEX, prefixed_iri):
         return CustomGroup(prefixed_iri=prefixed_iri)
     else:
         raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
