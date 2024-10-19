@@ -14,6 +14,7 @@ from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import GroupType
+from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
 
 
@@ -48,7 +49,9 @@ class PermissionScope(BaseModel):
     @staticmethod
     def from_dict(d: dict[str, list[str]]) -> PermissionScope:
         purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
-        return PermissionScope.model_validate({k: [group_builder(v) for v in vs] for k, vs in purged_kwargs.items()})
+        return PermissionScope.model_validate(
+            {k: [group_builder(get_prefixed_iri_from_full_iri(v)) for v in vs] for k, vs in purged_kwargs.items()}
+        )
 
     @staticmethod
     def _remove_duplicates_from_kwargs(kwargs: dict[str, list[str]]) -> dict[str, list[str]]:

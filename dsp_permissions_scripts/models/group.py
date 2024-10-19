@@ -17,18 +17,28 @@ from pydantic import model_validator
 from typing_extensions import Annotated
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
+from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
-def group_builder(prefixed_or_full_iri: str) -> BuiltinGroup | CustomGroup:
-    if prefixed_or_full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
-        prefixed_iri = prefixed_or_full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
+def get_prefixed_iri_from_full_iri(full_iri: str) -> str:
+    if full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
+        return full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
+    elif full_iri.startswith("http://rdfh.ch/"):
+        return f"{shortname}:{full_iri}"
+    else:
+        raise InvalidIRIError(f"Could not transform full IRI {full_iri} to prefixed IRI")
+
+
+def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
+    if prefixed_iri.startswith("knora-admin:"):
         return BuiltinGroup(prefixed_iri=prefixed_iri)
-    elif prefixed_or_full_iri.startswith("knora-admin:"):
-        return BuiltinGroup(prefixed_iri=prefixed_or_full_iri)
-    return CustomGroup(prefixed_iri=prefixed_or_full_iri)
+    elif re.search(r"^\w+:\w+$", prefixed_iri):
+        return CustomGroup(prefixed_iri=prefixed_iri)
+    else:
+        raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
 
 
 class Group(BaseModel, ABC):
