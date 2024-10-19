@@ -24,6 +24,11 @@ CUSTOM_GROUP_NAME = "CustomGroup"
 CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/{SHORTCODE}/abcdef"
 
 
+@pytest.fixture
+def dsp_client() -> DspClient:
+    return DspClient("api.dasch.swiss", "1234")
+
+
 class TestScopeSerialization:
     perm_strings = (
         f"CR knora-admin:SystemAdmin|V {SHORTNAME}:{CUSTOM_GROUP_NAME}",
@@ -82,14 +87,16 @@ class TestScopeSerialization:
         ),
     )
 
-    def test_create_scope_from_string(self) -> None:
+    def test_create_scope_from_string(self, dsp_client: DspClient) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            assert create_scope_from_string(perm_string) == scope, f"Failed with permission string '{perm_string}'"
+            assert (
+                create_scope_from_string(perm_string, dsp_client) == scope
+            ), f"Failed with permission string '{perm_string}'"
 
-    def test_create_scope_from_admin_route_object(self) -> None:
+    def test_create_scope_from_admin_route_object(self, dsp_client: DspClient) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             fail_msg = f"Failed with admin group object no. {index}"
-            assert create_scope_from_admin_route_object(admin_route_object) == scope, fail_msg
+            assert create_scope_from_admin_route_object(admin_route_object, dsp_client) == scope, fail_msg
 
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):

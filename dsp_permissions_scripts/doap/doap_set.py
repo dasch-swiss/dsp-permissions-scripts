@@ -22,7 +22,7 @@ def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_clie
     except ApiError as err:
         err.message = f"Could not update scope of DOAP {doap_iri}"
         raise err from None
-    new_doap = create_doap_from_admin_route_response(response["default_object_access_permission"])
+    new_doap = create_doap_from_admin_route_response(response["default_object_access_permission"], dsp_client)
     return new_doap
 
 
@@ -57,7 +57,7 @@ def create_new_doap_on_server(
     try:
         response = dsp_client.post("/admin/permissions/doap", data=payload)
         logger.info(f"Successfully created new DOAP for target {target}")
-        return create_doap_from_admin_route_response(response["default_object_access_permission"])
+        return create_doap_from_admin_route_response(response["default_object_access_permission"], dsp_client)
     except ApiError:
         logger.error(f"Could not create new DOAP for target {target}")
         return None

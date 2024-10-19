@@ -23,11 +23,17 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
-def get_prefixed_iri_from_full_iri(full_iri: str) -> str:
+def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
     if full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
         return full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
     elif full_iri.startswith("http://rdfh.ch/"):
-        return f"{shortname}:{full_iri}"
+        all_groups = dsp_client.get("/admin/groups")["groups"]
+        if not (group := [grp for grp in all_groups if grp["id"] == full_iri]):
+            raise InvalidGroupError(
+                f"{full_iri} is not a valid full IRI of a group. "
+                f"Available group IRIs: {', '.join([grp['id'] for grp in all_groups])}"
+            )
+        return f"{group[0]["project"]["shortname"]}:{group[0]["name"]}"
     else:
         raise InvalidIRIError(f"Could not transform full IRI {full_iri} to prefixed IRI")
 
@@ -88,7 +94,7 @@ class CustomGroup(Group):
         if not (group := [grp for grp in proj_groups if grp["name"] == self.prefixed_iri.split(":")[-1]]):
             raise InvalidGroupError(
                 f"{self.prefixed_iri} is not a valid group. "
-                "Available groups: {', '.join([grp['name'] for grp in proj_groups])}"
+                f"Available groups: {', '.join([grp['name'] for grp in proj_groups])}"
             )
         full_iri: str = group[0]["id"]
         return full_iri

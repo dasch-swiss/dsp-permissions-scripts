@@ -16,7 +16,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     return "|".join(strs)
 
 
-def create_scope_from_string(permission_string: str) -> PermissionScope:
+def create_scope_from_string(permission_string: str, dsp_client: DspClient) -> PermissionScope:
     """Deserializes a permission string as used by /v2 routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     scopes = permission_string.split("|")
@@ -24,10 +24,12 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
         perm_letter, groups_as_str = scope.split(" ")
         groups = groups_as_str.split(",")
         kwargs[perm_letter] = groups
-    return PermissionScope.from_dict(kwargs)
+    return PermissionScope.from_dict(kwargs, dsp_client)
 
 
-def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]]) -> PermissionScope:
+def create_scope_from_admin_route_object(
+    admin_route_object: list[dict[str, Any]], dsp_client: DspClient
+) -> PermissionScope:
     """Deserializes an object returned by /admin/permissions routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     for obj in admin_route_object:
@@ -36,7 +38,7 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
             kwargs[attr_name].append(obj["additionalInformation"])
         else:
             kwargs[attr_name] = [obj["additionalInformation"]]
-    return PermissionScope.from_dict(kwargs)
+    return PermissionScope.from_dict(kwargs, dsp_client)
 
 
 def create_admin_route_object_from_scope(
