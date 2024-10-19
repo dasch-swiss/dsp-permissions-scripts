@@ -26,7 +26,12 @@ CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/{SHORTCODE}/abcdef"
 
 @pytest.fixture
 def dsp_client() -> DspClient:
-    return DspClient("api.dasch.swiss", "1234")
+    dsp_client = Mock(spec=DspClient)
+    get_response = {
+        "groups": [{"id": CUSTOM_GROUP_FULL_IRI, "name": CUSTOM_GROUP_NAME, "project": {"shortname": SHORTNAME}}]
+    }
+    dsp_client.get = Mock(return_value=get_response)
+    return dsp_client
 
 
 class TestScopeSerialization:
@@ -96,7 +101,8 @@ class TestScopeSerialization:
     def test_create_scope_from_admin_route_object(self, dsp_client: DspClient) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
             fail_msg = f"Failed with admin group object no. {index}"
-            assert create_scope_from_admin_route_object(admin_route_object, dsp_client) == scope, fail_msg
+            returned = create_scope_from_admin_route_object(admin_route_object, dsp_client)
+            assert returned == scope, fail_msg
 
     def test_create_string_from_scope(self) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
