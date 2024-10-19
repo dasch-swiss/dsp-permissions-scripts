@@ -92,7 +92,7 @@ class TestAdd:
             CR=[group.PROJECT_ADMIN],
             V=[group.UNKNOWN_USER, group.KNOWN_USER],
         )
-        rgx = "Group 'val='knora-admin:ProjectAdmin'' is already in permission 'CR'"
+        rgx = "Group 'prefixed_iri='knora-admin:ProjectAdmin'' is already in permission 'CR'"
         with pytest.raises(ValueError, match=re.escape(rgx)):
             _ = scope.add("CR", group.PROJECT_ADMIN)
 
