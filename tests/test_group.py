@@ -16,16 +16,16 @@ from dsp_permissions_scripts.models.group import sort_groups
 NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 
 
-def test_builtin_group_from_prefixed_iri() -> None:
-    builtin_groups = [BuiltinGroup(prefixed_iri=f"knora-admin:{x}") for x in NAMES_OF_BUILTIN_GROUPS]
-    assert builtin_groups == [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
+@pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
+def test_builtin_group_from_prefixed_iri(group_name: str) -> None:
+    builtin_group = BuiltinGroup(prefixed_iri=f"knora-admin:{group_name}")
+    assert builtin_group in [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
 
 
-def test_builtin_group_from_full_iri_raises() -> None:
-    full_iris = [f"{KNORA_ADMIN_ONTO_NAMESPACE}{x}" for x in NAMES_OF_BUILTIN_GROUPS]
-    for full_iri in full_iris:
-        with pytest.raises(InvalidGroupError):
-            BuiltinGroup(prefixed_iri=full_iri)
+@pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
+def test_builtin_group_from_full_iri_raises(group_name: str) -> None:
+    with pytest.raises(InvalidGroupError):
+        BuiltinGroup(prefixed_iri=f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}")
 
 
 def test_builtin_group_invalid_prefix() -> None:
@@ -36,7 +36,16 @@ def test_builtin_group_invalid_prefix() -> None:
 
 
 def test_builtin_group_invalid_name() -> None:
-    pass
+    invalid_names = ["SystemAdministrator", "Sysadmin", "ProjectAdministator", "ProjAdmin", "ProjMember"]
+    for inv in invalid_names:
+        with pytest.raises(InvalidGroupError):
+            BuiltinGroup(prefixed_iri=f"knora-admin:{inv}")
+
+
+@pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
+def test_builtin_group_generate_full_iri(group_name: str) -> None:
+    generated_full_iri = BuiltinGroup(prefixed_iri=f"knora-admin:{group_name}").full_iri()
+    assert generated_full_iri == f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}"
 
 
 def test_custom_group() -> None:
