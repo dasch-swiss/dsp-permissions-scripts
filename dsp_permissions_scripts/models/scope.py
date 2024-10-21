@@ -16,7 +16,7 @@ from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
-from dsp_permissions_scripts.models.group import is_prefixed_iri
+from dsp_permissions_scripts.models.group import is_prefixed_group_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
@@ -55,7 +55,7 @@ class PermissionScope(BaseModel):
         for k, vs in purged_kwargs.items():
             groups = []
             for v in vs:
-                if is_prefixed_iri(v):
+                if is_prefixed_group_iri(v):
                     groups.append(group_builder(v))
                 else:
                     groups.append(group_builder(get_prefixed_iri_from_full_iri(v, dsp_client)))
