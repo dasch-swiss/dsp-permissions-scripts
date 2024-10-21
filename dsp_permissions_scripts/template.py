@@ -127,7 +127,7 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
         return
-    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, dsp_client)
+    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, dsp_client, shortcode)
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,

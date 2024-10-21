@@ -62,5 +62,5 @@ def test_create_new_doap_on_server(
     )
     dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=create_new_doap_request)
     doap_set.create_doap_from_admin_route_response.assert_called_once_with(  # type: ignore[attr-defined]
-        create_new_doap_response["default_object_access_permission"]
+        create_new_doap_response["default_object_access_permission"], dsp_client
     )
