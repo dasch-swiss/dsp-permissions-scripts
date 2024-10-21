@@ -16,16 +16,43 @@ from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
-from dsp_permissions_scripts.models.group import is_prefixed_iri
+from dsp_permissions_scripts.models.group import is_prefixed_group_iri
 from dsp_permissions_scripts.models.group import sort_groups
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
+@pytest.fixture
+def new_custom_group_iri() -> str:
+    return "http://rdfh.ch/groups/083A/_zbeAt-lQDSUNItmBBafvw"
+
+
+@pytest.fixture
+def old_custom_group_iri() -> str:
+    return "http://rdfh.ch/groups/0001/thing-searcher"
+
+
+@pytest.fixture
+def dsp_client_with_2_groups(new_custom_group_iri: str, old_custom_group_iri: str) -> DspClient:
+    get_response = {
+        "groups": [
+            {"id": new_custom_group_iri, "name": "btt-editors", "project": {"shortname": "btt", "shortcode": "083A"}},
+            {
+                "id": old_custom_group_iri,
+                "name": "Thing searcher",
+                "project": {"shortname": "anything", "shortcode": "0001"},
+            },
+        ]
+    }
+    dsp_client = Mock(spec=DspClient)
+    dsp_client.get = Mock(return_value=get_response)
+    return dsp_client
+
+
 def test_is_prefixed_iri() -> None:
-    assert is_prefixed_iri("knora-admin:ProjectAdmin")
-    assert not is_prefixed_iri(f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin")
+    assert is_prefixed_group_iri("knora-admin:ProjectAdmin")
+    assert not is_prefixed_group_iri(f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin")
     with pytest.raises(InvalidIRIError):
-        is_prefixed_iri("ProjectAdmin")
+        is_prefixed_group_iri("ProjectAdmin")
 
 
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
@@ -34,21 +61,27 @@ def test_get_prefixed_iri_from_full_iri_builtin(group_name: str) -> None:
     assert returned == f"knora-admin:{group_name}"
 
 
-def test_get_prefixed_iri_from_full_iri_custom() -> None:
+def test_get_prefixed_iri_from_full_iri_custom(dsp_client_with_2_groups: DspClient) -> None:
     new_group_iri = "http://rdfh.ch/groups/083A/_zbeAt-lQDSUNItmBBafvw"
     old_group_iri = "http://rdfh.ch/groups/0001/thing-searcher"
-    get_response = {
-        "groups": [
-            {"id": new_group_iri, "name": "btt-editors", "project": {"shortname": "btt", "shortcode": "083A"}},
-            {"id": old_group_iri, "name": "Thing searcher", "project": {"shortname": "anything", "shortcode": "0001"}},
-        ]
-    }
-    dsp_client = Mock(spec=DspClient)
-    dsp_client.get = Mock(return_value=get_response)
-    new_group_iri_returned = get_prefixed_iri_from_full_iri(new_group_iri, dsp_client)
-    old_group_iri_returned = get_prefixed_iri_from_full_iri(old_group_iri, dsp_client)
+    new_group_iri_returned = get_prefixed_iri_from_full_iri(new_group_iri, dsp_client_with_2_groups)
+    old_group_iri_returned = get_prefixed_iri_from_full_iri(old_group_iri, dsp_client_with_2_groups)
     assert new_group_iri_returned == "btt:btt-editors"
     assert old_group_iri_returned == "anything:Thing searcher"
+
+
+@pytest.mark.parametrize(
+    "iri",
+    ["http://www.knora.org/ontology/knora-admin#Thing searcher", "http://www.knora.org/ontology/knora-base#Value"],
+)
+def test_get_prefixed_iri_from_full_iri_invalid_iri(iri: str) -> None:
+    with pytest.raises(InvalidIRIError):
+        get_prefixed_iri_from_full_iri(iri, DspClient("foo"))
+
+
+def test_get_prefixed_iri_from_full_iri_invalid_group(dsp_client_with_2_groups: DspClient) -> None:
+    with pytest.raises(InvalidGroupError):
+        get_prefixed_iri_from_full_iri("http://rdfh.ch/groups/0123/8-5f7B639_79ef6a043baW", dsp_client_with_2_groups)
 
 
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
