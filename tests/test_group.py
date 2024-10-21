@@ -21,9 +21,11 @@ def test_builtin_group_from_prefixed_iri() -> None:
     assert builtin_groups == [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
 
 
-def test_builtin_group_from_full_iri() -> None:
-    builtin_groups = [BuiltinGroup(prefixed_iri=f"{KNORA_ADMIN_ONTO_NAMESPACE}{x}") for x in NAMES_OF_BUILTIN_GROUPS]
-    assert builtin_groups == [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
+def test_builtin_group_from_full_iri_raises() -> None:
+    full_iris = [f"{KNORA_ADMIN_ONTO_NAMESPACE}{x}" for x in NAMES_OF_BUILTIN_GROUPS]
+    for full_iri in full_iris:
+        with pytest.raises(InvalidGroupError):
+            BuiltinGroup(prefixed_iri=full_iri)
 
 
 def test_builtin_group_invalid_prefix() -> None:

@@ -69,14 +69,6 @@ class BuiltinGroup(Group):
 
     prefixed_iri: str
 
-    @model_validator(mode="before")
-    @classmethod
-    def _shorten_iri(cls, data: Any) -> Any:
-        if not isinstance(data, dict):
-            return data
-        data["prefixed_iri"] = data["prefixed_iri"].replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
-        return data
-
     @model_validator(mode="after")
     def _check_regex(self) -> Self:
         valid_group_names = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
