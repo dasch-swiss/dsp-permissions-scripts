@@ -20,6 +20,7 @@ from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
+NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 PREFIXED_IRI_REGEX = r"^[\w-]+:[\w-]+$"
 
@@ -34,7 +35,7 @@ def is_prefixed_iri(iri: str) -> bool:
 
 
 def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
-    if full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE):
+    if full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE) and full_iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
         return full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
     elif full_iri.startswith("http://rdfh.ch/"):
         all_groups = dsp_client.get("/admin/groups")["groups"]
