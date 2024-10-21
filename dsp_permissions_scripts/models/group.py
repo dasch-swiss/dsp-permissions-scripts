@@ -25,19 +25,19 @@ KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 PREFIXED_IRI_REGEX = r"^[\w-]+:[\w-]+$"
 
 
-def is_prefixed_iri(iri: str) -> bool:
-    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/")):
+def is_prefixed_group_iri(iri: str) -> bool:
+    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/groups/")):
         return False
     elif re.search(PREFIXED_IRI_REGEX, iri):
         return True
     else:
-        raise InvalidIRIError(f"{iri} is not a valid IRI")
+        raise InvalidIRIError(f"{iri} is not a valid group IRI")
 
 
 def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
     if full_iri.startswith(KNORA_ADMIN_ONTO_NAMESPACE) and full_iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
         return full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
-    elif full_iri.startswith("http://rdfh.ch/"):
+    elif full_iri.startswith("http://rdfh.ch/groups/"):
         all_groups = dsp_client.get("/admin/groups")["groups"]
         if not (group := [grp for grp in all_groups if grp["id"] == full_iri]):
             raise InvalidGroupError(

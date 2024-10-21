@@ -21,7 +21,7 @@ from dsp_permissions_scripts.utils.scope_serialization import create_string_from
 SHORTNAME = "shortname"
 SHORTCODE = "1234"
 CUSTOM_GROUP_NAME = "CustomGroup"
-CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/{SHORTCODE}/abcdef"
+CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/groups/{SHORTCODE}/abcdef"
 
 
 @pytest.fixture
