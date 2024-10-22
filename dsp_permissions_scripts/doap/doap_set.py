@@ -5,7 +5,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
+from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger

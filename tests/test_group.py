@@ -6,7 +6,6 @@ import pytest
 from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.models.group import CREATOR
-from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import NAMES_OF_BUILTIN_GROUPS
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
@@ -15,14 +14,15 @@ from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import CustomGroup
-from dsp_permissions_scripts.models.group import _get_full_iri_from_builtin_group
-from dsp_permissions_scripts.models.group import _get_full_iri_from_custom_group
-from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
-from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
+from dsp_permissions_scripts.models.group_utils import _get_full_iri_from_builtin_group
+from dsp_permissions_scripts.models.group_utils import _get_full_iri_from_custom_group
+from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
+from dsp_permissions_scripts.models.group_utils import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group_utils import sort_groups
 from dsp_permissions_scripts.utils.dsp_client import DspClient
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 
 @pytest.fixture
@@ -89,13 +89,13 @@ def test_get_full_iri_from_prefixed_iri_invalid(iri: str) -> None:
         get_full_iri_from_prefixed_iri(iri, DspClient("foo"))
 
 
-@patch("dsp_permissions_scripts.models.group._get_full_iri_from_builtin_group")
+@patch("dsp_permissions_scripts.models.group_utils._get_full_iri_from_builtin_group")
 def test_get_full_iri_from_prefixed_iri_with_builtin_group(patched_func: Mock) -> None:
     get_full_iri_from_prefixed_iri("knora-admin:ProjectAdmin", DspClient("foo"))
     patched_func.assert_called_once_with("knora-admin", "ProjectAdmin")
 
 
-@patch("dsp_permissions_scripts.models.group._get_full_iri_from_custom_group")
+@patch("dsp_permissions_scripts.models.group_utils._get_full_iri_from_custom_group")
 def test_get_full_iri_from_prefixed_iri_with_custom_group(patched_func: Mock) -> None:
     dsp_client = DspClient("foo")
     get_full_iri_from_prefixed_iri("limc:groupname", dsp_client)

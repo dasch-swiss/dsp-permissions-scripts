@@ -15,9 +15,9 @@ from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import GroupType
-from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
+from dsp_permissions_scripts.models.group_utils import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 

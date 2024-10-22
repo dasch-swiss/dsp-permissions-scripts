@@ -11,13 +11,13 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import InvalidIRIError
-from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_value_oaps
 from dsp_permissions_scripts.oap.oap_set import update_permissions_for_resource
 from dsp_permissions_scripts.oap.oap_set import update_permissions_for_value
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 logger = get_logger(__name__)
 

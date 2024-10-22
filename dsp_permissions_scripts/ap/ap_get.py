@@ -4,8 +4,8 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
+from dsp_permissions_scripts.models.group_utils import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
