@@ -107,13 +107,9 @@ class TestScopeSerialization:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
             assert create_string_from_scope(scope) == perm_string, f"Failed with permission string '{perm_string}'"
 
-    def test_create_admin_route_object_from_scope(self) -> None:
-        get_response = {
-            "groups": [{"id": CUSTOM_GROUP_FULL_IRI, "name": CUSTOM_GROUP_NAME, "project": {"shortname": SHORTNAME}}]
-        }
-        dsp_client_mock = Mock(spec=DspClient, get=Mock(return_value=get_response))
+    def test_create_admin_route_object_from_scope(self, dsp_client: DspClient) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            returned = create_admin_route_object_from_scope(scope, dsp_client_mock)
+            returned = create_admin_route_object_from_scope(scope, dsp_client)
             assert unordered(returned) == admin_route_object, f"Failed with admin group object no. {index}"
 
 
