@@ -122,6 +122,20 @@ def test_custom_group(prefixed_iri: str) -> None:
     assert custom_group.prefixed_iri == prefixed_iri
 
 
+@pytest.mark.parametrize(
+    "group_name",
+    [
+        "knora-api:Value",
+        "knora-base:Resource",
+        "knora-admin:ThingSearcher",
+        f"{KNORA_ADMIN_ONTO_NAMESPACE}ThingSearcher",
+    ],
+)
+def test_custom_group_invalid(group_name: str) -> None:
+    with pytest.raises(InvalidGroupError):
+        CustomGroup(prefixed_iri=group_name)
+
+
 def test_group_builder() -> None:
     pass
 

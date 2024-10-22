@@ -89,8 +89,10 @@ class CustomGroup(Group):
 
     @model_validator(mode="after")
     def _check_regex(self) -> Self:
-        if not re.search(r"^.+:.+$", self.prefixed_iri):
+        if not re.search(PREFIXED_IRI_REGEX, self.prefixed_iri):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
+        if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
+            raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
         return self
 
     def full_iri(self, dsp_client: DspClient, shortcode: str) -> str:
