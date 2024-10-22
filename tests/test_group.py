@@ -1,9 +1,8 @@
 from unittest.mock import Mock
+from unittest.mock import patch
 
 import pytest
 
-import dsp_permissions_scripts
-import dsp_permissions_scripts.models
 from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.models.group import CREATOR
@@ -90,19 +89,17 @@ def test_get_full_iri_from_prefixed_iri_invalid(iri: str) -> None:
         get_full_iri_from_prefixed_iri(iri, DspClient("foo"))
 
 
-def test_get_full_iri_from_prefixed_iri_with_builtin_group() -> None:
-    mock = Mock()
-    dsp_permissions_scripts.models.group._get_full_iri_from_builtin_group = mock
+@patch("dsp_permissions_scripts.models.group._get_full_iri_from_builtin_group")
+def test_get_full_iri_from_prefixed_iri_with_builtin_group(patched_func: Mock) -> None:
     get_full_iri_from_prefixed_iri("knora-admin:ProjectAdmin", DspClient("foo"))
-    mock.assert_called_once_with("knora-admin", "ProjectAdmin")
+    patched_func.assert_called_once_with("knora-admin", "ProjectAdmin")
 
 
-def test_get_full_iri_from_prefixed_iri_with_custom_group() -> None:
-    mock = Mock()
+@patch("dsp_permissions_scripts.models.group._get_full_iri_from_custom_group")
+def test_get_full_iri_from_prefixed_iri_with_custom_group(patched_func: Mock) -> None:
     dsp_client = DspClient("foo")
-    dsp_permissions_scripts.models.group._get_full_iri_from_custom_group = mock
     get_full_iri_from_prefixed_iri("limc:groupname", dsp_client)
-    mock.assert_called_once_with("limc", "groupname", dsp_client)
+    patched_func.assert_called_once_with("limc", "groupname", dsp_client)
 
 
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
