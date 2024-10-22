@@ -10,7 +10,7 @@ from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
-from dsp_permissions_scripts.models.group import group_builder
+from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
@@ -26,11 +26,10 @@ CUSTOM_GROUP_FULL_IRI = f"http://rdfh.ch/groups/{SHORTCODE}/abcdef"
 
 @pytest.fixture
 def dsp_client() -> DspClient:
-    dsp_client = Mock(spec=DspClient)
     get_response = {
         "groups": [{"id": CUSTOM_GROUP_FULL_IRI, "name": CUSTOM_GROUP_NAME, "project": {"shortname": SHORTNAME}}]
     }
-    dsp_client.get = Mock(return_value=get_response)
+    dsp_client = Mock(spec=DspClient, get=Mock(return_value=get_response))
     return dsp_client
 
 
@@ -74,7 +73,7 @@ class TestScopeSerialization:
     scopes = (
         PermissionScope.create(
             CR=[SYSTEM_ADMIN],
-            V=[group_builder(f"{SHORTNAME}:{CUSTOM_GROUP_NAME}")],
+            V=[CustomGroup(prefixed_iri=f"{SHORTNAME}:{CUSTOM_GROUP_NAME}")],
         ),
         PermissionScope.create(
             D=[PROJECT_ADMIN],
@@ -110,7 +109,7 @@ class TestScopeSerialization:
 
     def test_create_admin_route_object_from_scope(self) -> None:
         get_response = {
-            "groups": [{"name": CUSTOM_GROUP_NAME, "id": CUSTOM_GROUP_FULL_IRI, "project": {"shortname": SHORTNAME}}]
+            "groups": [{"id": CUSTOM_GROUP_FULL_IRI, "name": CUSTOM_GROUP_NAME, "project": {"shortname": SHORTNAME}}]
         }
         dsp_client_mock = Mock(spec=DspClient, get=Mock(return_value=get_response))
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):

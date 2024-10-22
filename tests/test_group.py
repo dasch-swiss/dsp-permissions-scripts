@@ -44,8 +44,7 @@ def dsp_client_with_2_groups(new_custom_group_iri: str, old_custom_group_iri: st
             {"id": old_custom_group_iri, "name": "Thing searcher", "project": {"shortname": "anything"}},
         ]
     }
-    dsp_client = Mock(spec=DspClient)
-    dsp_client.get = Mock(return_value=get_response)
+    dsp_client = Mock(spec=DspClient, get=Mock(return_value=get_response))
     return dsp_client
 
 
