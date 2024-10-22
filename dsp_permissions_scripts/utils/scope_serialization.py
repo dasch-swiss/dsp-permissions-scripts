@@ -1,7 +1,7 @@
 from typing import Any
 
 from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
-from dsp_permissions_scripts.models.group import sort_groups
+from dsp_permissions_scripts.models.group_utils import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 

@@ -21,7 +21,7 @@ from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
-from dsp_permissions_scripts.models.group import sort_groups
+from dsp_permissions_scripts.models.group_utils import sort_groups
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 

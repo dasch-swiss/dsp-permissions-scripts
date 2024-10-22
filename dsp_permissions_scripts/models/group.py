@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from typing import Any
-from typing import Iterable
 from typing import Self
 from typing import TypeAlias
 from typing import Union
@@ -21,6 +20,59 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
+
+
+class BuiltinGroup(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    prefixed_iri: str
+
+    @model_validator(mode="after")
+    def _check_regex(self) -> Self:
+        valid_group_names = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
+        prefix, name = self.prefixed_iri.split(":")
+        if prefix != "knora-admin" or name not in valid_group_names:
+            raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
+        return self
+
+
+class CustomGroup(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    prefixed_iri: str
+
+    @model_validator(mode="after")
+    def _check_regex(self) -> Self:
+        if not is_prefixed_group_iri(self.prefixed_iri):
+            raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
+        if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
+            raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
+        return self
+
+
+def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
+    if prefixed_iri.startswith("knora-admin:"):
+        return BuiltinGroup(prefixed_iri=prefixed_iri)
+    elif re.search(PREFIXED_IRI_REGEX, prefixed_iri):
+        return CustomGroup(prefixed_iri=prefixed_iri)
+    else:
+        raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
+
+
+def group_discriminator(v: Any) -> str:
+    if isinstance(v, dict):
+        return "builtin" if v["prefixed_iri"].startswith("knora-admin:") else "custom"
+    else:
+        return "builtin" if getattr(v, "prefixed_iri").startswith("knora-admin:") else "custom"
+
+
+GroupType: TypeAlias = Annotated[
+    Union[
+        Annotated[BuiltinGroup, Tag("builtin")],
+        Annotated[CustomGroup, Tag("custom")],
+    ],
+    Discriminator(group_discriminator),
+]
 
 
 def is_prefixed_group_iri(iri: str) -> bool:
@@ -75,81 +127,6 @@ def _get_full_iri_from_custom_group(prefix: str, groupname: str, dsp_client: Dsp
         )
     full_iri: str = group[0]["id"]
     return full_iri
-
-
-def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
-    if prefixed_iri.startswith("knora-admin:"):
-        return BuiltinGroup(prefixed_iri=prefixed_iri)
-    elif re.search(PREFIXED_IRI_REGEX, prefixed_iri):
-        return CustomGroup(prefixed_iri=prefixed_iri)
-    else:
-        raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
-
-
-class BuiltinGroup(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    prefixed_iri: str
-
-    @model_validator(mode="after")
-    def _check_regex(self) -> Self:
-        valid_group_names = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
-        prefix, name = self.prefixed_iri.split(":")
-        if prefix != "knora-admin" or name not in valid_group_names:
-            raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
-        return self
-
-
-class CustomGroup(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    prefixed_iri: str
-
-    @model_validator(mode="after")
-    def _check_regex(self) -> Self:
-        if not is_prefixed_group_iri(self.prefixed_iri):
-            raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
-        if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
-            raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
-        return self
-
-
-def group_discriminator(v: Any) -> str:
-    if isinstance(v, dict):
-        return "builtin" if v["prefixed_iri"].startswith("knora-admin:") else "custom"
-    else:
-        return "builtin" if getattr(v, "prefixed_iri").startswith("knora-admin:") else "custom"
-
-
-GroupType: TypeAlias = Annotated[
-    Union[
-        Annotated[BuiltinGroup, Tag("builtin")],
-        Annotated[CustomGroup, Tag("custom")],
-    ],
-    Discriminator(group_discriminator),
-]
-
-
-def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
-    alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    relevant_letter = prefixed_iri.split(":")[-1][0]
-    return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
-
-
-def sort_groups(groups_original: Iterable[GroupType]) -> list[GroupType]:
-    """
-    Sorts groups:
-     - First according to their power (most powerful first - only applicable for built-in groups)
-     - Then alphabetically (custom groups)
-    """
-    sort_key = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
-    groups = list(groups_original)
-    groups.sort(
-        key=lambda x: sort_key.index(x)
-        if isinstance(x, BuiltinGroup)
-        else _get_sort_pos_of_custom_group(x.prefixed_iri)
-    )
-    return groups
 
 
 UNKNOWN_USER = BuiltinGroup(prefixed_iri="knora-admin:UnknownUser")
