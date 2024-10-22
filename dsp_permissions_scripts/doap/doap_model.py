@@ -5,7 +5,6 @@ from typing import Self
 from pydantic import BaseModel
 from pydantic import model_validator
 
-from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.models.scope import PermissionScope
 
@@ -38,7 +37,7 @@ class EntityDoapTarget(BaseModel):
 class NewGroupDoapTarget(BaseModel):
     """Represents the target of a DOAP that is yet to be created."""
 
-    group: Group
+    group: GroupType
 
 
 class NewEntityDoapTarget(BaseModel):

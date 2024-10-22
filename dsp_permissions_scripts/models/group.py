@@ -95,10 +95,11 @@ class CustomGroup(Group):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
         return self
 
-    def full_iri(self, dsp_client: DspClient, shortcode: str) -> str:
+    def full_iri(self, dsp_client: DspClient) -> str:
+        shortname, groupname = self.prefixed_iri.split(":")
         all_groups = dsp_client.get("/admin/groups")["groups"]
-        proj_groups = [grp for grp in all_groups if grp["project"]["shortcode"] == shortcode]
-        if not (group := [grp for grp in proj_groups if grp["name"] == self.prefixed_iri.split(":")[-1]]):
+        proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == shortname]
+        if not (group := [grp for grp in proj_groups if grp["name"] == groupname]):
             raise InvalidGroupError(
                 f"{self.prefixed_iri} is not a valid group. "
                 f"Available groups: {', '.join([grp['name'] for grp in proj_groups])}"

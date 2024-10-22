@@ -42,7 +42,7 @@ def create_scope_from_admin_route_object(
 
 
 def create_admin_route_object_from_scope(
-    perm_scope: PermissionScope, dsp_client: DspClient, shortcode: str
+    perm_scope: PermissionScope, dsp_client: DspClient
 ) -> list[dict[str, str | None]]:
     """
     Serializes a permission scope to an object that can be used for requests to /admin/permissions routes.
@@ -52,7 +52,7 @@ def create_admin_route_object_from_scope(
     for perm_letter in perm_scope.model_fields:
         groups = perm_scope.get(perm_letter)
         for group in groups:
-            full_iri = group.full_iri() if isinstance(group, BuiltinGroup) else group.full_iri(dsp_client, shortcode)
+            full_iri = group.full_iri() if isinstance(group, BuiltinGroup) else group.full_iri(dsp_client)
             scope_elements.append(
                 {
                     "additionalInformation": full_iri,

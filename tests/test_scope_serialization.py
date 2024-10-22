@@ -114,7 +114,7 @@ class TestScopeSerialization:
         }
         dsp_client_mock = Mock(spec=DspClient, get=Mock(return_value=get_response))
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
-            returned = create_admin_route_object_from_scope(scope, dsp_client_mock, SHORTCODE)
+            returned = create_admin_route_object_from_scope(scope, dsp_client_mock)
             assert unordered(returned) == admin_route_object, f"Failed with admin group object no. {index}"
 
 

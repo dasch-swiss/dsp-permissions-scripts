@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
@@ -21,7 +21,7 @@ def _delete_doap_on_server(doap: Doap, dsp_client: DspClient) -> None:
 
 def delete_doap_of_group_on_server(
     existing_doaps: list[Doap],
-    forGroup: Group,
+    forGroup: GroupType,
     dsp_client: DspClient,
 ) -> list[Doap]:
     doaps_to_delete = [

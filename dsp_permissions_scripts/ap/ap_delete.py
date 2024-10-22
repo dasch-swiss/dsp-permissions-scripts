@@ -2,7 +2,7 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 
@@ -20,7 +20,7 @@ def _delete_ap_on_server(ap: Ap, dsp_client: DspClient) -> None:
 
 def delete_ap_of_group_on_server(
     existing_aps: list[Ap],
-    forGroup: Group,
+    forGroup: GroupType,
     dsp_client: DspClient,
 ) -> list[Ap]:
     aps_to_delete = [ap for ap in existing_aps if ap.forGroup == forGroup]
