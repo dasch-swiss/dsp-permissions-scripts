@@ -24,7 +24,9 @@ PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
 
 
 def is_prefixed_group_iri(iri: str) -> bool:
-    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/groups/")):
+    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/groups/", "knora-base:", "knora-api:")):
+        return False
+    elif iri.startswith("knora-admin:") and not iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
         return False
     elif re.search(PREFIXED_IRI_REGEX, iri):
         return True
@@ -48,15 +50,28 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
 
 
 def get_full_iri_from_prefixed_iri(prefixed_iri: str, dsp_client: DspClient) -> str:
-    shortname, groupname = prefixed_iri.split(":")
-    if shortname == "knora-admin":
-        return prefixed_iri.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE)
+    if not is_prefixed_group_iri(prefixed_iri):
+        raise InvalidIRIError(f"{prefixed_iri} is not a valid prefixed group IRI")
+    prefix, groupname = prefixed_iri.split(":")
+    if prefix == "knora-admin":
+        return _get_full_iri_from_builtin_group(prefix, groupname)
+    else:
+        return _get_full_iri_from_custom_group(prefix, groupname, dsp_client)
+
+
+def _get_full_iri_from_builtin_group(prefix: str, groupname: str) -> str:
+    if groupname not in NAMES_OF_BUILTIN_GROUPS:
+        raise InvalidGroupError(f"{prefix}:{groupname} is not a valid builtin group")
+    return f"{KNORA_ADMIN_ONTO_NAMESPACE}{groupname}"
+
+
+def _get_full_iri_from_custom_group(prefix: str, groupname: str, dsp_client: DspClient) -> str:
     all_groups = dsp_client.get("/admin/groups")["groups"]
-    proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == shortname]
+    proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == prefix]
     if not (group := [grp for grp in proj_groups if grp["name"] == groupname]):
         raise InvalidGroupError(
-            f"{prefixed_iri} is not a valid group. "
-            f"Available groups: {', '.join([grp['name'] for grp in proj_groups])}"
+            f"{prefix}:{groupname} is not a valid group. "
+            f"Available groups for the project {prefix}: {', '.join([grp['name'] for grp in proj_groups])}"
         )
     full_iri: str = group[0]["id"]
     return full_iri

@@ -2,6 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
+import dsp_permissions_scripts
+import dsp_permissions_scripts.models
 from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.models.group import CREATOR
@@ -14,6 +16,8 @@ from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import CustomGroup
+from dsp_permissions_scripts.models.group import _get_full_iri_from_builtin_group
+from dsp_permissions_scripts.models.group import _get_full_iri_from_custom_group
 from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
@@ -36,12 +40,8 @@ def old_custom_group_iri() -> str:
 def dsp_client_with_2_groups(new_custom_group_iri: str, old_custom_group_iri: str) -> DspClient:
     get_response = {
         "groups": [
-            {"id": new_custom_group_iri, "name": "btt-editors", "project": {"shortname": "btt", "shortcode": "083A"}},
-            {
-                "id": old_custom_group_iri,
-                "name": "Thing searcher",
-                "project": {"shortname": "anything", "shortcode": "0001"},
-            },
+            {"id": new_custom_group_iri, "name": "btt-editors", "project": {"shortname": "btt"}},
+            {"id": old_custom_group_iri, "name": "Thing searcher", "project": {"shortname": "anything"}},
         ]
     }
     dsp_client = Mock(spec=DspClient)
@@ -85,10 +85,46 @@ def test_get_prefixed_iri_from_full_iri_invalid_group(dsp_client_with_2_groups: 
         get_prefixed_iri_from_full_iri("http://rdfh.ch/groups/0123/8-5f7B639_79ef6a043baW", dsp_client_with_2_groups)
 
 
+@pytest.mark.parametrize("iri", ["knora-base:Value", f"{KNORA_ADMIN_ONTO_NAMESPACE}groupname"])
+def test_get_full_iri_from_prefixed_iri_invalid(iri: str) -> None:
+    with pytest.raises(InvalidIRIError):
+        get_full_iri_from_prefixed_iri(iri, DspClient("foo"))
+
+
+def test_get_full_iri_from_prefixed_iri_with_builtin_group() -> None:
+    mock = Mock()
+    dsp_permissions_scripts.models.group._get_full_iri_from_builtin_group = mock
+    get_full_iri_from_prefixed_iri("knora-admin:ProjectAdmin", DspClient("foo"))
+    mock.assert_called_once_with("knora-admin", "ProjectAdmin")
+
+
+def test_get_full_iri_from_prefixed_iri_with_custom_group() -> None:
+    mock = Mock()
+    dsp_client = DspClient("foo")
+    dsp_permissions_scripts.models.group._get_full_iri_from_custom_group = mock
+    get_full_iri_from_prefixed_iri("limc:groupname", dsp_client)
+    mock.assert_called_once_with("limc", "groupname", dsp_client)
+
+
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
-def test_get_full_iri_from_prefixed_iri(group_name: str) -> None:
-    res = get_full_iri_from_prefixed_iri(f"knora-admin:{group_name}", DspClient("foo"))
+def test_get_full_iri_from_builtin_group(group_name: str) -> None:
+    res = _get_full_iri_from_builtin_group("knora-admin", group_name)
     assert res == f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}"
+
+
+def test_get_full_iri_from_builtin_group_invalid() -> None:
+    with pytest.raises(InvalidGroupError):
+        _get_full_iri_from_builtin_group("knora-admin", "NonExistent")
+
+
+def test_get_full_iri_from_custom_group(dsp_client_with_2_groups: DspClient, new_custom_group_iri: str) -> None:
+    res = _get_full_iri_from_custom_group("btt", "btt-editors", dsp_client_with_2_groups)
+    assert res == new_custom_group_iri
+
+
+def test_get_full_iri_from_custom_group_invalid(dsp_client_with_2_groups: DspClient) -> None:
+    with pytest.raises(InvalidGroupError):
+        _get_full_iri_from_custom_group("limc", "limc-editors", dsp_client_with_2_groups)
 
 
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
