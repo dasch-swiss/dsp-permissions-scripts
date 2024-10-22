@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import re
-from abc import ABC
-from abc import abstractmethod
 from typing import Any
 from typing import Iterable
 from typing import Self
@@ -22,7 +20,7 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
-PREFIXED_IRI_REGEX = r"^[\w-]+:[\w-]+$"
+PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
 
 
 def is_prefixed_group_iri(iri: str) -> bool:
@@ -49,6 +47,21 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
         raise InvalidIRIError(f"Could not transform full IRI {full_iri} to prefixed IRI")
 
 
+def get_full_iri_from_prefixed_iri(prefixed_iri: str, dsp_client: DspClient) -> str:
+    shortname, groupname = prefixed_iri.split(":")
+    if shortname == "knora-admin":
+        return prefixed_iri.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE)
+    all_groups = dsp_client.get("/admin/groups")["groups"]
+    proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == shortname]
+    if not (group := [grp for grp in proj_groups if grp["name"] == groupname]):
+        raise InvalidGroupError(
+            f"{prefixed_iri} is not a valid group. "
+            f"Available groups: {', '.join([grp['name'] for grp in proj_groups])}"
+        )
+    full_iri: str = group[0]["id"]
+    return full_iri
+
+
 def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
     if prefixed_iri.startswith("knora-admin:"):
         return BuiltinGroup(prefixed_iri=prefixed_iri)
@@ -58,14 +71,7 @@ def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
         raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
 
 
-class Group(BaseModel, ABC):
-    prefixed_iri: str
-
-    @abstractmethod
-    def full_iri(self, *args: Any) -> str: ...
-
-
-class BuiltinGroup(Group):
+class BuiltinGroup(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
@@ -78,11 +84,8 @@ class BuiltinGroup(Group):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
         return self
 
-    def full_iri(self) -> str:
-        return self.prefixed_iri.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE)
 
-
-class CustomGroup(Group):
+class CustomGroup(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
@@ -94,18 +97,6 @@ class CustomGroup(Group):
         if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
         return self
-
-    def full_iri(self, dsp_client: DspClient) -> str:
-        shortname, groupname = self.prefixed_iri.split(":")
-        all_groups = dsp_client.get("/admin/groups")["groups"]
-        proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == shortname]
-        if not (group := [grp for grp in proj_groups if grp["name"] == groupname]):
-            raise InvalidGroupError(
-                f"{self.prefixed_iri} is not a valid group. "
-                f"Available groups: {', '.join([grp['name'] for grp in proj_groups])}"
-            )
-        full_iri: str = group[0]["id"]
-        return full_iri
 
 
 def group_discriminator(v: Any) -> str:
@@ -130,7 +121,7 @@ def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
-def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
+def sort_groups(groups_original: Iterable[GroupType]) -> list[GroupType]:
     """
     Sorts groups:
      - First according to their power (most powerful first - only applicable for built-in groups)

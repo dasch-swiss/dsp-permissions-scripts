@@ -110,7 +110,7 @@ class TestScopeSerialization:
 
     def test_create_admin_route_object_from_scope(self) -> None:
         get_response = {
-            "groups": [{"name": CUSTOM_GROUP_NAME, "id": CUSTOM_GROUP_FULL_IRI, "project": {"shortcode": SHORTCODE}}]
+            "groups": [{"name": CUSTOM_GROUP_NAME, "id": CUSTOM_GROUP_FULL_IRI, "project": {"shortname": SHORTNAME}}]
         }
         dsp_client_mock = Mock(spec=DspClient, get=Mock(return_value=get_response))
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):

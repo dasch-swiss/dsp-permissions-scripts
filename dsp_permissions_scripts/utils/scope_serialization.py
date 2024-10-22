@@ -1,6 +1,6 @@
 from typing import Any
 
-from dsp_permissions_scripts.models.group import BuiltinGroup
+from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -52,7 +52,7 @@ def create_admin_route_object_from_scope(
     for perm_letter in perm_scope.model_fields:
         groups = perm_scope.get(perm_letter)
         for group in groups:
-            full_iri = group.full_iri() if isinstance(group, BuiltinGroup) else group.full_iri(dsp_client)
+            full_iri = get_full_iri_from_prefixed_iri(group.prefixed_iri, dsp_client)
             scope_elements.append(
                 {
                     "additionalInformation": full_iri,

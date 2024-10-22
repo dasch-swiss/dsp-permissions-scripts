@@ -14,6 +14,7 @@ from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import CustomGroup
+from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
@@ -85,6 +86,12 @@ def test_get_prefixed_iri_from_full_iri_invalid_group(dsp_client_with_2_groups: 
 
 
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
+def test_get_full_iri_from_prefixed_iri(group_name: str) -> None:
+    res = get_full_iri_from_prefixed_iri(f"knora-admin:{group_name}", DspClient("foo"))
+    assert res == f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}"
+
+
+@pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
 def test_builtin_group_from_prefixed_iri(group_name: str) -> None:
     builtin_group = BuiltinGroup(prefixed_iri=f"knora-admin:{group_name}")
     assert builtin_group in [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
@@ -108,12 +115,6 @@ def test_builtin_group_invalid_name() -> None:
     for inv in invalid_names:
         with pytest.raises(InvalidGroupError):
             BuiltinGroup(prefixed_iri=f"knora-admin:{inv}")
-
-
-@pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
-def test_builtin_group_generate_full_iri(group_name: str) -> None:
-    generated_full_iri = BuiltinGroup(prefixed_iri=f"knora-admin:{group_name}").full_iri()
-    assert generated_full_iri == f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}"
 
 
 @pytest.mark.parametrize("prefixed_iri", ["my-shortname:my-custom-group", "ANYTHING:Thing Searcher"])

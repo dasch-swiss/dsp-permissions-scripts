@@ -5,6 +5,7 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.models.errors import ApiError
+from dsp_permissions_scripts.models.group import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -47,8 +48,11 @@ def create_new_doap_on_server(
     dsp_client: DspClient,
 ) -> Doap | None:
     proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    forGroup = None
+    if isinstance(target, NewGroupDoapTarget):
+        forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri, dsp_client)
     payload = {
-        "forGroup": target.group.full_iri() if isinstance(target, NewGroupDoapTarget) else None,
+        "forGroup": forGroup,
         "forProject": proj_iri,
         "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
         "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,
