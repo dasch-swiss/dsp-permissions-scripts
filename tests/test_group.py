@@ -174,31 +174,40 @@ def test_custom_group_invalid(group_name: str) -> None:
 
 
 def test_group_builder() -> None:
-    pass
+    assert group_builder("knora-admin:UnknownUser") == UNKNOWN_USER
+    assert group_builder("limc:groupname") == CustomGroup(prefixed_iri="limc:groupname")
+
+
+@pytest.mark.parametrize(
+    "inv", ["knora-api:foo", "knora-base:foo", "knora-admin:foo", f"{KNORA_ADMIN_ONTO_NAMESPACE}foo"]
+)
+def test_group_builder_invalid(inv: str) -> None:
+    with pytest.raises(InvalidGroupError):
+        group_builder(inv)
 
 
 def test_sort_groups() -> None:
-    groups_original = [
-        group_builder("shortname:C_CustomGroup"),
+    groups_original: list[BuiltinGroup | CustomGroup] = [
+        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
         UNKNOWN_USER,
         PROJECT_ADMIN,
         PROJECT_MEMBER,
         CREATOR,
-        group_builder("shortname:A_CustomGroup"),
-        group_builder("shortname:B_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
         KNOWN_USER,
         SYSTEM_ADMIN,
     ]
-    groups_expected = [
+    groups_expected: list[BuiltinGroup | CustomGroup] = [
         SYSTEM_ADMIN,
         CREATOR,
         PROJECT_ADMIN,
         PROJECT_MEMBER,
         KNOWN_USER,
         UNKNOWN_USER,
-        group_builder("shortname:A_CustomGroup"),
-        group_builder("shortname:B_CustomGroup"),
-        group_builder("shortname:C_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
     ]
     groups_returned = sort_groups(groups_original)
     assert groups_returned == groups_expected
