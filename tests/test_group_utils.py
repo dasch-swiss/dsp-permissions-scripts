@@ -45,6 +45,33 @@ def dsp_client_with_2_groups(new_custom_group_iri: str, old_custom_group_iri: st
     return dsp_client
 
 
+def test_sort_groups() -> None:
+    groups_original: list[BuiltinGroup | CustomGroup] = [
+        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
+        UNKNOWN_USER,
+        PROJECT_ADMIN,
+        PROJECT_MEMBER,
+        CREATOR,
+        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
+        KNOWN_USER,
+        SYSTEM_ADMIN,
+    ]
+    groups_expected: list[BuiltinGroup | CustomGroup] = [
+        SYSTEM_ADMIN,
+        CREATOR,
+        PROJECT_ADMIN,
+        PROJECT_MEMBER,
+        KNOWN_USER,
+        UNKNOWN_USER,
+        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
+        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
+    ]
+    groups_returned = sort_groups(groups_original)
+    assert groups_returned == groups_expected
+
+
 @pytest.mark.parametrize("group_name", NAMES_OF_BUILTIN_GROUPS)
 def test_get_prefixed_iri_from_full_iri_builtin(group_name: str) -> None:
     returned = get_prefixed_iri_from_full_iri(f"{KNORA_ADMIN_ONTO_NAMESPACE}{group_name}", DspClient("foo"))
@@ -112,33 +139,6 @@ def test_get_full_iri_from_custom_group(dsp_client_with_2_groups: DspClient, new
 def test_get_full_iri_from_custom_group_invalid(dsp_client_with_2_groups: DspClient) -> None:
     with pytest.raises(InvalidGroupError):
         _get_full_iri_from_custom_group("limc", "limc-editors", dsp_client_with_2_groups)
-
-
-def test_sort_groups() -> None:
-    groups_original: list[BuiltinGroup | CustomGroup] = [
-        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
-        UNKNOWN_USER,
-        PROJECT_ADMIN,
-        PROJECT_MEMBER,
-        CREATOR,
-        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
-        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
-        KNOWN_USER,
-        SYSTEM_ADMIN,
-    ]
-    groups_expected: list[BuiltinGroup | CustomGroup] = [
-        SYSTEM_ADMIN,
-        CREATOR,
-        PROJECT_ADMIN,
-        PROJECT_MEMBER,
-        KNOWN_USER,
-        UNKNOWN_USER,
-        CustomGroup(prefixed_iri="shortname:A_CustomGroup"),
-        CustomGroup(prefixed_iri="shortname:B_CustomGroup"),
-        CustomGroup(prefixed_iri="shortname:C_CustomGroup"),
-    ]
-    groups_returned = sort_groups(groups_original)
-    assert groups_returned == groups_expected
 
 
 if __name__ == "__main__":
