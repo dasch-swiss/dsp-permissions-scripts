@@ -4,7 +4,6 @@ from unittest.mock import Mock
 import pytest
 
 from dsp_permissions_scripts.models.errors import InvalidIRIError
-from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap import update_iris
@@ -13,6 +12,7 @@ from dsp_permissions_scripts.oap.update_iris import IRIUpdater
 from dsp_permissions_scripts.oap.update_iris import ResourceIRIUpdater
 from dsp_permissions_scripts.oap.update_iris import ValueIRIUpdater
 from dsp_permissions_scripts.utils.dsp_client import DspClient
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 
 @pytest.fixture

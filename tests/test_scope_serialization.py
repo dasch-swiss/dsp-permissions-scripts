@@ -1,9 +1,14 @@
 import pytest
 from pytest_unordered import unordered
 
-from dsp_permissions_scripts.models import group
-from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
+from dsp_permissions_scripts.models.group import CREATOR
+from dsp_permissions_scripts.models.group import KNOWN_USER
+from dsp_permissions_scripts.models.group import PROJECT_ADMIN
+from dsp_permissions_scripts.models.group import PROJECT_MEMBER
+from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
+from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
@@ -12,7 +17,7 @@ from dsp_permissions_scripts.utils.scope_serialization import create_string_from
 
 class TestScopeSerialization:
     perm_strings = (
-        "CR knora-admin:SystemAdmin|V knora-admin:CustomGroup",
+        "CR knora-admin:SystemAdmin",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
         "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
         "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
@@ -20,7 +25,6 @@ class TestScopeSerialization:
     admin_route_objects = (
         [
             {"name": "CR", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}SystemAdmin", "permissionCode": None},
-            {"name": "V", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}CustomGroup", "permissionCode": None},
         ],
         [
             {"name": "D", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin", "permissionCode": None},
@@ -49,22 +53,21 @@ class TestScopeSerialization:
     )
     scopes = (
         PermissionScope.create(
-            CR=[group.SYSTEM_ADMIN],
-            V=[group.Group(val="knora-admin:CustomGroup")],
+            CR=[SYSTEM_ADMIN],
         ),
         PermissionScope.create(
-            D=[group.PROJECT_ADMIN],
-            RV=[group.PROJECT_MEMBER],
+            D=[PROJECT_ADMIN],
+            RV=[PROJECT_MEMBER],
         ),
         PermissionScope.create(
-            M=[group.PROJECT_ADMIN],
-            V=[group.CREATOR, group.KNOWN_USER],
-            RV=[group.UNKNOWN_USER],
+            M=[PROJECT_ADMIN],
+            V=[CREATOR, KNOWN_USER],
+            RV=[UNKNOWN_USER],
         ),
         PermissionScope.create(
-            CR=[group.SYSTEM_ADMIN, group.PROJECT_ADMIN],
-            D=[group.CREATOR],
-            RV=[group.UNKNOWN_USER],
+            CR=[SYSTEM_ADMIN, PROJECT_ADMIN],
+            D=[CREATOR],
+            RV=[UNKNOWN_USER],
         ),
     )
 
