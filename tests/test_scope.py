@@ -37,10 +37,10 @@ class TestScopeCreation:
     def test_valid_scope_from_dict(self) -> None:
         scope = PermissionScope.from_dict(
             {
-                "CR": [group.SYSTEM_ADMIN.val],
-                "D": [group.PROJECT_ADMIN.val],
-                "M": [group.PROJECT_MEMBER.val, group.KNOWN_USER.val],
-                "V": [group.UNKNOWN_USER.val],
+                "CR": [group.SYSTEM_ADMIN.prefixed_iri],
+                "D": [group.PROJECT_ADMIN.prefixed_iri],
+                "M": [group.PROJECT_MEMBER.prefixed_iri, group.KNOWN_USER.prefixed_iri],
+                "V": [group.UNKNOWN_USER.prefixed_iri],
             }
         )
         assert scope.CR == frozenset({group.SYSTEM_ADMIN})
@@ -85,7 +85,7 @@ class TestAdd:
             CR=[group.PROJECT_ADMIN],
             V=[group.UNKNOWN_USER, group.KNOWN_USER],
         )
-        rgx = "Group 'val='knora-admin:ProjectAdmin'' is already in permission 'CR'"
+        rgx = "Group 'prefixed_iri='knora-admin:ProjectAdmin'' is already in permission 'CR'"
         with pytest.raises(ValueError, match=re.escape(rgx)):
             _ = scope.add("CR", group.PROJECT_ADMIN)
 
