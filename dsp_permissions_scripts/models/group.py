@@ -7,8 +7,7 @@ from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
-
-KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 
 class Group(BaseModel):
