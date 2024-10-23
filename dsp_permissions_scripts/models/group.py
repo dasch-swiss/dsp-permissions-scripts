@@ -14,7 +14,6 @@ from pydantic import model_validator
 from typing_extensions import Annotated
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
-from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
@@ -42,7 +41,7 @@ class CustomGroup(BaseModel):
 
     @model_validator(mode="after")
     def _check_regex(self) -> Self:
-        if not is_prefixed_group_iri(self.prefixed_iri):
+        if not is_valid_prefixed_group_iri(self.prefixed_iri):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
         if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a custom group")
@@ -74,7 +73,7 @@ Group: TypeAlias = Annotated[
 ]
 
 
-def is_prefixed_group_iri(iri: str) -> bool:
+def is_valid_prefixed_group_iri(iri: str) -> bool:
     if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/groups/", "knora-base:", "knora-api:")):
         return False
     elif iri.startswith("knora-admin:") and not iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
@@ -82,7 +81,7 @@ def is_prefixed_group_iri(iri: str) -> bool:
     elif re.search(PREFIXED_IRI_REGEX, iri):
         return True
     else:
-        raise InvalidIRIError(f"{iri} is not a valid group IRI")
+        return False
 
 
 UNKNOWN_USER = BuiltinGroup(prefixed_iri="knora-admin:UnknownUser")

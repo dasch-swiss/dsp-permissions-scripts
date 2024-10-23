@@ -11,7 +11,7 @@ from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import Group
-from dsp_permissions_scripts.models.group import is_prefixed_group_iri
+from dsp_permissions_scripts.models.group import is_valid_prefixed_group_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
@@ -54,7 +54,7 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
 
 
 def get_full_iri_from_prefixed_iri(prefixed_iri: str, dsp_client: DspClient) -> str:
-    if not is_prefixed_group_iri(prefixed_iri):
+    if not is_valid_prefixed_group_iri(prefixed_iri):
         raise InvalidIRIError(f"{prefixed_iri} is not a valid prefixed group IRI")
     prefix, groupname = prefixed_iri.split(":")
     if prefix == "knora-admin":
