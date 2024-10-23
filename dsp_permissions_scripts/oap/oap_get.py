@@ -81,7 +81,7 @@ def _enrich_with_value_oaps(
     complete_oaps = copy.deepcopy(res_only_oaps)
     for oap in complete_oaps:
         full_resource = dsp_client.get(f"/v2/resources/{quote_plus(oap.resource_oap.resource_iri)}")
-        oap.value_oaps = get_value_oaps(full_resource, restrict_to_props)
+        oap.value_oaps = get_value_oaps(dsp_client, full_resource, restrict_to_props)
     logger.info(f"Enriched {len(complete_oaps)} OAPs of knora-base resources with their value OAPs.")
     return complete_oaps
 
@@ -108,7 +108,7 @@ def _get_oaps_of_one_kb_resclass(dsp_client: DspClient, project_iri: str, rescla
         # 1 result: the resource is returned as a single dict
         # >1 results: the resource is returned as a list of dicts
         for json_resource in response.get("@graph", [response]):
-            scope = create_scope_from_string(json_resource["knora-api:hasPermissions"])
+            scope = create_scope_from_string(json_resource["knora-api:hasPermissions"], dsp_client)
             res_oap = ResourceOap(scope=scope, resource_iri=json_resource["@id"])
             oaps.append(Oap(resource_oap=res_oap, value_oaps=[]))
         mayHaveMoreResults = bool(response.get("knora-api:mayHaveMoreResults", False))
@@ -170,14 +170,14 @@ def _get_next_page(
     if "@graph" in result:
         oaps = []
         for r in result["@graph"]:
-            if oap := _get_oap_of_one_resource(r, oap_config):
+            if oap := _get_oap_of_one_resource(r, oap_config, dsp_client):
                 oaps.append(oap)
         return True, oaps
 
     # result contains only 1 resource: return it, then stop (there will be no more resources)
     if "@id" in result:
         oaps = []
-        if oap := _get_oap_of_one_resource(result, oap_config):
+        if oap := _get_oap_of_one_resource(result, oap_config, dsp_client):
             oaps.append(oap)
         return False, oaps
 
@@ -185,23 +185,25 @@ def _get_next_page(
     return False, []
 
 
-def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig) -> Oap | None:
+def _get_oap_of_one_resource(r: dict[str, Any], oap_config: OapRetrieveConfig, dsp_client: DspClient) -> Oap | None:
     if oap_config.retrieve_resources != "all" and r["@type"] not in oap_config.specified_res_classes:
         return None
-    scope = create_scope_from_string(r["knora-api:hasPermissions"])
+    scope = create_scope_from_string(r["knora-api:hasPermissions"], dsp_client)
     resource_oap = ResourceOap(scope=scope, resource_iri=r["@id"])
 
     if oap_config.retrieve_values == "none":
         value_oaps = []
     elif oap_config.retrieve_values == "all":
-        value_oaps = get_value_oaps(r)
+        value_oaps = get_value_oaps(dsp_client, r)
     else:
-        value_oaps = get_value_oaps(r, oap_config.specified_props)
+        value_oaps = get_value_oaps(dsp_client, r, oap_config.specified_props)
 
     return Oap(resource_oap=resource_oap, value_oaps=value_oaps)
 
 
-def get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None = None) -> list[ValueOap]:
+def get_value_oaps(
+    dsp_client: DspClient, resource: dict[str, Any], restrict_to_props: list[str] | None = None
+) -> list[ValueOap]:
     res = []
     for k, v in resource.items():
         if k in IGNORE_KEYS:
@@ -218,7 +220,7 @@ def get_value_oaps(resource: dict[str, Any], restrict_to_props: list[str] | None
                     "@type": type_,
                     "knora-api:hasPermissions": perm_str,
                 } if "/values/" in id_:
-                    scope = create_scope_from_string(perm_str)
+                    scope = create_scope_from_string(perm_str, dsp_client)
                     oap = ValueOap(
                         scope=scope, property=k, value_type=type_, value_iri=id_, resource_iri=resource["@id"]
                     )
