@@ -7,6 +7,7 @@ from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.models.scope import RESTRICTED_VIEW
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -33,10 +34,12 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         scope=OPEN,
         dsp_client=dsp_client,
     )
+    restricted_class_name = "RestrictedAccessImage" if shortcode == "084C" else "ImageThing"
+    restricted_class_iri = f"{dsp_client.server}/ontology/{shortcode}/testonto/v2#{restricted_class_name}"
     _ = create_new_doap_on_server(
-        target=NewEntityDoapTarget(resource_class=f"{dsp_client.server}/ontology/084C/church/v2#RestrictedAccessImage"),
+        target=NewEntityDoapTarget(resource_class=restricted_class_iri),
         shortcode=shortcode,
-        scope=OPEN,
+        scope=RESTRICTED_VIEW,
         dsp_client=dsp_client,
     )
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
