@@ -1,7 +1,7 @@
 import pytest
 
 from dsp_permissions_scripts.models import group
-from dsp_permissions_scripts.utils.helpers import sort_groups
+from dsp_permissions_scripts.models.group_utils import sort_groups
 
 
 def test_sort_groups() -> None:
