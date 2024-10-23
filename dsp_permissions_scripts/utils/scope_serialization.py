@@ -1,5 +1,6 @@
 from typing import Any
 
+from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group_utils import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
 
@@ -48,7 +49,7 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
         for group in groups:
             scope_elements.append(
                 {
-                    "additionalInformation": group.full_iri(),
+                    "additionalInformation": get_full_iri_from_prefixed_iri(group.prefixed_iri),
                     "name": perm_letter,
                     "permissionCode": None,
                 }

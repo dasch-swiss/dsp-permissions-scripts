@@ -1,4 +1,5 @@
 PACKAGE_NAME = "dsp-permissions-scripts"
+KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
 
 
 def dereference_prefix(

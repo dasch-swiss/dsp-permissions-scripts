@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from pydantic import BaseModel
@@ -7,8 +8,11 @@ from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import InvalidGroupError
+from dsp_permissions_scripts.models.errors import InvalidIRIError
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
-KNORA_ADMIN_ONTO_NAMESPACE = "http://www.knora.org/ontology/knora-admin#"
+PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
+NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 
 
 class Group(BaseModel):
@@ -30,8 +34,16 @@ class Group(BaseModel):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
         return self
 
-    def full_iri(self) -> str:
-        return self.prefixed_iri.replace("knora-admin:", KNORA_ADMIN_ONTO_NAMESPACE)
+
+def is_prefixed_group_iri(iri: str) -> bool:
+    if iri.startswith((KNORA_ADMIN_ONTO_NAMESPACE, "http://rdfh.ch/groups/", "knora-base:", "knora-api:")):
+        return False
+    elif iri.startswith("knora-admin:") and not iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
+        return False
+    elif re.search(PREFIXED_IRI_REGEX, iri):
+        return True
+    else:
+        raise InvalidIRIError(f"{iri} is not a valid group IRI")
 
 
 UNKNOWN_USER = Group(prefixed_iri="knora-admin:UnknownUser")
