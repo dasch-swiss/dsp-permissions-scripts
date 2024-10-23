@@ -1,3 +1,13 @@
+@api = https://api.rdu.dasch.swiss
+@api_http = http://api.rdu.dasch.swiss
+@projectIriEncoded = http%3A%2F%2Frdfh.ch%2Fprojects%2F9ZFpbCunQeqUBAWGGaDHXA
+@restricted_class = {{api_http}}/ontology/084C/church/v2#RestrictedAccessImage
+@existingProjMemberDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2F8ANkE-zuTtSpcwSgiSeP2w
+@existingProjAdminDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2FySL-_il9SKOY-AHNQkCtgQ
+
+
+###
+
 # @name login
 POST {{api}}/v2/authentication
 Content-Type: application/json
@@ -11,10 +21,6 @@ Content-Type: application/json
 ###
 
 @authToken = {{login.response.body.token}}
-@projectIriEncoded = http%3A%2F%2Frdfh.ch%2Fprojects%2F9ZFpbCunQeqUBAWGGaDHXA
-@restricted_class = {{api_http}}/ontology/084C/church/v2#RestrictedAccessImage
-@existingProjMemberDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2F8ANkE-zuTtSpcwSgiSeP2w
-@existingProjAdminDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2FySL-_il9SKOY-AHNQkCtgQ
 
 
 ###
