@@ -13,7 +13,6 @@ from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
-from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import GroupType
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
@@ -143,10 +142,4 @@ RESTRICTED_VIEW = PermissionScope.create(
 RESTRICTED = PermissionScope.create(
     CR=[PROJECT_ADMIN],
     D=[PROJECT_MEMBER],
-)
-
-LIMC_OPEN = PermissionScope.create(
-    CR=[PROJECT_ADMIN],
-    D=[CustomGroup(prefixed_iri="limc:limc-editors")],
-    V=[PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER],
 )
