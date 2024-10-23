@@ -1,0 +1,100 @@
+# @name login
+POST {{api}}/v2/authentication
+Content-Type: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+
+###
+
+@authToken = {{login.response.body.token}}
+@projectIriEncoded = http%3A%2F%2Frdfh.ch%2Fprojects%2F9ZFpbCunQeqUBAWGGaDHXA
+@restricted_class = {{api_http}}/ontology/084C/church/v2#RestrictedAccessImage
+@existingProjMemberDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2F8ANkE-zuTtSpcwSgiSeP2w
+@existingProjAdminDOAP = http%3A%2F%2Frdfh.ch%2Fpermissions%2F084C%2FySL-_il9SKOY-AHNQkCtgQ
+
+
+###
+
+GET {{api}}/admin/permissions/doap/{{projectIriEncoded}}
+Authorization: Bearer {{authToken}}
+
+
+###
+
+PUT {{api}}/admin/permissions/{{existingProjMemberDOAP}}/hasPermissions
+Content-Type: application/json; charset=UTF-8
+Authorization: Bearer {{authToken}}
+
+{
+    "hasPermissions": [
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+            "name": "CR",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#ProjectMember",
+            "name": "D",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#KnownUser",
+            "name": "V",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#UnknownUser",
+            "name": "V",
+            "permissionCode": null
+        },
+    ]
+}
+
+
+###
+
+PUT {{api}}/admin/permissions/{{existingProjAdminDOAP}}/hasPermissions
+Content-Type: application/json; charset=UTF-8
+Authorization: Bearer {{authToken}}
+
+{
+    "hasPermissions": [
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+            "name": "CR",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#ProjectMember",
+            "name": "D",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#KnownUser",
+            "name": "RV",
+            "permissionCode": null
+        },
+        {
+            "additionalInformation": "http://www.knora.org/ontology/knora-admin#UnknownUser",
+            "name": "RV",
+            "permissionCode": null
+        },
+    ]
+}
+
+
+###
+
+PUT {{api}}/admin/permissions/{{existingProjAdminDOAP}}/hasPermissions
+Content-Type: application/json; charset=UTF-8
+Authorization: Bearer {{authToken}}
+
+{
+    "forResourceClass": "{{restricted_class}}",
+}
+
+###
