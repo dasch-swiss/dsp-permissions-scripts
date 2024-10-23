@@ -139,3 +139,7 @@ def test_sort_groups() -> None:
     ]
     groups_returned = sort_groups(groups_original)
     assert groups_returned == groups_expected
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
