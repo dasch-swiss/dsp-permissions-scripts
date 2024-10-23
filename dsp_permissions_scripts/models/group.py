@@ -65,7 +65,7 @@ def group_discriminator(v: Any) -> str:
         return "builtin" if getattr(v, "prefixed_iri").startswith("knora-admin:") else "custom"
 
 
-GroupType: TypeAlias = Annotated[
+Group: TypeAlias = Annotated[
     Union[
         Annotated[BuiltinGroup, Tag("builtin")],
         Annotated[CustomGroup, Tag("custom")],

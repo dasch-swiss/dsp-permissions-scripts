@@ -13,7 +13,7 @@ from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
-from dsp_permissions_scripts.models.group import GroupType
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
 from dsp_permissions_scripts.models.group_utils import get_prefixed_iri_from_full_iri
@@ -25,19 +25,19 @@ class PermissionScope(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    CR: frozenset[GroupType] = frozenset()
-    D: frozenset[GroupType] = frozenset()
-    M: frozenset[GroupType] = frozenset()
-    V: frozenset[GroupType] = frozenset()
-    RV: frozenset[GroupType] = frozenset()
+    CR: frozenset[Group] = frozenset()
+    D: frozenset[Group] = frozenset()
+    M: frozenset[Group] = frozenset()
+    V: frozenset[Group] = frozenset()
+    RV: frozenset[Group] = frozenset()
 
     @staticmethod
     def create(
-        CR: Iterable[GroupType] = (),
-        D: Iterable[GroupType] = (),
-        M: Iterable[GroupType] = (),
-        V: Iterable[GroupType] = (),
-        RV: Iterable[GroupType] = (),
+        CR: Iterable[Group] = (),
+        D: Iterable[Group] = (),
+        M: Iterable[Group] = (),
+        V: Iterable[Group] = (),
+        RV: Iterable[Group] = (),
     ) -> PermissionScope:
         """Factory method to create a PermissionScope from Iterables instead of frozensets."""
         return PermissionScope(
@@ -87,24 +87,24 @@ class PermissionScope(BaseModel):
             raise EmptyScopeError()
         return self
 
-    def get(self, permission: str) -> frozenset[GroupType]:
+    def get(self, permission: str) -> frozenset[Group]:
         """Retrieve the groups that have the given permission."""
         if permission not in self.model_fields:
             raise ValueError(f"Permission '{permission}' not in {self.model_fields}")
-        res: frozenset[GroupType] = getattr(self, permission)
+        res: frozenset[Group] = getattr(self, permission)
         return res
 
     def add(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: GroupType,
+        group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group added to permission."""
         groups = self.get(permission)
         if group.prefixed_iri in [g.prefixed_iri for g in groups]:
             raise ValueError(f"Group '{group}' is already in permission '{permission}'")
         groups = groups | {group}
-        kwargs: dict[str, frozenset[GroupType]] = {permission: groups}
+        kwargs: dict[str, frozenset[Group]] = {permission: groups}
         for perm in self.model_fields:
             if perm != permission:
                 kwargs[perm] = self.get(perm)
@@ -113,14 +113,14 @@ class PermissionScope(BaseModel):
     def remove(
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
-        group: GroupType,
+        group: Group,
     ) -> PermissionScope:
         """Return a copy of the PermissionScope instance with group removed from permission."""
         groups = self.get(permission)
         if group.prefixed_iri not in [g.prefixed_iri for g in groups]:
             raise ValueError(f"Group '{group}' is not in permission '{permission}'")
         groups = groups - {group}
-        kwargs: dict[str, frozenset[GroupType]] = {permission: groups}
+        kwargs: dict[str, frozenset[Group]] = {permission: groups}
         for perm in self.model_fields:
             if perm != permission:
                 kwargs[perm] = self.get(perm)

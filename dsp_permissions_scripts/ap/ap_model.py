@@ -2,7 +2,7 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from dsp_permissions_scripts.models.group import GroupType
+from dsp_permissions_scripts.models.group import Group
 
 
 class ApValue(Enum):
@@ -23,7 +23,7 @@ class ApValue(Enum):
 class Ap(BaseModel):
     """Represents an Administrative Permission"""
 
-    forGroup: GroupType
+    forGroup: Group
     forProject: str
     hasPermissions: frozenset[ApValue]
     iri: str

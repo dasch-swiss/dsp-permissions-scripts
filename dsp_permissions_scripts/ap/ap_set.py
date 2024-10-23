@@ -6,7 +6,7 @@ from dsp_permissions_scripts.ap.ap_get import create_ap_from_admin_route_object
 from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
-from dsp_permissions_scripts.models.group import GroupType
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -43,7 +43,7 @@ def apply_updated_scopes_of_aps_on_server(aps: list[Ap], dsp_client: DspClient) 
 
 
 def create_new_ap_on_server(
-    forGroup: GroupType,
+    forGroup: Group,
     shortcode: str,
     hasPermissions: list[ApValue],
     dsp_client: DspClient,

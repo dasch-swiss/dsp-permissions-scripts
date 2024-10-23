@@ -10,13 +10,13 @@ from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
-from dsp_permissions_scripts.models.group import GroupType
+from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.group import is_prefixed_group_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
 
-def sort_groups(groups_original: Iterable[GroupType]) -> list[GroupType]:
+def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
     """
     Sorts groups:
      - First according to their power (most powerful first - only applicable for built-in groups)
