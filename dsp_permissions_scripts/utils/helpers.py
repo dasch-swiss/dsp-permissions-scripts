@@ -45,5 +45,5 @@ def sort_groups(groups_original: Iterable[group.Group]) -> list[group.Group]:
         group.UNKNOWN_USER,
     ]
     groups = list(groups_original)
-    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x.val))
+    groups.sort(key=lambda x: sort_key.index(x) if x in sort_key else _get_sort_pos_of_custom_group(x.prefixed_iri))
     return groups

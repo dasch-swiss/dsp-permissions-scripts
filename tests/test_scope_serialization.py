@@ -50,7 +50,7 @@ class TestScopeSerialization:
     scopes = (
         PermissionScope.create(
             CR=[group.SYSTEM_ADMIN],
-            V=[group.Group(val="knora-admin:CustomGroup")],
+            V=[group.Group(prefixed_iri="knora-admin:CustomGroup")],
         ),
         PermissionScope.create(
             D=[group.PROJECT_ADMIN],
