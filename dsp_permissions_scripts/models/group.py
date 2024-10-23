@@ -21,6 +21,8 @@ NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMem
 
 
 class BuiltinGroup(BaseModel):
+    """Represents a DSP-builtin group, in the form 'knora-admin:ProjectAdmin'"""
+
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
@@ -35,6 +37,8 @@ class BuiltinGroup(BaseModel):
 
 
 class CustomGroup(BaseModel):
+    """Represents a custom group, in the form 'project-shortname:groupname'"""
+
     model_config = ConfigDict(frozen=True)
 
     prefixed_iri: str
@@ -49,6 +53,15 @@ class CustomGroup(BaseModel):
 
 
 def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
+    """
+    Accepts a prefixed IRI, and and converts it to a BuiltinGroup or CustomGroup.
+
+    Args:
+        prefixed_iri: string in the form 'knora-admin:ProjectAdmin' or 'project-shortname:groupname'
+
+    Raises:
+        InvalidGroupError: if the input is neither a valid builtin group nor a valid custom group
+    """
     if prefixed_iri.startswith("knora-admin:"):
         return BuiltinGroup(prefixed_iri=prefixed_iri)
     elif re.search(PREFIXED_IRI_REGEX, prefixed_iri):
@@ -57,7 +70,11 @@ def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
         raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
 
 
-def group_discriminator(v: Any) -> str:
+def _group_discriminator(v: Any) -> str:
+    """
+    This is only for typing purposes,
+    see https://docs.pydantic.dev/latest/concepts/unions/#discriminated-unions-with-callable-discriminator
+    """
     if isinstance(v, dict):
         return "builtin" if v["prefixed_iri"].startswith("knora-admin:") else "custom"
     else:
@@ -69,7 +86,7 @@ Group: TypeAlias = Annotated[
         Annotated[BuiltinGroup, Tag("builtin")],
         Annotated[CustomGroup, Tag("custom")],
     ],
-    Discriminator(group_discriminator),
+    Discriminator(_group_discriminator),
 ]
 
 
