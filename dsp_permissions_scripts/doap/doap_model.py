@@ -43,11 +43,15 @@ class NewGroupDoapTarget(BaseModel):
 class NewEntityDoapTarget(BaseModel):
     """Represents the target of a DOAP that is yet to be created."""
 
-    resource_class: str | None = None
-    property: str | None = None
+    resclass_name: str | None = None
+    property_name: str | None = None
 
     @model_validator(mode="after")
     def _validate(self) -> Self:
-        if self.resource_class is None and self.property is None:
+        if self.resclass_name is None and self.property_name is None:
             raise ValueError("At least one of resource_class or property must be set")
+        if self.resclass_name and any([x in self.resclass_name for x in ["#", "/", "knora.org", "dasch.swiss"]]):
+            raise ValueError(f"The resource class name must not be a full IRI, but you provided {self.resclass_name}")
+        if self.property_name and any([x in self.property_name for x in ["#", "/", "knora.org", "dasch.swiss"]]):
+            raise ValueError(f"The property name must not be a full IRI, but you provided {self.property_name}")
         return self

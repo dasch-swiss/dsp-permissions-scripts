@@ -51,11 +51,17 @@ def create_new_doap_on_server(
     forGroup = None
     if isinstance(target, NewGroupDoapTarget):
         forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri)
+    forResourceClass = None
+    if isinstance(target, NewEntityDoapTarget) and target.resclass_name:
+        forResourceClass = _get_internal_iri_from_name(target.resclass_name, dsp_client)
+    forProperty = None
+    if isinstance(target, NewEntityDoapTarget) and target.property_name:
+        forProperty = _get_internal_iri_from_name(target.property_name, dsp_client)
     payload = {
         "forGroup": forGroup,
         "forProject": proj_iri,
-        "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
-        "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,
+        "forProperty": forProperty,
+        "forResourceClass": forResourceClass,
         "hasPermissions": create_admin_route_object_from_scope(scope),
     }
     try:
@@ -65,3 +71,7 @@ def create_new_doap_on_server(
     except ApiError:
         logger.error(f"Could not create new DOAP for target {target}")
         return None
+
+
+def _get_internal_iri_from_name(name: str, dsp_client: DspClient) -> str:
+    iri = f"http://www.knora.org/ontology/{dsp_client.shortcode}/{ontoname}#{name}"
