@@ -34,7 +34,7 @@ def create_new_ap_response() -> dict[str, Any]:
 
 
 def test_create_new_ap_on_server(create_new_ap_request: dict[str, Any], create_new_ap_response: dict[str, Any]) -> None:
-    ap_set.get_project_iri_and_onto_iris_by_shortcode = Mock(  # type: ignore[attr-defined]
+    ap_set.get_proj_iri_and_onto_iris_by_shortcode = Mock(  # type: ignore[attr-defined]
         return_value=("http://rdfh.ch/projects/QykAkmHJTPS7ervbGynSHw", None)
     )
     ap_set.create_ap_from_admin_route_object = Mock()  # type: ignore[attr-defined]

@@ -10,7 +10,7 @@ from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
+from dsp_permissions_scripts.utils.project import get_proj_iri_and_onto_iris_by_shortcode
 
 logger = get_logger(__name__)
 
@@ -48,7 +48,7 @@ def create_new_ap_on_server(
     hasPermissions: list[ApValue],
     dsp_client: DspClient,
 ) -> Ap | None:
-    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    proj_iri, _ = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
         "forGroup": get_full_iri_from_prefixed_iri(forGroup.prefixed_iri, dsp_client),
         "forProject": proj_iri,

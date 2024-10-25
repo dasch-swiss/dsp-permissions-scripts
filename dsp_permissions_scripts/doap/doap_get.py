@@ -9,7 +9,7 @@ from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.group_utils import get_prefixed_iri_from_full_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
+from dsp_permissions_scripts.utils.project import get_proj_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_admin_route_object
 
 logger = get_logger(__name__)
@@ -53,7 +53,7 @@ def get_doaps_of_project(shortcode: str, dsp_client: DspClient) -> list[Doap]:
     By default, all DOAPs are returned, regardless of their target (target=all).
     """
     logger.info("****** Retrieving all DOAPs... ******")
-    project_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    project_iri, _ = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     doaps = _get_all_doaps_of_project(project_iri, dsp_client)
     msg = f"Retrieved {len(doaps)} DOAPs"
     logger.info(msg)
