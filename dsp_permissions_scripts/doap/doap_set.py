@@ -9,7 +9,7 @@ from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixe
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
+from dsp_permissions_scripts.utils.project import get_proj_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_admin_route_object_from_scope
 
 logger = get_logger(__name__)
@@ -47,7 +47,7 @@ def create_new_doap_on_server(
     scope: PermissionScope,
     dsp_client: DspClient,
 ) -> Doap | None:
-    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    proj_iri, _ = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     forGroup = None
     if isinstance(target, NewGroupDoapTarget):
         forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri)

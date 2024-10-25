@@ -87,9 +87,7 @@ def response_for_resclass() -> dict[str, Any]:
 
 
 @patch("dsp_permissions_scripts.doap.doap_set.create_doap_from_admin_route_response")
-@patch(
-    "dsp_permissions_scripts.doap.doap_set.get_project_iri_and_onto_iris_by_shortcode", return_value=(PROJ_IRI, None)
-)
+@patch("dsp_permissions_scripts.doap.doap_set.get_proj_iri_and_onto_iris_by_shortcode", return_value=(PROJ_IRI, None))
 def test_create_doap_for_group(
     get_project_iri_and_onto_iris_by_shortcode: Mock,  # noqa: ARG001
     create_doap_from_admin_route_response: Mock,
@@ -110,9 +108,7 @@ def test_create_doap_for_group(
 
 
 @patch("dsp_permissions_scripts.doap.doap_set.create_doap_from_admin_route_response")
-@patch(
-    "dsp_permissions_scripts.doap.doap_set.get_project_iri_and_onto_iris_by_shortcode", return_value=(PROJ_IRI, None)
-)
+@patch("dsp_permissions_scripts.doap.doap_set.get_proj_iri_and_onto_iris_by_shortcode", return_value=(PROJ_IRI, None))
 def test_create_doap_for_resclass(
     get_project_iri_and_onto_iris_by_shortcode: Mock,  # noqa: ARG001
     create_doap_from_admin_route_response: Mock,
