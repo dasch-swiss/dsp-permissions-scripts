@@ -12,7 +12,7 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
 from dsp_permissions_scripts.utils.helpers import dereference_prefix
 from dsp_permissions_scripts.utils.project import get_all_resource_class_localnames_of_project
-from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
+from dsp_permissions_scripts.utils.project import get_proj_iri_and_onto_iris_by_shortcode
 from dsp_permissions_scripts.utils.scope_serialization import create_scope_from_string
 
 logger = get_logger(__name__)
@@ -234,7 +234,7 @@ def get_all_oaps_of_project(
     oap_config: OapRetrieveConfig,
 ) -> list[Oap]:
     logger.info("******* Retrieving all OAPs... *******")
-    project_iri, onto_iris = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    project_iri, onto_iris = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     resclass_localnames = get_all_resource_class_localnames_of_project(onto_iris, dsp_client, oap_config)
     all_oaps: list[Oap] = []
     for resclass_localname in resclass_localnames:
