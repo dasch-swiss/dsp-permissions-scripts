@@ -1,20 +1,25 @@
 from typing import Any
 from unittest.mock import Mock
+from unittest.mock import patch
 
 import pytest
 
-from dsp_permissions_scripts.doap import doap_set
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
+SHORTCODE = "0000"
+ONTO_NAME = "limc"
+MY_RESCLASS_NAME = "MyResclass"
+PROJ_IRI = "http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw"
+
 
 @pytest.fixture
-def create_new_doap_request() -> dict[str, Any]:
+def request_for_group() -> dict[str, Any]:
     return {
         "forGroup": "http://www.knora.org/ontology/knora-admin#KnownUser",
-        "forProject": "http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw",
+        "forProject": PROJ_IRI,
         "forProperty": None,
         "forResourceClass": None,
         "hasPermissions": [
@@ -28,11 +33,11 @@ def create_new_doap_request() -> dict[str, Any]:
 
 
 @pytest.fixture
-def create_new_doap_response() -> dict[str, Any]:
+def response_for_group() -> dict[str, Any]:
     return {
         "default_object_access_permission": {
             "iri": "http://rdfh.ch/permissions/4123/grKNPv-tQ7aBYq0mDXyatg",
-            "forProject": "http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw",
+            "forProject": PROJ_IRI,
             "forGroup": "http://www.knora.org/ontology/knora-admin#KnownUser",
             "hasPermissions": [
                 {
@@ -45,22 +50,22 @@ def create_new_doap_response() -> dict[str, Any]:
     }
 
 
-def test_create_new_doap_on_server(
-    create_new_doap_request: dict[str, Any], create_new_doap_response: dict[str, Any]
+@patch("dsp_permissions_scripts.doap.doap_set.create_doap_from_admin_route_response")
+@patch("dsp_permissions_scripts.doap.doap_set.get_proj_iri_and_onto_iris_by_shortcode", return_value=(PROJ_IRI, None))
+def test_create_doap_for_group(
+    get_project_iri_and_onto_iris_by_shortcode: Mock,  # noqa: ARG001
+    create_doap_from_admin_route_response: Mock,
+    request_for_group: dict[str, Any],
+    response_for_group: dict[str, Any],
 ) -> None:
-    doap_set.get_proj_iri_and_onto_iris_by_shortcode = Mock(  # type: ignore[attr-defined]
-        return_value=("http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw", None)
-    )
-    doap_set.create_doap_from_admin_route_response = Mock()  # type: ignore[attr-defined]
-    dsp_client = Mock()
-    dsp_client.post = Mock(return_value=create_new_doap_response)
+    dsp_client = Mock(post=Mock(return_value=response_for_group))
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.KNOWN_USER),
-        shortcode="0000",
+        shortcode=SHORTCODE,
         scope=PermissionScope.create(V=[group.UNKNOWN_USER]),
         dsp_client=dsp_client,
     )
-    dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=create_new_doap_request)
-    doap_set.create_doap_from_admin_route_response.assert_called_once_with(  # type: ignore[attr-defined]
-        create_new_doap_response["default_object_access_permission"], dsp_client
+    dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=request_for_group)
+    create_doap_from_admin_route_response.assert_called_once_with(
+        response_for_group["default_object_access_permission"], dsp_client
     )
