@@ -34,7 +34,7 @@ def get_all_resource_class_localnames_of_project(
     return all_class_localnames
 
 
-def get_project_iri_and_onto_iris_by_shortcode(shortcode: str, dsp_client: DspClient) -> tuple[str, list[str]]:
+def get_proj_iri_and_onto_iris_by_shortcode(shortcode: str, dsp_client: DspClient) -> tuple[str, list[str]]:
     try:
         response = dsp_client.get(f"/admin/projects/shortcode/{shortcode}")
     except ApiError as err:
