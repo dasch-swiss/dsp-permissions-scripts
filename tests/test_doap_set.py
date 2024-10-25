@@ -48,7 +48,7 @@ def create_new_doap_response() -> dict[str, Any]:
 def test_create_new_doap_on_server(
     create_new_doap_request: dict[str, Any], create_new_doap_response: dict[str, Any]
 ) -> None:
-    doap_set.get_project_iri_and_onto_iris_by_shortcode = Mock(  # type: ignore[attr-defined]
+    doap_set.get_proj_iri_and_onto_iris_by_shortcode = Mock(  # type: ignore[attr-defined]
         return_value=("http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw", None)
     )
     doap_set.create_doap_from_admin_route_response = Mock()  # type: ignore[attr-defined]
