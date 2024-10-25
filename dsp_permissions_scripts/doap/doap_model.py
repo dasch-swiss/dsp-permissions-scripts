@@ -59,6 +59,7 @@ class NewGroupDoapTarget(BaseModel):
 class NewEntityDoapTarget(BaseModel):
     """Represents the target of a DOAP that is yet to be created."""
 
+    onto_name: str
     resclass_name: str | None = None
     property_name: str | None = None
 

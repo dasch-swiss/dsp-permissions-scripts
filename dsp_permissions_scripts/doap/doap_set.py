@@ -53,10 +53,10 @@ def create_new_doap_on_server(
         forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri)
     forResourceClass = None
     if isinstance(target, NewEntityDoapTarget) and target.resclass_name:
-        forResourceClass = _get_internal_iri_from_name(target.resclass_name, dsp_client)
+        forResourceClass = _get_internal_iri_from_name(target.resclass_name, shortcode, target.onto_name)
     forProperty = None
     if isinstance(target, NewEntityDoapTarget) and target.property_name:
-        forProperty = _get_internal_iri_from_name(target.property_name, dsp_client)
+        forProperty = _get_internal_iri_from_name(target.property_name, shortcode, target.onto_name)
     payload = {
         "forGroup": forGroup,
         "forProject": proj_iri,
@@ -73,5 +73,5 @@ def create_new_doap_on_server(
         return None
 
 
-def _get_internal_iri_from_name(name: str, dsp_client: DspClient) -> str:
-    iri = f"http://www.knora.org/ontology/{dsp_client.shortcode}/{ontoname}#{name}"
+def _get_internal_iri_from_name(name: str, proj_shortcode: str, ontoname: str) -> str:
+    return f"http://www.knora.org/ontology/{proj_shortcode}/{ontoname}#{name}"

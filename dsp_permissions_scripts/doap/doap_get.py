@@ -35,7 +35,7 @@ def create_doap_from_admin_route_response(permission: dict[str, Any]) -> Doap:
             target = GroupDoapTarget(project_iri=project_iri, group=Group(prefixed_iri=group))
         case {"forProject": project_iri, **p}:
             target = EntityDoapTarget(
-                project_iri=project_iri, resource_class=p.get("forResourceClass"), property=p.get("forProperty")
+                project_iri=project_iri, resclass_iri=p.get("forResourceClass"), property_iri=p.get("forProperty")
             )
     return Doap(
         target=target,
