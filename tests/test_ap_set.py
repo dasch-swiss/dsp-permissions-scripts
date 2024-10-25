@@ -52,4 +52,6 @@ def test_create_new_ap_on_server(
         dsp_client=dsp_client,
     )
     dsp_client.post.assert_called_once_with("/admin/permissions/ap", data=create_new_ap_request)
-    create_ap_from_admin_route_object.assert_called_once_with(create_new_ap_response["administrative_permission"], dsp_client)
+    create_ap_from_admin_route_object.assert_called_once_with(
+        create_new_ap_response["administrative_permission"], dsp_client
+    )
