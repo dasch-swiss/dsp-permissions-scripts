@@ -1,12 +1,12 @@
 from typing import Any
 from unittest.mock import Mock
+from unittest.mock import patch
 
 import pytest
 
 from dsp_permissions_scripts.models.errors import InvalidIRIError
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap import update_iris
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.oap.update_iris import IRIUpdater
 from dsp_permissions_scripts.oap.update_iris import ResourceIRIUpdater
@@ -94,14 +94,17 @@ def test_factory_with_invalid_iri() -> None:
             IRIUpdater.from_string(inv, dsp_client)
 
 
-def test_ResourceIRIUpdater(res_dict_2_props: dict[str, Any]) -> None:
+@patch("dsp_permissions_scripts.oap.update_iris.update_permissions_for_resource")
+def test_ResourceIRIUpdater(
+    update_permissions_for_resource: Mock,
+    res_dict_2_props: dict[str, Any],
+) -> None:
     dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_props))
-    update_iris.update_permissions_for_resource = Mock()  # type: ignore[attr-defined]
     new_scope = PermissionScope.create(D=[PROJECT_ADMIN])
     res_iri = "http://rdfh.ch/4123/2ETqDXKeRrS5JSd6TxFO5g"
     IRIUpdater.from_string(res_iri, dsp_client).update_iri(new_scope)
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2F2ETqDXKeRrS5JSd6TxFO5g")
-    update_iris.update_permissions_for_resource.assert_called_once_with(  # type: ignore[attr-defined]
+    update_permissions_for_resource.assert_called_once_with(
         resource_iri=res_iri,
         lmd=res_dict_2_props["knora-api:lastModificationDate"],
         resource_type=res_dict_2_props["@type"],
@@ -111,9 +114,12 @@ def test_ResourceIRIUpdater(res_dict_2_props: dict[str, Any]) -> None:
     )
 
 
-def test_ValueIRIUpdater_2_props(res_dict_2_props: dict[str, Any]) -> None:
+@patch("dsp_permissions_scripts.oap.update_iris.update_permissions_for_value")
+def test_ValueIRIUpdater_2_props(
+    update_permissions_for_value: Mock,
+    res_dict_2_props: dict[str, Any],
+) -> None:
     dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_props))
-    update_iris.update_permissions_for_value = Mock()  # type: ignore[attr-defined]
     val_oap = ValueOap(
         scope=PermissionScope.create(D=[PROJECT_ADMIN]),
         property="testonto:hasOtherText",
@@ -123,7 +129,7 @@ def test_ValueIRIUpdater_2_props(res_dict_2_props: dict[str, Any]) -> None:
     )
     IRIUpdater.from_string(val_oap.value_iri, dsp_client).update_iri(val_oap.scope)
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
-    update_iris.update_permissions_for_value.assert_called_once_with(  # type: ignore[attr-defined]
+    update_permissions_for_value.assert_called_once_with(
         value=val_oap,
         resource_type=res_dict_2_props["@type"],
         context=res_dict_2_props["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
@@ -131,9 +137,12 @@ def test_ValueIRIUpdater_2_props(res_dict_2_props: dict[str, Any]) -> None:
     )
 
 
-def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
+@patch("dsp_permissions_scripts.oap.update_iris.update_permissions_for_value")
+def test_ValueIRIUpdater_2_vals(
+    update_permissions_for_value: Mock,
+    res_dict_2_vals: dict[str, Any],
+) -> None:
     dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_vals))
-    update_iris.update_permissions_for_value = Mock()  # type: ignore[attr-defined]
     val_oap = ValueOap(
         scope=PermissionScope.create(D=[PROJECT_ADMIN]),
         property="testonto:hasSimpleText",
@@ -143,7 +152,7 @@ def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
     )
     IRIUpdater.from_string(val_oap.value_iri, dsp_client).update_iri(val_oap.scope)
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
-    update_iris.update_permissions_for_value.assert_called_once_with(  # type: ignore[attr-defined]
+    update_permissions_for_value.assert_called_once_with(
         value=val_oap,
         resource_type=res_dict_2_vals["@type"],
         context=res_dict_2_vals["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
@@ -151,14 +160,18 @@ def test_ValueIRIUpdater_2_vals(res_dict_2_vals: dict[str, Any]) -> None:
     )
 
 
-def test_ValueIRIUpdater_invalid_iri(res_dict_2_vals: dict[str, Any], caplog: pytest.LogCaptureFixture) -> None:
+@patch("dsp_permissions_scripts.oap.update_iris.update_permissions_for_value")
+def test_ValueIRIUpdater_invalid_iri(
+    update_permissions_for_value: Mock,
+    res_dict_2_vals: dict[str, Any],
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     """test what happens if a value IRI is provided that is not part of the current resource"""
     dsp_client = Mock(spec_set=DspClient, get=Mock(return_value=res_dict_2_vals))
-    update_iris.update_permissions_for_value = Mock()  # type: ignore[attr-defined]
     val_iri = "http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw/values/eD0ii5mIS9y18M6fMy1Fkw"
     IRIUpdater.from_string(val_iri, dsp_client).update_iri(PermissionScope.create(D=[PROJECT_ADMIN]))
     dsp_client.get.assert_called_once_with("/v2/resources/http%3A%2F%2Frdfh.ch%2F4123%2FQDdiwk_3Rk--N2dzsSPOdw")
-    update_iris.update_permissions_for_value.assert_not_called()  # type: ignore[attr-defined]
+    update_permissions_for_value.assert_not_called()
     assert len(caplog.records) == 1
     log_msg_expected = f"Could not find value {val_iri} in resource http://rdfh.ch/4123/QDdiwk_3Rk--N2dzsSPOdw"
     assert caplog.records[0].message == log_msg_expected
