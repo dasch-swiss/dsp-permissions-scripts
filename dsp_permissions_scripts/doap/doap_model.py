@@ -6,6 +6,7 @@ from typing import Self
 from pydantic import BaseModel
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
@@ -26,7 +27,8 @@ class GroupDoapTarget(BaseModel):
 class EntityDoapTarget(BaseModel):
     """
     Note that the resclass IRIs and property IRIs are in the environment-agnostic format
-    "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>"
+    "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>" or
+    "http://api.knora.org/ontology/knora-api/v2#<knora_base_class>"
     """
 
     project_iri: str
@@ -41,12 +43,22 @@ class EntityDoapTarget(BaseModel):
 
     @model_validator(mode="after")
     def _validate_iri_format(self) -> Self:
-        rgx = r"http://www\.knora\.org/ontology/[A-Fa-f0-9]{4}/[^/#]+#[^/#]+"
-        iri_format = "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>"
-        if self.resclass_iri and not re.search(rgx, self.resclass_iri):
-            raise ValueError(f"The IRI must be in the format '{iri_format}', but you provided {self.resclass_iri}")
-        if self.property_iri and not re.search(rgx, self.property_iri):
-            raise ValueError(f"The IRI must be in the format '{iri_format}', but you provided {self.property_iri}")
+        regexes = [
+            r"^http://www\.knora\.org/ontology/[A-Fa-f0-9]{4}/[^/#]+#[^/#]+$",
+            r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
+        ]
+        iri_formats = [
+            "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>",
+            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class>",
+        ]
+        if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
+            raise ValueError(
+                f"The IRI must be in one of the formats {iri_formats}, but you provided {self.resclass_iri}"
+            )
+        if self.property_iri and not any(re.search(r, self.property_iri) for r in regexes):
+            raise ValueError(
+                f"The IRI must be in one of the formats {iri_formats}, but you provided {self.property_iri}"
+            )
         return self
 
 
@@ -59,20 +71,27 @@ class NewGroupDoapTarget(BaseModel):
 class NewEntityDoapTarget(BaseModel):
     """Represents the target of a DOAP that is yet to be created."""
 
-    onto_name: str
-    resclass_name: str | None = None
-    property_name: str | None = None
+    prefixed_class: str | None = None
+    prefixed_prop: str | None = None
 
     @model_validator(mode="after")
     def _validate(self) -> Self:
-        if self.resclass_name is None and self.property_name is None:
+        if self.prefixed_class is None and self.prefixed_prop is None:
             raise ValueError("At least one of resource_class or property must be set")
         return self
 
     @model_validator(mode="after")
     def _validate_name_format(self) -> Self:
-        if self.resclass_name and any([x in self.resclass_name for x in ["#", "/", "knora.org", "dasch.swiss"]]):
-            raise ValueError(f"The resource class name must not be a full IRI, but you provided {self.resclass_name}")
-        if self.property_name and any([x in self.property_name for x in ["#", "/", "knora.org", "dasch.swiss"]]):
-            raise ValueError(f"The property name must not be a full IRI, but you provided {self.property_name}")
+        if self.prefixed_class and any([x in self.prefixed_class for x in ["#", "/", "knora.org", "dasch.swiss"]]):
+            raise ValueError(f"The resource class name must not be a full IRI, but you provided {self.prefixed_class}")
+        if self.prefixed_class and not re.search(PREFIXED_IRI_REGEX, self.prefixed_class):
+            raise ValueError(
+                "The resource class name must be in the format 'onto:resclass_name', "
+                f"but you provided {self.prefixed_class}"
+            )
+        if self.prefixed_prop and any([x in self.prefixed_prop for x in ["#", "/", "knora.org", "dasch.swiss"]]):
+            raise ValueError(f"The property name must not be a full IRI, but you provided {self.prefixed_prop}")
+        if self.prefixed_prop and not re.search(PREFIXED_IRI_REGEX, self.prefixed_prop):
+            msg = f"The property name must be in the format 'onto:resclass_name', but you provided {self.prefixed_prop}"
+            raise ValueError(msg)
         return self

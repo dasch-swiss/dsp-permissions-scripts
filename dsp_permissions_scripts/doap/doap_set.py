@@ -52,11 +52,11 @@ def create_new_doap_on_server(
     if isinstance(target, NewGroupDoapTarget):
         forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri)
     forResourceClass = None
-    if isinstance(target, NewEntityDoapTarget) and target.resclass_name:
-        forResourceClass = _get_internal_iri_from_name(target.resclass_name, shortcode, target.onto_name)
+    if isinstance(target, NewEntityDoapTarget) and target.prefixed_class:
+        forResourceClass = _get_internal_iri_from_name(target.prefixed_class, shortcode)
     forProperty = None
-    if isinstance(target, NewEntityDoapTarget) and target.property_name:
-        forProperty = _get_internal_iri_from_name(target.property_name, shortcode, target.onto_name)
+    if isinstance(target, NewEntityDoapTarget) and target.prefixed_prop:
+        forProperty = _get_internal_iri_from_name(target.prefixed_prop, shortcode)
     payload = {
         "forGroup": forGroup,
         "forProject": proj_iri,
@@ -73,5 +73,8 @@ def create_new_doap_on_server(
         return None
 
 
-def _get_internal_iri_from_name(name: str, proj_shortcode: str, ontoname: str) -> str:
-    return f"http://www.knora.org/ontology/{proj_shortcode}/{ontoname}#{name}"
+def _get_internal_iri_from_name(prefixed_name: str, proj_shortcode: str) -> str:
+    onto, name = prefixed_name.split(":")
+    if onto == "knora-api":
+        return f"http://api.knora.org/ontology/knora-api/v2#{name}"
+    return f"http://www.knora.org/ontology/{proj_shortcode}/{onto}#{name}"

@@ -117,7 +117,7 @@ def test_create_doap_for_resclass(
 ) -> None:
     dsp_client = Mock(post=Mock(return_value=response_for_resclass))
     _ = create_new_doap_on_server(
-        target=NewEntityDoapTarget(onto_name=ONTO_NAME, resclass_name=MY_RESCLASS_NAME),
+        target=NewEntityDoapTarget(prefixed_class=f"{ONTO_NAME}:{MY_RESCLASS_NAME}"),
         shortcode=SHORTCODE,
         scope=PermissionScope.create(V=[group.UNKNOWN_USER]),
         dsp_client=dsp_client,
