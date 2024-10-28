@@ -54,7 +54,7 @@ class CustomGroup(BaseModel):
 
 def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
     """
-    Accepts a prefixed IRI, and and converts it to a BuiltinGroup or CustomGroup.
+    Accepts a prefixed IRI, and converts it to a BuiltinGroup or CustomGroup.
 
     Args:
         prefixed_iri: string in the form 'knora-admin:ProjectAdmin' or 'project-shortname:groupname'
