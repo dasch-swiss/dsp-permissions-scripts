@@ -70,18 +70,13 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     for doap in project_doaps:
         _delete_doap_on_server(doap, dsp_client)
         logger.info(f"Deleted DOAP {doap.doap_iri}")
-    _ = create_new_doap_on_server(
-        target=NewGroupDoapTarget(group=PROJECT_ADMIN),
-        shortcode=shortcode,
-        scope=LIMC_OPEN,
-        dsp_client=dsp_client,
-    )
-    _ = create_new_doap_on_server(
-        target=NewGroupDoapTarget(group=group_builder("limc:limc-editors")),
-        shortcode=shortcode,
-        scope=LIMC_OPEN,
-        dsp_client=dsp_client,
-    )
+    for target in [PROJECT_ADMIN, group_builder("limc:limc-editors")]:
+        _ = create_new_doap_on_server(
+            target=NewGroupDoapTarget(group=target),
+            shortcode=shortcode,
+            scope=LIMC_OPEN,
+            dsp_client=dsp_client,
+        )
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
