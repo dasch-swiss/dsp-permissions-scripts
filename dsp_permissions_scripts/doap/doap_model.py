@@ -28,7 +28,7 @@ class EntityDoapTarget(BaseModel):
     """
     Note that the resclass IRIs and property IRIs are in the environment-agnostic format
     "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>" or
-    "http://api.knora.org/ontology/knora-api/v2#<knora_base_class>"
+    "http://www.knora.org/ontology/knora-base#<knora_base_class>"
     """
 
     project_iri: str
@@ -45,11 +45,11 @@ class EntityDoapTarget(BaseModel):
     def _validate_iri_format(self) -> Self:
         regexes = [
             r"^http://www\.knora\.org/ontology/[A-Fa-f0-9]{4}/[^/#]+#[^/#]+$",
-            r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
+            r"^http://www\.knora\.org/ontology/knora-base#[^/#]+$",
         ]
         iri_formats = [
             "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>",
-            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class>",
+            "http://www.knora.org/ontology/knora-base#<knora_base_class>",
         ]
         if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
             raise ValueError(

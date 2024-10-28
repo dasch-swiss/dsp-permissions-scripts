@@ -76,5 +76,5 @@ def create_new_doap_on_server(
 def _get_internal_iri_from_name(prefixed_name: str, proj_shortcode: str) -> str:
     onto, name = prefixed_name.split(":")
     if onto == "knora-api":
-        return f"http://api.knora.org/ontology/knora-api/v2#{name}"
+        return f"http://www.knora.org/ontology/knora-base#{name}"
     return f"http://www.knora.org/ontology/{proj_shortcode}/{onto}#{name}"
