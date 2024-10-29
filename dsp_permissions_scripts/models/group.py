@@ -28,7 +28,7 @@ class BuiltinGroup(BaseModel):
     prefixed_iri: str
 
     @model_validator(mode="after")
-    def _check_regex(self) -> Self:
+    def _validate(self) -> Self:
         valid_group_names = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
         prefix, name = self.prefixed_iri.split(":")
         if prefix != "knora-admin" or name not in valid_group_names:
@@ -44,7 +44,7 @@ class CustomGroup(BaseModel):
     prefixed_iri: str
 
     @model_validator(mode="after")
-    def _check_regex(self) -> Self:
+    def _validate(self) -> Self:
         if not is_valid_prefixed_group_iri(self.prefixed_iri):
             raise InvalidGroupError(f"{self.prefixed_iri} is not a valid group IRI")
         if self.prefixed_iri.startswith(("knora-admin:", "knora-base:", "knora-api:")):
