@@ -68,7 +68,7 @@ class ValueIRIUpdater(IRIUpdater):
     def update_iri(self, new_scope: PermissionScope) -> None:
         res_iri = re.sub(r"/values/[^/]{22}$", "", self.iri)
         res_dict = self._get_res_dict(res_iri)
-        val_oap = next((v for v in get_value_oaps(res_dict) if v.value_iri == self.iri), None)
+        val_oap = next((v for v in get_value_oaps(self.dsp_client, res_dict) if v.value_iri == self.iri), None)
         if not val_oap:
             self.err_msg = f"Could not find value {self.iri} in resource {res_dict['@id']}"
             logger.error(self.err_msg)

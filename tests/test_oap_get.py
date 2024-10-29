@@ -26,6 +26,11 @@ _ENRICH_WITH_VALUE_OAPS = "dsp_permissions_scripts.oap.oap_get._enrich_with_valu
 
 
 @pytest.fixture
+def dsp_client() -> DspClient:
+    return DspClient("api.dasch.swiss", "1234")
+
+
+@pytest.fixture
 def resource() -> dict[str, Any]:
     return {
         "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
@@ -168,7 +173,7 @@ def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/O
 
 
 class Test_get_value_oaps:
-    def test_oap_get_multiple_values_per_prop(self) -> None:
+    def test_oap_get_multiple_values_per_prop(self, dsp_client: DspClient) -> None:
         resource = {
             "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
             "geoarch:hasDescriptionSiteProject": {
@@ -212,10 +217,10 @@ class Test_get_value_oaps:
                 resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
             ),
         ]
-        returned = get_value_oaps(resource)
+        returned = get_value_oaps(dsp_client, resource)
         assert expected == returned
 
-    def test_linkobj_full(self, linkobj: dict[str, Any]) -> None:
+    def test_linkobj_full(self, linkobj: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -239,10 +244,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA",
         )
         expected = [exp_1, exp_2, exp_3]
-        returned = get_value_oaps(linkobj)
+        returned = get_value_oaps(dsp_client, linkobj)
         assert returned == unordered(expected)
 
-    def test_video_segment_full(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_full(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -280,10 +285,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2, exp_3, exp_4, exp_5]
-        returned = get_value_oaps(video_segment)
+        returned = get_value_oaps(dsp_client, video_segment)
         assert returned == unordered(expected)
 
-    def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -293,10 +298,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1]
-        returned = get_value_oaps(video_segment, ["knora-api:relatesToValue"])
+        returned = get_value_oaps(dsp_client, video_segment, ["knora-api:relatesToValue"])
         assert returned == unordered(expected)
 
-    def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -313,11 +318,11 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2]
-        returned = get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
+        returned = get_value_oaps(dsp_client, video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
         assert returned == unordered(expected)
 
 
-def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
     expected_res_oap = ResourceOap(
         scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
@@ -338,22 +343,22 @@ def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap_1, expected_val_oap_2])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
-def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="none")
     expected_res_oap = ResourceOap(
         scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
-def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(
         retrieve_resources="specified_res_classes",
         specified_res_classes=["my-data-model:ImageThing"],
@@ -372,7 +377,7 @@ def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, An
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
