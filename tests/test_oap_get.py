@@ -433,7 +433,7 @@ class Test_get_oaps_of_one_kb_resclass:
 class Test_get_oaps_of_kb_resclasses:
     def test_get_oaps_of_kb_resclasses_all_resclasses_all_values(
         self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
-    ) -> None:
+    ) -> None:  # sourcery skip: class-extract-method
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="all",

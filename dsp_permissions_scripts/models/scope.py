@@ -52,7 +52,7 @@ class PermissionScope(BaseModel):
     def from_dict(d: dict[str, list[str]], dsp_client: DspClient) -> PermissionScope:
         purged_kwargs = PermissionScope._remove_duplicates_from_kwargs(d)
         purged_kwargs = {
-            k: [get_prefixed_iri_from_full_iri(v, dsp_client) if not is_valid_prefixed_group_iri(v) else v for v in vs]
+            k: [v if is_valid_prefixed_group_iri(v) else get_prefixed_iri_from_full_iri(v, dsp_client) for v in vs]
             for k, vs in purged_kwargs.items()
         }
         return PermissionScope.model_validate({k: [group_builder(v) for v in vs] for k, vs in purged_kwargs.items()})
@@ -83,7 +83,7 @@ class PermissionScope(BaseModel):
 
     @model_validator(mode="after")
     def check_scope_not_empty(self) -> PermissionScope:
-        if not any([len(self.get(field)) > 0 for field in self.model_fields]):
+        if not any(self.get(field) for field in self.model_fields):
             raise EmptyScopeError()
         return self
 
@@ -98,7 +98,7 @@ class PermissionScope(BaseModel):
         self,
         permission: Literal["CR", "D", "M", "V", "RV"],
         group: Group,
-    ) -> PermissionScope:
+    ) -> PermissionScope:  # sourcery skip: class-extract-method
         """Return a copy of the PermissionScope instance with group added to permission."""
         groups = self.get(permission)
         if group.prefixed_iri in [g.prefixed_iri for g in groups]:
