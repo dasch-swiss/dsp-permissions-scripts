@@ -1,23 +1,17 @@
-import copy
-
 from dsp_permissions_scripts.ap.ap_delete import delete_ap_of_group_on_server
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
-from dsp_permissions_scripts.doap.doap_delete import delete_doap_of_group_on_server
+from dsp_permissions_scripts.doap.doap_delete import _delete_doap_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
-from dsp_permissions_scripts.doap.doap_model import Doap
-from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
-from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models.group import KNOWN_USER
 from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
-from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import group_builder
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -28,21 +22,11 @@ from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 
 LIMC_OPEN = PermissionScope.create(
     CR=[PROJECT_ADMIN],
-    D=[CustomGroup(prefixed_iri="limc:limc-editors")],
+    D=[group_builder("limc:limc-editors")],
     V=[PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER],
 )
 
 logger = get_logger(__name__)
-
-
-def modify_doaps(doaps: list[Doap]) -> list[Doap]:
-    """Adapt this sample to your needs."""
-    modified_doaps = []
-    for doap in copy.deepcopy(doaps):
-        if isinstance(doap.target, GroupDoapTarget) and doap.target.group == PROJECT_ADMIN:
-            doap.scope = LIMC_OPEN
-            modified_doaps.append(doap)
-    return modified_doaps
 
 
 def update_aps(shortcode: str, dsp_client: DspClient) -> None:
@@ -83,22 +67,16 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         server=dsp_client.server,
     )
-    remaining_doaps = delete_doap_of_group_on_server(
-        existing_doaps=project_doaps,
-        forGroup=PROJECT_MEMBER,
-        dsp_client=dsp_client,
-    )
-    _ = create_new_doap_on_server(
-        target=NewGroupDoapTarget(group=group_builder("limc:limc-editors")),
-        shortcode=shortcode,
-        scope=LIMC_OPEN,
-        dsp_client=dsp_client,
-    )
-    project_doaps_modified = modify_doaps(doaps=remaining_doaps)
-    if not project_doaps_modified:
-        logger.info("There are no DOAPs to update.")
-        return
-    apply_updated_scopes_of_doaps_on_server(project_doaps_modified, dsp_client)
+    for doap in project_doaps:
+        _delete_doap_on_server(doap, dsp_client)
+        logger.info(f"Deleted DOAP {doap.doap_iri}")
+    for target in [PROJECT_ADMIN, group_builder("limc:limc-editors")]:
+        _ = create_new_doap_on_server(
+            target=NewGroupDoapTarget(group=target),
+            shortcode=shortcode,
+            scope=LIMC_OPEN,
+            dsp_client=dsp_client,
+        )
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps_updated,
