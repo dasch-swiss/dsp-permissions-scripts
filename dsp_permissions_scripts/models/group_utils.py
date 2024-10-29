@@ -43,7 +43,7 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
         return full_iri.replace(KNORA_ADMIN_ONTO_NAMESPACE, "knora-admin:")
     elif full_iri.startswith("http://rdfh.ch/groups/"):
         all_groups = dsp_client.get("/admin/groups")["groups"]
-        if not (group := [grp for grp in all_groups if grp["id"] == full_iri]):
+        if not (group := [grp for grp in all_groups if grp["id"].casefold() == full_iri.casefold()]):
             raise InvalidGroupError(
                 f"{full_iri} is not a valid full IRI of a group. "
                 f"Available group IRIs: {', '.join([grp['id'] for grp in all_groups])}"
