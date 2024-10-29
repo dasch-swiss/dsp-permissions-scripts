@@ -71,7 +71,7 @@ def _get_full_iri_from_builtin_group(prefix: str, groupname: str) -> str:
 
 def _get_full_iri_from_custom_group(prefix: str, groupname: str, dsp_client: DspClient) -> str:
     all_groups = dsp_client.get("/admin/groups")["groups"]
-    proj_groups = [grp for grp in all_groups if grp["project"]["shortname"] == prefix]
+    proj_groups = [grp for grp in all_groups if grp["project"]["shortname"].casefold() == prefix.casefold()]
     if not (group := [grp for grp in proj_groups if grp["name"] == groupname]):
         raise InvalidGroupError(
             f"{prefix}:{groupname} is not a valid group. "
