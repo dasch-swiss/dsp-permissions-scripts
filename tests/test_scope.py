@@ -14,7 +14,7 @@ def dsp_client() -> DspClient:
 
 
 class TestScopeCreation:
-    def test_valid_scope(self) -> None:
+    def test_valid_scope(self) -> None:  # sourcery skip: class-extract-method
         scope = PermissionScope(
             CR=frozenset({group.SYSTEM_ADMIN}),
             D=frozenset({group.PROJECT_ADMIN}),

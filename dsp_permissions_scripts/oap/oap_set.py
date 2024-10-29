@@ -152,8 +152,7 @@ def apply_updated_oaps_on_server(
     msg = f"Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}..."
     logger.info(f"******* {msg} *******")
 
-    failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
-    if failed_iris:
+    if failed_iris := _launch_thread_pool(oaps, nthreads, dsp_client):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"FAILED_RESOURCES_AND_VALUES_{timestamp}.txt"
         _write_failed_iris_to_file(
