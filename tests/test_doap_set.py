@@ -14,6 +14,8 @@ SHORTCODE = "0000"
 ONTO_NAME = "limc"
 MY_RESCLASS_NAME = "MyResclass"
 PROJ_IRI = "http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw"
+HTTP_HOST = "http://api.dev.dasch.swiss"
+HTTPS_HOST = "https://api.dev.dasch.swiss"
 
 
 @pytest.fixture
@@ -57,7 +59,7 @@ def request_for_resclass() -> dict[str, Any]:
         "forGroup": None,
         "forProject": PROJ_IRI,
         "forProperty": None,
-        "forResourceClass": f"http://www.knora.org/ontology/{SHORTCODE}/{ONTO_NAME}#{MY_RESCLASS_NAME}",
+        "forResourceClass": f"{HTTP_HOST}/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}",
         "hasPermissions": [
             {
                 "additionalInformation": "http://www.knora.org/ontology/knora-admin#UnknownUser",
@@ -74,7 +76,7 @@ def response_for_resclass() -> dict[str, Any]:
         "default_object_access_permission": {
             "iri": "http://rdfh.ch/permissions/4123/grKNPv-tQ7aBYq0mDXyatg",
             "forProject": PROJ_IRI,
-            "forResourceClass": f"http://www.knora.org/ontology/{SHORTCODE}/{ONTO_NAME}#{MY_RESCLASS_NAME}",
+            "forResourceClass": f"{HTTP_HOST}/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}",
             "hasPermissions": [
                 {
                     "name": "V",
@@ -115,7 +117,7 @@ def test_create_doap_for_resclass(
     request_for_resclass: dict[str, Any],
     response_for_resclass: dict[str, Any],
 ) -> None:
-    dsp_client = Mock(post=Mock(return_value=response_for_resclass))
+    dsp_client = Mock(post=Mock(return_value=response_for_resclass), server=HTTPS_HOST)
     _ = create_new_doap_on_server(
         target=NewEntityDoapTarget(prefixed_class=f"{ONTO_NAME}:{MY_RESCLASS_NAME}"),
         shortcode=SHORTCODE,

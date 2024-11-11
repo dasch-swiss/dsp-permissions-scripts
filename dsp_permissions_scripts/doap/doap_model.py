@@ -25,12 +25,6 @@ class GroupDoapTarget(BaseModel):
 
 
 class EntityDoapTarget(BaseModel):
-    """
-    Note that the resclass IRIs and property IRIs are in the environment-agnostic format
-    "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>" or
-    "http://www.knora.org/ontology/knora-base#<knora_base_class>"
-    """
-
     project_iri: str
     resclass_iri: str | None = None
     property_iri: str | None = None
@@ -44,12 +38,13 @@ class EntityDoapTarget(BaseModel):
     @model_validator(mode="after")
     def _validate_iri_format(self) -> Self:
         regexes = [
-            r"^http://www\.knora\.org/ontology/[A-Fa-f0-9]{4}/[^/#]+#[^/#]+$",
-            r"^http://www\.knora\.org/ontology/knora-base#[^/#]+$",
+            r"^http://0.0.0.0:3333/ontology/[A-Fa-f0-9]{4}/[^/#]+/v2#[^/#]+$",
+            r"^http://api\.(.+\.)?dasch\.swiss/ontology/[A-Fa-f0-9]{4}/[^/#]+/v2#[^/#]+$",
+            r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
         ]
         iri_formats = [
-            "http://www.knora.org/ontology/<shortcode>/<ontoname>#<classname_or_property_name>",
-            "http://www.knora.org/ontology/knora-base#<knora_base_class>",
+            "http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
+            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>",
         ]
         if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
             raise ValueError(
