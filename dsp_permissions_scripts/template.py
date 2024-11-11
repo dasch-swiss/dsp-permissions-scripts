@@ -37,10 +37,9 @@ def modify_aps(aps: list[Ap]) -> list[Ap]:
     """Adapt this sample to your needs."""
     modified_aps = []
     for ap in copy.deepcopy(aps):
-        if ap.forGroup == group.PROJECT_ADMIN:
-            if ApValue.ProjectAdminRightsAllPermission not in ap.hasPermissions:
-                ap.add_permission(ApValue.ProjectAdminRightsAllPermission)
-                modified_aps.append(ap)
+        if ap.forGroup == group.PROJECT_ADMIN and ApValue.ProjectAdminRightsAllPermission not in ap.hasPermissions:
+            ap.add_permission(ApValue.ProjectAdminRightsAllPermission)
+            modified_aps.append(ap)
     return modified_aps
 
 

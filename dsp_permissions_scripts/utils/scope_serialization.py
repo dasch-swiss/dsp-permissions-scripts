@@ -3,6 +3,7 @@ from typing import Any
 from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.models.group_utils import sort_groups
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.dsp_client import DspClient
 
 
 def create_string_from_scope(perm_scope: PermissionScope) -> str:
@@ -15,7 +16,7 @@ def create_string_from_scope(perm_scope: PermissionScope) -> str:
     return "|".join(strs)
 
 
-def create_scope_from_string(permission_string: str) -> PermissionScope:
+def create_scope_from_string(permission_string: str, dsp_client: DspClient) -> PermissionScope:
     """Deserializes a permission string as used by /v2 routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     scopes = permission_string.split("|")
@@ -23,10 +24,12 @@ def create_scope_from_string(permission_string: str) -> PermissionScope:
         perm_letter, groups_as_str = scope.split(" ")
         groups = groups_as_str.split(",")
         kwargs[perm_letter] = groups
-    return PermissionScope.from_dict(kwargs)
+    return PermissionScope.from_dict(kwargs, dsp_client)
 
 
-def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]]) -> PermissionScope:
+def create_scope_from_admin_route_object(
+    admin_route_object: list[dict[str, Any]], dsp_client: DspClient
+) -> PermissionScope:
     """Deserializes an object returned by /admin/permissions routes to a PermissionScope object."""
     kwargs: dict[str, list[str]] = {}
     for obj in admin_route_object:
@@ -35,10 +38,12 @@ def create_scope_from_admin_route_object(admin_route_object: list[dict[str, Any]
             kwargs[attr_name].append(obj["additionalInformation"])
         else:
             kwargs[attr_name] = [obj["additionalInformation"]]
-    return PermissionScope.from_dict(kwargs)
+    return PermissionScope.from_dict(kwargs, dsp_client)
 
 
-def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[dict[str, str | None]]:
+def create_admin_route_object_from_scope(
+    perm_scope: PermissionScope, dsp_client: DspClient
+) -> list[dict[str, str | None]]:
     """
     Serializes a permission scope to an object that can be used for requests to /admin/permissions routes.
     Note: This route doesn't accept relative IRIs.
@@ -47,9 +52,10 @@ def create_admin_route_object_from_scope(perm_scope: PermissionScope) -> list[di
     for perm_letter in perm_scope.model_fields:
         groups = perm_scope.get(perm_letter)
         for group in groups:
+            full_iri = get_full_iri_from_prefixed_iri(group.prefixed_iri, dsp_client)
             scope_elements.append(
                 {
-                    "additionalInformation": get_full_iri_from_prefixed_iri(group.prefixed_iri),
+                    "additionalInformation": full_iri,
                     "name": perm_letter,
                     "permissionCode": None,
                 }

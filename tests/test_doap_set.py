@@ -103,7 +103,7 @@ def test_create_doap_for_group(
     )
     dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=request_for_group)
     create_doap_from_admin_route_response.assert_called_once_with(
-        response_for_group["default_object_access_permission"]
+        response_for_group["default_object_access_permission"], dsp_client
     )
 
 

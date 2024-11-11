@@ -133,7 +133,7 @@ class DspClient:
         self,
         route: str,
         headers: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, Any]:  # sourcery skip: class-extract-method
         """
         Make an HTTP GET request to the server to which this connection has been established.
 
@@ -257,8 +257,7 @@ class DspClient:
             return None
 
         already = "dsp.errors.BadRequestException: The submitted permissions are the same as the current ones"
-        should_break = response.status_code == 400 and response.text and already in response.text
-        if should_break:
+        if response.status_code == 400 and response.text and already in response.text:
             raise PermissionsAlreadyUpToDate()
 
         raise ApiError("Permanently unable to execute the network action", response.text, response.status_code)
@@ -296,7 +295,7 @@ class DspClient:
             data["Set-Cookie"] = self._mask(data["Set-Cookie"])
         if "Authorization" in data:
             if match := re.search(r"^Bearer (.+)", data["Authorization"]):
-                data["Authorization"] = f"Bearer {self._mask(match.group(1))}"
+                data["Authorization"] = f"Bearer {self._mask(match[1])}"
         if "password" in data:
             data["password"] = "*" * len(data["password"])
         return data

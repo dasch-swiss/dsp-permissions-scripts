@@ -5,10 +5,16 @@ import pytest
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.errors import EmptyScopeError
 from dsp_permissions_scripts.models.scope import PermissionScope
+from dsp_permissions_scripts.utils.dsp_client import DspClient
+
+
+@pytest.fixture
+def dsp_client() -> DspClient:
+    return DspClient("api.dasch.swiss", "1234")
 
 
 class TestScopeCreation:
-    def test_valid_scope(self) -> None:
+    def test_valid_scope(self) -> None:  # sourcery skip: class-extract-method
         scope = PermissionScope(
             CR=frozenset({group.SYSTEM_ADMIN}),
             D=frozenset({group.PROJECT_ADMIN}),
@@ -34,14 +40,15 @@ class TestScopeCreation:
         assert scope.V == frozenset([group.UNKNOWN_USER])
         assert scope.RV == frozenset()
 
-    def test_valid_scope_from_dict(self) -> None:
+    def test_valid_scope_from_dict(self, dsp_client: DspClient) -> None:
         scope = PermissionScope.from_dict(
             {
                 "CR": [group.SYSTEM_ADMIN.prefixed_iri],
                 "D": [group.PROJECT_ADMIN.prefixed_iri],
                 "M": [group.PROJECT_MEMBER.prefixed_iri, group.KNOWN_USER.prefixed_iri],
                 "V": [group.UNKNOWN_USER.prefixed_iri],
-            }
+            },
+            dsp_client,
         )
         assert scope.CR == frozenset({group.SYSTEM_ADMIN})
         assert scope.D == frozenset({group.PROJECT_ADMIN})
@@ -49,13 +56,13 @@ class TestScopeCreation:
         assert scope.V == frozenset({group.UNKNOWN_USER})
         assert scope.RV == frozenset()
 
-    def test_create_empty_scope(self) -> None:
+    def test_create_empty_scope(self, dsp_client: DspClient) -> None:
         with pytest.raises(EmptyScopeError):
             PermissionScope.create()
         with pytest.raises(EmptyScopeError):
             PermissionScope()
         with pytest.raises(EmptyScopeError):
-            PermissionScope.from_dict({})
+            PermissionScope.from_dict({}, dsp_client)
 
     def test_same_group_in_multiple_fields(self) -> None:
         with pytest.raises(ValueError, match=re.escape("must not occur in more than one field")):

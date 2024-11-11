@@ -17,13 +17,13 @@ logger = get_logger(__name__)
 
 def _update_doap_scope_on_server(doap_iri: str, scope: PermissionScope, dsp_client: DspClient) -> Doap:
     iri = quote_plus(doap_iri, safe="")
-    payload = {"hasPermissions": create_admin_route_object_from_scope(scope)}
+    payload = {"hasPermissions": create_admin_route_object_from_scope(scope, dsp_client)}
     try:
         response = dsp_client.put(f"/admin/permissions/{iri}/hasPermissions", data=payload)
     except ApiError as err:
         err.message = f"Could not update scope of DOAP {doap_iri}"
         raise err from None
-    new_doap = create_doap_from_admin_route_response(response["default_object_access_permission"])
+    new_doap = create_doap_from_admin_route_response(response["default_object_access_permission"], dsp_client)
     return new_doap
 
 
@@ -50,7 +50,7 @@ def create_new_doap_on_server(
     proj_iri, _ = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     forGroup = None
     if isinstance(target, NewGroupDoapTarget):
-        forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri)
+        forGroup = get_full_iri_from_prefixed_iri(target.group.prefixed_iri, dsp_client)
     forResourceClass = None
     if isinstance(target, NewEntityDoapTarget) and target.prefixed_class:
         forResourceClass = _get_internal_iri_from_name(target.prefixed_class, shortcode)
@@ -67,7 +67,7 @@ def create_new_doap_on_server(
     try:
         response = dsp_client.post("/admin/permissions/doap", data=payload)
         logger.info(f"Successfully created new DOAP for target {target}")
-        return create_doap_from_admin_route_response(response["default_object_access_permission"])
+        return create_doap_from_admin_route_response(response["default_object_access_permission"], dsp_client)
     except ApiError:
         logger.error(f"Could not create new DOAP for target {target}")
         return None
