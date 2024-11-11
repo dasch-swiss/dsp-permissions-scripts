@@ -62,7 +62,7 @@ def create_new_doap_on_server(
         "forProject": proj_iri,
         "forProperty": forProperty,
         "forResourceClass": forResourceClass,
-        "hasPermissions": create_admin_route_object_from_scope(scope),
+        "hasPermissions": create_admin_route_object_from_scope(scope, dsp_client),
     }
     try:
         response = dsp_client.post("/admin/permissions/doap", data=payload)

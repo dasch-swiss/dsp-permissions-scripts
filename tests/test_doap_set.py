@@ -124,5 +124,5 @@ def test_create_doap_for_resclass(
     )
     dsp_client.post.assert_called_once_with("/admin/permissions/doap", data=request_for_resclass)
     create_doap_from_admin_route_response.assert_called_once_with(
-        response_for_resclass["default_object_access_permission"]
+        response_for_resclass["default_object_access_permission"], dsp_client
     )
