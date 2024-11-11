@@ -6,18 +6,18 @@ from urllib.parse import quote_plus
 
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.errors import PermissionsAlreadyUpToDate
-from dsp_permissions_scripts.models.group import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
+from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 from dsp_permissions_scripts.utils.scope_serialization import create_string_from_scope
 
 logger = get_logger(__name__)
 
 
-def _update_permissions_for_value(
+def update_permissions_for_value(
     value: ValueOap,
     resource_type: str,
     context: dict[str, str],
@@ -44,7 +44,7 @@ def _update_permissions_for_value(
         raise err from None
 
 
-def _update_permissions_for_resource(  # noqa: PLR0913
+def update_permissions_for_resource(  # noqa: PLR0913
     resource_iri: str,
     lmd: str | None,
     resource_type: str,
@@ -86,7 +86,7 @@ def _update_batch(batch: tuple[ModifiedOap, ...], dsp_client: DspClient) -> list
             continue
         if oap.resource_oap:
             try:
-                _update_permissions_for_resource(
+                update_permissions_for_resource(
                     resource_iri=oap.resource_oap.resource_iri,
                     lmd=resource.get("knora-api:lastModificationDate"),
                     resource_type=resource["@type"],
@@ -99,7 +99,7 @@ def _update_batch(batch: tuple[ModifiedOap, ...], dsp_client: DspClient) -> list
                 failed_iris.append(oap.resource_oap.resource_iri)
         for val_oap in oap.value_oaps:
             try:
-                _update_permissions_for_value(
+                update_permissions_for_value(
                     value=val_oap,
                     resource_type=resource["@type"],
                     context=resource["@context"] | {"knora-admin": KNORA_ADMIN_ONTO_NAMESPACE},
@@ -152,8 +152,7 @@ def apply_updated_oaps_on_server(
     msg = f"Updating {res_oap_count} resource OAPs and {value_oap_count} value OAPs on {dsp_client.server}..."
     logger.info(f"******* {msg} *******")
 
-    failed_iris = _launch_thread_pool(oaps, nthreads, dsp_client)
-    if failed_iris:
+    if failed_iris := _launch_thread_pool(oaps, nthreads, dsp_client):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"FAILED_RESOURCES_AND_VALUES_{timestamp}.txt"
         _write_failed_iris_to_file(

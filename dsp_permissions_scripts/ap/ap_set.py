@@ -7,9 +7,10 @@ from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.models.errors import ApiError
 from dsp_permissions_scripts.models.group import Group
+from dsp_permissions_scripts.models.group_utils import get_full_iri_from_prefixed_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
-from dsp_permissions_scripts.utils.project import get_project_iri_and_onto_iris_by_shortcode
+from dsp_permissions_scripts.utils.project import get_proj_iri_and_onto_iris_by_shortcode
 
 logger = get_logger(__name__)
 
@@ -23,7 +24,7 @@ def _update_ap_scope_on_server(ap: Ap, dsp_client: DspClient) -> Ap:
         err.message = f"Could not update scope of Administrative Permission {ap.iri}"
         raise err from None
     ap_updated: dict[str, Any] = response["administrative_permission"]
-    ap_object_updated = create_ap_from_admin_route_object(ap_updated)
+    ap_object_updated = create_ap_from_admin_route_object(ap_updated, dsp_client)
     return ap_object_updated
 
 
@@ -47,9 +48,9 @@ def create_new_ap_on_server(
     hasPermissions: list[ApValue],
     dsp_client: DspClient,
 ) -> Ap | None:
-    proj_iri, _ = get_project_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
+    proj_iri, _ = get_proj_iri_and_onto_iris_by_shortcode(shortcode, dsp_client)
     payload = {
-        "forGroup": forGroup.full_iri(),
+        "forGroup": get_full_iri_from_prefixed_iri(forGroup.prefixed_iri, dsp_client),
         "forProject": proj_iri,
         "hasPermissions": [
             {"additionalInformation": None, "name": ap_val.value, "permissionCode": None} for ap_val in hasPermissions
@@ -57,8 +58,8 @@ def create_new_ap_on_server(
     }
     try:
         response = dsp_client.post("/admin/permissions/ap", data=payload)
-        logger.info(f"Successfully created new AP for group {forGroup.val}")
-        return create_ap_from_admin_route_object(response["administrative_permission"])
+        logger.info(f"Successfully created new AP for group {forGroup.prefixed_iri}")
+        return create_ap_from_admin_route_object(response["administrative_permission"], dsp_client)
     except ApiError:
         logger.error(f"Could not create new AP for group {forGroup}")
         return None

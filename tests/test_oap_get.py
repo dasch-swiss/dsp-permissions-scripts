@@ -1,5 +1,6 @@
 from typing import Any
 from unittest.mock import Mock
+from unittest.mock import patch
 from urllib.parse import quote
 
 import pytest
@@ -7,20 +8,29 @@ from pytest_unordered import unordered
 
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.scope import PermissionScope
-from dsp_permissions_scripts.oap import oap_get
 from dsp_permissions_scripts.oap.oap_get import KB_RESCLASSES
 from dsp_permissions_scripts.oap.oap_get import _get_oap_of_one_resource
 from dsp_permissions_scripts.oap.oap_get import _get_oaps_of_one_kb_resclass
-from dsp_permissions_scripts.oap.oap_get import _get_value_oaps
 from dsp_permissions_scripts.oap.oap_get import get_oaps_of_kb_resclasses
+from dsp_permissions_scripts.oap.oap_get import get_value_oaps
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
 from dsp_permissions_scripts.oap.oap_model import ResourceOap
 from dsp_permissions_scripts.oap.oap_model import ValueOap
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 
+# ruff: noqa: PT019
 
-@pytest.fixture()
+_GET_OAPS_OF_SPECIFIED_KB_RESCLASSES = "dsp_permissions_scripts.oap.oap_get._get_oaps_of_specified_kb_resclasses"
+_ENRICH_WITH_VALUE_OAPS = "dsp_permissions_scripts.oap.oap_get._enrich_with_value_oaps"
+
+
+@pytest.fixture
+def dsp_client() -> DspClient:
+    return DspClient("api.dasch.swiss", "1234")
+
+
+@pytest.fixture
 def resource() -> dict[str, Any]:
     return {
         "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
@@ -39,7 +49,7 @@ def resource() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def gravsearch_1_link_obj() -> dict[str, Any]:
     return {
         "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember",
@@ -48,7 +58,7 @@ def gravsearch_1_link_obj() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
     page_1 = {
         "@graph": [
@@ -82,7 +92,7 @@ def gravsearch_4_link_objs_on_2_pages() -> list[dict[str, Any]]:
     return [page_1, page_2]
 
 
-@pytest.fixture()
+@pytest.fixture
 def video_segment() -> dict[str, Any]:  # https://ark.stage.dasch.swiss/ark:/72163/1/0812/l32ehsHuTfaQAKVTRiuBRAR
     return {
         "knora-api:hasSegmentBounds": {
@@ -126,7 +136,7 @@ def video_segment() -> dict[str, Any]:  # https://ark.stage.dasch.swiss/ark:/721
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/Os_5VvgkSC2saUlSUdcLhA
     return {
         "knora-api:hasPermissions": "CR knora-admin:ProjectAdmin|V knora-admin:KnownUser",
@@ -163,7 +173,7 @@ def linkobj() -> dict[str, Any]:  # https://app.test.dasch.swiss/resource/F18E/O
 
 
 class Test_get_value_oaps:
-    def test_oap_get_multiple_values_per_prop(self) -> None:
+    def test_oap_get_multiple_values_per_prop(self, dsp_client: DspClient) -> None:
         resource = {
             "@id": "http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
             "geoarch:hasDescriptionSiteProject": {
@@ -207,10 +217,10 @@ class Test_get_value_oaps:
                 resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
             ),
         ]
-        returned = _get_value_oaps(resource)
+        returned = get_value_oaps(dsp_client, resource)
         assert expected == returned
 
-    def test_linkobj_full(self, linkobj: dict[str, Any]) -> None:
+    def test_linkobj_full(self, linkobj: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.PROJECT_ADMIN], V=[group.KNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -234,10 +244,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/F18E/Os_5VvgkSC2saUlSUdcLhA",
         )
         expected = [exp_1, exp_2, exp_3]
-        returned = _get_value_oaps(linkobj)
+        returned = get_value_oaps(dsp_client, linkobj)
         assert returned == unordered(expected)
 
-    def test_video_segment_full(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_full(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -275,10 +285,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2, exp_3, exp_4, exp_5]
-        returned = _get_value_oaps(video_segment)
+        returned = get_value_oaps(dsp_client, video_segment)
         assert returned == unordered(expected)
 
-    def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_restrict_to_1_prop(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -288,10 +298,10 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1]
-        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue"])
+        returned = get_value_oaps(dsp_client, video_segment, ["knora-api:relatesToValue"])
         assert returned == unordered(expected)
 
-    def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any]) -> None:
+    def test_video_segment_restrict_to_2_props(self, video_segment: dict[str, Any], dsp_client: DspClient) -> None:
         perm_scope_expected = PermissionScope.create(CR=[group.CREATOR], V=[group.KNOWN_USER, group.UNKNOWN_USER])
         exp_1 = ValueOap(
             scope=perm_scope_expected,
@@ -308,11 +318,11 @@ class Test_get_value_oaps:
             resource_iri="http://rdfh.ch/0812/l32ehsHuTfaQAKVTRiuBRA",
         )
         expected = [exp_1, exp_2]
-        returned = _get_value_oaps(video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
+        returned = get_value_oaps(dsp_client, video_segment, ["knora-api:relatesToValue", "knora-api:hasTitle"])
         assert returned == unordered(expected)
 
 
-def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
     expected_res_oap = ResourceOap(
         scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
@@ -333,22 +343,22 @@ def test_get_oap_of_one_resource_all_classes_all_values(resource: dict[str, Any]
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap_1, expected_val_oap_2])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
-def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_all_classes_no_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="none")
     expected_res_oap = ResourceOap(
         scope=PermissionScope.create(CR=[group.PROJECT_MEMBER], V=[group.UNKNOWN_USER]),
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
-def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any]) -> None:
+def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, Any], dsp_client: DspClient) -> None:
     config = OapRetrieveConfig(
         retrieve_resources="specified_res_classes",
         specified_res_classes=["my-data-model:ImageThing"],
@@ -367,14 +377,13 @@ def test_get_oap_of_one_resource_some_classes_some_values(resource: dict[str, An
         resource_iri="http://rdfh.ch/0838/dBu563hjSN6RmJZp6NU3_Q",
     )
     expected = Oap(resource_oap=expected_res_oap, value_oaps=[expected_val_oap])
-    res = _get_oap_of_one_resource(resource, config)
+    res = _get_oap_of_one_resource(resource, config, dsp_client)
     assert res == expected
 
 
 class Test_get_oaps_of_one_kb_resclass:
     def test_get_oaps_of_one_kb_resclass_0_results(self) -> None:
-        dsp_client = Mock(spec=DspClient)
-        dsp_client.get = Mock(side_effect=[{}])
+        dsp_client = Mock(spec=DspClient, get=Mock(side_effect=[{}]))
         res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
         assert res == []
         assert len(dsp_client.get.call_args_list) == 1
@@ -385,8 +394,7 @@ class Test_get_oaps_of_one_kb_resclass:
         assert quote("OFFSET 0", safe="") in called_route
 
     def test_get_oaps_of_one_kb_resclass_1_result(self, gravsearch_1_link_obj: dict[str, Any]) -> None:
-        dsp_client = Mock(spec=DspClient)
-        dsp_client.get = Mock(side_effect=[gravsearch_1_link_obj])
+        dsp_client = Mock(spec=DspClient, get=Mock(side_effect=[gravsearch_1_link_obj]))
         res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
         expected = Oap(
             resource_oap=ResourceOap(
@@ -401,8 +409,7 @@ class Test_get_oaps_of_one_kb_resclass:
         self,
         gravsearch_4_link_objs_on_2_pages: list[dict[str, Any]],
     ) -> None:
-        dsp_client = Mock(spec=DspClient)
-        dsp_client.get = Mock(side_effect=gravsearch_4_link_objs_on_2_pages)
+        dsp_client = Mock(spec=DspClient, get=Mock(side_effect=gravsearch_4_link_objs_on_2_pages))
         res = _get_oaps_of_one_kb_resclass(dsp_client, "proj_iri", "resclass")
         expected_scope = PermissionScope.create(CR=[group.PROJECT_ADMIN], D=[group.PROJECT_MEMBER])
         expected_res_oaps = [
@@ -421,22 +428,24 @@ class Test_get_oaps_of_one_kb_resclass:
         assert quote("OFFSET 1", safe="") in called_route_2
 
 
+@patch(_GET_OAPS_OF_SPECIFIED_KB_RESCLASSES, side_effect=[["res_only_oap_1", "res_only_oap_2"]])
+@patch(_ENRICH_WITH_VALUE_OAPS, side_effect=[["enriched_oap_1", "enriched_oap_2"]])
 class Test_get_oaps_of_kb_resclasses:
-    def test_get_oaps_of_kb_resclasses_all_resclasses_all_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_all_resclasses_all_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:  # sourcery skip: class-extract-method
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="all",
             retrieve_values="all",
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
-        oap_get._enrich_with_value_oaps.assert_called_once_with(dsp_client, ["res_only_oap_1", "res_only_oap_2"])
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
+        _enrich_with_value_oaps.assert_called_once_with(dsp_client, ["res_only_oap_1", "res_only_oap_2"])
 
-    def test_get_oaps_of_kb_resclasses_all_resclasses_specified_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_all_resclasses_specified_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="all",
@@ -444,26 +453,26 @@ class Test_get_oaps_of_kb_resclasses:
             specified_props=["onto:prop_1", "onto:prop_2"],
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
-        oap_get._enrich_with_value_oaps.assert_called_once_with(
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
+        _enrich_with_value_oaps.assert_called_once_with(
             dsp_client, ["res_only_oap_1", "res_only_oap_2"], ["onto:prop_1", "onto:prop_2"]
         )
 
-    def test_get_oaps_of_kb_resclasses_all_resclasses_no_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_all_resclasses_no_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="all",
             retrieve_values="none",
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
-        oap_get._enrich_with_value_oaps.assert_not_called()
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", KB_RESCLASSES)
+        _enrich_with_value_oaps.assert_not_called()
 
-    def test_get_oaps_of_kb_resclasses_some_resclasses_all_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_some_resclasses_all_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="specified_res_classes",
@@ -471,14 +480,12 @@ class Test_get_oaps_of_kb_resclasses:
             retrieve_values="all",
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(
-            dsp_client, "proj_iri", ["knora-api:Region"]
-        )
-        oap_get._enrich_with_value_oaps.assert_called_once_with(dsp_client, ["res_only_oap_1", "res_only_oap_2"])
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", ["knora-api:Region"])
+        _enrich_with_value_oaps.assert_called_once_with(dsp_client, ["res_only_oap_1", "res_only_oap_2"])
 
-    def test_get_oaps_of_kb_resclasses_some_resclasses_some_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_some_resclasses_some_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="specified_res_classes",
@@ -487,16 +494,14 @@ class Test_get_oaps_of_kb_resclasses:
             specified_props=["onto:prop_1", "onto:prop_2"],
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(
-            dsp_client, "proj_iri", ["knora-api:Region"]
-        )
-        oap_get._enrich_with_value_oaps.assert_called_once_with(
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", ["knora-api:Region"])
+        _enrich_with_value_oaps.assert_called_once_with(
             dsp_client, ["res_only_oap_1", "res_only_oap_2"], ["onto:prop_1", "onto:prop_2"]
         )
 
-    def test_get_oaps_of_kb_resclasses_some_resclasses_no_values(self) -> None:
-        oap_get._get_oaps_of_specified_kb_resclasses = Mock(side_effect=[["res_only_oap_1", "res_only_oap_2"]])
-        oap_get._enrich_with_value_oaps = Mock(side_effect=[["enriched_oap_1", "enriched_oap_2"]])
+    def test_get_oaps_of_kb_resclasses_some_resclasses_no_values(
+        self, _enrich_with_value_oaps: Mock, _get_oaps_of_specified_kb_resclasses: Mock
+    ) -> None:
         dsp_client = Mock(spec=DspClient)
         oap_config = OapRetrieveConfig(
             retrieve_resources="specified_res_classes",
@@ -504,7 +509,5 @@ class Test_get_oaps_of_kb_resclasses:
             retrieve_values="none",
         )
         _ = get_oaps_of_kb_resclasses(dsp_client, "proj_iri", oap_config)
-        oap_get._get_oaps_of_specified_kb_resclasses.assert_called_once_with(
-            dsp_client, "proj_iri", ["knora-api:Region"]
-        )
-        oap_get._enrich_with_value_oaps.assert_not_called()
+        _get_oaps_of_specified_kb_resclasses.assert_called_once_with(dsp_client, "proj_iri", ["knora-api:Region"])
+        _enrich_with_value_oaps.assert_not_called()

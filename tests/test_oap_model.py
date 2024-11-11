@@ -49,7 +49,7 @@ class TestOap:
 
 
 class TestOapRetrieveConfig:
-    def test_all_resources_all_values(self) -> None:
+    def test_all_resources_all_values(self) -> None:  # sourcery skip: class-extract-method
         conf = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
         assert conf.retrieve_resources == "all"
         assert conf.specified_res_classes == []
