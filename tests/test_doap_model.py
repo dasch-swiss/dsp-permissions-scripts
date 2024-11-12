@@ -1,6 +1,7 @@
 import pytest
 
 from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
+from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
 
 SHORTCODE = "0000"
 ONTO_NAME = "limc"
@@ -60,3 +61,38 @@ class TestEntityDoapTarget:
             _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=inv)
         with pytest.raises(ValueError, match="IRI must be in one of the formats"):
             _ = EntityDoapTarget(project_iri=PROJ_IRI, property_iri=inv)
+
+
+class TestNewEntityDoapTarget:
+    def test_not_empty(self) -> None:
+        with pytest.raises(ValueError, match="At least one of resource_class or property must be set"):
+            NewEntityDoapTarget()
+
+    @pytest.mark.parametrize(
+        ("resclass", "prop"), [("My-Onto:My-Class", "my_onto:prop_name"), ("onto:class", None), (None, "onto-1:prop-1")]
+    )
+    def test_valid(self, resclass: str | None, prop: str | None) -> None:
+        _ = NewEntityDoapTarget(prefixed_class=resclass, prefixed_prop=prop)
+
+    @pytest.mark.parametrize(
+        "inv",
+        [
+            RESCLASS_LOCAL,
+            PROP_LOCAL,
+            RESCLASS_REMOTE,
+            PROP_REMOTE,
+            RESCLASS_KNORA_BASE,
+            PROP_KNORA_BASE,
+            "http://rdfh.ch/4123/CPm__dQhRoKPzvjzrPuWxg/values/eD0ii5mIS9y18M6fMy1Fk",
+            "http://rdfh.ch/4123/CPm__dQhRoKPzvjzrPuWxg",
+            MY_RESCLASS_NAME,
+            MY_PROP_NAME,
+            PROJ_IRI,
+            HTTP_HOST,
+        ],
+    )
+    def test_invalid(self, inv: str) -> None:
+        with pytest.raises(ValueError):  # noqa: PT011
+            _ = NewEntityDoapTarget(prefixed_class=inv)
+        with pytest.raises(ValueError):  # noqa: PT011
+            _ = NewEntityDoapTarget(prefixed_prop=inv)
