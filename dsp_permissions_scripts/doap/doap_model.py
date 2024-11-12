@@ -43,6 +43,7 @@ class EntityDoapTarget(BaseModel):
             r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
         ]
         iri_formats = [
+            "http://0.0.0.0:3333/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
             "http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
             "http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>",
         ]
