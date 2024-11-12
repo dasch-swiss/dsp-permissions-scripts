@@ -99,6 +99,6 @@ class NewEntityDoapTarget(BaseModel):
         if self.prefixed_prop and any([x in self.prefixed_prop for x in ["#", "/", "knora.org", "dasch.swiss"]]):
             raise ValueError(f"The property name must not be a full IRI, but you provided {self.prefixed_prop}")
         if self.prefixed_prop and not re.search(PREFIXED_IRI_REGEX, self.prefixed_prop):
-            msg = f"The property name must be in the format 'onto:resclass_name', but you provided {self.prefixed_prop}"
+            msg = f"The property name must be in the format 'onto:prop_name', but you provided {self.prefixed_prop}"
             raise ValueError(msg)
         return self
