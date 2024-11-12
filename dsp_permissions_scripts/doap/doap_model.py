@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 import re
-from typing import Literal
 from typing import Self
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
-from pydantic import Discriminator
-from pydantic import Field
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
@@ -24,7 +21,7 @@ class Doap(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    target: GroupDoapTarget | EntityDoapTarget = Field(discriminator=Discriminator("target"))
+    target: GroupDoapTarget | EntityDoapTarget
     scope: PermissionScope
     doap_iri: str
 
@@ -33,7 +30,6 @@ class GroupDoapTarget(BaseModel):
     """The group for which a DOAP is defined"""
 
     model_config = ConfigDict(extra="forbid")
-    target: Literal["group"] = Field(init=False, default="group")
 
     project_iri: str
     group: Group
@@ -43,7 +39,6 @@ class EntityDoapTarget(BaseModel):
     """The resource class and/or property for which a DOAP is defined"""
 
     model_config = ConfigDict(extra="forbid")
-    target: Literal["entity"] = Field(init=False, default="entity")
 
     project_iri: str
     resclass_iri: str | None = None
