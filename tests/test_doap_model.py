@@ -4,6 +4,8 @@ from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
 from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedPropError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedResclassError
 
 SHORTCODE = "0000"
 ONTO_NAME = "limc"
@@ -94,7 +96,7 @@ class TestNewEntityDoapTarget:
         ],
     )
     def test_invalid(self, inv: str) -> None:
-        with pytest.raises(ValueError):  # noqa: PT011
+        with pytest.raises(InvalidPrefixedResclassError):
             _ = NewEntityDoapTarget(prefixed_class=inv)
-        with pytest.raises(ValueError):  # noqa: PT011
+        with pytest.raises(InvalidPrefixedPropError):
             _ = NewEntityDoapTarget(prefixed_prop=inv)
