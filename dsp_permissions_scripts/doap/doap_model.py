@@ -35,13 +35,13 @@ class EntityDoapTarget(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     project_iri: str
-    resource_class: str | None = None
-    property: str | None = None
+    resclass_iri: str | None = None
+    property_iri: str | None = None
 
     @model_validator(mode="after")
     def _validate(self) -> Self:
-        if self.resource_class is None and self.property is None:
-            raise ValueError("At least one of resource_class or property must be set")
+        if self.resclass_iri is None and self.property_iri is None:
+            raise ValueError("At least one of resclass_iri or property_iri must be set")
         return self
 
 
@@ -65,11 +65,11 @@ class NewEntityDoapTarget(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    resource_class: str | None = None
-    property: str | None = None
+    prefixed_class: str | None = None
+    prefixed_prop: str | None = None
 
     @model_validator(mode="after")
     def _validate(self) -> Self:
-        if self.resource_class is None and self.property is None:
+        if self.prefixed_class is None and self.prefixed_prop is None:
             raise ValueError("At least one of resource_class or property must be set")
         return self
