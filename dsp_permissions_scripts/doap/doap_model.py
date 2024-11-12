@@ -66,7 +66,7 @@ class EntityDoapTarget(BaseModel):
 
 class NewGroupDoapTarget(BaseModel):
     """
-    The group for which a DOAP is defined, if th DOAP is yet to be created.
+    The group for which a DOAP is defined, if the DOAP is yet to be created.
     At this stage, the project IRI is not known yet.
     """
 
