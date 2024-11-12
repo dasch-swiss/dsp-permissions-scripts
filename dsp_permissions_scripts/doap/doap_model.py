@@ -8,6 +8,8 @@ from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
 from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedPropError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedResclassError
 from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -82,16 +84,13 @@ class NewEntityDoapTarget(BaseModel):
 
     @model_validator(mode="after")
     def _validate_name_format(self) -> Self:
-        if self.prefixed_class and any([x in self.prefixed_class for x in ["#", "/", "knora.org", "dasch.swiss"]]):
-            raise ValueError(f"The resource class name must not be a full IRI, but you provided {self.prefixed_class}")
-        if self.prefixed_class and not re.search(PREFIXED_IRI_REGEX, self.prefixed_class):
-            raise ValueError(
-                "The resource class name must be in the format 'onto:resclass_name', "
-                f"but you provided {self.prefixed_class}"
-            )
-        if self.prefixed_prop and any([x in self.prefixed_prop for x in ["#", "/", "knora.org", "dasch.swiss"]]):
-            raise ValueError(f"The property name must not be a full IRI, but you provided {self.prefixed_prop}")
-        if self.prefixed_prop and not re.search(PREFIXED_IRI_REGEX, self.prefixed_prop):
-            msg = f"The property name must be in the format 'onto:prop_name', but you provided {self.prefixed_prop}"
-            raise ValueError(msg)
+        def _fails(s: str) -> bool:
+            contains_forbidden = any(x in s for x in ["#", "/", "knora.org", "dasch.swiss"])
+            fails_regex = not re.search(PREFIXED_IRI_REGEX, s)
+            return contains_forbidden or fails_regex
+
+        if self.prefixed_class and _fails(self.prefixed_class):
+            raise InvalidPrefixedResclassError(self.prefixed_class)
+        if self.prefixed_prop and _fails(self.prefixed_prop):
+            raise InvalidPrefixedPropError(self.prefixed_prop)
         return self
