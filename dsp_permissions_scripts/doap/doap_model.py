@@ -4,6 +4,7 @@ import re
 from typing import Self
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
@@ -18,6 +19,8 @@ from dsp_permissions_scripts.models.scope import PermissionScope
 class Doap(BaseModel):
     """Model representing a DOAP, containing the target, the scope and the IRI of the DOAP."""
 
+    model_config = ConfigDict(extra="forbid")
+
     target: GroupDoapTarget | EntityDoapTarget
     scope: PermissionScope
     doap_iri: str
@@ -26,12 +29,16 @@ class Doap(BaseModel):
 class GroupDoapTarget(BaseModel):
     """The group for which a DOAP is defined"""
 
+    model_config = ConfigDict(extra="forbid")
+
     project_iri: str
     group: Group
 
 
 class EntityDoapTarget(BaseModel):
     """The resource class and/or property for which a DOAP is defined"""
+
+    model_config = ConfigDict(extra="forbid")
 
     project_iri: str
     resclass_iri: str | None = None
@@ -63,6 +70,8 @@ class NewGroupDoapTarget(BaseModel):
     At this stage, the project IRI is not known yet.
     """
 
+    model_config = ConfigDict(extra="forbid")
+
     group: Group
 
 
@@ -72,6 +81,8 @@ class NewEntityDoapTarget(BaseModel):
     At this stage, neither the project IRI nor the full IRIs of the class/prop are known yet.
     So the class/prop must be defined by their prefixed name (onto:name).
     """
+
+    model_config = ConfigDict(extra="forbid")
 
     prefixed_class: str | None = None
     prefixed_prop: str | None = None
