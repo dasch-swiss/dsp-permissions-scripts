@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from pydantic import model_validator
 
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
 from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -47,19 +48,10 @@ class EntityDoapTarget(BaseModel):
             r"^http://api\.(.+\.)?dasch\.swiss/ontology/[A-Fa-f0-9]{4}/[^/#]+/v2#[^/#]+$",
             r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
         ]
-        iri_formats = [
-            "http://0.0.0.0:3333/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
-            "http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
-            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>",
-        ]
         if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
-            raise ValueError(
-                f"The IRI must be in one of the formats {iri_formats}, but you provided {self.resclass_iri}"
-            )
+            raise InvalidEntityDoapTargetError(self.resclass_iri)
         if self.property_iri and not any(re.search(r, self.property_iri) for r in regexes):
-            raise ValueError(
-                f"The IRI must be in one of the formats {iri_formats}, but you provided {self.property_iri}"
-            )
+            raise InvalidEntityDoapTargetError(self.property_iri)
         return self
 
 

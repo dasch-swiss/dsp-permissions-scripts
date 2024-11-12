@@ -57,3 +57,15 @@ class InvalidIRIError(Exception):
 @dataclass
 class EmptyDoapTargetError(Exception):
     message = "At least one of resource_class or property must be set"
+
+
+class InvalidEntityDoapTargetError(Exception):
+    message: str
+
+    def __init__(self, resclass_iri: str) -> None:
+        iri_formats = [
+            "http://0.0.0.0:3333/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
+            "http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
+            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>",
+        ]
+        self.message = f"The IRI must be in one of the formats {iri_formats}, but you provided {resclass_iri}"

@@ -3,6 +3,7 @@ import pytest
 from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
 from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
 
 SHORTCODE = "0000"
 ONTO_NAME = "limc"
@@ -58,9 +59,9 @@ class TestEntityDoapTarget:
         ],
     )
     def test_invalid(self, inv: str) -> None:
-        with pytest.raises(ValueError, match="IRI must be in one of the formats"):
+        with pytest.raises(InvalidEntityDoapTargetError):
             _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=inv)
-        with pytest.raises(ValueError, match="IRI must be in one of the formats"):
+        with pytest.raises(InvalidEntityDoapTargetError):
             _ = EntityDoapTarget(project_iri=PROJ_IRI, property_iri=inv)
 
 
