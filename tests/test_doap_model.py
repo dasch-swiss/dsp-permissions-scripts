@@ -10,49 +10,53 @@ PROJ_IRI = "http://rdfh.ch/projects/P7Uo3YvDT7Kvv3EvLCl2tw"
 HTTP_HOST = "http://api.dev.dasch.swiss"
 HTTPS_HOST = "https://api.dev.dasch.swiss"
 
+RESCLASS_LOCAL = f"http://0.0.0.0:3333/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}"
+PROP_LOCAL = f"http://0.0.0.0:3333/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_PROP_NAME}"
+
+RESCLASS_REMOTE = f"http://api.rdu-14.dasch.swiss/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}"
+PROP_REMOTE = f"http://api.dasch.swiss/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_PROP_NAME}"
+
+RESCLASS_KNORA_BASE = "http://api.knora.org/ontology/knora-api/v2#StillImageRepresentation"
+PROP_KNORA_BASE = "http://api.knora.org/ontology/knora-api/v2#hasValue"
+
 
 class TestEntityDoapTarget:
     def test_not_empty(self) -> None:
         with pytest.raises(ValueError, match="At least one of resource_class or property must be set"):
             EntityDoapTarget(project_iri=PROJ_IRI)
 
-    def test_valid_local_class(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            resclass_iri=f"http://0.0.0.0:3333/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}",
-        )
+    @pytest.mark.parametrize(
+        ("resclass", "prop"), [(RESCLASS_LOCAL, PROP_LOCAL), (RESCLASS_LOCAL, None), (None, PROP_LOCAL)]
+    )
+    def test_valid_local(self, resclass: str | None, prop: str | None) -> None:
+        _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=resclass, property_iri=prop)
 
-    def test_valid_local_prop(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            property_iri=f"http://0.0.0.0:3333/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_PROP_NAME}",
-        )
+    @pytest.mark.parametrize(
+        ("resclass", "prop"), [(RESCLASS_REMOTE, PROP_REMOTE), (RESCLASS_REMOTE, None), (None, PROP_REMOTE)]
+    )
+    def test_valid_remote(self, resclass: str | None, prop: str | None) -> None:
+        _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=resclass, property_iri=prop)
 
-    def test_valid_remote_class(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            resclass_iri=f"http://api.dev.dasch.swiss/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_RESCLASS_NAME}",
-        )
+    @pytest.mark.parametrize(
+        ("resclass", "prop"),
+        [(RESCLASS_KNORA_BASE, PROP_KNORA_BASE), (RESCLASS_KNORA_BASE, None), (None, PROP_KNORA_BASE)],
+    )
+    def test_valid_knora_base(self, resclass: str | None, prop: str | None) -> None:
+        _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=resclass, property_iri=prop)
 
-    def test_valid_remote_prop(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            property_iri=f"http://api.<subdomain>.dasch.swiss/ontology/{SHORTCODE}/{ONTO_NAME}/v2#{MY_PROP_NAME}",
-        )
-
-    def test_valid_knora_base_class(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            resclass_iri="http://api.knora.org/ontology/knora-api/v2#StillImageRepresentation",
-        )
-
-    def test_valid_knora_base_prop(self) -> None:
-        _ = EntityDoapTarget(
-            project_iri=PROJ_IRI,
-            property_iri="http://api.knora.org/ontology/knora-api/v2#hasValue",
-        )
-
-
-"http://0.0.0.0:3333/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>"
-"http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>"
-"http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>"
+    @pytest.mark.parametrize(
+        "inv",
+        [
+            "http://rdfh.ch/4123/CPm__dQhRoKPzvjzrPuWxg/values/eD0ii5mIS9y18M6fMy1Fk",
+            "http://rdfh.ch/4123/CPm__dQhRoKPzvjzrPuWxg",
+            MY_RESCLASS_NAME,
+            MY_PROP_NAME,
+            PROJ_IRI,
+            HTTP_HOST,
+        ],
+    )
+    def test_invalid(self, inv: str) -> None:
+        with pytest.raises(ValueError, match="IRI must be in one of the formats"):
+            _ = EntityDoapTarget(project_iri=PROJ_IRI, resclass_iri=inv)
+        with pytest.raises(ValueError, match="IRI must be in one of the formats"):
+            _ = EntityDoapTarget(project_iri=PROJ_IRI, property_iri=inv)
