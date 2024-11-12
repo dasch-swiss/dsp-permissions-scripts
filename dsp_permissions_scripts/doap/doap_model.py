@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+import re
 from typing import Self
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedPropError
+from dsp_permissions_scripts.models.errors import InvalidPrefixedResclassError
+from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
@@ -41,7 +47,20 @@ class EntityDoapTarget(BaseModel):
     @model_validator(mode="after")
     def _validate(self) -> Self:
         if self.resclass_iri is None and self.property_iri is None:
-            raise ValueError("At least one of resclass_iri or property_iri must be set")
+            raise EmptyDoapTargetError
+        return self
+
+    @model_validator(mode="after")
+    def _validate_iri_format(self) -> Self:
+        regexes = [
+            r"^http://0.0.0.0:3333/ontology/[A-Fa-f0-9]{4}/[^/#]+/v2#[^/#]+$",
+            r"^http://api\.(.+\.)?dasch\.swiss/ontology/[A-Fa-f0-9]{4}/[^/#]+/v2#[^/#]+$",
+            r"^http://api\.knora\.org/ontology/knora-api/v2#[^/#]+$",
+        ]
+        if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
+            raise InvalidEntityDoapTargetError(self.resclass_iri)
+        if self.property_iri and not any(re.search(r, self.property_iri) for r in regexes):
+            raise InvalidEntityDoapTargetError(self.property_iri)
         return self
 
 
@@ -71,5 +90,18 @@ class NewEntityDoapTarget(BaseModel):
     @model_validator(mode="after")
     def _validate(self) -> Self:
         if self.prefixed_class is None and self.prefixed_prop is None:
-            raise ValueError("At least one of resource_class or property must be set")
+            raise EmptyDoapTargetError
+        return self
+
+    @model_validator(mode="after")
+    def _validate_name_format(self) -> Self:
+        def _fails(s: str) -> bool:
+            contains_forbidden = any(x in s for x in ["#", "/", "knora.org", "dasch.swiss"])
+            fails_regex = not re.search(PREFIXED_IRI_REGEX, s)
+            return contains_forbidden or fails_regex
+
+        if self.prefixed_class and _fails(self.prefixed_class):
+            raise InvalidPrefixedResclassError(self.prefixed_class)
+        if self.prefixed_prop and _fails(self.prefixed_prop):
+            raise InvalidPrefixedPropError(self.prefixed_prop)
         return self

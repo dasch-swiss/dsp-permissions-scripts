@@ -52,3 +52,40 @@ class InvalidGroupError(Exception):
 @dataclass
 class InvalidIRIError(Exception):
     message: str
+
+
+@dataclass
+class EmptyDoapTargetError(Exception):
+    message = "At least one of resource_class or property must be set"
+
+
+class InvalidEntityDoapTargetError(Exception):
+    message: str
+
+    def __init__(self, invalid_resclass_iri: str) -> None:
+        iri_formats = [
+            "http://0.0.0.0:3333/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
+            "http://api.<subdomain>.dasch.swiss/ontology/<shortcode>/<ontoname>/v2#<classname_or_property_name>",
+            "http://api.knora.org/ontology/knora-api/v2#<knora_base_class_or_base_property>",
+        ]
+        self.message = f"The IRI must be in one of the formats {iri_formats}, but you provided {invalid_resclass_iri}"
+
+
+class InvalidPrefixedResclassError(Exception):
+    message: str
+
+    def __init__(self, invalid_prefixed_resclass: str) -> None:
+        self.message = (
+            f"The resource class name must be in the format 'onto:resclass_name', "
+            f"but you provided {invalid_prefixed_resclass}"
+        )
+
+
+class InvalidPrefixedPropError(Exception):
+    message: str
+
+    def __init__(self, invalid_prefixed_property: str) -> None:
+        self.message = (
+            f"The property name must be in the format 'onto:property_name', "
+            f"but you provided {invalid_prefixed_property}"
+        )
