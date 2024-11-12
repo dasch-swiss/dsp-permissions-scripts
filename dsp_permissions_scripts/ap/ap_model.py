@@ -1,6 +1,7 @@
 from enum import Enum
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 
 from dsp_permissions_scripts.models.group import Group
 
@@ -22,6 +23,8 @@ class ApValue(Enum):
 
 class Ap(BaseModel):
     """Represents an Administrative Permission"""
+
+    model_config = ConfigDict(extra="forbid")
 
     forGroup: Group
     forProject: str

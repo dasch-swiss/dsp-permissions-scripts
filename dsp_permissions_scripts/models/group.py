@@ -23,7 +23,7 @@ NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMem
 class BuiltinGroup(BaseModel):
     """Represents a DSP-builtin group, in the form 'knora-admin:ProjectAdmin'"""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     prefixed_iri: str
 
@@ -39,7 +39,7 @@ class BuiltinGroup(BaseModel):
 class CustomGroup(BaseModel):
     """Represents a custom group, in the form 'project-shortname:groupname'"""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     prefixed_iri: str
 

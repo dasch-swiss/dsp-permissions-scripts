@@ -54,8 +54,8 @@ def create_new_doap_on_server(
     payload = {
         "forGroup": forGroup,
         "forProject": proj_iri,
-        "forProperty": target.property if isinstance(target, NewEntityDoapTarget) else None,
-        "forResourceClass": target.resource_class if isinstance(target, NewEntityDoapTarget) else None,
+        "forProperty": target.prefixed_prop if isinstance(target, NewEntityDoapTarget) else None,
+        "forResourceClass": target.prefixed_class if isinstance(target, NewEntityDoapTarget) else None,
         "hasPermissions": create_admin_route_object_from_scope(scope, dsp_client),
     }
     try:
