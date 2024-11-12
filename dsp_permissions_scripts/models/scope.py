@@ -23,7 +23,7 @@ from dsp_permissions_scripts.utils.dsp_client import DspClient
 class PermissionScope(BaseModel):
     """A scope is an object encoding the information: Which user group gets which permissions on a resource/value?"""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     CR: frozenset[Group] = frozenset()
     D: frozenset[Group] = frozenset()
