@@ -2,6 +2,7 @@ import pytest
 
 from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
+from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
 
 SHORTCODE = "0000"
 ONTO_NAME = "limc"
@@ -23,7 +24,7 @@ PROP_KNORA_BASE = "http://api.knora.org/ontology/knora-api/v2#hasValue"
 
 class TestEntityDoapTarget:
     def test_not_empty(self) -> None:
-        with pytest.raises(ValueError, match="At least one of resource_class or property must be set"):
+        with pytest.raises(EmptyDoapTargetError):
             EntityDoapTarget(project_iri=PROJ_IRI)
 
     @pytest.mark.parametrize(
@@ -65,7 +66,7 @@ class TestEntityDoapTarget:
 
 class TestNewEntityDoapTarget:
     def test_not_empty(self) -> None:
-        with pytest.raises(ValueError, match="At least one of resource_class or property must be set"):
+        with pytest.raises(EmptyDoapTargetError):
             NewEntityDoapTarget()
 
     @pytest.mark.parametrize(

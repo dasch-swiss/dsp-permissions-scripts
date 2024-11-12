@@ -6,6 +6,7 @@ from typing import Self
 from pydantic import BaseModel
 from pydantic import model_validator
 
+from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
 from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
@@ -36,7 +37,7 @@ class EntityDoapTarget(BaseModel):
     @model_validator(mode="after")
     def _validate(self) -> Self:
         if self.resclass_iri is None and self.property_iri is None:
-            raise ValueError("At least one of resource_class or property must be set")
+            raise EmptyDoapTargetError
         return self
 
     @model_validator(mode="after")
@@ -84,7 +85,7 @@ class NewEntityDoapTarget(BaseModel):
     @model_validator(mode="after")
     def _validate(self) -> Self:
         if self.prefixed_class is None and self.prefixed_prop is None:
-            raise ValueError("At least one of resource_class or property must be set")
+            raise EmptyDoapTargetError
         return self
 
     @model_validator(mode="after")

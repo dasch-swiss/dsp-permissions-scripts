@@ -52,3 +52,8 @@ class InvalidGroupError(Exception):
 @dataclass
 class InvalidIRIError(Exception):
     message: str
+
+
+@dataclass
+class EmptyDoapTargetError(Exception):
+    message = "At least one of resource_class or property must be set"
