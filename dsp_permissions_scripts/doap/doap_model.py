@@ -20,11 +20,15 @@ class Doap(BaseModel):
 
 
 class GroupDoapTarget(BaseModel):
+    """The group for which a DOAP is defined"""
+
     project_iri: str
     group: Group
 
 
 class EntityDoapTarget(BaseModel):
+    """The resource class and/or property for which a DOAP is defined"""
+
     project_iri: str
     resclass_iri: str | None = None
     property_iri: str | None = None
@@ -59,13 +63,20 @@ class EntityDoapTarget(BaseModel):
 
 
 class NewGroupDoapTarget(BaseModel):
-    """Represents the target of a DOAP that is yet to be created."""
+    """
+    The group for which a DOAP is defined, if th DOAP is yet to be created.
+    At this stage, the project IRI is not known yet.
+    """
 
     group: Group
 
 
 class NewEntityDoapTarget(BaseModel):
-    """Represents the target of a DOAP that is yet to be created."""
+    """
+    The resource class and/or property for which a DOAP is defined, if the DOAP is yet to be created.
+    At this stage, neither the project IRI nor the full IRIs of the class/prop are known yet.
+    So the class/prop must be defined by their prefixed name (onto:name).
+    """
 
     prefixed_class: str | None = None
     prefixed_prop: str | None = None
