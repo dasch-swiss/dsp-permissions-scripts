@@ -20,6 +20,8 @@ class Oap(BaseModel):
     If only the resource is of interest, value_oaps will be an empty list.
     """
 
+    model_config = ConfigDict(extra="forbid")
+
     resource_oap: ResourceOap
     value_oaps: list[ValueOap]
 
@@ -30,6 +32,8 @@ class ModifiedOap(BaseModel):
     This model is used to represent only the modified parts of an OAP, so it can be incomplete.
     """
 
+    model_config = ConfigDict(extra="forbid")
+
     resource_oap: ResourceOap | None = None
     value_oaps: list[ValueOap] = Field(default_factory=list)
 
@@ -39,6 +43,8 @@ class ModifiedOap(BaseModel):
 
 class ResourceOap(BaseModel):
     """Model representing an object access permission of a resource"""
+
+    model_config = ConfigDict(extra="forbid")
 
     scope: PermissionScope
     resource_iri: str
@@ -54,6 +60,8 @@ class ValueOap(BaseModel):
     property: property whith which the value relates to its resource
     value_type: type of the value, e.g. "knora-api:TextValue"
     """
+
+    model_config = ConfigDict(extra="forbid")
 
     scope: PermissionScope
     property: str
@@ -73,7 +81,7 @@ class OapRetrieveConfig(BaseModel):
     which can be used to resolve the ontology prefixes.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     retrieve_resources: Literal["all", "specified_res_classes"] = "all"
     specified_res_classes: list[str] = []
