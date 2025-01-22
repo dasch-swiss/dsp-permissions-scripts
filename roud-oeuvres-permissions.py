@@ -195,5 +195,8 @@ WHERE {
 }
 """
 
+# desired permission string (already exist for other resources / values
+# CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember|V knora-admin:UnknownUser
+
 if __name__ == "__main__":
     main()
