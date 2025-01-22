@@ -1,29 +1,36 @@
-[tool.poetry]
-authors = ["DaSCH - Swiss National Data and Service Center for the Humanities <info@dasch.swiss>"]
+[project]
+authors = [{name = "DaSCH - Swiss National Data and Service Center for the Humanities", email = "info@dasch.swiss"}]
 description = ""
 license = "Apache-2.0"
 name = "dsp-permissions-scripts"
-packages = [{include = "dsp_permissions_scripts"}]
+packages = [{ include = "dsp_permissions_scripts" }]
 readme = "README.md"
 version = "0.1.0"
 
-[tool.poetry.dependencies]
-python = "^3.12.0"
-requests = "^2.32.3"
-pydantic = "^2.9.2"
+requires-python = ">=3.12"
+dependencies = [
+    "requests~=2.32.3",
+    "pydantic~=2.9.2"
+]
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.11.2"
-types-requests = "^2.32.0.20240914"
-python-dotenv = "^1.0.1"
-ruff = "^0.6.9"
-pre-commit = "^4.0.1"
-pytest = "^8.3.2"
-pytest-unordered = "^0.6.1"
+[tool.uv]
+dev-dependencies = [
+    "mypy~=1.11.2",
+    "types-requests~=2.32.0.20240914",
+    "python-dotenv~=1.0.1",
+    "ruff~=0.6.9",
+    "pre-commit~=4.0.1",
+    "pytest~=8.3.2",
+    "pytest-unordered~=0.6.1",
+]
+
 
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+# Tells “frontend” build tools (like pip, build, or uv) what “backend” build tool to use (e.g. setuptools, hatchling).
+# The "backend" doesn't need to be installed. It will be installed by the "frontend" in a temporary, isolated
+# environment for use during the build process.
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 120
@@ -31,36 +38,36 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = [
-    "RUF",      # ruff-specific rules
-    "PL",       # pylint
-    "I",        # isort
-    "E",        # pycodestyle errors
-    "F",        # pyflakes
-    "A",        # flake8-builtins
-    "BLE",      # flake8-blind-except
-    "ARG",      # flake8-unused-arguments
-    "S",        # flake8-bandit plugin which checks for security issues
-    "YTT",      # flake8-2020 plugin, which checks for misuse of `sys.version` or `sys.version_info`
-    "ASYNC",    # flake8-async plugin, which checks for bad async / asyncio practices
-    "ISC",      # flake8-implicit-str-concat plugin, which checks for problematic string concatenation
-    "INP",      # flake8-no-pep420 plugin, which checks for missing __init__.py files
-    "PIE",      # flake8-pie plugin, which does miscellaneous checks
-    "PT",       # flake8-pytest-style plugin
-    "TID",      # flake8-tidy-imports plugin
-    "ICN",      # flake8-import-conventions plugin, which checks for import conventions
-    "ARG",      # flake8-unused-arguments
-    "PGH",      # pygrep-hooks: A collection of fast, cheap, regex based pre-commit hooks
-    "UP031",    # pyupgrade: printf-string-formatting
-    "B023",     # flake8-bugbear: function-uses-loop-variable
-    "FIX",      # flake8-fixme: checks for FIXME, TODO, XXX, etc.
+    "RUF", # ruff-specific rules
+    "PL", # pylint
+    "I", # isort
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "A", # flake8-builtins
+    "BLE", # flake8-blind-except
+    "ARG", # flake8-unused-arguments
+    "S", # flake8-bandit plugin which checks for security issues
+    "YTT", # flake8-2020 plugin, which checks for misuse of `sys.version` or `sys.version_info`
+    "ASYNC", # flake8-async plugin, which checks for bad async / asyncio practices
+    "ISC", # flake8-implicit-str-concat plugin, which checks for problematic string concatenation
+    "INP", # flake8-no-pep420 plugin, which checks for missing __init__.py files
+    "PIE", # flake8-pie plugin, which does miscellaneous checks
+    "PT", # flake8-pytest-style plugin
+    "TID", # flake8-tidy-imports plugin
+    "ICN", # flake8-import-conventions plugin, which checks for import conventions
+    "ARG", # flake8-unused-arguments
+    "PGH", # pygrep-hooks: A collection of fast, cheap, regex based pre-commit hooks
+    "UP031", # pyupgrade: printf-string-formatting
+    "B023", # flake8-bugbear: function-uses-loop-variable
+    "FIX", # flake8-fixme: checks for FIXME, TODO, XXX, etc.
 ]
 ignore = [
-    "ISC001",   # flake8-implicit-str-concat: single-line-implicit-string-concatenation  # incompatible with the formatter
+    "ISC001", # flake8-implicit-str-concat: single-line-implicit-string-concatenation  # incompatible with the formatter
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-    "S101",     # flake8-bandit: use of assert
+    "S101", # flake8-bandit: use of assert
 ]
 
 [tool.ruff.lint.pydocstyle]

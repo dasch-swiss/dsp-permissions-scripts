@@ -10,13 +10,11 @@ A collection of scripts to handle permissions in DSP.
 
 ## Local setup to run the scripts in this repository
 
-Set up the poetry virtual environment:
+Set up the virtual environment with uv:
 
-- Install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
-    - for Windows, see [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
-- Execute `poetry install`, which will:
-    - create a virtual environment (if there isn't already one)
-    - install all dependencies from `poetry.lock`
+- `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- `uv sync --all-extras --dev`
+- `source .venv/bin/activate`
 - Set the virtual environment's Python interpreter as default interpreter in your IDE,
   so that your IDE uses the correct Python version and the correct dependencies.
 
