@@ -180,6 +180,20 @@ def main() -> None:
         oap_config=oap_config,
     )
 
+# Problematic Permissions:
+"""
+PREFIX kb: <http://www.knora.org/ontology/knora-base#>
+PREFIX ka: <http://www.knora.org/ontology/knora-admin#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT  ?targetIRI ?resType
+WHERE {
+  GRAPH <http://www.knora.org/data/0112/roud-oeuvres> {
+    ?targetIRI kb:hasPermissions "CR knora-admin:Creator,knora-admin:ProjectAdmin|D knora-admin:KnownUser|V knora-admin:UnknownUser" .
+    ?targetIRI rdf:type ?resType
+  }
+}
+"""
 
 if __name__ == "__main__":
     main()
