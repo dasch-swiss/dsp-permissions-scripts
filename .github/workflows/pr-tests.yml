@@ -18,7 +18,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        run: uv pip install -r requirements.txt
+        run: uv sync --all-extras --dev
 
       - name: Formatting with ruff
         run: uv run ruff format --check .
