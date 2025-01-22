@@ -15,6 +15,8 @@ Set up the virtual environment with uv:
 - `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - `uv sync --all-extras --dev`
 - `source .venv/bin/activate`
+- Set the virtual environment's Python interpreter as default interpreter in your IDE,
+  so that your IDE uses the correct Python version and the correct dependencies.
 
 
 ## How to use this repo
