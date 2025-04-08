@@ -61,10 +61,10 @@ There are 3 permissions systems:
       (Until now it isn't possible to specify DOAPs when creating a project.)
 
 The permissions system of DSP is documented
-[here](https://docs.dasch.swiss/2023.10.01/DSP-API/05-internals/design/api-admin/administration/).
+[here](https://docs.dasch.swiss/latest/DSP-API/05-internals/design/api-admin/administration/).
 
 The `/admin/permissions` endpoint of DSP-API is documented
-[here](https://docs.dasch.swiss/2023.10.01/DSP-API/03-endpoints/api-admin/permissions/).
+[here](https://docs.dasch.swiss/latest/DSP-API/03-endpoints/api-admin/permissions/).
 
 
 ## AP: Administrative Permissions
@@ -182,7 +182,7 @@ If a user creates a resource, DSP checks the following places for DOAPs:
 - ...
 - Last: User belongs to group `ProjectMember`: take DOAPs of `ProjectMember`
 
-[See the docs](https://docs.dasch.swiss/2023.03.01/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules)
+[See the docs](https://docs.dasch.swiss/latest/DSP-API/05-internals/design/api-admin/administration/#permission-precedence-rules)
 for more details.
 
 
