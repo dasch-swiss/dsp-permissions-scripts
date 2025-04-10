@@ -1,9 +1,15 @@
+from dsp_permissions_scripts.doap.doap_delete import delete_doap_of_group_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import NewEntityDoapTarget
+from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
+from dsp_permissions_scripts.models.group import KNOWN_USER
+from dsp_permissions_scripts.models.group import PROJECT_ADMIN
+from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.models.scope import RESTRICTED
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -20,6 +26,22 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         shortcode=shortcode,
         mode="original",
         server=dsp_client.server,
+    )
+    _ = delete_doap_of_group_on_server(
+        existing_doaps=project_doaps,
+        forGroup=PROJECT_MEMBER,
+        dsp_client=dsp_client,
+    )
+    _ = delete_doap_of_group_on_server(
+        existing_doaps=project_doaps,
+        forGroup=PROJECT_ADMIN,
+        dsp_client=dsp_client,
+    )
+    _ = create_new_doap_on_server(
+        target=NewGroupDoapTarget(group=KNOWN_USER),
+        shortcode=shortcode,
+        scope=RESTRICTED,
+        dsp_client=dsp_client,
     )
     _ = create_new_doap_on_server(
         target=NewEntityDoapTarget(prefixed_class="bmf:Tamu"),
@@ -50,7 +72,7 @@ def main() -> None:
     and one to update the Object Access Permissions of a project.
     All must first be adapted to your needs.
     """
-    host = Hosts.get_host("rdu")
+    host = Hosts.get_host("localhost")
     shortcode = "0813"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
