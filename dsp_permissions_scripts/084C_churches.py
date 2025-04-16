@@ -4,6 +4,7 @@ from dsp_permissions_scripts.doap.doap_delete import delete_doap_of_group_on_ser
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
+from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
@@ -25,7 +26,11 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     restr_acc_img_iri = "http://www.knora.org/ontology/084C/church#RestrictedAccessImage"
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
-        if isinstance(doap.target, EntityDoapTarget) and doap.target.resclass_iri == restr_acc_img_iri:
+        if (
+            isinstance(doap.target, EntityDoapTarget)
+            and doap.target.resclass_iri == restr_acc_img_iri
+            and doap.scope != RESTRICTED
+        ):
             doap.scope = RESTRICTED
             modified_doaps.append(doap)
     return modified_doaps
@@ -40,17 +45,24 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         server=dsp_client.server,
     )
-    remaining_doaps = delete_doap_of_group_on_server(
-        existing_doaps=project_doaps,
-        forGroup=group.PROJECT_MEMBER,
-        dsp_client=dsp_client,
-    )
-    _ = create_new_doap_on_server(
-        target=NewGroupDoapTarget(group=group.KNOWN_USER),
-        shortcode=shortcode,
-        scope=OPEN,
-        dsp_client=dsp_client,
-    )
+    if any(
+        doap.target.group == group.PROJECT_MEMBER for doap in project_doaps if isinstance(doap.target, GroupDoapTarget)
+    ) and not any(
+        doap.target.group == group.KNOWN_USER for doap in project_doaps if isinstance(doap.target, GroupDoapTarget)
+    ):
+        remaining_doaps = delete_doap_of_group_on_server(
+            existing_doaps=project_doaps,
+            forGroup=group.PROJECT_MEMBER,
+            dsp_client=dsp_client,
+        )
+        _ = create_new_doap_on_server(
+            target=NewGroupDoapTarget(group=group.KNOWN_USER),
+            shortcode=shortcode,
+            scope=OPEN,
+            dsp_client=dsp_client,
+        )
+    else:
+        remaining_doaps = project_doaps
     project_doaps_modified = modify_doaps(doaps=remaining_doaps)
     if not project_doaps_modified:
         logger.info("There are no DOAPs to update.")
