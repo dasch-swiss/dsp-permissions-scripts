@@ -59,6 +59,7 @@ class EntityDoapTarget(BaseModel):
             # Response from API is sometimes in internal representation.
             # Canceled bug ticket (won't fix): https://linear.app/dasch/issue/DEV-4341
             r"^http://www.knora.org/ontology/[A-Fa-f0-9]{4}/[^/#]+#[^/#]+$",
+            r"^http://www.knora.org/ontology/knora-base#[^/#]+$",
         ]
         if self.resclass_iri and not any(re.search(r, self.resclass_iri) for r in regexes):
             raise InvalidEntityDoapTargetError(self.resclass_iri)
