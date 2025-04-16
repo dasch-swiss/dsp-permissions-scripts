@@ -13,6 +13,12 @@ from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.models.scope import RESTRICTED
+from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import ModifiedOap
+from dsp_permissions_scripts.oap.oap_model import Oap
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
+from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -77,6 +83,37 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     )
 
 
+def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
+    """Adapt this sample to your needs."""
+    modified_oaps: list[ModifiedOap] = []
+    for oap in copy.deepcopy(oaps):
+        new_oap = ModifiedOap()
+        for value_oap in oap.value_oaps:
+            if value_oap.value_type == "knora-api:StillImageFileValue":
+                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": RESTRICTED}))
+        if not new_oap.is_empty():
+            modified_oaps.append(new_oap)
+    return modified_oaps
+
+
+def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
+    """Sample function to modify the Object Access Permissions of a project."""
+    oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps, shortcode, mode="original")
+    oaps_modified = modify_oaps(oaps)
+    if not oaps_modified:
+        logger.info("There are no OAPs to update.")
+        return
+    apply_updated_oaps_on_server(
+        oaps=oaps_modified,
+        shortcode=shortcode,
+        dsp_client=dsp_client,
+        nthreads=4,
+    )
+    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps_updated, shortcode, mode="modified")
+
+
 def main() -> None:
     """
     The main function provides you with 3 sample functions:
@@ -90,9 +127,21 @@ def main() -> None:
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
+    oap_config = OapRetrieveConfig(
+        retrieve_resources="specified_res_classes",
+        specified_res_classes=["church:RestrictedAccessImage"],
+        retrieve_values="specified_props",
+        specified_props=["knora-api:hasStillImageFileValue"],
+    )
+
     update_doaps(
         shortcode=shortcode,
         dsp_client=dsp_client,
+    )
+    update_oaps(
+        shortcode=shortcode,
+        dsp_client=dsp_client,
+        oap_config=oap_config,
     )
 
 
