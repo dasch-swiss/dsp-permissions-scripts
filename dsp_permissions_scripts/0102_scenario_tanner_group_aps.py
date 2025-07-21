@@ -9,10 +9,8 @@ from dsp_permissions_scripts.doap.doap_model import Doap
 from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
-from dsp_permissions_scripts.models.group import PROJECT_ADMIN
 from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import Oap
@@ -53,9 +51,10 @@ def update_aps(shortcode: str, dsp_client: DspClient) -> None:
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
     modified_doaps = []
+    tanner_group = CustomGroup(prefixed_iri="scenario-tanner:group-scenario-tanner")
     for doap in copy.deepcopy(doaps):
-        if isinstance(doap.target, GroupDoapTarget) and doap.target.group == PROJECT_ADMIN:
-            doap.scope = OPEN
+        if isinstance(doap.target, GroupDoapTarget) and tanner_group not in doap.scope.M:
+            doap.scope = doap.scope.add(permission="M", group=tanner_group)
             modified_doaps.append(doap)
     return modified_doaps
 
