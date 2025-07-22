@@ -1,14 +1,14 @@
-import copy
-
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import Doap
+from dsp_permissions_scripts.doap.doap_model import EntityDoapTarget
 from dsp_permissions_scripts.doap.doap_model import GroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
 from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_on_server
+from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
@@ -50,20 +50,28 @@ def update_aps(shortcode: str, dsp_client: DspClient) -> None:
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
-    modified_doaps = []
     tanner_group = CustomGroup(prefixed_iri="scenario-tanner:group-scenario-tanner")
-    for doap in copy.deepcopy(doaps):
-        if isinstance(doap.target, GroupDoapTarget) and tanner_group not in doap.scope.M:
+    for doap in doaps:
+        is_proj_adm_doap = bool(
+            isinstance(doap.target, GroupDoapTarget)
+            and doap.target.group == PROJECT_MEMBER
+            and tanner_group not in doap.scope.M
+        )
+        is_interview_doap = bool(
+            isinstance(doap.target, EntityDoapTarget)
+            and str(doap.target.resclass_iri).endswith("Interview")
+            and tanner_group not in doap.scope.M
+        )
+        if is_proj_adm_doap or is_interview_doap:
             doap.scope = doap.scope.add(permission="M", group=tanner_group)
-            modified_doaps.append(doap)
-    return modified_doaps
+    return doaps
 
 
 def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     """Adapt this sample to your needs."""
     modified_oaps: list[ModifiedOap] = []
     tanner_group = CustomGroup(prefixed_iri="scenario-tanner:group-scenario-tanner")
-    for oap in copy.deepcopy(oaps):
+    for oap in oaps:
         new_oap = ModifiedOap()
         if tanner_group not in oap.resource_oap.scope.M:
             new_scope = oap.resource_oap.scope.add(permission="M", group=tanner_group)
