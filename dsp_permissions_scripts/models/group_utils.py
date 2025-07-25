@@ -10,8 +10,9 @@ from dsp_permissions_scripts.models.group import PROJECT_MEMBER
 from dsp_permissions_scripts.models.group import SYSTEM_ADMIN
 from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
+from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import Group
-from dsp_permissions_scripts.models.group import is_valid_prefixed_group_iri
+from dsp_permissions_scripts.models.group import is_valid_group_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
@@ -22,20 +23,22 @@ def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
      - First according to their power (most powerful first - only applicable for built-in groups)
      - Then alphabetically (custom groups)
     """
-    sort_key = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
-    groups = list(groups_original)
-    groups.sort(
-        key=lambda x: sort_key.index(x)
-        if isinstance(x, BuiltinGroup)
-        else _get_sort_pos_of_custom_group(x.prefixed_iri)
-    )
-    return groups
-
-
-def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
-    alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    relevant_letter = prefixed_iri.split(":")[-1][0]
-    return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
+    builtin_order = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
+    
+    builtin_groups: list[BuiltinGroup] = []
+    custom_groups: list[CustomGroup] = []
+    
+    for group in groups_original:
+        match group:
+            case BuiltinGroup():
+                builtin_groups.append(group)
+            case CustomGroup():
+                custom_groups.append(group)
+    
+    builtin_groups.sort(key=lambda x: builtin_order.index(x))
+    custom_groups.sort(key=lambda x: x.prefixed_iri.lower())
+    
+    return builtin_groups + custom_groups
 
 
 def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
@@ -54,7 +57,7 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
 
 
 def get_full_iri_from_prefixed_iri(prefixed_iri: str, dsp_client: DspClient) -> str:
-    if not is_valid_prefixed_group_iri(prefixed_iri):
+    if not is_valid_group_iri(prefixed_iri):
         raise InvalidIRIError(f"{prefixed_iri} is not a valid prefixed group IRI")
     prefix, groupname = prefixed_iri.split(":")
     if prefix == "knora-admin":

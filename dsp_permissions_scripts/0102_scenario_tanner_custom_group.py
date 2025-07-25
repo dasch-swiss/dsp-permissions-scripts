@@ -70,7 +70,8 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
 def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     """Adapt this sample to your needs."""
     modified_oaps: list[ModifiedOap] = []
-    tanner_group = CustomGroup(prefixed_iri="scenario-tanner:group-scenario-tanner")
+    # shortened IRI doesn't seem to work as expected, so we use the full IRI
+    tanner_group = CustomGroup(prefixed_iri="http://rdfh.ch/groups/0102/oe8-uWCgS4Wl6wfOvaFGCA")
     for oap in oaps:
         new_oap = ModifiedOap()
         if tanner_group not in oap.resource_oap.scope.M:

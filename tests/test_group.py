@@ -13,7 +13,7 @@ from dsp_permissions_scripts.models.group import UNKNOWN_USER
 from dsp_permissions_scripts.models.group import BuiltinGroup
 from dsp_permissions_scripts.models.group import CustomGroup
 from dsp_permissions_scripts.models.group import group_builder
-from dsp_permissions_scripts.models.group import is_valid_prefixed_group_iri
+from dsp_permissions_scripts.models.group import is_valid_group_iri
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
@@ -101,7 +101,7 @@ def test_group_builder_invalid(inv: str) -> None:
 
 @pytest.mark.parametrize("iri", ["knora-admin:ProjectAdmin", "project_short-name:Group Name", "limc:group-name_1"])
 def test_is_valid_prefixed_group_iri_true(iri: str) -> None:
-    assert is_valid_prefixed_group_iri(iri)
+    assert is_valid_group_iri(iri)
 
 
 @pytest.mark.parametrize(
@@ -115,4 +115,4 @@ def test_is_valid_prefixed_group_iri_true(iri: str) -> None:
     ],
 )
 def test_is_valid_prefixed_group_iri_false(iri: str) -> None:
-    assert not is_valid_prefixed_group_iri(iri)
+    assert not is_valid_group_iri(iri)
