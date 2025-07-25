@@ -16,7 +16,9 @@ from typing_extensions import Annotated
 from dsp_permissions_scripts.models.errors import InvalidGroupError
 from dsp_permissions_scripts.utils.helpers import KNORA_ADMIN_ONTO_NAMESPACE
 
-PREFIXED_IRI_REGEX = r"^http://rdfh\.ch/groups/[0-9A-F]{4}/[a-zA-Z0-9_-]+$"
+_PREFIXED_IRI_REGEX = r"^[\w-]+:[\w -]+$"
+_FULLY_QUALIFIED_IRI_REGEX = r"^http://rdfh\.ch/groups/[0-9A-F]{4}/[a-zA-Z0-9_-]+$"
+GROUP_IRI_REGEX = f"({_PREFIXED_IRI_REGEX})|({_FULLY_QUALIFIED_IRI_REGEX})"
 NAMES_OF_BUILTIN_GROUPS = ["SystemAdmin", "Creator", "ProjectAdmin", "ProjectMember", "KnownUser", "UnknownUser"]
 
 
@@ -64,7 +66,7 @@ def group_builder(prefixed_iri: str) -> BuiltinGroup | CustomGroup:
     """
     if prefixed_iri.startswith("knora-admin:"):
         return BuiltinGroup(prefixed_iri=prefixed_iri)
-    elif re.search(PREFIXED_IRI_REGEX, prefixed_iri):
+    elif re.search(GROUP_IRI_REGEX, prefixed_iri):
         return CustomGroup(prefixed_iri=prefixed_iri)
     else:
         raise InvalidGroupError(f"{prefixed_iri} is not a valid group IRI")
@@ -95,7 +97,7 @@ def is_valid_group_iri(iri: str) -> bool:
         return False
     elif iri.startswith("knora-admin:") and not iri.endswith(tuple(NAMES_OF_BUILTIN_GROUPS)):
         return False
-    elif re.search(PREFIXED_IRI_REGEX, iri):
+    elif re.search(GROUP_IRI_REGEX, iri):
         return True
     else:
         return False

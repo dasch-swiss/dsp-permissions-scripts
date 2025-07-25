@@ -11,7 +11,7 @@ from dsp_permissions_scripts.models.errors import EmptyDoapTargetError
 from dsp_permissions_scripts.models.errors import InvalidEntityDoapTargetError
 from dsp_permissions_scripts.models.errors import InvalidPrefixedPropError
 from dsp_permissions_scripts.models.errors import InvalidPrefixedResclassError
-from dsp_permissions_scripts.models.group import PREFIXED_IRI_REGEX
+from dsp_permissions_scripts.models.group import GROUP_IRI_REGEX
 from dsp_permissions_scripts.models.group import Group
 from dsp_permissions_scripts.models.scope import PermissionScope
 
@@ -101,7 +101,7 @@ class NewEntityDoapTarget(BaseModel):
     def _validate_name_format(self) -> Self:
         def _fails(s: str) -> bool:
             contains_forbidden = any(x in s for x in ["#", "/", "knora.org", "dasch.swiss"])
-            fails_regex = not re.search(PREFIXED_IRI_REGEX, s)
+            fails_regex = not re.search(GROUP_IRI_REGEX, s)
             return contains_forbidden or fails_regex
 
         if self.prefixed_class and _fails(self.prefixed_class):
