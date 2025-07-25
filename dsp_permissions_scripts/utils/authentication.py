@@ -13,8 +13,9 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     In case of localhost, return the default email/password for localhost.
     """
     if host == Hosts.LOCALHOST:
-        user = "root@example.com"
-        pw = "test"
+        # When using a Prod-Dump locally, this is handy
+        user = os.getenv("LOCALHOST_EMAIL") or "root@example.com"
+        pw = os.getenv("LOCALHOST_PASSWORD") or "test"
     elif re.search(r"api.rdu-\d\d.dasch.swiss", host):
         user = os.getenv("RDU_TEST_EMAIL") or ""
         pw = os.getenv("RDU_TEST_PASSWORD") or ""
