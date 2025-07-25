@@ -24,20 +24,20 @@ def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
      - Then alphabetically (custom groups)
     """
     builtin_order = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
-    
+
     builtin_groups: list[BuiltinGroup] = []
     custom_groups: list[CustomGroup] = []
-    
+
     for group in groups_original:
         match group:
             case BuiltinGroup():
                 builtin_groups.append(group)
             case CustomGroup():
                 custom_groups.append(group)
-    
+
     builtin_groups.sort(key=lambda x: builtin_order.index(x))
     custom_groups.sort(key=lambda x: x.prefixed_iri.lower())
-    
+
     return builtin_groups + custom_groups
 
 
