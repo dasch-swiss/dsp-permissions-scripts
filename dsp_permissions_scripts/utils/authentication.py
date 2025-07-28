@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.utils.dsp_client import DspClient
+from dsp_permissions_scripts.utils.get_logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def _get_login_credentials(host: str) -> tuple[str, str]:
@@ -28,6 +31,9 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     elif host == Hosts.RDU:
         user = os.getenv("RDU_EMAIL") or ""
         pw = os.getenv("RDU_PASSWORD") or ""
+    elif host == Hosts.PROD:
+        user = os.getenv("PROD_EMAIL") or ""
+        pw = os.getenv("PROD_PASSWORD") or ""
     else:
         user = os.getenv("PROD_EMAIL") or ""
         pw = os.getenv("PROD_PASSWORD") or ""
@@ -49,8 +55,10 @@ def login(host: str) -> DspClient:
     Returns:
         dsp_client: client that knows how to access the DSP server (i.e. that has a token)
     """
+    logger.info(f"Logging in to {host}...")
     load_dotenv()  # set login credentials from .env file as environment variables
     user, pw = _get_login_credentials(host)
     dsp_client = DspClient(host)
     dsp_client.login(user, pw)
+    logger.info(f"Logged in to {host} successfully.")
     return dsp_client
