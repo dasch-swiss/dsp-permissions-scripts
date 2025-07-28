@@ -99,7 +99,15 @@ def test_group_builder_invalid(inv: str) -> None:
         group_builder(inv)
 
 
-@pytest.mark.parametrize("iri", ["knora-admin:ProjectAdmin", "project_short-name:Group Name", "limc:group-name_1", "http://rdfh.ch/groups/0001/thing-searcher"])
+@pytest.mark.parametrize(
+    "iri",
+    [
+        "knora-admin:ProjectAdmin",
+        "project_short-name:Group Name",
+        "limc:group-name_1",
+        "http://rdfh.ch/groups/0001/thing-searcher",
+    ],
+)
 def test_is_valid_prefixed_group_iri_true(iri: str) -> None:
     assert is_valid_group_iri(iri)
 
