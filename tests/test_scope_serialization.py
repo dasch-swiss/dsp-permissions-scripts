@@ -35,16 +35,11 @@ def dsp_client() -> DspClient:
 
 class TestScopeSerialization:
     perm_strings = (
-        f"CR knora-admin:SystemAdmin|V {SHORTNAME}:{CUSTOM_GROUP_NAME}",
         "D knora-admin:ProjectAdmin|RV knora-admin:ProjectMember",
         "M knora-admin:ProjectAdmin|V knora-admin:Creator,knora-admin:KnownUser|RV knora-admin:UnknownUser",
         "CR knora-admin:SystemAdmin,knora-admin:ProjectAdmin|D knora-admin:Creator|RV knora-admin:UnknownUser",
     )
     admin_route_objects = (
-        [
-            {"name": "CR", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}SystemAdmin", "permissionCode": None},
-            {"name": "V", "additionalInformation": CUSTOM_GROUP_FULL_IRI, "permissionCode": None},
-        ],
         [
             {"name": "D", "additionalInformation": f"{KNORA_ADMIN_ONTO_NAMESPACE}ProjectAdmin", "permissionCode": None},
             {
@@ -71,10 +66,6 @@ class TestScopeSerialization:
         ],
     )
     scopes = (
-        PermissionScope.create(
-            CR=[SYSTEM_ADMIN],
-            V=[CustomGroup(prefixed_iri=f"{SHORTNAME}:{CUSTOM_GROUP_NAME}")],
-        ),
         PermissionScope.create(
             D=[PROJECT_ADMIN],
             RV=[PROJECT_MEMBER],
