@@ -22,6 +22,12 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     elif host == Hosts.DEV:
         user = os.getenv("DEV_EMAIL") or ""
         pw = os.getenv("DEV_PASSWORD") or ""
+    elif host == Hosts.STAGE:
+        user = os.getenv("STAGE_EMAIL") or ""
+        pw = os.getenv("STAGE_PASSWORD") or ""
+    elif host == Hosts.RDU:
+        user = os.getenv("RDU_EMAIL") or ""
+        pw = os.getenv("RDU_PASSWORD") or ""
     else:
         user = os.getenv("PROD_EMAIL") or ""
         pw = os.getenv("PROD_PASSWORD") or ""
