@@ -12,6 +12,9 @@ from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -83,6 +86,25 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     )
 
 
+def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
+    """Sample function to modify the Object Access Permissions of a project."""
+    oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    write_oap_overview_report(oaps)
+    # serialize_oaps(oaps, shortcode, mode="original")
+    # oaps_modified = modify_oaps(oaps)
+    # if not oaps_modified:
+    #     logger.info("There are no OAPs to update.")
+    #     return
+    # apply_updated_oaps_on_server(
+    #     oaps=oaps_modified,
+    #     shortcode=shortcode,
+    #     dsp_client=dsp_client,
+    #     nthreads=4,
+    # )
+    # oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    # serialize_oaps(oaps_updated, shortcode, mode="modified")
+
+
 def main() -> None:
     """
     The main function provides you with 3 sample functions:
@@ -96,8 +118,11 @@ def main() -> None:
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
+    oap_config = OapRetrieveConfig(retrieve_resources="all", retrieve_values="all")
+
     update_aps(shortcode=shortcode, dsp_client=dsp_client)
     update_doaps(shortcode=shortcode, dsp_client=dsp_client)
+    update_oaps(shortcode=shortcode, dsp_client=dsp_client, oap_config=oap_config)
 
 
 if __name__ == "__main__":
