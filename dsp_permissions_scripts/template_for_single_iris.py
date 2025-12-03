@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.update_iris import update_iris
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.get_logger import log_start_of_script
@@ -16,7 +16,7 @@ def main() -> None:
     host = Hosts.get_host("localhost")
     shortcode = "4123"
     iri_file = Path("project_data/4123/iris_to_update.txt")
-    new_scope = OPEN
+    new_scope = PUBLIC
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
 
