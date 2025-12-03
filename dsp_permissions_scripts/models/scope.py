@@ -127,19 +127,19 @@ class PermissionScope(BaseModel):
         return PermissionScope.create(**kwargs)
 
 
-OPEN = PermissionScope.create(
+PUBLIC = PermissionScope.create(
     CR=[PROJECT_ADMIN],
     D=[PROJECT_MEMBER],
     V=[KNOWN_USER, UNKNOWN_USER],
 )
 
-RESTRICTED_VIEW = PermissionScope.create(
+LIMITED_VIEW = PermissionScope.create(
     CR=[PROJECT_ADMIN],
     D=[PROJECT_MEMBER],
     RV=[KNOWN_USER, UNKNOWN_USER],
 )
 
-RESTRICTED = PermissionScope.create(
+PRIVATE = PermissionScope.create(
     CR=[PROJECT_ADMIN],
     D=[PROJECT_MEMBER],
 )

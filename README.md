@@ -155,8 +155,8 @@ DOAPs are always project-related, but more specifically, they are:
 
 - Either group-related: I belong to a group and create a resource, which OAPs does the resource get?
 - Or ontology-related:
-    - class-related: resources of some classes are public, while resources of other classes are restricted
-    - property-related: some properties are public, while other properties are restricted
+    - class-related: resources of some classes are public, while resources of other classes are private
+    - property-related: some properties are public, while other properties are private
     - or a combination of class/property-related
 
 > 💡 **Note**

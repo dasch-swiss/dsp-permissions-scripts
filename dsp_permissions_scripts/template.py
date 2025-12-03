@@ -17,7 +17,7 @@ from dsp_permissions_scripts.doap.doap_set import apply_updated_scopes_of_doaps_
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.models.scope import PermissionScope
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import ModifiedOap
@@ -48,7 +48,7 @@ def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     modified_doaps = []
     for doap in copy.deepcopy(doaps):
         if isinstance(doap.target, GroupDoapTarget) and doap.target.group == group.PROJECT_ADMIN:
-            doap.scope = OPEN
+            doap.scope = PUBLIC
             modified_doaps.append(doap)
     return modified_doaps
 
@@ -58,11 +58,11 @@ def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
     modified_oaps: list[ModifiedOap] = []
     for oap in copy.deepcopy(oaps):
         new_oap = ModifiedOap()
-        if oap.resource_oap.scope != OPEN:
-            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": OPEN})
+        if oap.resource_oap.scope != PUBLIC:
+            new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": PUBLIC})
         for value_oap in oap.value_oaps:
-            if value_oap.scope != OPEN:
-                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": OPEN}))
+            if value_oap.scope != PUBLIC:
+                new_oap.value_oaps.append(value_oap.model_copy(update={"scope": PUBLIC}))
         if not new_oap.is_empty():
             modified_oaps.append(new_oap)
     return modified_oaps
