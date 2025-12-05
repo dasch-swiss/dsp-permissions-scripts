@@ -1,7 +1,6 @@
 import copy
 
 from dsp_permissions_scripts.ap.ap_get import get_aps_of_project
-from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
@@ -13,9 +12,13 @@ from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_proje
 from dsp_permissions_scripts.doap.doap_set import create_new_doap_on_server
 from dsp_permissions_scripts.models import group
 from dsp_permissions_scripts.models.host import Hosts
-from dsp_permissions_scripts.models.scope import OPEN
+from dsp_permissions_scripts.models.scope import PUBLIC
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
+from dsp_permissions_scripts.oap.oap_model import ModifiedOap
+from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
+from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
+from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -81,23 +84,29 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     )
 
 
+def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
+    modified_oaps: list[ModifiedOap] = []
+    for oap in copy.deepcopy(oaps):
+        new_oap = ModifiedOap()
+        new_oap.resource_oap = oap.resource_oap.model_copy(update={"scope": PUBLIC})
+        for value_oap in oap.value_oaps:
+            new_oap.value_oaps.append(value_oap.model_copy(update={"scope": PUBLIC}))
+        modified_oaps.append(new_oap)
+    return modified_oaps
+
+
 def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
-    """Sample function to modify the Object Access Permissions of a project."""
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    write_oap_overview_report(oaps)
-    # serialize_oaps(oaps, shortcode, mode="original")
-    # oaps_modified = modify_oaps(oaps)
-    # if not oaps_modified:
-    #     logger.info("There are no OAPs to update.")
-    #     return
-    # apply_updated_oaps_on_server(
-    #     oaps=oaps_modified,
-    #     shortcode=shortcode,
-    #     dsp_client=dsp_client,
-    #     nthreads=4,
-    # )
-    # oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    # serialize_oaps(oaps_updated, shortcode, mode="modified")
+    serialize_oaps(oaps, shortcode, mode="original")
+    oaps_modified = modify_oaps(oaps)
+    apply_updated_oaps_on_server(
+        oaps=oaps_modified,
+        shortcode=shortcode,
+        dsp_client=dsp_client,
+        nthreads=4,
+    )
+    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
+    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
