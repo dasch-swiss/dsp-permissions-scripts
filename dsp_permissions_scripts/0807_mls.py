@@ -66,13 +66,13 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.PROJECT_ADMIN),
         shortcode=shortcode,
-        scope=OPEN,
+        scope=PUBLIC,
         dsp_client=dsp_client,
     )
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.PROJECT_MEMBER),
         shortcode=shortcode,
-        scope=OPEN,
+        scope=PUBLIC,
         dsp_client=dsp_client,
     )
     project_doaps_updated = get_doaps_of_project(shortcode, dsp_client)
