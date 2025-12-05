@@ -12,22 +12,26 @@ def _get_login_credentials(host: str) -> tuple[str, str]:
     Retrieve user email and password from the environment variables.
     In case of localhost, return the default email/password for localhost.
     """
+    user, pw = None, None
     if host == Hosts.LOCALHOST:
         user = "root@example.com"
         pw = "test"
-    elif re.search(r"api.rdu-\d\d.dasch.swiss", host):
+    elif re.search(r"api\.rdu-\d\d\.dasch\.swiss", host):
         user = os.getenv("RDU_TEST_EMAIL") or ""
         pw = os.getenv("RDU_TEST_PASSWORD") or ""
-    elif host == Hosts.RDU:
-        user = os.getenv("RDU_EMAIL") or ""
-        pw = os.getenv("RDU_PASSWORD") or ""
-    else:
+    elif re.search(r"api(\.rdu|\.stage)?\.dasch\.swiss", host):
         user = os.getenv("PROD_EMAIL") or ""
         pw = os.getenv("PROD_PASSWORD") or ""
+    elif re.search(r"api\.demo\.dasch\.swiss", host):
+        user = os.getenv("DEMO_EMAIL") or ""
+        pw = os.getenv("DEMO_PASSWORD") or ""
     if not user or not pw:
         raise NameError(
             "Missing credentials: Your username/password could not be retrieved. "
-            "Please define '<ENV>_EMAIL' and '<ENV>_PASSWORD' in the file '.env'."
+            "Please define the appropriate environment variables in the file '.env':\n"
+            " - For Prod/Stage/rdu-stage: PROD_EMAIL and PROD_PASSWORD\n"
+            " - For RDU test servers: RDU_TEST_EMAIL and RDU_TEST_PASSWORD\n"
+            " - For Demo: DEMO_EMAIL and DEMO_PASSWORD"
         )
     return user, pw
 
