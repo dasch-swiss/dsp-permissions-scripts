@@ -270,7 +270,7 @@ class DspClient:
             self.session.headers["Authorization"] = f"Bearer {self.token}"
 
     def _log_and_sleep(self, reason: str, retry_counter: int, exc_info: bool) -> None:
-        msg = f"{reason}: Try reconnecting to DSP server, next attempt in {2 ** retry_counter} seconds..."
+        msg = f"{reason}: Try reconnecting to DSP server, next attempt in {2**retry_counter} seconds..."
         logger.error(f"{msg} ({retry_counter=:})", exc_info=exc_info)
         time.sleep(2**retry_counter)
 

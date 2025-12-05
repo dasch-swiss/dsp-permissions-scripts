@@ -3,25 +3,24 @@ authors = [{name = "DaSCH - Swiss National Data and Service Center for the Human
 description = ""
 license = "Apache-2.0"
 name = "dsp-permissions-scripts"
-packages = [{ include = "dsp_permissions_scripts" }]
 readme = "README.md"
 version = "0.1.0"
 
 requires-python = ">=3.12"
 dependencies = [
-    "requests~=2.32.3",
-    "pydantic~=2.9.2"
+    "requests",
+    "pydantic"
 ]
 
-[tool.uv]
-dev-dependencies = [
-    "mypy~=1.11.2",
-    "types-requests~=2.32.0.20240914",
-    "python-dotenv~=1.0.1",
-    "ruff~=0.6.9",
-    "pre-commit~=4.0.1",
-    "pytest~=8.3.2",
-    "pytest-unordered~=0.6.1",
+[dependency-groups]
+dev = [
+    "mypy",
+    "types-requests",
+    "python-dotenv",
+    "ruff",
+    "pre-commit",
+    "pytest",
+    "pytest-unordered",
 ]
 
 
