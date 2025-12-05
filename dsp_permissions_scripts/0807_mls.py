@@ -17,7 +17,6 @@ from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import ModifiedOap
 from dsp_permissions_scripts.oap.oap_model import Oap
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
-from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.oap.oap_set import apply_updated_oaps_on_server
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
@@ -97,7 +96,6 @@ def modify_oaps(oaps: list[Oap]) -> list[ModifiedOap]:
 
 def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveConfig) -> None:
     oaps = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps, shortcode, mode="original")
     oaps_modified = modify_oaps(oaps)
     apply_updated_oaps_on_server(
         oaps=oaps_modified,
@@ -105,8 +103,6 @@ def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveCo
         dsp_client=dsp_client,
         nthreads=4,
     )
-    oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
-    serialize_oaps(oaps_updated, shortcode, mode="modified")
 
 
 def main() -> None:
