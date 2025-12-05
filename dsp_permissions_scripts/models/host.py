@@ -3,7 +3,6 @@ class Hosts:
 
     LOCALHOST = "http://0.0.0.0:3333"
     PROD = "https://api.dasch.swiss"
-    RDU = "https://api.rdu.dasch.swiss"
 
     @staticmethod
     def get_host(identifier: str) -> str:
