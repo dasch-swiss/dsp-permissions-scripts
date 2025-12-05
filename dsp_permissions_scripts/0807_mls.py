@@ -110,14 +110,7 @@ def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveCo
 
 
 def main() -> None:
-    """
-    The main function provides you with 3 sample functions:
-    One to update the Administrative Permissions of a project,
-    one to update the Default Object Access Permissions of a project,
-    and one to update the Object Access Permissions of a project.
-    All must first be adapted to your needs.
-    """
-    host = Hosts.get_host("rdu")
+    host = Hosts.get_host("stage")
     shortcode = "0807"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
