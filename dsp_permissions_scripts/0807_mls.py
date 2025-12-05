@@ -6,6 +6,7 @@ from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
 from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
+from dsp_permissions_scripts.doap.doap_delete import delete_doap_of_group_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
@@ -34,13 +35,13 @@ def update_aps(shortcode: str, dsp_client: DspClient) -> None:
     for ap in project_aps:
         if ap.forGroup == group.PROJECT_ADMIN:
             ap.add_permission(ApValue.ProjectAdminAllPermission)
+    apply_updated_scopes_of_aps_on_server(project_aps, dsp_client)
     create_new_ap_on_server(
         forGroup=group.PROJECT_MEMBER,
         shortcode=shortcode,
         hasPermissions=[ApValue.ProjectResourceCreateAllPermission],
         dsp_client=dsp_client,
     )
-    apply_updated_scopes_of_aps_on_server(project_aps, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
@@ -51,7 +52,6 @@ def update_aps(shortcode: str, dsp_client: DspClient) -> None:
 
 
 def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
-    """Sample function to modify the Default Object Access Permissions of a project."""
     project_doaps = get_doaps_of_project(shortcode, dsp_client)
     serialize_doaps_of_project(
         project_doaps=project_doaps,
@@ -59,6 +59,7 @@ def update_doaps(shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         server=dsp_client.server,
     )
+    delete_doap_of_group_on_server(existing_doaps=project_doaps, forGroup=group.PROJECT_ADMIN, dsp_client=dsp_client)
     _ = create_new_doap_on_server(
         target=NewGroupDoapTarget(group=group.PROJECT_ADMIN),
         shortcode=shortcode,
