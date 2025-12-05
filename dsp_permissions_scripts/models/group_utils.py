@@ -48,7 +48,7 @@ def get_prefixed_iri_from_full_iri(full_iri: str, dsp_client: DspClient) -> str:
                 f"{full_iri} is not a valid full IRI of a group. "
                 f"Available group IRIs: {', '.join([grp['id'] for grp in all_groups])}"
             )
-        return f"{group[0]["project"]["shortname"]}:{group[0]["name"]}"
+        return f"{group[0]['project']['shortname']}:{group[0]['name']}"
     else:
         raise InvalidIRIError(f"Could not transform full IRI {full_iri} to prefixed IRI")
 
