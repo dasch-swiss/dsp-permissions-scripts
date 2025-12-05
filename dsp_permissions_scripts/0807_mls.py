@@ -5,6 +5,7 @@ from dsp_permissions_scripts.ap.ap_model import Ap
 from dsp_permissions_scripts.ap.ap_model import ApValue
 from dsp_permissions_scripts.ap.ap_serialize import serialize_aps_of_project
 from dsp_permissions_scripts.ap.ap_set import apply_updated_scopes_of_aps_on_server
+from dsp_permissions_scripts.ap.ap_set import create_new_ap_on_server
 from dsp_permissions_scripts.doap.doap_get import get_doaps_of_project
 from dsp_permissions_scripts.doap.doap_model import NewGroupDoapTarget
 from dsp_permissions_scripts.doap.doap_serialize import serialize_doaps_of_project
@@ -14,7 +15,6 @@ from dsp_permissions_scripts.models.host import Hosts
 from dsp_permissions_scripts.models.scope import OPEN
 from dsp_permissions_scripts.oap.oap_get import get_all_oaps_of_project
 from dsp_permissions_scripts.oap.oap_model import OapRetrieveConfig
-from dsp_permissions_scripts.oap.oap_serialize import serialize_oaps
 from dsp_permissions_scripts.utils.authentication import login
 from dsp_permissions_scripts.utils.dsp_client import DspClient
 from dsp_permissions_scripts.utils.get_logger import get_logger
@@ -23,18 +23,7 @@ from dsp_permissions_scripts.utils.get_logger import log_start_of_script
 logger = get_logger(__name__)
 
 
-def modify_aps(aps: list[Ap]) -> list[Ap]:
-    """Adapt this sample to your needs."""
-    modified_aps = []
-    for ap in copy.deepcopy(aps):
-        ap.add_permission(ApValue.ProjectAdminAllPermission)
-        ap.remove_permission(ApValue.ProjectResourceCreateAllPermission)
-        modified_aps.append(ap)
-    return modified_aps
-
-
 def update_aps(shortcode: str, dsp_client: DspClient) -> None:
-    """Sample function to modify the Administrative Permissions of a project."""
     project_aps = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps,
@@ -42,11 +31,16 @@ def update_aps(shortcode: str, dsp_client: DspClient) -> None:
         mode="original",
         server=dsp_client.server,
     )
-    modified_aps = modify_aps(project_aps)
-    if not modified_aps:
-        logger.info("There are no APs to update.")
-        return
-    apply_updated_scopes_of_aps_on_server(modified_aps, dsp_client)
+    for ap in project_aps:
+        if ap.forGroup == group.PROJECT_ADMIN:
+            ap.add_permission(ApValue.ProjectAdminAllPermission)
+    create_new_ap_on_server(
+        forGroup=group.PROJECT_MEMBER,
+        shortcode=shortcode,
+        hasPermissions=[ApValue.ProjectResourceCreateAllPermission],
+        dsp_client=dsp_client,
+    )
+    apply_updated_scopes_of_aps_on_server(project_aps, dsp_client)
     project_aps_updated = get_aps_of_project(shortcode, dsp_client)
     serialize_aps_of_project(
         project_aps=project_aps_updated,
