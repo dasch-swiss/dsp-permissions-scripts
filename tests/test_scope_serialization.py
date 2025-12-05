@@ -93,9 +93,9 @@ class TestScopeSerialization:
 
     def test_create_scope_from_string(self, dsp_client: DspClient) -> None:
         for perm_string, scope in zip(self.perm_strings, self.scopes):
-            assert (
-                create_scope_from_string(perm_string, dsp_client) == scope
-            ), f"Failed with permission string '{perm_string}'"
+            assert create_scope_from_string(perm_string, dsp_client) == scope, (
+                f"Failed with permission string '{perm_string}'"
+            )
 
     def test_create_scope_from_admin_route_object(self, dsp_client: DspClient) -> None:
         for admin_route_object, scope, index in zip(self.admin_route_objects, self.scopes, range(len(self.scopes))):
