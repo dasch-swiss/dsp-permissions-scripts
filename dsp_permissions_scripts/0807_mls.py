@@ -106,7 +106,7 @@ def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveCo
 
 
 def main() -> None:
-    host = Hosts.get_host("stage")
+    host = Hosts.get_host("rdu")
     shortcode = "0807"
     log_start_of_script(host, shortcode)
     dsp_client = login(host)
