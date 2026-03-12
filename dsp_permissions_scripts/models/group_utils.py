@@ -34,7 +34,7 @@ def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
 
 def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    relevant_letter = prefixed_iri.split(":")[-1][0]
+    relevant_letter = prefixed_iri.rsplit(":", maxsplit=1)[-1][0]
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
