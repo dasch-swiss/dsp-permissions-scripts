@@ -25,9 +25,9 @@ def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
     sort_key = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
     groups = list(groups_original)
     groups.sort(
-        key=lambda x: sort_key.index(x)
-        if isinstance(x, BuiltinGroup)
-        else _get_sort_pos_of_custom_group(x.prefixed_iri)
+        key=lambda x: (
+            sort_key.index(x) if isinstance(x, BuiltinGroup) else _get_sort_pos_of_custom_group(x.prefixed_iri)
+        )
     )
     return groups
 
