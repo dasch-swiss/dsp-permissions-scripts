@@ -91,13 +91,16 @@ dsp_permissions_scripts/
 ### Typical Workflow
 
 Users typically:
-1. Copy `dsp_permissions_scripts/template.py` to a new file
-2. Configure the host (localhost, prod, dev, test) and project shortcode
-3. Modify the three functions (`modify_aps`, `modify_doaps`, `modify_oaps`) to implement desired changes
-4. Run the script to:
+- create a new branch
+- Copy `dsp_permissions_scripts/template.py` to a new file `<project_shortcode>_<project_shortname>`, 
+  e.g. `dsp_permissions_scripts/082A_lenzburg.py`
+- Configure the host (localhost, prod, rdu, stage) and project shortcode
+- Modify the three functions (`modify_aps`, `modify_doaps`, `modify_oaps`) to implement desired changes
+- Run the script to:
    - Retrieve current permissions and serialize to JSON in `project_data/<shortcode>/`
    - Apply modifications via DSP-API
    - Retrieve updated permissions and serialize again for verification
+- in the first run, scripts are ALWAYS executed against localhost or rdu/stage server, before going to prod
 
 ### Core Concepts
 
