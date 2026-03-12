@@ -148,7 +148,7 @@ def update_oaps(shortcode: str, dsp_client: DspClient, oap_config: OapRetrieveCo
         oaps=oaps_modified,
         shortcode=shortcode,
         dsp_client=dsp_client,
-        nthreads=4,
+        nthreads=2,
     )
     oaps_updated = get_all_oaps_of_project(shortcode, dsp_client, oap_config)
     serialize_oaps(oaps_updated, shortcode, mode="modified")
