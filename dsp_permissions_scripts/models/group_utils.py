@@ -25,16 +25,16 @@ def sort_groups(groups_original: Iterable[Group]) -> list[Group]:
     sort_key = [SYSTEM_ADMIN, CREATOR, PROJECT_ADMIN, PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER]
     groups = list(groups_original)
     groups.sort(
-        key=lambda x: sort_key.index(x)
-        if isinstance(x, BuiltinGroup)
-        else _get_sort_pos_of_custom_group(x.prefixed_iri)
+        key=lambda x: (
+            sort_key.index(x) if isinstance(x, BuiltinGroup) else _get_sort_pos_of_custom_group(x.prefixed_iri)
+        )
     )
     return groups
 
 
 def _get_sort_pos_of_custom_group(prefixed_iri: str) -> int:
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    relevant_letter = prefixed_iri.split(":")[-1][0]
+    relevant_letter = prefixed_iri.rsplit(":", maxsplit=1)[-1][0]
     return alphabet.index(relevant_letter.lower()) + 99  # must be higher than the highest index of the builtin groups
 
 
