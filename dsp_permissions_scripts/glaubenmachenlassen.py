@@ -22,9 +22,11 @@ logger = get_logger(__name__)
 
 def modify_doaps(doaps: list[Doap]) -> list[Doap]:
     """Adapt this sample to your needs."""
-    assert len(doaps) == 1
+    if not len(doaps) == 1:
+        raise ValueError(f"There should be only one DOAP, but got list of length {len(doaps)}: {doaps}")
     doap = doaps[0]
-    assert isinstance(doap.target, GroupDoapTarget) and doap.target.group == PROJECT_MEMBER
+    if not all([isinstance(doap.target, GroupDoapTarget) and doap.target.group == PROJECT_MEMBER]):
+        raise ValueError(f"Unexpected DOAP: {doap}")
     new_scope = PermissionScope.create(
         CR=[PROJECT_ADMIN],
         V=[PROJECT_MEMBER, KNOWN_USER, UNKNOWN_USER],
