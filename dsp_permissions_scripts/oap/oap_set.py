@@ -137,7 +137,7 @@ def apply_updated_oaps_on_server(
     oaps: list[ModifiedOap],
     shortcode: str,
     dsp_client: DspClient,
-    nthreads: int = 4,
+    nthreads: int = 2,
 ) -> None:
     """
     Applies modified Object Access Permissions of resources (and their values) on a DSP server.
